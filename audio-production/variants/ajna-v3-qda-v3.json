@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "id": "ajna-v3-qda-v3",
+  "meditationId": "ajna",
+  "title": "A Blue Window in the Snow",
+  "scriptRevision": "ajna-blue-window-v3",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/ajna-v3-qda-v3-draft.md",
+  "durationSeconds": 720,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/ajna-v3-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 501100,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Sit tall without becoming rigid. Let the face soften and place gentle attention between the eyebrows."
+    },
+    {
+      "startSeconds": 65,
+      "text": "Imagine a small blue window glowing in a house surrounded by snow. It is simply a visual anchor, not a supernatural claim."
+    },
+    {
+      "startSeconds": 120,
+      "text": "Notice the dark space behind the eyelids around that window. Let the image remain small and easy."
+    },
+    {
+      "startSeconds": 175,
+      "text": "Breathe naturally. With each exhale, imagine snow settling without needing the world to become silent."
+    },
+    {
+      "startSeconds": 230,
+      "text": "Thoughts may leave footprints across the field. See them, then return to the blue window."
+    },
+    {
+      "startSeconds": 285,
+      "text": "If the forehead tightens, release the image and feel the whole face. Return only when the point feels comfortable."
+    },
+    {
+      "startSeconds": 340,
+      "text": "Rest with the window for several breaths. No need to look through it or discover what is inside."
+    },
+    {
+      "startSeconds": 395,
+      "text": "[thoughtfully] Attention can be both precise and gentle, like one lit square held by miles of soft weather."
+    },
+    {
+      "startSeconds": 450,
+      "text": "Let wandering be another snowfall. Notice it accumulating, then gently clear a path back."
+    },
+    {
+      "startSeconds": 505,
+      "text": "Release effort for a moment and rest in the whole inner landscape, window included."
+    },
+    {
+      "startSeconds": 560,
+      "text": "Begin feeling the body below the face... throat... chest... belly... hands... legs."
+    },
+    {
+      "startSeconds": 615,
+      "text": "Let the snow scene fade while sounds and temperature return to the foreground."
+    },
+    {
+      "startSeconds": 680,
+      "text": "[softly] Open your eyes when ready. Carry the steadiness of one quiet window into the room."
+    }
+  ]
+}

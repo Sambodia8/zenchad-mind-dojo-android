@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "id": "yoga-nidra-v2-qda-v3",
+  "meditationId": "yoga-nidra",
+  "title": "The Starship Sleep Deck",
+  "scriptRevision": "yoga-nidra-starship-v2",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/yoga-nidra-v2-qda-v3-draft.md",
+  "durationSeconds": 1200,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/yoga-nidra-v2-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 502500,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Lie down, support the body, and settle the temperature around you. Imagine entering the sleep deck of a starship travelling on automatic."
+    },
+    {
+      "startSeconds": 70,
+      "text": "Feel the complete outline of the body. The ship is moving, but you have no controls to operate for a while."
+    },
+    {
+      "startSeconds": 125,
+      "text": "Right thumb... index... middle... ring... little finger... palm... back of hand... wrist. Each panel turns from blue to dark."
+    },
+    {
+      "startSeconds": 180,
+      "text": "Right forearm... elbow... upper arm... shoulder... armpit... ribs... waist... hip."
+    },
+    {
+      "startSeconds": 235,
+      "text": "Right thigh... kneecap... back of knee... shin... calf... ankle... heel... sole... top of foot... each of the five toes."
+    },
+    {
+      "startSeconds": 300,
+      "text": "Left thumb... index... middle... ring... little finger... palm... back of hand... wrist."
+    },
+    {
+      "startSeconds": 355,
+      "text": "Left forearm... elbow... upper arm... shoulder... armpit... ribs... waist... hip."
+    },
+    {
+      "startSeconds": 410,
+      "text": "Left thigh... kneecap... back of knee... shin... calf... ankle... heel... sole... top of foot... each of the five toes."
+    },
+    {
+      "startSeconds": 475,
+      "text": "Both heels... calves... backs of knees... backs of thighs... pelvis... lower back... middle back... upper back... shoulder blades."
+    },
+    {
+      "startSeconds": 535,
+      "text": "Lower belly... navel... upper belly... lower ribs... chest... collarbones... throat. The central deck grows quiet."
+    },
+    {
+      "startSeconds": 595,
+      "text": "Jaw hinge... chin... lower lip... upper lip... corners of mouth... teeth... gums... tongue... root of the tongue. Let the mouth rest completely."
+    },
+    {
+      "startSeconds": 655,
+      "text": "Cheeks... nose... nostrils... bridge... space around the eyes... eyelids... tiny muscles beneath the eyes."
+    },
+    {
+      "startSeconds": 715,
+      "text": "Right eyebrow... left eyebrow... space between them... forehead... temples... ears... back of head... crown... whole scalp."
+    },
+    {
+      "startSeconds": 775,
+      "text": "Feel the entire face powered down without disappearing. Breathing and swallowing can continue by themselves."
+    },
+    {
+      "startSeconds": 840,
+      "text": "Whole right side... whole left side... both together... whole back... whole front... complete body inside the sleep deck."
+    },
+    {
+      "startSeconds": 900,
+      "text": "[thoughtfully] A thought may cross the monitoring screen. Let automatic systems handle it without waking the crew."
+    },
+    {
+      "startSeconds": 960,
+      "text": "Rest as one field of sensation suspended among distant stars."
+    },
+    {
+      "startSeconds": 1020,
+      "text": "Sense the breath entering and leaving the complete body, with no part needing to assist."
+    },
+    {
+      "startSeconds": 1080,
+      "text": "Remember the real room around you and the ordinary planet supporting everything."
+    },
+    {
+      "startSeconds": 1160,
+      "text": "[softly] Bring movement to fingers, toes, face, and limbs. Open your eyes when ready; the ship has carried you home."
+    }
+  ]
+}

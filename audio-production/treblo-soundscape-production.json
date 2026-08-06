@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "provider": "treblo",
+  "approved": true,
+  "approvedBy": "Sam",
+  "approvalReference": "Approved the no-Port-Blue Metta sample and instructed Codex to do the rest on 2026-07-28",
+  "title": "ZenChad Treblo Meditation Soundscapes",
+  "outputDirectory": "output/elevenlabs-tests/soundscape-production/treblo",
+  "apiKeyFile": "D:\\My Drive\\ZenChad\\treblo_api_key.txt",
+  "endpoint": "https://api.treblo.com/v1/generations/v3",
+  "model": "melodia_v3",
+  "outputFormat": "ogg",
+  "instrumental": true,
+  "lengthRangeSeconds": [60, 90],
+  "loopPreparation": {
+    "loopStartSeconds": 2,
+    "crossfadeSeconds": 5,
+    "outroTrimSeconds": 12,
+    "targetBitRate": "192k",
+    "sampleRate": 48000
+  },
+  "costPerGeneration": 100,
+  "maxGenerations": 12,
+  "maxApprovedCredits": 1200,
+  "tags": [
+    "ambient",
+    "meditation",
+    "soundscape",
+    "drone",
+    "relaxation",
+    "soft",
+    "peaceful",
+    "ethereal",
+    "minimalistic",
+    "synthesizer",
+    "new age"
+  ],
+  "negativeTags": [
+    "jazz",
+    "brass",
+    "horn",
+    "saxophone",
+    "trumpet",
+    "trombone",
+    "swing",
+    "big band"
+  ],
+  "candidates": [
+    {
+      "order": 1,
+      "id": "pratyahara",
+      "meditationName": "Pratyahara",
+      "story": "Quiet Spacecraft",
+      "fileName": "01-pratyahara-treblo-v3-loop.ogg",
+      "prompt": "Instrumental ambient background for Pratyahara meditation. A quiet spacecraft gradually dims its outward-facing instruments: warm low synthesizer pads, a soft electrical glow and rare filtered electronic points receding into a calm interior hush. Extremely slow, inward, weightless and minimal. No melody-led performance, acoustic ensemble, percussion, alarms or science-fiction drama. Leave the middle frequencies spacious for spoken narration. Keep volume and harmony nearly static from beginning to end, with no intro, outro, cadence, climax, fade-out or silence."
+    },
+    {
+      "order": 2,
+      "id": "nsdr",
+      "meditationName": "NSDR",
+      "story": "Sleeping City",
+      "fileName": "02-nsdr-treblo-v3-loop.ogg",
+      "prompt": "Instrumental ambient background for NSDR and deep lying-down rest. Imagine a sleeping city quietly powering down one district at a time: long warm nocturnal synthesizer pads, an almost imperceptible downward harmonic drift and a distant softened electrical hum. Deeply restful, dark blue, safe and nearly motionless. No beat, melody-led performance, acoustic instruments, percussion, tension or cinematic drama. Preserve open middle frequencies for narration and a uniform low intensity, with no intro, ending, climax, fade-out or silence."
+    },
+    {
+      "order": 3,
+      "id": "sound-awareness",
+      "meditationName": "Sound Awareness",
+      "story": "Celestial Radio",
+      "fileName": "03-sound-awareness-treblo-v3-loop.ogg",
+      "loopEndSeconds": 50.5,
+      "prompt": "Instrumental ambient background for rotating sound-awareness meditation. A gentle old celestial radio tunes between far and near signals: broad airy synthesizer noise, soft sustained pads and rare blurred harmonic glimmers that seem to move across a wide stereo field. Curious but tranquil, spacious and minimal. No crackling static, speech, recognizable melody, beat, percussion, bright pings or sudden movement. Keep the centre clear for narration and the loudness nearly constant, with no intro, outro, climax, fade-out or silence."
+    },
+    {
+      "order": 4,
+      "id": "ego",
+      "meditationName": "Ego Inquiry",
+      "story": "Open Sky and Windows",
+      "fileName": "04-ego-inquiry-treblo-v3-loop.ogg",
+      "prompt": "Instrumental ambient background for gentle ego inquiry. Transparent synthesizer layers resemble moonlit windows reflecting an open night sky: soft glassy harmonics, warm air and slow unresolved colours with abundant silence between tonal details but no actual drop to silence. Spacious, thoughtful and emotionally neutral rather than dramatic. No beat, percussion, solo instrument, recognizable melody, sadness or cinematic tension. Leave room for spoken inquiry and maintain a steady circular texture without an intro, ending, climax or fade-out."
+    },
+    {
+      "order": 5,
+      "id": "ajna",
+      "meditationName": "Ajna Chakra",
+      "story": "Indigo Lighthouse",
+      "fileName": "05-ajna-chakra-treblo-v3-loop.ogg",
+      "prompt": "Instrumental ambient background for an optional Ajna focus meditation. A calm indigo lighthouse glows through a violet night: one soft sustained tonal centre, slow blue synthesizer halos and faint filtered upper harmonics. Steady, lucid, gentle and minimal, without mystical theatre. No beat, percussion, chanting, bells, recognizable melody, dramatic swells or supernatural atmosphere. Keep the middle frequencies open beneath narration and the energy uniform, with no intro, outro, cadence, climax, fade-out or silence."
+    },
+    {
+      "order": 6,
+      "id": "urge-surfing",
+      "meditationName": "Urge Surfing",
+      "story": "Luminous Tide",
+      "fileName": "06-urge-surfing-treblo-v3-loop.ogg",
+      "prompt": "Instrumental ambient background for urge-surfing meditation. A luminous tide inside a glass snow globe rises slightly, crests and gently changes into warm suspended synthesizer pads with tiny softened granular sparkles. Calm observation, patience and change without danger. Movement should remain subtle and dynamics narrow. No drums, percussion, alarm tones, dissonance, recognizable melody or cinematic impact. Leave room for narration and use a quiet circular harmonic texture with no formal intro, ending, climax, fade-out or silence."
+    },
+    {
+      "order": 7,
+      "id": "acceptance",
+      "meditationName": "Radical Acceptance",
+      "story": "Inner Weather",
+      "fileName": "07-radical-acceptance-treblo-v3-loop.ogg",
+      "prompt": "Instrumental ambient background for radical acceptance meditation. Gentle inner weather moves beneath a glass observatory dome: warm cloudlike synthesizer pads, distant softened rain-coloured harmonics and a patient steady glow that allows every feeling to be present. Tender, spacious and non-dramatic. No literal rain sounds, beat, percussion, melancholy solo, recognizable melody, tension or emotional climax. Keep the centre clear for narration and maintain almost static loudness and harmony, with no intro, outro, cadence, fade-out or silence."
+    },
+    {
+      "order": 8,
+      "id": "trataka",
+      "meditationName": "Trataka",
+      "story": "Crystal Cave Candle",
+      "fileName": "08-trataka-treblo-v3-loop.ogg",
+      "prompt": "Instrumental ambient background for safe candle-gazing concentration. A tiny warm point of light rests inside a dark crystal cave: one steady soft synthesizer tone, very sparse filtered glass overtones and enormous calm space. Lucid, stable and hypnotic without becoming mystical theatre. No beat, percussion, bells, bowls, water drops, recognizable melody, loud resonance, swell or climax. Keep a constant quiet dynamic beneath narration and a naturally circular texture with no intro, ending, fade-out or silence."
+    },
+    {
+      "order": 9,
+      "id": "diaphragmatic-breathing",
+      "meditationName": "Diaphragmatic Breathing",
+      "story": "Underground Garden",
+      "fileName": "09-diaphragmatic-breathing-treblo-v3-loop.ogg",
+      "prompt": "Instrumental ambient background for comfortable diaphragmatic breathing. A warm underground garden slowly brightens and softens as if gently breathing: rounded synthesizer pads expand and settle by a very small amount beneath faint moss-green harmonics. Easy, organic, reassuring and minimal. No audible breathing, beat, percussion, bass pulse, melody-led performance, acoustic ensemble or dramatic swell. Keep the centre open for narration and dynamics extremely narrow, with no intro, ending, climax, fade-out or silence."
+    },
+    {
+      "order": 10,
+      "id": "focused-attention",
+      "meditationName": "Focused Attention",
+      "story": "Patient Satellite",
+      "fileName": "10-focused-attention-treblo-v3-loop.ogg",
+      "loopEndSeconds": 55,
+      "prompt": "Instrumental ambient background for focused-attention meditation. A small patient satellite follows a quiet circular orbit through a velvet night: stable warm synthesizer pads, one faint recurring electronic glimmer and slow soft harmonic rotation. Clear, friendly, consistent and minimally stimulating. No beat, percussion, arpeggio, recognizable melody, busy sequencing, alarms or dramatic space soundtrack. Leave the middle frequencies open for narration and keep the loop even, with no intro, outro, climax, fade-out or silence."
+    },
+    {
+      "order": 11,
+      "id": "grounding",
+      "meditationName": "Five-Sense Grounding",
+      "story": "Safe Ordinary Room",
+      "fileName": "11-grounding-treblo-v3-loop.ogg",
+      "prompt": "Instrumental ambient background for five-sense grounding. A safe ordinary room at night holds a warm lamp, quiet walls and a softened distant city glow: comforting low synthesizer pads, subtle earthy harmonics and almost no movement. Present, familiar and reassuring rather than dreamy or transporting. No field recordings, beat, percussion, recognizable melody, acoustic instruments, tension or cinematic atmosphere. Keep the centre clear for narration and the volume uniform, with no intro, ending, climax, fade-out or silence."
+    },
+    {
+      "order": 12,
+      "id": "yoga-nidra",
+      "meditationName": "Yoga Nidra",
+      "story": "Moonlit Aquarium",
+      "fileName": "12-yoga-nidra-treblo-v3-loop.ogg",
+      "prompt": "Extremely gentle instrumental ambient background for a long Yoga Nidra body scan. A moonlit aquarium after closing: deep blue underwater synthesizer pads, soft filtered glass harmonics and a very slow downward-floating tonal drift. Sleep-safe, weightless, warm and nearly motionless. No vocals, beat, percussion, bass pulse, recognizable melody, bright chimes, tension, crescendo or sudden change. Leave the middle frequencies open for narration and keep a constant low intensity with no intro, ending, climax, fade-out or silence."
+    }
+  ]
+}

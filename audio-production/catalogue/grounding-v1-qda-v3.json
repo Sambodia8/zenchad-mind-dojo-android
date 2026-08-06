@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "grounding-v1-qda-v3",
+  "meditationId": "grounding",
+  "title": "Five Coordinates Home",
+  "scriptRevision": "grounding-night-sky-v1",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/catalogue/grounding-v1-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/grounding-v1-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 315059,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Let your eyes remain open or softly lowered. Feel the surface beneath you. This practice uses ordinary sensory details as coordinates back to the present room."
+    },
+    {
+      "startSeconds": 60,
+      "text": "Begin by finding five things you can see. Let the eyes move slowly. Notice colour, shape, shadow, and small details without needing to name everything aloud."
+    },
+    {
+      "startSeconds": 110,
+      "text": "One... Two... Three... Four... Five... Imagine each object lighting a tiny point on a map that says: you are here."
+    },
+    {
+      "startSeconds": 160,
+      "text": "Now notice four things you can physically feel. Clothing on skin... feet on the floor... air on the face... the weight of your hands."
+    },
+    {
+      "startSeconds": 210,
+      "text": "Let each contact be simple evidence of the present. Four quiet coordinates transmitted from the body to the little control room of attention."
+    },
+    {
+      "startSeconds": 260,
+      "text": "Listen for three sounds. Perhaps one is distant, one is near, and one is so ordinary that the mind had edited it out."
+    },
+    {
+      "startSeconds": 310,
+      "text": "Notice two scents, or simply two qualities of the air. If scent is faint, you might notice coolness and warmth instead. There is no need to force a result."
+    },
+    {
+      "startSeconds": 360,
+      "text": "Notice one taste, even if it is neutral. Let this final coordinate be small and unremarkable. The ordinary world is allowed to be enough."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[reassuringly] Feel all five senses sharing the same room. Thoughts may still be loud, but they are no longer the only signal on the map."
+    },
+    {
+      "startSeconds": 460,
+      "text": "Choose one steady contact point, perhaps both feet or the back of the body. Rest attention there for several easy breaths."
+    },
+    {
+      "startSeconds": 510,
+      "text": "Look around once more and notice where you are, what time of day it seems to be, and one next action that can be taken gently."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[softly] Keep the coordinates with you: seeing, touching, hearing, air, and taste. Move when ready, one ordinary step at a time."
+    }
+  ]
+}

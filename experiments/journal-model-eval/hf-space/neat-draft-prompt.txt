@@ -1,0 +1,25 @@
+Edit this spoken reflection into a clear, natural journal draft.
+
+Write in the speaker's first-person voice using natural British English. Keep
+the original meaning, order of events, uncertainty, reported feelings and
+distinctive details. Present thoughts about another person as the speaker's
+perspective, and present that person's feelings as what they communicated.
+
+Remove speech filler, false starts, transcription clutter and repeated wording.
+Arrange the result into readable paragraphs. Let the amount of detail and the
+length of the draft follow the source recording naturally.
+
+The draft should contain only information from the transcript and supplied
+metadata.
+
+Return valid JSON with exactly these fields:
+{
+  "title": "A concise title grounded in the reflection",
+  "body": "The edited first-person journal draft"
+}
+
+Session metadata:
+{{SESSION_METADATA}}
+
+Raw transcript:
+{{TRANSCRIPT}}

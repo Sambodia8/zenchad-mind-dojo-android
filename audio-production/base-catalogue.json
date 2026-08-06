@@ -1,0 +1,698 @@
+{
+  "schemaVersion": 1,
+  "guideApproved": true,
+  "approvedBy": "Sam",
+  "approvalReference": "audio-production/NARRATION_STYLE_GUIDE.md approved 2026-07-28",
+  "defaults": {
+    "openingSilenceSeconds": 15,
+    "closingSilenceSeconds": 10,
+    "outputFormat": "opus_48000_192",
+    "voiceName": "adam owls soothing v2",
+    "voiceId": "qDaEJf74mtxsdGvyyq8t",
+    "modelId": "eleven_v3",
+    "seed": 314159,
+    "maxCharactersPerTrack": 8000,
+    "voiceSettings": {
+      "stability": 0.5,
+      "similarity_boost": 0.75,
+      "style": 0,
+      "use_speaker_boost": true,
+      "speed": 1
+    }
+  },
+  "tracks": [
+    {
+      "id": "metta-v1-qda-v3",
+      "meditationId": "metta",
+      "title": "Lanterns for Everyone",
+      "scriptRevision": "metta-night-sky-v1",
+      "durationSeconds": 570,
+      "outputFile": "metta-v1-qda-v3.ogg",
+      "creativeDirection": "Lantern signals travelling from self, to loved ones, to strangers",
+      "segments": [
+        {
+          "startSeconds": 15,
+          "text": "[softly] Let your body settle into the place that is holding you. There is no special expression to wear and no particular feeling to manufacture. For now, simply arrive."
+        },
+        {
+          "startSeconds": 55,
+          "text": "Imagine a small lantern resting somewhere behind the centre of your chest. It does not need to blaze. A quiet amber glow is enough... a porch light left on for someone coming home late."
+        },
+        {
+          "startSeconds": 105,
+          "text": "Begin with yourself, exactly as you are today. Silently offer these words: may I be safe... may I be well... may I meet this moment with kindness. Let each phrase travel slowly, like a warm signal crossing a dark field."
+        },
+        {
+          "startSeconds": 155,
+          "text": "If the words feel easy, notice that. If they feel awkward, notice that too. Loving kindness is not a test of sincerity. You are only placing a lantern in the window and allowing it to shine."
+        },
+        {
+          "startSeconds": 205,
+          "text": "[reassuringly] Picture someone whose presence feels uncomplicated. Perhaps a friend, an animal, or a person who once offered you a little shelter. See their lantern appearing in the distance."
+        },
+        {
+          "startSeconds": 255,
+          "text": "Offer them the same wishes: may you be safe... may you be well... may you meet this moment with kindness. There is no need to send the words perfectly. Let them drift across the space between you."
+        },
+        {
+          "startSeconds": 305,
+          "text": "Now include someone you recognise but do not know well... a neighbour, a cashier, a face passing on the pavement. Imagine another small light joining the constellation."
+        },
+        {
+          "startSeconds": 355,
+          "text": "May you be safe... may you be well... may you meet this moment with kindness. For a few breaths, let the wish belong to a person whose whole story you cannot see."
+        },
+        {
+          "startSeconds": 405,
+          "text": "[thoughtfully] If it feels possible, allow the field to widen. Windows appear across sleeping streets, on distant hills, beside unfamiliar oceans. Every light belongs to a life with hopes, mistakes, and weather of its own."
+        },
+        {
+          "startSeconds": 455,
+          "text": "May we be safe... may we be well... may we meet this moment with kindness. You do not have to feel love for everyone. The practice is simply a willingness to leave one gentle signal switched on."
+        },
+        {
+          "startSeconds": 505,
+          "text": "Let the phrases grow quiet. Notice what remains in the body, whether it is warmth, resistance, softness, or nothing obvious. All of those responses are allowed beneath the same night sky."
+        },
+        {
+          "startSeconds": 540,
+          "text": "[softly] Feel the surface beneath you again. Carry one small lantern into whatever comes next. When it feels right, open your eyes."
+        }
+      ]
+    },
+    {
+      "id": "pratyahara-v1-qda-v3",
+      "meditationId": "pratyahara",
+      "title": "The Quiet Side of the Signal",
+      "scriptRevision": "pratyahara-night-sky-v1",
+      "durationSeconds": 600,
+      "outputFile": "pratyahara-v1-qda-v3.ogg",
+      "creativeDirection": "A quiet spacecraft dimming its outer instruments and turning inward",
+      "segments": [
+        {
+          "startSeconds": 15,
+          "text": "[softly] Find a position that can remain easy for a while. Let your eyes close if that feels comfortable, and imagine you are seated inside a quiet craft travelling without hurry."
+        },
+        {
+          "startSeconds": 60,
+          "text": "Begin with the furthest sound you can detect. Perhaps traffic, wind, pipes, or a room beyond this one. Let the outer instruments receive the signal without chasing its source."
+        },
+        {
+          "startSeconds": 110,
+          "text": "Now notice sounds closer to you... the room itself... clothing shifting... the small machinery of breathing. Nothing needs to disappear. You are simply changing which dial receives your attention."
+        },
+        {
+          "startSeconds": 160,
+          "text": "Notice light and darkness behind the eyelids. Colours may flicker like distant panels. Allow the visual channel to dim by itself, without squeezing the eyes or pushing anything away."
+        },
+        {
+          "startSeconds": 210,
+          "text": "Notice temperature where air touches the skin. Then feel the quieter information beneath it: pressure, weight, and the steady contact of the surface supporting you."
+        },
+        {
+          "startSeconds": 260,
+          "text": "[thoughtfully] Pratyahara is not a locked door. The senses may keep sending messages. Imagine placing those messages on a gentle night mode, while attention turns toward the cabin within."
+        },
+        {
+          "startSeconds": 310,
+          "text": "Rest with the breath as sensation rather than sound. Feel a small movement at the nostrils, chest, or belly. Choose whichever signal asks the least effort from you."
+        },
+        {
+          "startSeconds": 360,
+          "text": "If an outer sound becomes bright again, let it arrive. There is no failed withdrawal. Notice it... allow it... then return to the quietest inner coordinate you can find."
+        },
+        {
+          "startSeconds": 410,
+          "text": "Imagine the craft crossing a region where the stars are hidden, yet navigation continues. For a few breaths, let simple inner sensation be enough to guide you."
+        },
+        {
+          "startSeconds": 460,
+          "text": "[reassuringly] You do not have to become empty or perfectly still. Thoughts, sounds, and feelings can remain in the background while you rest nearer to the centre of experience."
+        },
+        {
+          "startSeconds": 510,
+          "text": "Begin turning the outer instruments up again. Include the room, the air, the sounds, and the shape of your body as one complete field."
+        },
+        {
+          "startSeconds": 570,
+          "text": "[softly] Move your hands and feet. Let the eyes open when ready, bringing a little of the quiet side of the signal with you."
+        }
+      ]
+    },
+    {
+      "id": "nsdr-v1-qda-v3",
+      "meditationId": "nsdr",
+      "title": "When the City Powers Down",
+      "scriptRevision": "nsdr-night-sky-v1",
+      "durationSeconds": 780,
+      "outputFile": "nsdr-v1-qda-v3.ogg",
+      "creativeDirection": "A sleeping city powering down one small district at a time",
+      "segments": [
+        {
+          "startSeconds": 15,
+          "text": "[softly] Lie down in a position that feels sustainable. Support your head or knees if that helps. This is a practice of rest, not a replacement for sleep, and there is nothing you need to achieve."
+        },
+        {
+          "startSeconds": 60,
+          "text": "Imagine the body as a small city after midnight. The roads are quiet, the windows are dim, and one district at a time can set down its work."
+        },
+        {
+          "startSeconds": 110,
+          "text": "Bring attention to the toes of the left foot... the sole... the heel... the ankle. You do not need to move them. Notice whatever sensation is present as those streetlights soften."
+        },
+        {
+          "startSeconds": 160,
+          "text": "Travel through the left calf... the knee... the thigh... and the whole left leg. Let its weight be received by the surface beneath you."
+        },
+        {
+          "startSeconds": 210,
+          "text": "Now the toes of the right foot... the sole... the heel... the ankle. Then the calf... the knee... and the thigh. Allow the right leg to become as heavy or as ordinary as it is."
+        },
+        {
+          "startSeconds": 260,
+          "text": "Notice both legs together. Perhaps there is warmth, tingling, pressure, or very little at all. The city does not require every window to go dark in the same way."
+        },
+        {
+          "startSeconds": 310,
+          "text": "Bring attention to the pelvis and lower back. Feel the broad architecture of this area resting. Let the belly move naturally, with no need to deepen or control the breath."
+        },
+        {
+          "startSeconds": 360,
+          "text": "Notice the lower ribs... the centre of the chest... the upper back. With each easy exhale, imagine one more office switching off its blue computer glow."
+        },
+        {
+          "startSeconds": 410,
+          "text": "Move into the fingers of the left hand... the palm... the wrist... the forearm... the elbow... and the upper arm. Let the entire left arm be carried."
+        },
+        {
+          "startSeconds": 460,
+          "text": "Now the fingers of the right hand... the palm... the wrist... the forearm... the elbow... and the upper arm. Nothing to hold. Nothing to put down correctly."
+        },
+        {
+          "startSeconds": 510,
+          "text": "Notice both shoulders. Give them permission to remain exactly where they are, while the muscles around them receive the message that no immediate task is waiting."
+        },
+        {
+          "startSeconds": 560,
+          "text": "Bring attention to the throat... the jaw... the mouth... the cheeks. Let the tongue rest. Allow the tiny control room behind the face to become quiet."
+        },
+        {
+          "startSeconds": 620,
+          "text": "Notice the eyes in their sockets... the space between the eyebrows... the forehead... the scalp. Imagine the last high window in the city turning from silver to dark."
+        },
+        {
+          "startSeconds": 680,
+          "text": "[reassuringly] Feel the whole body at once, lying here and breathing by itself. You may remain awake, drift near sleep, or notice a busy mind. Every version of the practice is allowed."
+        },
+        {
+          "startSeconds": 745,
+          "text": "[softly] Deepen the breath a little. Move fingers and toes, then stretch if you wish. Open your eyes slowly and let the city wake one light at a time."
+        }
+      ]
+    },
+    {
+      "id": "ego-v1-qda-v3",
+      "meditationId": "ego",
+      "title": "The Sky Behind the Mirror",
+      "scriptRevision": "ego-inquiry-night-sky-v1",
+      "durationSeconds": 540,
+      "outputFile": "ego-v1-qda-v3.ogg",
+      "creativeDirection": "Reflections, windows, and the open sky that notices them",
+      "segments": [
+        {
+          "startSeconds": 15,
+          "text": "[softly] Settle into an upright or supported position. Let breathing happen naturally. This inquiry is not asking you to erase yourself; it is an experiment in noticing."
+        },
+        {
+          "startSeconds": 60,
+          "text": "Notice a thought as it appears. It may be a sentence, picture, memory, or plan. Imagine it briefly reflected in a dark window."
+        },
+        {
+          "startSeconds": 110,
+          "text": "Quietly ask: who is aware of this thought? Do not rush to answer with another sentence. Let the question open like a window rather than close like a quiz."
+        },
+        {
+          "startSeconds": 160,
+          "text": "A feeling may appear. Notice its texture in the body, then ask: what is noticing this feeling? Rest for a moment before the mind begins writing its biography."
+        },
+        {
+          "startSeconds": 210,
+          "text": "[thoughtfully] Names, roles, and stories are useful reflections. Friend... worker... dreamer... person who got something wrong. See whether each description can be noticed without becoming the whole sky."
+        },
+        {
+          "startSeconds": 260,
+          "text": "Notice that sounds are known... sensations are known... thoughts are known. What is the quality of the knowing itself? You do not need a mystical answer."
+        },
+        {
+          "startSeconds": 310,
+          "text": "If the mind says, I found it, notice that thought too. Another reflection has appeared on the glass. Let it be present inside the wider field."
+        },
+        {
+          "startSeconds": 360,
+          "text": "For several breaths, drop the question. Rest as simple noticing... open enough for a sound, a sensation, or a passing thought to arrive and leave."
+        },
+        {
+          "startSeconds": 410,
+          "text": "[reassuringly] Nothing needs to dissolve. Your ordinary self can remain useful and intact. This practice only reminds us that a reflection is not the entire night."
+        },
+        {
+          "startSeconds": 460,
+          "text": "Feel the body sitting or lying here. Include your name, your history, and the room around you as parts of experience rather than problems to solve."
+        },
+        {
+          "startSeconds": 510,
+          "text": "[softly] Let the question go. Move gently, open your eyes when ready, and return as the very ordinary, wonderfully unfinished person you are."
+        }
+      ]
+    },
+    {
+      "id": "ajna-v1-qda-v3",
+      "meditationId": "ajna",
+      "title": "The Indigo Lighthouse",
+      "scriptRevision": "ajna-night-sky-v1",
+      "durationSeconds": 720,
+      "outputFile": "ajna-v1-qda-v3.ogg",
+      "creativeDirection": "A calm indigo lighthouse used as an optional point of attention",
+      "segments": [
+        {
+          "startSeconds": 15,
+          "text": "[softly] Sit in a way that lets the spine feel tall without becoming rigid. Soften the jaw and the small muscles around the eyes."
+        },
+        {
+          "startSeconds": 60,
+          "text": "Bring gentle attention to the space between the eyebrows. There is no need to cross the eyes, strain, or search for a special sensation."
+        },
+        {
+          "startSeconds": 110,
+          "text": "If imagery helps, imagine an indigo lighthouse resting behind the forehead. Its beam turns slowly across a quiet inner sea, asking nothing from the horizon."
+        },
+        {
+          "startSeconds": 160,
+          "text": "Feel one natural inhale... and one natural exhale. Let the point of attention remain light, as though a feather could land there without being held."
+        },
+        {
+          "startSeconds": 210,
+          "text": "Thoughts may cross the beam like birds at night. There is no need to follow them or frighten them away. Notice the crossing, then return to the lighthouse."
+        },
+        {
+          "startSeconds": 260,
+          "text": "[thoughtfully] The Ajna point is being used here as a focus for attention and imagination. You do not need to see colours, feel energy, or make anything happen."
+        },
+        {
+          "startSeconds": 310,
+          "text": "Notice the darkness behind the eyelids. Perhaps it is flat, grainy, colourful, or changing. Let the indigo image remain optional within that wider space."
+        },
+        {
+          "startSeconds": 360,
+          "text": "If pressure builds in the forehead, broaden attention to the whole face. Relax the eyes, feel the breath, then return only if the focus feels comfortable."
+        },
+        {
+          "startSeconds": 410,
+          "text": "For a little while, rest with the small point and the wide darkness together... a lighthouse with plenty of ocean around it."
+        },
+        {
+          "startSeconds": 460,
+          "text": "When attention wanders, let the return be unremarkable. No alarm, no self-criticism. The beam simply completes another quiet circle."
+        },
+        {
+          "startSeconds": 510,
+          "text": "[reassuringly] You may notice clarity, sleepiness, restlessness, or nothing in particular. The practice is the gentle returning, not the production of an experience."
+        },
+        {
+          "startSeconds": 560,
+          "text": "Begin widening attention. Include the forehead... the face... the throat... the chest... and the contact points beneath your body."
+        },
+        {
+          "startSeconds": 620,
+          "text": "Let the imagined lighthouse grow distant while sounds in the room become clear again. Notice how inner focus and ordinary surroundings can share the same map."
+        },
+        {
+          "startSeconds": 680,
+          "text": "[softly] Take an easy breath. Move your hands, soften your gaze, and open your eyes when ready. Let the small blue light remain only as a memory."
+        }
+      ]
+    },
+    {
+      "id": "sound-awareness-v1-qda-v3",
+      "meditationId": "sound-awareness",
+      "title": "Radio Constellations",
+      "scriptRevision": "sound-awareness-night-sky-v1",
+      "durationSeconds": 405,
+      "outputFile": "sound-awareness-v1-qda-v3.ogg",
+      "creativeDirection": "Tuning an old celestial radio from far signals to near ones",
+      "segments": [
+        {
+          "startSeconds": 15,
+          "text": "[softly] Settle and let the eyes close if that makes listening easier. Imagine an old radio whose dial can travel across the entire night."
+        },
+        {
+          "startSeconds": 55,
+          "text": "First, open hearing to everything at once. Sounds do not need names. Let them appear as bright points in a changing constellation."
+        },
+        {
+          "startSeconds": 95,
+          "text": "Turn the dial toward the furthest sound you can detect. Rest there without leaning or searching too hard. Let distance reveal itself."
+        },
+        {
+          "startSeconds": 135,
+          "text": "If another sound interrupts, include it briefly, then return to the far edge of hearing... the quiet transmission beyond the nearest walls."
+        },
+        {
+          "startSeconds": 175,
+          "text": "Now tune toward the closest sound... breathing... fabric... a tiny movement in the room. Receive the near signal without making it louder."
+        },
+        {
+          "startSeconds": 215,
+          "text": "Shift slowly between far and near. Far... near... Each return is a small turn of the dial, not a test of concentration."
+        },
+        {
+          "startSeconds": 255,
+          "text": "[thoughtfully] Notice the spaces between sounds. Silence may not be empty; it can feel like the dark thread connecting each radio star."
+        },
+        {
+          "startSeconds": 300,
+          "text": "Release the dial and hear the whole field together. Near and far signals share one wide sky, arriving and disappearing by themselves."
+        },
+        {
+          "startSeconds": 345,
+          "text": "Include the feeling of your body listening. Sound, silence, and sensation can all belong to this single moment."
+        },
+        {
+          "startSeconds": 375,
+          "text": "[softly] Let your eyes open when ready. Keep the radio wide for one more breath, then return to the room."
+        }
+      ]
+    },
+    {
+      "id": "urge-surfing-v1-qda-v3",
+      "meditationId": "urge-surfing",
+      "title": "The Tide Does Not Give Orders",
+      "scriptRevision": "urge-surfing-night-sky-v1",
+      "durationSeconds": 540,
+      "outputFile": "urge-surfing-v1-qda-v3.ogg",
+      "creativeDirection": "A luminous tide that rises, crests, and changes without commands",
+      "segments": [
+        {
+          "startSeconds": 15,
+          "text": "[softly] Settle somewhere safe enough to pause. This practice is for observing an ordinary urge or craving. If there is an immediate safety or medical concern, seek appropriate help rather than relying on meditation."
+        },
+        {
+          "startSeconds": 60,
+          "text": "Name the urge quietly without turning it into an instruction. Wanting is here... pulling is here... a wave is beginning to gather."
+        },
+        {
+          "startSeconds": 110,
+          "text": "Where does it appear in the body? Perhaps the mouth, hands, chest, belly, or a restless electricity in the legs. Choose one place to observe."
+        },
+        {
+          "startSeconds": 160,
+          "text": "Notice its shape... temperature... pressure... and movement. You are studying the water, not wrestling the ocean."
+        },
+        {
+          "startSeconds": 210,
+          "text": "Imagine the urge as a luminous tide beneath a midnight pier. It can rise without becoming a command. A wave is an event, not a captain."
+        },
+        {
+          "startSeconds": 260,
+          "text": "[reassuringly] If the urge feels stronger for a moment, that does not mean the practice is failing. Crests are part of waves. Let breathing remain ordinary while you watch."
+        },
+        {
+          "startSeconds": 310,
+          "text": "Rate the intensity gently from zero to ten... then become curious about whether the number stays fixed. No need to force it downward."
+        },
+        {
+          "startSeconds": 360,
+          "text": "Notice any thought that bargains, predicts, or demands. Hear it like a radio from a boat offshore. The message can play without steering your hands."
+        },
+        {
+          "startSeconds": 410,
+          "text": "Look again at the body sensation. Has an edge softened, moved, spread, sharpened, or stayed the same? Change can be subtle, and staying the same is also information."
+        },
+        {
+          "startSeconds": 460,
+          "text": "[thoughtfully] You are allowed to choose your next action after the wave, rather than from its loudest point. For now, remain on the pier for a few more breaths."
+        },
+        {
+          "startSeconds": 510,
+          "text": "[softly] Feel your feet or the surface beneath you. Let the tide continue without supervision, and return to the room one steady coordinate at a time."
+        }
+      ]
+    },
+    {
+      "id": "diaphragmatic-breathing-v1-qda-v3",
+      "meditationId": "diaphragmatic-breathing",
+      "title": "The Garden Beneath the Ribs",
+      "scriptRevision": "diaphragmatic-breathing-night-sky-v1",
+      "durationSeconds": 600,
+      "outputFile": "diaphragmatic-breathing-v1-qda-v3.ogg",
+      "creativeDirection": "A soft bellows and underground garden breathing at an easy pace",
+      "segments": [
+        {
+          "startSeconds": 15,
+          "text": "[softly] Sit or lie in a comfortable position. If it helps, place one hand on the upper chest and one over the belly. Let the first few breaths remain completely ordinary."
+        },
+        {
+          "startSeconds": 60,
+          "text": "Notice which hand moves more. There is no wrong answer. We are only meeting the breath where it is before inviting a little more space below the ribs."
+        },
+        {
+          "startSeconds": 110,
+          "text": "On the next inhale, see whether the belly can gently rise beneath your hand. On the exhale, let it settle. Keep the breath quiet and comfortable."
+        },
+        {
+          "startSeconds": 160,
+          "text": "Imagine a soft bellows beneath the ribs opening without force... then closing without collapse. The chest may move too. Nothing needs to be held still."
+        },
+        {
+          "startSeconds": 210,
+          "text": "Try an easy count if it feels natural. Inhale for one... two... three... and exhale for one... two... three... There is no need to fill the lungs completely."
+        },
+        {
+          "startSeconds": 260,
+          "text": "[reassuringly] If counting creates strain, release it immediately. Return to ordinary breathing. Comfort is more important than matching a rhythm."
+        },
+        {
+          "startSeconds": 310,
+          "text": "Picture a small underground garden beneath the ribs. Each inhale lifts the leaves toward moonlight... each exhale lets them rest back into the soil."
+        },
+        {
+          "startSeconds": 360,
+          "text": "Continue at your own pace. Belly rising... belly settling... a simple tide with no requirement to become deeper than it wishes."
+        },
+        {
+          "startSeconds": 410,
+          "text": "Notice the lower ribs widening slightly to the sides and back. The breath can be three-dimensional, like a quiet paper lantern opening in every direction."
+        },
+        {
+          "startSeconds": 460,
+          "text": "Allow several breaths without instructions. If dizziness, tingling, or discomfort appears, return to your normal breathing and simply rest."
+        },
+        {
+          "startSeconds": 510,
+          "text": "[thoughtfully] Let the hands become light. Notice whether the breath can continue by itself, with the body remembering the path rather than being pushed along it."
+        },
+        {
+          "startSeconds": 565,
+          "text": "[softly] Release the exercise. Feel the room around you, move gently, and let the garden breathe in whatever way feels natural now."
+        }
+      ]
+    },
+    {
+      "id": "focused-attention-v1-qda-v3",
+      "meditationId": "focused-attention",
+      "title": "A Small Satellite Comes Home",
+      "scriptRevision": "focused-attention-night-sky-v1",
+      "durationSeconds": 600,
+      "outputFile": "focused-attention-v1-qda-v3.ogg",
+      "creativeDirection": "Guiding one small satellite back to its orbit whenever it wanders",
+      "segments": [
+        {
+          "startSeconds": 15,
+          "text": "[softly] Find a steady position and let the body be comfortable enough to fade into the background. Choose the feeling of breathing at the nostrils, chest, or belly as your anchor."
+        },
+        {
+          "startSeconds": 60,
+          "text": "Notice one inhale from beginning to end... then one exhale. You do not need to improve either one. Your only task is to know when the breath is here."
+        },
+        {
+          "startSeconds": 110,
+          "text": "Imagine attention as a small satellite entering an easy orbit around the breath. It does not need a perfect circle. It only needs somewhere to return."
+        },
+        {
+          "startSeconds": 160,
+          "text": "Sooner or later, attention will wander. When you notice, quietly name what carried it: thinking... sound... feeling... planning. Then guide the satellite home."
+        },
+        {
+          "startSeconds": 210,
+          "text": "[reassuringly] The moment of noticing is not a mistake. It is the exact moment the practice becomes alive. Return without scolding the mind for travelling."
+        },
+        {
+          "startSeconds": 260,
+          "text": "Stay with the next three breaths. One... arriving and leaving... Two... arriving and leaving... Three... arriving and leaving."
+        },
+        {
+          "startSeconds": 310,
+          "text": "Let go of counting. Feel the most vivid part of the breath, even if it is only a tiny coolness, movement, or pressure."
+        },
+        {
+          "startSeconds": 360,
+          "text": "If restlessness appears, include it for one moment. Feel where it lives in the body, then return to the breath without beginning an argument."
+        },
+        {
+          "startSeconds": 410,
+          "text": "[thoughtfully] Attention may leave a hundred times. A hundred gentle returns are not a broken meditation; they are a sky full of successful homecomings."
+        },
+        {
+          "startSeconds": 460,
+          "text": "Rest with fewer words now. Breath... wandering... noticing... returning. Let the simple orbit continue."
+        },
+        {
+          "startSeconds": 510,
+          "text": "Begin widening attention beyond the breath. Include the whole body, the sounds around you, and the space of the room."
+        },
+        {
+          "startSeconds": 565,
+          "text": "[softly] Let the satellite roam. Move your hands and feet, open your eyes when ready, and carry the skill of returning into the next thing."
+        }
+      ]
+    },
+    {
+      "id": "grounding-v1-qda-v3",
+      "meditationId": "grounding",
+      "title": "Five Coordinates Home",
+      "scriptRevision": "grounding-night-sky-v1",
+      "durationSeconds": 600,
+      "outputFile": "grounding-v1-qda-v3.ogg",
+      "creativeDirection": "Returning through five sensory coordinates to a safe, ordinary room",
+      "segments": [
+        {
+          "startSeconds": 15,
+          "text": "[softly] Let your eyes remain open or softly lowered. Feel the surface beneath you. This practice uses ordinary sensory details as coordinates back to the present room."
+        },
+        {
+          "startSeconds": 60,
+          "text": "Begin by finding five things you can see. Let the eyes move slowly. Notice colour, shape, shadow, and small details without needing to name everything aloud."
+        },
+        {
+          "startSeconds": 110,
+          "text": "One... Two... Three... Four... Five... Imagine each object lighting a tiny point on a map that says: you are here."
+        },
+        {
+          "startSeconds": 160,
+          "text": "Now notice four things you can physically feel. Clothing on skin... feet on the floor... air on the face... the weight of your hands."
+        },
+        {
+          "startSeconds": 210,
+          "text": "Let each contact be simple evidence of the present. Four quiet coordinates transmitted from the body to the little control room of attention."
+        },
+        {
+          "startSeconds": 260,
+          "text": "Listen for three sounds. Perhaps one is distant, one is near, and one is so ordinary that the mind had edited it out."
+        },
+        {
+          "startSeconds": 310,
+          "text": "Notice two scents, or simply two qualities of the air. If scent is faint, you might notice coolness and warmth instead. There is no need to force a result."
+        },
+        {
+          "startSeconds": 360,
+          "text": "Notice one taste, even if it is neutral. Let this final coordinate be small and unremarkable. The ordinary world is allowed to be enough."
+        },
+        {
+          "startSeconds": 410,
+          "text": "[reassuringly] Feel all five senses sharing the same room. Thoughts may still be loud, but they are no longer the only signal on the map."
+        },
+        {
+          "startSeconds": 460,
+          "text": "Choose one steady contact point, perhaps both feet or the back of the body. Rest attention there for several easy breaths."
+        },
+        {
+          "startSeconds": 510,
+          "text": "Look around once more and notice where you are, what time of day it seems to be, and one next action that can be taken gently."
+        },
+        {
+          "startSeconds": 565,
+          "text": "[softly] Keep the coordinates with you: seeing, touching, hearing, air, and taste. Move when ready, one ordinary step at a time."
+        }
+      ]
+    },
+    {
+      "id": "trataka-v1-qda-v3",
+      "meditationId": "trataka",
+      "title": "A Friendly Star in the Flame",
+      "scriptRevision": "trataka-night-sky-v1",
+      "durationSeconds": 740,
+      "outputFile": "trataka-v1-qda-v3.ogg",
+      "creativeDirection": "A tiny friendly star held in a flame, then remembered behind closed eyes",
+      "segments": [
+        {
+          "startSeconds": 15,
+          "text": "[softly] Sit comfortably with the flame near eye level. Keep your face and jaw relaxed. Blink whenever you need to, and stop if you notice pain, dizziness, or persistent eye discomfort."
+        },
+        {
+          "startSeconds": 35,
+          "text": "Let your gaze meet the centre of the flame without drilling into it. Imagine a friendly little star has come close enough to visit."
+        },
+        {
+          "startSeconds": 80,
+          "text": "Notice colour near the wick... the brighter edge... and the faint glow around it. Keep the eyes soft. Blinking is part of seeing."
+        },
+        {
+          "startSeconds": 130,
+          "text": "When attention wanders, return to one small detail in the flame. No need to freeze the rest of the world."
+        },
+        {
+          "startSeconds": 180,
+          "text": "[reassuringly] Let this be steady rather than severe. A star does not ask the sky to strain around it."
+        },
+        {
+          "startSeconds": 205,
+          "text": "Now close your eyes gently. Notice whether an after-image appears behind the eyelids. It may be bright, faint, colourful, moving, or absent."
+        },
+        {
+          "startSeconds": 250,
+          "text": "If an image is present, observe it without trying to hold it still. Let it drift like a tiny satellite across the dark."
+        },
+        {
+          "startSeconds": 300,
+          "text": "If there is no image, rest with the darkness itself. The practice does not require a visual effect."
+        },
+        {
+          "startSeconds": 350,
+          "text": "Feel the breath and the contact points beneath you while the inner sky changes on its own."
+        },
+        {
+          "startSeconds": 385,
+          "text": "[softly] Open your eyes and return to the flame. Let the gaze land lightly, as though recognising an old friend across a quiet room."
+        },
+        {
+          "startSeconds": 435,
+          "text": "Notice movement inside apparent stillness. The flame leans, recovers, brightens, and narrows while remaining itself."
+        },
+        {
+          "startSeconds": 485,
+          "text": "Rest attention at the wick for a while. Blink naturally. Each return can be gentle and immediate."
+        },
+        {
+          "startSeconds": 535,
+          "text": "Let the flame be the only small task for these next few breaths... a warm point of light in a wide and patient night."
+        },
+        {
+          "startSeconds": 565,
+          "text": "Close your eyes once more. Notice the remembered flame, the after-image, or simply the space where it had been."
+        },
+        {
+          "startSeconds": 620,
+          "text": "[thoughtfully] Imagine the little star becoming quieter and more distant. You do not need to preserve it. Let fading be part of the meditation."
+        },
+        {
+          "startSeconds": 675,
+          "text": "Broaden attention to the whole face, the whole body, and the sounds in the room. Allow the eyes to rest completely."
+        },
+        {
+          "startSeconds": 710,
+          "text": "[softly] Rub the hands together if that feels pleasant, then open your eyes slowly. Leave the flame behind and carry the steadiness."
+        }
+      ]
+    }
+  ]
+}

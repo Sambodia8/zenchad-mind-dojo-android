@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "approvedBy": "Sam",
+  "approvalReference": "Final Treblo sample authorized 2026-07-28 without Port Blue after the Port Blue result was rejected",
+  "title": "Metta Treblo Ambient Retry",
+  "outputDirectory": "output/elevenlabs-tests/soundscape-pilot/treblo",
+  "apiKeyFile": "D:\\My Drive\\ZenChad\\treblo_api_key.txt",
+  "model": "melodia_v3",
+  "endpoint": "https://api.treblo.com/v1/generations/v3",
+  "outputFormat": "ogg",
+  "lengthRangeSeconds": [60, 90],
+  "instrumental": true,
+  "maxTaskSubmissions": 3,
+  "maxSuccessfulGenerations": 2,
+  "promptVariant": "original",
+  "tags": [
+    "ambient",
+    "meditation",
+    "soundscape",
+    "drone",
+    "relaxation",
+    "soft",
+    "peaceful",
+    "ethereal",
+    "minimalistic",
+    "synthesizer",
+    "new age"
+  ],
+  "negativeTags": [
+    "jazz",
+    "brass",
+    "horn",
+    "saxophone",
+    "trumpet",
+    "trombone",
+    "swing",
+    "big band"
+  ],
+  "prompt": "Instrumental ambient background for loving-kindness meditation. A continuous bed of warm, soft synthesizer pads with only occasional delicate high electronic tones. Extremely slow, peaceful, weightless, minimal and emotionally gentle. No melody-led performance, acoustic ensemble or percussion. Leave the middle frequencies spacious for spoken narration. Keep the texture almost static, with uniform volume and harmony from the first second to the last. Designed as a seamless loop: no intro, outro, cadence, climax, fade-out or silence.",
+  "fileName": "02-metta-ambient-treblo-v3-loop.ogg"
+}

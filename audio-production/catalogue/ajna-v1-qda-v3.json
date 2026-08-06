@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "ajna-v1-qda-v3",
+  "meditationId": "ajna",
+  "title": "The Indigo Lighthouse",
+  "scriptRevision": "ajna-night-sky-v1",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/catalogue/ajna-v1-qda-v3-draft.md",
+  "durationSeconds": 720,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/ajna-v1-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 314559,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Sit in a way that lets the spine feel tall without becoming rigid. Soften the jaw and the small muscles around the eyes."
+    },
+    {
+      "startSeconds": 60,
+      "text": "Bring gentle attention to the space between the eyebrows. There is no need to cross the eyes, strain, or search for a special sensation."
+    },
+    {
+      "startSeconds": 110,
+      "text": "If imagery helps, imagine an indigo lighthouse resting behind the forehead. Its beam turns slowly across a quiet inner sea, asking nothing from the horizon."
+    },
+    {
+      "startSeconds": 160,
+      "text": "Feel one natural inhale... and one natural exhale. Let the point of attention remain light, as though a feather could land there without being held."
+    },
+    {
+      "startSeconds": 210,
+      "text": "Thoughts may cross the beam like birds at night. There is no need to follow them or frighten them away. Notice the crossing, then return to the lighthouse."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[thoughtfully] The Ajna point is being used here as a focus for attention and imagination. You do not need to see colours, feel energy, or make anything happen."
+    },
+    {
+      "startSeconds": 310,
+      "text": "Notice the darkness behind the eyelids. Perhaps it is flat, grainy, colourful, or changing. Let the indigo image remain optional within that wider space."
+    },
+    {
+      "startSeconds": 360,
+      "text": "If pressure builds in the forehead, broaden attention to the whole face. Relax the eyes, feel the breath, then return only if the focus feels comfortable."
+    },
+    {
+      "startSeconds": 410,
+      "text": "For a little while, rest with the small point and the wide darkness together... a lighthouse with plenty of ocean around it."
+    },
+    {
+      "startSeconds": 460,
+      "text": "When attention wanders, let the return be unremarkable. No alarm, no self-criticism. The beam simply completes another quiet circle."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[reassuringly] You may notice clarity, sleepiness, restlessness, or nothing in particular. The practice is the gentle returning, not the production of an experience."
+    },
+    {
+      "startSeconds": 560,
+      "text": "Begin widening attention. Include the forehead... the face... the throat... the chest... and the contact points beneath your body."
+    },
+    {
+      "startSeconds": 620,
+      "text": "Let the imagined lighthouse grow distant while sounds in the room become clear again. Notice how inner focus and ordinary surroundings can share the same map."
+    },
+    {
+      "startSeconds": 680,
+      "text": "[softly] Take an easy breath. Move your hands, soften your gaze, and open your eyes when ready. Let the small blue light remain only as a memory."
+    }
+  ]
+}

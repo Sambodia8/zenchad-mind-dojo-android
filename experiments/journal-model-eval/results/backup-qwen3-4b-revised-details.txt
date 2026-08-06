@@ -1,0 +1,4 @@
+Model: Qwen/Qwen3-4B-Instruct-2507
+Generation elapsed: 23.9 seconds
+Generated tokens: 900
+Validation: Invalid JSON: Unterminated string starting at at line 20, column 5.

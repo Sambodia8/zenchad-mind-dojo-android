@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "nsdr-v2-qda-v3",
+  "meditationId": "nsdr",
+  "title": "The Last Train Enters the Depot",
+  "scriptRevision": "nsdr-night-train-v2",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/nsdr-v2-qda-v3-draft.md",
+  "durationSeconds": 780,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/nsdr-v2-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 500400,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Lie down and adjust anything that needs support. This is deliberate rest, not a substitute for sleep. Imagine the last train of the evening entering a quiet depot."
+    },
+    {
+      "startSeconds": 65,
+      "text": "Feel the left foot and toes as the first carriage becomes still... sole... heel... ankle... calf... knee... thigh."
+    },
+    {
+      "startSeconds": 120,
+      "text": "Let the whole left leg rest on its track. Nothing to lift, brace, or carry."
+    },
+    {
+      "startSeconds": 170,
+      "text": "Move through the right toes... sole... heel... ankle... calf... knee... and thigh. The second line powers down."
+    },
+    {
+      "startSeconds": 225,
+      "text": "Feel both legs together, heavy or light, detailed or vague. The depot accepts every kind of arrival."
+    },
+    {
+      "startSeconds": 280,
+      "text": "Notice pelvis, hips, and lower back. Let the belly move without instructions while the central carriage settles."
+    },
+    {
+      "startSeconds": 335,
+      "text": "Feel lower ribs, chest, shoulder blades, and upper back. With each exhale, another overhead light clicks off."
+    },
+    {
+      "startSeconds": 390,
+      "text": "Travel through the left fingers, palm, wrist, forearm, elbow, upper arm, and shoulder. Let the arm be parked for the night."
+    },
+    {
+      "startSeconds": 445,
+      "text": "Now right fingers, palm, wrist, forearm, elbow, upper arm, and shoulder. Allow both hands to release their imaginary luggage."
+    },
+    {
+      "startSeconds": 500,
+      "text": "Notice throat, jaw, lips, tongue, cheeks, and the tiny muscles beside the nose. Let the face stop announcing where it is going."
+    },
+    {
+      "startSeconds": 555,
+      "text": "Feel eyes, brow, forehead, temples, ears, and scalp. The destination board becomes blank."
+    },
+    {
+      "startSeconds": 615,
+      "text": "Sense the whole head... whole torso... both arms... both legs. The train is complete and motionless enough."
+    },
+    {
+      "startSeconds": 675,
+      "text": "[reassuringly] You may be awake, dreamy, restless, or nearly asleep. Rest does not require a particular platform."
+    },
+    {
+      "startSeconds": 745,
+      "text": "[softly] Deepen the breath. Move fingers and toes, stretch if wanted, and return as the depot begins switching on its morning lights."
+    }
+  ]
+}

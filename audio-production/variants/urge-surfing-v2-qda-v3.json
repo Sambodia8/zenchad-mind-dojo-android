@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "urge-surfing-v2-qda-v3",
+  "meditationId": "urge-surfing",
+  "title": "A Comet Does Not Need Chasing",
+  "scriptRevision": "urge-comet-v2",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/urge-surfing-v2-qda-v3-draft.md",
+  "durationSeconds": 540,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/urge-surfing-v2-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 501200,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Pause somewhere safe. This is for observing an ordinary urge, not replacing help in an immediate safety or medical situation."
+    },
+    {
+      "startSeconds": 60,
+      "text": "Name what is here: craving... pulling... wanting. Imagine it as a comet entering the edge of your sky."
+    },
+    {
+      "startSeconds": 110,
+      "text": "Locate the urge in the body. Notice pressure, heat, tightness, movement, or restless energy."
+    },
+    {
+      "startSeconds": 160,
+      "text": "The comet can be bright without giving instructions. Watch its tail, speed, and changing shape."
+    },
+    {
+      "startSeconds": 210,
+      "text": "Notice any thought that says now, always, or impossible. Let the words travel behind the comet rather than steering your body."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[reassuringly] Intensity may rise. A brighter moment does not mean you must chase it or make it disappear."
+    },
+    {
+      "startSeconds": 310,
+      "text": "Rate the urge from zero to ten, then check again after several breaths. Observe change without demanding reduction."
+    },
+    {
+      "startSeconds": 360,
+      "text": "Feel the body beneath the sky: feet, seat, hands, breath. You are more than the streak of light passing through."
+    },
+    {
+      "startSeconds": 410,
+      "text": "Notice whether the urge has moved, sharpened, faded, or stayed. All are useful observations."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[thoughtfully] Choice can wait until the comet is no longer filling the whole window. Remain here for a few more breaths."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[softly] Let the comet continue beyond the horizon. Return to the room and choose the next action deliberately."
+    }
+  ]
+}

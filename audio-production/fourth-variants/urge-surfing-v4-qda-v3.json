@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "urge-surfing-v4-qda-v3",
+  "meditationId": "urge-surfing",
+  "title": "The Storm Inside the Snow Globe",
+  "scriptRevision": "urge-snow-globe-v4",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/urge-surfing-v4-qda-v3-draft.md",
+  "durationSeconds": 540,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/urge-surfing-v4-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 600700,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Settle somewhere safe and bring to mind an urge that is workable, not overwhelming. Imagine holding a snow globe without needing to shake or steady it."
+    },
+    {
+      "startSeconds": 60,
+      "text": "Name the urge simply: wanting... checking... escaping... reaching. A name is a label on the glass, not an instruction."
+    },
+    {
+      "startSeconds": 110,
+      "text": "Locate its strongest body sensation. Perhaps pressure, heat, restlessness, tightness, or a bright electric pull."
+    },
+    {
+      "startSeconds": 160,
+      "text": "Imagine those sensations as snow moving inside the globe. Notice speed, density, direction, and where the storm is most active."
+    },
+    {
+      "startSeconds": 210,
+      "text": "Let the breath remain natural. You are not blowing the snow away; you are staying present while gravity does its quiet work."
+    },
+    {
+      "startSeconds": 260,
+      "text": "Rate the urge gently from zero to ten, then become curious about whether the number stays perfectly still."
+    },
+    {
+      "startSeconds": 310,
+      "text": "Watch for a crest, a dip, or a change of texture. Even an urge that remains strong is changing in tiny ways."
+    },
+    {
+      "startSeconds": 360,
+      "text": "[reassuringly] You can choose distance from the trigger, ask for support, or leave the situation. Surfing an urge does not mean refusing practical help."
+    },
+    {
+      "startSeconds": 410,
+      "text": "Picture more flakes settling onto a miniature town. Windows reappear. Streets return. The storm was real, and it was also temporary weather."
+    },
+    {
+      "startSeconds": 460,
+      "text": "Choose one next action that serves you better than the urge: wait five minutes, drink water, move rooms, message someone, or simply keep breathing."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[softly] Put the snow globe down in imagination. Feel your real hands and remember: a signal may be loud without becoming your commander."
+    }
+  ]
+}

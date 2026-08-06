@@ -1,0 +1,26 @@
+{
+  "title": "Morning Anime Failure and Emotional Tensions with Hannah",
+  "experience": "I woke up after one and went downstairs to sort a USB for Dayton containing anime, so he could watch it. I plugged it into the TV to watch anime with breakfast, but it didn’t work, so I switched to a YouTube video about AI agents running lemonade stands. I anticipated a conversation with Hannah at 3 p.m., so I reviewed our emotional playbook, which I’d prepared for her to use when answering questions. I felt disappointed by her previous answers—they were self-focused, with no mention of what I could do to support her. I noticed she struggled to type responses and thought she’d benefit from rambling into a microphone, so I sent her a prompt for that. I tried calling her at 3:10 and 3:30, but she wasn’t awake until quarter to 4. After sending her the prompt and clarifying what I wanted from her—two completed questions and a review—I felt stressed when she kept sending messages saying she felt ignored, stressed, and unfairly treated. She asked what I expected, and I clarified I wanted at least two questions done and a review. I sent her a Spotify link, even though I don’t use it, and created an AI journaling tool for her to use in a rambly way. When she sent a 12-minute voice message, I told her not to send me messages unless necessary and said I needed space. I went to do a Japanese lesson on Duolingo and returned to send her a screenshot showing her name in a message. I haven’t listened to the voice message and told her I want a break until 8 p.m. She hasn’t responded since.",
+  "observations": [
+    "Hannah’s previous answers were self-focused, with no references to what Sam could do to help.",
+    "She struggled with typing and found the emotional playbook difficult, especially with structured questions.",
+    "She argued for over an hour about not having conversations after 2 a.m., despite agreeing to it earlier.",
+    "She repeatedly sent messages expressing stress, feeling ignored, and saying the process felt unfair.",
+    "The emotional playbook appears emotionally biased toward Sam’s role in protecting Hannah’s emotions, with few conditions on Hannah’s actions."
+  ],
+  "takeaways": [
+    "I need space when I feel overwhelmed by constant messaging.",
+    "Hannah finds the emotional playbook difficult due to lack of prior emotional conversations.",
+    "She resists structured questioning and prefers to express feelings through rambling or voice messages.",
+    "The playbook gives Sam clear expectations but offers little pressure on Hannah to act.",
+    "I feel stressed when she doesn’t respond to my requests about completing questions or reviewing the playbook."
+  ],
+  "nextSteps": [
+    "Send Hannah a clear message confirming the break until 8 p.m. and reiterate that I will not respond to voice messages unless necessary.",
+    "Review the emotional playbook with her when we reconnect to discuss its balance and her experience with it."
+  ],
+  "reflectionQuestions": [
+    "Do I need to adjust the emotional playbook to reduce pressure on Hannah to respond in a structured way?",
+    "Is the current structure of the playbook making it harder for her to engage, or is it simply unfamiliar?"
+  ]
+}

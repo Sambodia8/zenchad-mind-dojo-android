@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "grounding-v3-qda-v3",
+  "meditationId": "grounding",
+  "title": "A Small Kitchen at Dawn",
+  "scriptRevision": "grounding-kitchen-v3",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/grounding-v3-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/grounding-v3-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 502300,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Let the eyes stay open. Imagine attention arriving in a small kitchen just before sunrise."
+    },
+    {
+      "startSeconds": 65,
+      "text": "Notice five visible details as though morning light has found them for the first time."
+    },
+    {
+      "startSeconds": 115,
+      "text": "Shape... colour... pattern... reflection... shadow. Let seeing return you to this room."
+    },
+    {
+      "startSeconds": 165,
+      "text": "Find four touch sensations: fabric, floor, chair, temperature, weight, or the meeting of hands."
+    },
+    {
+      "startSeconds": 215,
+      "text": "Notice three sounds, including the quiet mechanical sounds a home makes by itself."
+    },
+    {
+      "startSeconds": 265,
+      "text": "Find two scents or air qualities. Perhaps clean, warm, cool, dry, familiar, or almost absent."
+    },
+    {
+      "startSeconds": 315,
+      "text": "Notice one taste. Neutral is still a taste and ordinary is still present."
+    },
+    {
+      "startSeconds": 365,
+      "text": "[thoughtfully] Let all five senses share one countertop of awareness. Nothing needs to dominate."
+    },
+    {
+      "startSeconds": 415,
+      "text": "Feel both feet or the back of the body as one dependable surface."
+    },
+    {
+      "startSeconds": 465,
+      "text": "Name the day, the place, and one thing you can do next without rushing."
+    },
+    {
+      "startSeconds": 515,
+      "text": "Look around again and notice one detail that feels pleasant or simply okay."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[softly] Let morning continue. Move into the next moment with the room still around you."
+    }
+  ]
+}

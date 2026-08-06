@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "title": "ZenChad Offline Meditation Music Catalogue",
+  "outputDirectory": "public/assets/audio/soundscapes",
+  "tracksPerMeditation": 2,
+  "tracks": [
+    {
+      "meditationId": "metta",
+      "variation": "a",
+      "title": "Weather Balloons at Dusk",
+      "provider": "ElevenLabs",
+      "source": "output/elevenlabs-tests/soundscape-pilot/09-metta-music-a-loop.ogg",
+      "fileName": "metta-music-a.ogg"
+    },
+    {
+      "meditationId": "metta",
+      "variation": "b",
+      "title": "Lavender Evening",
+      "provider": "Treblo",
+      "source": "output/elevenlabs-tests/soundscape-pilot/treblo/02-metta-ambient-treblo-v3-loop.ogg",
+      "fileName": "metta-music-b.ogg"
+    },
+    {
+      "meditationId": "pratyahara",
+      "variation": "a",
+      "title": "Quiet Spacecraft A",
+      "provider": "ElevenLabs",
+      "source": "output/elevenlabs-tests/soundscape-production/elevenlabs/01-pratyahara-eleven-music-a-loop.ogg",
+      "fileName": "pratyahara-music-a.ogg"
+    },
+    {
+      "meditationId": "pratyahara",
+      "variation": "b",
+      "title": "Quiet Spacecraft B",
+      "provider": "Treblo",
+      "source": "output/elevenlabs-tests/soundscape-production/treblo/01-pratyahara-treblo-v3-loop.ogg",
+      "fileName": "pratyahara-music-b.ogg"
+    },
+    {
+      "meditationId": "nsdr",
+      "variation": "a",
+      "title": "Sleeping City A",
+      "provider": "ElevenLabs",
+      "source": "output/elevenlabs-tests/soundscape-production/elevenlabs/02-nsdr-eleven-music-a-loop.ogg",
+      "fileName": "nsdr-music-a.ogg"
+    },
+    {
+      "meditationId": "nsdr",
+      "variation": "b",
+      "title": "Sleeping City B",
+      "provider": "Treblo",
+      "source": "output/elevenlabs-tests/soundscape-production/treblo/02-nsdr-treblo-v3-loop.ogg",
+      "fileName": "nsdr-music-b.ogg"
+    },
+    {
+      "meditationId": "sound-awareness",
+      "variation": "a",
+      "title": "Celestial Radio A",
+      "provider": "ElevenLabs",
+      "source": "output/elevenlabs-tests/soundscape-production/elevenlabs/03-sound-awareness-eleven-music-a-loop.ogg",
+      "fileName": "sound-awareness-music-a.ogg"
+    },
+    {
+      "meditationId": "sound-awareness",
+      "variation": "b",
+      "title": "Celestial Radio B",
+      "provider": "Treblo",
+      "source": "output/elevenlabs-tests/soundscape-production/treblo/03-sound-awareness-treblo-v3-loop.ogg",
+      "fileName": "sound-awareness-music-b.ogg"
+    },
+    {
+      "meditationId": "ego",
+      "variation": "a",
+      "title": "Open Sky and Windows A",
+      "provider": "ElevenLabs",
+      "source": "output/elevenlabs-tests/soundscape-production/elevenlabs/04-ego-inquiry-eleven-music-a-loop.ogg",
+      "fileName": "ego-music-a.ogg"
+    },
+    {
+      "meditationId": "ego",
+      "variation": "b",
+      "title": "Open Sky and Windows B",
+      "provider": "Treblo",
+      "source": "output/elevenlabs-tests/soundscape-production/treblo/04-ego-inquiry-treblo-v3-loop.ogg",
+      "fileName": "ego-music-b.ogg"
+    },
+    {
+      "meditationId": "ajna",
+      "variation": "a",
+      "title": "Indigo Lighthouse A",
+      "provider": "ElevenLabs",
+      "source": "output/elevenlabs-tests/soundscape-production/elevenlabs/05-ajna-chakra-eleven-music-a-loop.ogg",
+      "fileName": "ajna-music-a.ogg"
+    },
+    {
+      "meditationId": "ajna",
+      "variation": "b",
+      "title": "Indigo Lighthouse B",
+      "provider": "Treblo",
+      "source": "output/elevenlabs-tests/soundscape-production/treblo/05-ajna-chakra-treblo-v3-loop.ogg",
+      "fileName": "ajna-music-b.ogg"
+    },
+    {
+      "meditationId": "urge-surfing",
+      "variation": "a",
+      "title": "Luminous Tide A",
+      "provider": "ElevenLabs",
+      "source": "output/elevenlabs-tests/soundscape-pilot/11-urge-surfing-music-a-loop.ogg",
+      "fileName": "urge-surfing-music-a.ogg"
+    },
+    {
+      "meditationId": "urge-surfing",
+      "variation": "b",
+      "title": "Luminous Tide B",
+      "provider": "Treblo",
+      "source": "output/elevenlabs-tests/soundscape-production/treblo/06-urge-surfing-treblo-v3-loop.ogg",
+      "fileName": "urge-surfing-music-b.ogg"
+    },
+    {
+      "meditationId": "acceptance",
+      "variation": "a",
+      "title": "Inner Weather A",
+      "provider": "ElevenLabs",
+      "source": "output/elevenlabs-tests/soundscape-production/elevenlabs/06-radical-acceptance-eleven-music-a-loop.ogg",
+      "fileName": "acceptance-music-a.ogg"
+    },
+    {
+      "meditationId": "acceptance",
+      "variation": "b",
+      "title": "Inner Weather B",
+      "provider": "Treblo",
+      "source": "output/elevenlabs-tests/soundscape-production/treblo/07-radical-acceptance-treblo-v3-loop.ogg",
+      "fileName": "acceptance-music-b.ogg"
+    },
+    {
+      "meditationId": "trataka",
+      "variation": "a",
+      "title": "Crystal Cave Candle A",
+      "provider": "ElevenLabs",
+      "source": "output/elevenlabs-tests/soundscape-pilot/13-trataka-music-a-loop.ogg",
+      "fileName": "trataka-music-a.ogg"
+    },
+    {
+      "meditationId": "trataka",
+      "variation": "b",
+      "title": "Crystal Cave Candle B",
+      "provider": "Treblo",
+      "source": "output/elevenlabs-tests/soundscape-production/treblo/08-trataka-treblo-v3-loop.ogg",
+      "fileName": "trataka-music-b.ogg"
+    },
+    {
+      "meditationId": "diaphragmatic-breathing",
+      "variation": "a",
+      "title": "Underground Garden A",
+      "provider": "ElevenLabs",
+      "source": "output/elevenlabs-tests/soundscape-production/elevenlabs/07-diaphragmatic-breathing-eleven-music-a-loop.ogg",
+      "fileName": "diaphragmatic-breathing-music-a.ogg"
+    },
+    {
+      "meditationId": "diaphragmatic-breathing",
+      "variation": "b",
+      "title": "Underground Garden B",
+      "provider": "Treblo",
+      "source": "output/elevenlabs-tests/soundscape-production/treblo/09-diaphragmatic-breathing-treblo-v3-loop.ogg",
+      "fileName": "diaphragmatic-breathing-music-b.ogg"
+    },
+    {
+      "meditationId": "focused-attention",
+      "variation": "a",
+      "title": "Patient Satellite A",
+      "provider": "ElevenLabs",
+      "source": "output/elevenlabs-tests/soundscape-production/elevenlabs/08-focused-attention-eleven-music-a-loop.ogg",
+      "fileName": "focused-attention-music-a.ogg"
+    },
+    {
+      "meditationId": "focused-attention",
+      "variation": "b",
+      "title": "Patient Satellite B",
+      "provider": "Treblo",
+      "source": "output/elevenlabs-tests/soundscape-production/treblo/10-focused-attention-treblo-v3-loop.ogg",
+      "fileName": "focused-attention-music-b.ogg"
+    },
+    {
+      "meditationId": "grounding",
+      "variation": "a",
+      "title": "Safe Ordinary Room A",
+      "provider": "ElevenLabs",
+      "source": "output/elevenlabs-tests/soundscape-production/elevenlabs/09-grounding-eleven-music-a-loop.ogg",
+      "fileName": "grounding-music-a.ogg"
+    },
+    {
+      "meditationId": "grounding",
+      "variation": "b",
+      "title": "Safe Ordinary Room B",
+      "provider": "Treblo",
+      "source": "output/elevenlabs-tests/soundscape-production/treblo/11-grounding-treblo-v3-loop.ogg",
+      "fileName": "grounding-music-b.ogg"
+    },
+    {
+      "meditationId": "yoga-nidra",
+      "variation": "a",
+      "title": "Moonlit Aquarium A",
+      "provider": "ElevenLabs",
+      "source": "output/elevenlabs-tests/soundscape-pilot/15-yoga-nidra-music-a-loop.ogg",
+      "fileName": "yoga-nidra-music-a.ogg"
+    },
+    {
+      "meditationId": "yoga-nidra",
+      "variation": "b",
+      "title": "Moonlit Aquarium B",
+      "provider": "Treblo",
+      "source": "output/elevenlabs-tests/soundscape-production/treblo/12-yoga-nidra-treblo-v3-loop.ogg",
+      "fileName": "yoga-nidra-music-b.ogg"
+    }
+  ]
+}

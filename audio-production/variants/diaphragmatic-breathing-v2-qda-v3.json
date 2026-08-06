@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "diaphragmatic-breathing-v2-qda-v3",
+  "meditationId": "diaphragmatic-breathing",
+  "title": "The Moonlit Accordion",
+  "scriptRevision": "breathing-accordion-v2",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/diaphragmatic-breathing-v2-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/diaphragmatic-breathing-v2-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 501800,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Sit or lie comfortably. Place a hand on the belly if useful and let several breaths happen without changing them."
+    },
+    {
+      "startSeconds": 65,
+      "text": "Notice movement beneath the hand. Invite the belly and lower ribs to make a little more room on the next inhale."
+    },
+    {
+      "startSeconds": 115,
+      "text": "Imagine a moonlit accordion beneath the ribs opening easily... then folding home on the exhale."
+    },
+    {
+      "startSeconds": 165,
+      "text": "Keep the breath quiet. The chest may move too; nothing needs to be locked."
+    },
+    {
+      "startSeconds": 215,
+      "text": "Try an easy rhythm: inhale one... two... three... exhale one... two... three... only while comfortable."
+    },
+    {
+      "startSeconds": 265,
+      "text": "[reassuringly] Release counting at the first sign of strain. Ordinary breathing is always available."
+    },
+    {
+      "startSeconds": 315,
+      "text": "Feel the lower ribs widen to the sides and perhaps slightly into the back."
+    },
+    {
+      "startSeconds": 365,
+      "text": "Let the accordion play almost silently for several breaths, with no need for maximum depth."
+    },
+    {
+      "startSeconds": 415,
+      "text": "If dizziness, tingling, or discomfort appears, stop shaping the breath and rest."
+    },
+    {
+      "startSeconds": 465,
+      "text": "Notice how exhaling can finish without squeezing. Let the folds close by themselves."
+    },
+    {
+      "startSeconds": 515,
+      "text": "Remove the hand if you wish and see whether the body remembers the easy movement."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[softly] Release the exercise. Return to natural breathing and the sounds of the room."
+    }
+  ]
+}

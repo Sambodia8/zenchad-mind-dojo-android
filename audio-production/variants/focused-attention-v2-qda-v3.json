@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "focused-attention-v2-qda-v3",
+  "meditationId": "focused-attention",
+  "title": "The Moth Finds the Porch Light",
+  "scriptRevision": "focus-moth-v2",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/focused-attention-v2-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/focused-attention-v2-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 502000,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Choose one comfortable breath sensation as your porch light: nostrils, chest, or belly."
+    },
+    {
+      "startSeconds": 65,
+      "text": "Feel one inhale and one exhale. Let attention rest near the small warm signal."
+    },
+    {
+      "startSeconds": 115,
+      "text": "Imagine the mind as a moth circling through the dark. Wandering is what minds do."
+    },
+    {
+      "startSeconds": 165,
+      "text": "When you notice thought, sound, or feeling has carried attention away, name it lightly and return to the porch light."
+    },
+    {
+      "startSeconds": 215,
+      "text": "[reassuringly] The return is the practice. No flight path needs to be erased."
+    },
+    {
+      "startSeconds": 265,
+      "text": "Stay with three breaths: one... two... three... feeling each from beginning to end."
+    },
+    {
+      "startSeconds": 315,
+      "text": "Release counting and notice the most vivid detail of breathing."
+    },
+    {
+      "startSeconds": 365,
+      "text": "If restlessness appears, feel it for one moment, then return without argument."
+    },
+    {
+      "startSeconds": 415,
+      "text": "Again and again, the moth discovers the light. Each discovery is new."
+    },
+    {
+      "startSeconds": 465,
+      "text": "Rest with fewer words now: breathing... wandering... noticing... home."
+    },
+    {
+      "startSeconds": 515,
+      "text": "Widen attention to include the whole body and room."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[softly] Open your eyes. Let attention fly freely, remembering that it knows a way back."
+    }
+  ]
+}

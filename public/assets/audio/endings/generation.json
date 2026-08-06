@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-01T16:31:52.212Z",
+  "manifest": "audio-production/namaste-endings.json",
+  "outputFormat": "opus_48000_192",
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "requestCount": 4,
+  "automaticRetries": 0,
+  "results": [
+    {
+      "order": 1,
+      "fileName": "namaste-softly.ogg",
+      "title": "Namaste — softly",
+      "text": "[softly] Namaste.",
+      "seed": 314159,
+      "voiceId": "qDaEJf74mtxsdGvyyq8t",
+      "modelId": "eleven_v3",
+      "requestId": "CbFIuPAazBeZ9Pt0Kj3Q",
+      "durationSeconds": 1.0465,
+      "bytes": 26012,
+      "bitRate": 198849,
+      "codec": "opus",
+      "sampleRate": 48000,
+      "channels": 1
+    },
+    {
+      "order": 2,
+      "fileName": "namaste-warmly.ogg",
+      "title": "Namaste — warmly",
+      "text": "[warmly] Namaste.",
+      "seed": 271828,
+      "voiceId": "qDaEJf74mtxsdGvyyq8t",
+      "modelId": "eleven_v3",
+      "requestId": "NBjExLGs1lk4zQdkEBnj",
+      "durationSeconds": 0.9665,
+      "bytes": 26462,
+      "bitRate": 219033,
+      "codec": "opus",
+      "sampleRate": 48000,
+      "channels": 1
+    },
+    {
+      "order": 3,
+      "fileName": "namaste-reassuringly.ogg",
+      "title": "Namaste — reassuringly",
+      "text": "[reassuringly] Namaste.",
+      "seed": 161803,
+      "voiceId": "qDaEJf74mtxsdGvyyq8t",
+      "modelId": "eleven_v3",
+      "requestId": "E3OeNIrTY7FpI2VhBv38",
+      "durationSeconds": 1.3665,
+      "bytes": 31799,
+      "bitRate": 186163,
+      "codec": "opus",
+      "sampleRate": 48000,
+      "channels": 1
+    },
+    {
+      "order": 4,
+      "fileName": "namaste-thoughtfully.ogg",
+      "title": "Namaste — thoughtfully",
+      "text": "[thoughtfully] Namaste.",
+      "seed": 141421,
+      "voiceId": "qDaEJf74mtxsdGvyyq8t",
+      "modelId": "eleven_v3",
+      "requestId": "tGD8orPJPLCAbE2OgJD1",
+      "durationSeconds": 2.0065,
+      "bytes": 36004,
+      "bitRate": 143549,
+      "codec": "opus",
+      "sampleRate": 48000,
+      "channels": 1
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "metta-v1-qda-v3",
+  "meditationId": "metta",
+  "title": "Lanterns for Everyone",
+  "scriptRevision": "metta-night-sky-v1",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/catalogue/metta-v1-qda-v3-draft.md",
+  "durationSeconds": 570,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/metta-v1-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 314159,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Let your body settle into the place that is holding you. There is no special expression to wear and no particular feeling to manufacture. For now, simply arrive."
+    },
+    {
+      "startSeconds": 55,
+      "text": "Imagine a small lantern resting somewhere behind the centre of your chest. It does not need to blaze. A quiet amber glow is enough... a porch light left on for someone coming home late."
+    },
+    {
+      "startSeconds": 105,
+      "text": "Begin with yourself, exactly as you are today. Silently offer these words: may I be safe... may I be well... may I meet this moment with kindness. Let each phrase travel slowly, like a warm signal crossing a dark field."
+    },
+    {
+      "startSeconds": 155,
+      "text": "If the words feel easy, notice that. If they feel awkward, notice that too. Loving kindness is not a test of sincerity. You are only placing a lantern in the window and allowing it to shine."
+    },
+    {
+      "startSeconds": 205,
+      "text": "[reassuringly] Picture someone whose presence feels uncomplicated. Perhaps a friend, an animal, or a person who once offered you a little shelter. See their lantern appearing in the distance."
+    },
+    {
+      "startSeconds": 255,
+      "text": "Offer them the same wishes: may you be safe... may you be well... may you meet this moment with kindness. There is no need to send the words perfectly. Let them drift across the space between you."
+    },
+    {
+      "startSeconds": 305,
+      "text": "Now include someone you recognise but do not know well... a neighbour, a cashier, a face passing on the pavement. Imagine another small light joining the constellation."
+    },
+    {
+      "startSeconds": 355,
+      "text": "May you be safe... may you be well... may you meet this moment with kindness. For a few breaths, let the wish belong to a person whose whole story you cannot see."
+    },
+    {
+      "startSeconds": 405,
+      "text": "[thoughtfully] If it feels possible, allow the field to widen. Windows appear across sleeping streets, on distant hills, beside unfamiliar oceans. Every light belongs to a life with hopes, mistakes, and weather of its own."
+    },
+    {
+      "startSeconds": 455,
+      "text": "May we be safe... may we be well... may we meet this moment with kindness. You do not have to feel love for everyone. The practice is simply a willingness to leave one gentle signal switched on."
+    },
+    {
+      "startSeconds": 505,
+      "text": "Let the phrases grow quiet. Notice what remains in the body, whether it is warmth, resistance, softness, or nothing obvious. All of those responses are allowed beneath the same night sky."
+    },
+    {
+      "startSeconds": 540,
+      "text": "[softly] Feel the surface beneath you again. Carry one small lantern into whatever comes next. When it feels right, open your eyes."
+    }
+  ]
+}

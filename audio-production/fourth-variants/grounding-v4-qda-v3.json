@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "grounding-v4-qda-v3",
+  "meditationId": "grounding",
+  "title": "The Night Market Map",
+  "scriptRevision": "grounding-night-market-v4",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/grounding-v4-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/grounding-v4-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 601200,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Keep the eyes open if that helps you feel present. Imagine the room as a quiet night market with many simple coordinates home."
+    },
+    {
+      "startSeconds": 65,
+      "text": "Find five things you can see. Notice colour, edge, distance, shadow, or shine without needing them to be interesting."
+    },
+    {
+      "startSeconds": 115,
+      "text": "Choose one visible object and study a detail you had not noticed before, like a tiny sign above a familiar stall."
+    },
+    {
+      "startSeconds": 165,
+      "text": "Find four sensations of touch: feet on the floor, fabric on skin, air at the face, hands meeting an object."
+    },
+    {
+      "startSeconds": 215,
+      "text": "Press gently into one reliable surface and feel it press back. Let that contact mark your location."
+    },
+    {
+      "startSeconds": 265,
+      "text": "Listen for three sounds. Let each become a lantern placed somewhere on the map around you."
+    },
+    {
+      "startSeconds": 315,
+      "text": "Notice two scents, or simply two qualities of the air if scent is faint: cool, warm, dry, fresh, familiar."
+    },
+    {
+      "startSeconds": 365,
+      "text": "Notice one taste, perhaps neutral. You do not need to create a sensation that is not available."
+    },
+    {
+      "startSeconds": 415,
+      "text": "[reassuringly] If any sense is inaccessible or uncomfortable, skip it and choose another visible or tactile detail. The map has many routes."
+    },
+    {
+      "startSeconds": 465,
+      "text": "Say quietly: I am here, in this room, at this moment. Feel one breath arrive and leave while the market continues around you."
+    },
+    {
+      "startSeconds": 515,
+      "text": "Choose the next small practical action: stand, drink water, open a window, send a message, or remain seated a little longer."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[softly] Let the imaginary lanterns fade. Keep the coordinates of sight, touch, sound, scent, and taste as you continue."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "pratyahara-v1-qda-v3",
+  "meditationId": "pratyahara",
+  "title": "The Quiet Side of the Signal",
+  "scriptRevision": "pratyahara-night-sky-v1",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/catalogue/pratyahara-v1-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/pratyahara-v1-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 314259,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Find a position that can remain easy for a while. Let your eyes close if that feels comfortable, and imagine you are seated inside a quiet craft travelling without hurry."
+    },
+    {
+      "startSeconds": 60,
+      "text": "Begin with the furthest sound you can detect. Perhaps traffic, wind, pipes, or a room beyond this one. Let the outer instruments receive the signal without chasing its source."
+    },
+    {
+      "startSeconds": 110,
+      "text": "Now notice sounds closer to you... the room itself... clothing shifting... the small machinery of breathing. Nothing needs to disappear. You are simply changing which dial receives your attention."
+    },
+    {
+      "startSeconds": 160,
+      "text": "Notice light and darkness behind the eyelids. Colours may flicker like distant panels. Allow the visual channel to dim by itself, without squeezing the eyes or pushing anything away."
+    },
+    {
+      "startSeconds": 210,
+      "text": "Notice temperature where air touches the skin. Then feel the quieter information beneath it: pressure, weight, and the steady contact of the surface supporting you."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[thoughtfully] Pratyahara is not a locked door. The senses may keep sending messages. Imagine placing those messages on a gentle night mode, while attention turns toward the cabin within."
+    },
+    {
+      "startSeconds": 310,
+      "text": "Rest with the breath as sensation rather than sound. Feel a small movement at the nostrils, chest, or belly. Choose whichever signal asks the least effort from you."
+    },
+    {
+      "startSeconds": 360,
+      "text": "If an outer sound becomes bright again, let it arrive. There is no failed withdrawal. Notice it... allow it... then return to the quietest inner coordinate you can find."
+    },
+    {
+      "startSeconds": 410,
+      "text": "Imagine the craft crossing a region where the stars are hidden, yet navigation continues. For a few breaths, let simple inner sensation be enough to guide you."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[reassuringly] You do not have to become empty or perfectly still. Thoughts, sounds, and feelings can remain in the background while you rest nearer to the centre of experience."
+    },
+    {
+      "startSeconds": 510,
+      "text": "Begin turning the outer instruments up again. Include the room, the air, the sounds, and the shape of your body as one complete field."
+    },
+    {
+      "startSeconds": 570,
+      "text": "[softly] Move your hands and feet. Let the eyes open when ready, bringing a little of the quiet side of the signal with you."
+    }
+  ]
+}

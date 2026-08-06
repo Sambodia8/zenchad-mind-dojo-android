@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "id": "ajna-v2-qda-v3",
+  "meditationId": "ajna",
+  "title": "The Violet Compass",
+  "scriptRevision": "ajna-violet-compass-v2",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/ajna-v2-qda-v3-draft.md",
+  "durationSeconds": 720,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/ajna-v2-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 501000,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Sit comfortably and soften the muscles around the eyes. Let attention approach the space between the eyebrows without strain."
+    },
+    {
+      "startSeconds": 65,
+      "text": "Imagine a small violet compass resting behind the brow. It does not predict the future; it simply gives attention a place to return."
+    },
+    {
+      "startSeconds": 120,
+      "text": "Feel one inhale and exhale while the compass needle settles. Keep the gaze soft behind closed eyelids."
+    },
+    {
+      "startSeconds": 175,
+      "text": "When thought pulls north, south, yesterday, or tomorrow, notice the journey and return to the centre point."
+    },
+    {
+      "startSeconds": 230,
+      "text": "No colour or sensation is required. The compass can be imagined, faint, or absent while attention remains gentle."
+    },
+    {
+      "startSeconds": 285,
+      "text": "Broaden briefly to the whole forehead, temples, and face. Release any pressure before returning to the small point."
+    },
+    {
+      "startSeconds": 340,
+      "text": "[thoughtfully] Rest with centre and spaciousness together... one quiet needle floating inside a much wider sky."
+    },
+    {
+      "startSeconds": 395,
+      "text": "If an image appears, let it change. If darkness remains, let darkness be complete enough."
+    },
+    {
+      "startSeconds": 450,
+      "text": "Continue the simple cycle: wandering... noticing... returning to the violet coordinate."
+    },
+    {
+      "startSeconds": 505,
+      "text": "[reassuringly] Clarity may come or not come. The practice is attention, not a promise of special perception."
+    },
+    {
+      "startSeconds": 560,
+      "text": "Let the compass grow transparent. Include breath, chest, hands, and the contact points beneath you."
+    },
+    {
+      "startSeconds": 615,
+      "text": "Hear sounds in the room while keeping a faint sense of the brow. Inner and outer coordinates can coexist."
+    },
+    {
+      "startSeconds": 680,
+      "text": "[softly] Move your hands, open your eyes, and let the compass become an ordinary memory."
+    }
+  ]
+}

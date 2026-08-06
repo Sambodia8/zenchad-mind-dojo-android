@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "id": "ajna-v4-qda-v3",
+  "meditationId": "ajna",
+  "title": "The Planetarium's Violet Lens",
+  "scriptRevision": "ajna-planetarium-v4",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/ajna-v4-qda-v3-draft.md",
+  "durationSeconds": 720,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/ajna-v4-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 600600,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Sit or lie comfortably. Let the eyes rest behind closed lids and imagine entering a small planetarium after dark."
+    },
+    {
+      "startSeconds": 65,
+      "text": "Feel the body supported first... feet, seat, hands, and the natural movement of breath. Grounding is the floor beneath every constellation."
+    },
+    {
+      "startSeconds": 120,
+      "text": "Bring gentle attention to the space between the eyebrows. Keep the physical eyes soft and level, without trying to look upward."
+    },
+    {
+      "startSeconds": 175,
+      "text": "Imagine a violet lens there, no larger than a coin. It does not burn or push; it simply gathers scattered light."
+    },
+    {
+      "startSeconds": 230,
+      "text": "With each easy inhale, the lens becomes clear. With each exhale, unnecessary effort falls away like dust from a projector."
+    },
+    {
+      "startSeconds": 285,
+      "text": "A thought may paint a comet across the dome. Notice it, then return to the quiet lens at the centre."
+    },
+    {
+      "startSeconds": 340,
+      "text": "If you see darkness, colour, patterns, or nothing in particular, all are acceptable. The practice is attention, not special effects."
+    },
+    {
+      "startSeconds": 395,
+      "text": "Rest with the point of focus while the rest of the face remains spacious... jaw loose, tongue resting, forehead smooth."
+    },
+    {
+      "startSeconds": 450,
+      "text": "[reassuringly] If pressure or strain appears, widen attention to the whole head or open the eyes. Comfort is more important than intensity."
+    },
+    {
+      "startSeconds": 505,
+      "text": "Let the violet lens float in a much larger field of awareness, like one friendly planet among uncountable dark miles."
+    },
+    {
+      "startSeconds": 560,
+      "text": "Release the image. Keep only the calm precision of returning whenever the mind wandered."
+    },
+    {
+      "startSeconds": 615,
+      "text": "Feel the hands and feet again. Notice the room as the planetarium slowly raises its ordinary lights."
+    },
+    {
+      "startSeconds": 680,
+      "text": "[softly] Open your eyes when ready. Carry the lens as a metaphor for clear attention, not something you must keep seeing."
+    }
+  ]
+}

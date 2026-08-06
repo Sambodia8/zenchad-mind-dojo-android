@@ -1,0 +1,9 @@
+Mode: Faithful neat draft
+Model: Qwen/Qwen3-4B-Instruct-2507
+Generation elapsed: 13.5 seconds
+Generated tokens: 504
+Validation: Valid JSON with the required fields.
+
+Punctuation was normalised to ASCII when saving because the PowerShell capture
+did not preserve typographic quotation marks. The wording is otherwise the
+model output.

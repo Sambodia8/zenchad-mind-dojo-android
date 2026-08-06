@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Zen Chad</string>
+    <string name="title_activity_main">Zen Chad</string>
+    <string name="package_name">com.zenchad.minddojo</string>
+    <string name="custom_url_scheme">com.zenchad.minddojo</string>
+</resources>

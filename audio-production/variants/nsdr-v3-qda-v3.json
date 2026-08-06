@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "nsdr-v3-qda-v3",
+  "meditationId": "nsdr",
+  "title": "The Seaside Hotel Turns Down the Lights",
+  "scriptRevision": "nsdr-seaside-hotel-v3",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/nsdr-v3-qda-v3-draft.md",
+  "durationSeconds": 780,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/nsdr-v3-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 500500,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Lie down comfortably and let the surface receive you. This practice offers deep rest while leaving sleep to do its own important work."
+    },
+    {
+      "startSeconds": 65,
+      "text": "Imagine a seaside hotel after midnight. Begin at the left toes, foot, ankle, calf, knee, and thigh as rooms along the west wing go dark."
+    },
+    {
+      "startSeconds": 125,
+      "text": "Feel the right toes, foot, ankle, calf, knee, and thigh. Curtains close softly along the east wing."
+    },
+    {
+      "startSeconds": 185,
+      "text": "Notice both legs and the pelvis. Let their weight sink like luggage finally placed on the floor."
+    },
+    {
+      "startSeconds": 245,
+      "text": "Move through lower belly, lower back, ribs, chest, and upper back. The lift stops humming; the lobby clock keeps time alone."
+    },
+    {
+      "startSeconds": 305,
+      "text": "Feel left fingers, hand, wrist, forearm, elbow, upper arm, and shoulder. Let every key be returned to the desk."
+    },
+    {
+      "startSeconds": 365,
+      "text": "Now right fingers, hand, wrist, forearm, elbow, upper arm, and shoulder. Both arms can be entirely off duty."
+    },
+    {
+      "startSeconds": 425,
+      "text": "Notice throat and neck... jaw... lips... tongue... cheeks. Let the face become an unoccupied room."
+    },
+    {
+      "startSeconds": 485,
+      "text": "Feel the eyelids, space around the eyes, brow, forehead, temples, ears, back of the head, and scalp."
+    },
+    {
+      "startSeconds": 545,
+      "text": "Hear any distant sound as surf beyond the hotel windows. It can roll in and out without requiring attention."
+    },
+    {
+      "startSeconds": 605,
+      "text": "Sense the whole body at once, from scalp to toes. The building rests beside the ocean and breathing continues like a quiet tide."
+    },
+    {
+      "startSeconds": 665,
+      "text": "[thoughtfully] Nothing has to feel heavy. Nothing has to disappear. Let rest be the absence of another assignment."
+    },
+    {
+      "startSeconds": 715,
+      "text": "Remain here for several breaths while the hotel keeps its patient watch beside the dark water."
+    },
+    {
+      "startSeconds": 745,
+      "text": "[softly] Invite movement back into hands and feet. Open your eyes slowly, as though morning has reached the curtains."
+    }
+  ]
+}

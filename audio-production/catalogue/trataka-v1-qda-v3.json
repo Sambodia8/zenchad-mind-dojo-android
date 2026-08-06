@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "id": "trataka-v1-qda-v3",
+  "meditationId": "trataka",
+  "title": "A Friendly Star in the Flame",
+  "scriptRevision": "trataka-night-sky-v1",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/catalogue/trataka-v1-qda-v3-draft.md",
+  "durationSeconds": 740,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/trataka-v1-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 315159,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Sit comfortably with the flame near eye level. Keep your face and jaw relaxed. Blink whenever you need to, and stop if you notice pain, dizziness, or persistent eye discomfort."
+    },
+    {
+      "startSeconds": 35,
+      "text": "Let your gaze meet the centre of the flame without drilling into it. Imagine a friendly little star has come close enough to visit."
+    },
+    {
+      "startSeconds": 80,
+      "text": "Notice colour near the wick... the brighter edge... and the faint glow around it. Keep the eyes soft. Blinking is part of seeing."
+    },
+    {
+      "startSeconds": 130,
+      "text": "When attention wanders, return to one small detail in the flame. No need to freeze the rest of the world."
+    },
+    {
+      "startSeconds": 180,
+      "text": "[reassuringly] Let this be steady rather than severe. A star does not ask the sky to strain around it."
+    },
+    {
+      "startSeconds": 205,
+      "text": "Now close your eyes gently. Notice whether an after-image appears behind the eyelids. It may be bright, faint, colourful, moving, or absent."
+    },
+    {
+      "startSeconds": 250,
+      "text": "If an image is present, observe it without trying to hold it still. Let it drift like a tiny satellite across the dark."
+    },
+    {
+      "startSeconds": 300,
+      "text": "If there is no image, rest with the darkness itself. The practice does not require a visual effect."
+    },
+    {
+      "startSeconds": 350,
+      "text": "Feel the breath and the contact points beneath you while the inner sky changes on its own."
+    },
+    {
+      "startSeconds": 385,
+      "text": "[softly] Open your eyes and return to the flame. Let the gaze land lightly, as though recognising an old friend across a quiet room."
+    },
+    {
+      "startSeconds": 435,
+      "text": "Notice movement inside apparent stillness. The flame leans, recovers, brightens, and narrows while remaining itself."
+    },
+    {
+      "startSeconds": 485,
+      "text": "Rest attention at the wick for a while. Blink naturally. Each return can be gentle and immediate."
+    },
+    {
+      "startSeconds": 535,
+      "text": "Let the flame be the only small task for these next few breaths... a warm point of light in a wide and patient night."
+    },
+    {
+      "startSeconds": 565,
+      "text": "Close your eyes once more. Notice the remembered flame, the after-image, or simply the space where it had been."
+    },
+    {
+      "startSeconds": 620,
+      "text": "[thoughtfully] Imagine the little star becoming quieter and more distant. You do not need to preserve it. Let fading be part of the meditation."
+    },
+    {
+      "startSeconds": 675,
+      "text": "Broaden attention to the whole face, the whole body, and the sounds in the room. Allow the eyes to rest completely."
+    },
+    {
+      "startSeconds": 710,
+      "text": "[softly] Rub the hands together if that feels pleasant, then open your eyes slowly. Leave the flame behind and carry the steadiness."
+    }
+  ]
+}

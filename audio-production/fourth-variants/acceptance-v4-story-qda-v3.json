@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "acceptance-v4-story-qda-v3",
+  "meditationId": "acceptance",
+  "title": "The Repair Shop for Bent Constellations",
+  "scriptRevision": "acceptance-constellation-shop-v4",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/acceptance-v4-story-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/acceptance-v4-story-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 600800,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Let yourself arrive without improving the moment first. Imagine a repair shop open at midnight for constellations that have become bent or incomplete."
+    },
+    {
+      "startSeconds": 65,
+      "text": "Notice what is present in you now: tension, sadness, impatience, numbness, calm, or something without a name."
+    },
+    {
+      "startSeconds": 115,
+      "text": "Place the experience gently on the workbench. Say inwardly: this is what is here right now."
+    },
+    {
+      "startSeconds": 165,
+      "text": "Acceptance does not declare the damage beautiful or permanent. It simply turns on the lamp so you can see what you are actually holding."
+    },
+    {
+      "startSeconds": 215,
+      "text": "Find the feeling in the body. Give it room around the edges, as though the workbench were wider than the object resting there."
+    },
+    {
+      "startSeconds": 265,
+      "text": "Breathe beside it. You do not need to breathe into it, through it, or away from it. Company is enough."
+    },
+    {
+      "startSeconds": 315,
+      "text": "Thoughts may arrive with urgent repair instructions. Thank the mind for trying, then return to the plain fact of this sensation."
+    },
+    {
+      "startSeconds": 365,
+      "text": "[reassuringly] If the experience feels too large, look around the real room, feel your feet, and choose a smaller piece to meet."
+    },
+    {
+      "startSeconds": 415,
+      "text": "Imagine the constellation still shining while one point is missing. Wholeness can include a gap without pretending the gap is not there."
+    },
+    {
+      "startSeconds": 465,
+      "text": "Repeat softly: this belongs to the current sky... I do not have to like it... I can stop arguing with its presence for one breath."
+    },
+    {
+      "startSeconds": 515,
+      "text": "Let the workbench, tools, and midnight windows fade. Feel the larger awareness holding every imperfect star."
+    },
+    {
+      "startSeconds": 570,
+      "text": "[softly] Return to the room. Take the next kind and practical step, leaving the universe unfinished enough to keep becoming."
+    }
+  ]
+}

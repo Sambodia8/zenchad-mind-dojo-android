@@ -1,0 +1,23 @@
+{
+  "title": "Navigating a Complex Conversation",
+  "experience": "Two to five concise first-person paragraphs",
+  "observations": [
+    "The speaker is clearly feeling overwhelmed and frustrated by the situation.",
+    "There’s a sense of boundary setting and a desire for space, indicating a need for self-care.",
+    "The speaker is attempting to manage a challenging interaction with a potentially volatile individual."
+  ],
+  "takeaways": [
+    "Establish clear boundaries regarding communication expectations.",
+    "Recognize the potential for emotional reactivity and prioritize self-care.",
+    "Assess the need for a pause in the conversation to regain composure."
+  ],
+  "nextSteps": [
+    "Schedule a dedicated time to revisit the conversation with a clear plan for addressing the underlying issues.",
+    "Consider a brief, structured conversation focusing on specific needs and requests.",
+    "Implement a strategy for managing notification settings to minimize interruptions."
+  ],
+  "reflectionQuestions": [
+    "What specific aspects of the interaction are causing the most distress?",
+    "How can the speaker proactively communicate their needs without escalating the situation?"
+  ]
+}

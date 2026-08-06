@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "focused-attention-v1-qda-v3",
+  "meditationId": "focused-attention",
+  "title": "A Small Satellite Comes Home",
+  "scriptRevision": "focused-attention-night-sky-v1",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/catalogue/focused-attention-v1-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/focused-attention-v1-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 314959,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Find a steady position and let the body be comfortable enough to fade into the background. Choose the feeling of breathing at the nostrils, chest, or belly as your anchor."
+    },
+    {
+      "startSeconds": 60,
+      "text": "Notice one inhale from beginning to end... then one exhale. You do not need to improve either one. Your only task is to know when the breath is here."
+    },
+    {
+      "startSeconds": 110,
+      "text": "Imagine attention as a small satellite entering an easy orbit around the breath. It does not need a perfect circle. It only needs somewhere to return."
+    },
+    {
+      "startSeconds": 160,
+      "text": "Sooner or later, attention will wander. When you notice, quietly name what carried it: thinking... sound... feeling... planning. Then guide the satellite home."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[reassuringly] The moment of noticing is not a mistake. It is the exact moment the practice becomes alive. Return without scolding the mind for travelling."
+    },
+    {
+      "startSeconds": 260,
+      "text": "Stay with the next three breaths. One... arriving and leaving... Two... arriving and leaving... Three... arriving and leaving."
+    },
+    {
+      "startSeconds": 310,
+      "text": "Let go of counting. Feel the most vivid part of the breath, even if it is only a tiny coolness, movement, or pressure."
+    },
+    {
+      "startSeconds": 360,
+      "text": "If restlessness appears, include it for one moment. Feel where it lives in the body, then return to the breath without beginning an argument."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[thoughtfully] Attention may leave a hundred times. A hundred gentle returns are not a broken meditation; they are a sky full of successful homecomings."
+    },
+    {
+      "startSeconds": 460,
+      "text": "Rest with fewer words now. Breath... wandering... noticing... returning. Let the simple orbit continue."
+    },
+    {
+      "startSeconds": 510,
+      "text": "Begin widening attention beyond the breath. Include the whole body, the sounds around you, and the space of the room."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[softly] Let the satellite roam. Move your hands and feet, open your eyes when ready, and carry the skill of returning into the next thing."
+    }
+  ]
+}

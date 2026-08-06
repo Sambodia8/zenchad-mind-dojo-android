@@ -1,0 +1,27 @@
+{
+  "title": "Afternoon with Hannah: USB, Anime, and a 12-Minute Voice Message",
+  "experience": "I got up after one and went downstairs to sort a USB for Dayton that had anime on it. I plugged it into the TV to watch while eating breakfast, but it didn’t work, so I switched to YouTube. I watched a video about AI agents controlling lemonade stands, which felt interesting but unrelated. I was expecting a conversation with Hannah at 3 p.m., so I looked through the emotional playbook we’d built — a rule-based guide for discussing emotions. I found myself disappointed with her previous answers, which were all self-focused, like 'how do I feel when Sam does X?' with no mention of what Sam could do instead. I thought she’d be better off rambling into a microphone, so I sent her a prompt to record her responses to the questions. I tried calling her at 3:10 and 3:30, but she wasn’t awake until quarter to 4. After sending her the prompt and clarifying what I wanted — at least two questions completed, with a read-through — she started arguing about the 2 a.m. cutoff we’d agreed on. It took her an hour to accept it, and she’s been resistant to the playbook overall, saying it feels unfair and that she feels ignored and stressed. She asked me directly what I wanted from her, and I clarified I needed at least two answers and a read-through. I also sent her a Spotify link, even though I don’t use it, and created an AI journaling tool for her to use in a rambly way. When she sent a 12-minute voice message, I told her not to send me messages like that, saying I needed space. I went to do a Japanese lesson on Duolingo and came back to send her a screenshot showing her name in a message, with the voice message still there. I haven’t listened to it and don’t plan to. I’m currently on a self-soothing break until 8 p.m., and she hasn’t responded since, though I’m not sure if she’ll send another message.",
+  "observations": [
+    "Hannah’s previous answers to emotion-related questions were self-focused, with no references to what Sam could do to support her.",
+    "She struggled with typing and expressed difficulty answering questions, suggesting a lack of prior experience in emotional conversations.",
+    "The emotional playbook appears to be emotionally biased toward Hannah, with strong expectations placed on Sam to protect her emotions, while offering minimal obligations on her side.",
+    "Hannah repeatedly expressed feelings of being ignored, stressed, and unheard, especially when questioned about completing the playbook tasks.",
+    "She sent a 12-minute voice message after being explicitly told not to, indicating a pattern of over-communication that disrupts the space needed for self-soothing."
+  ],
+  "takeaways": [
+    "The current setup of the emotional playbook may be unbalanced, placing disproportionate pressure on Sam to respond while offering little accountability to Hannah.",
+    "Hannah feels stressed and ignored when asked to complete tasks, suggesting the process is not aligned with her emotional readiness or comfort level.",
+    "Direct communication about expectations — such as needing two completed questions — was clear, but she still resisted and complained about the process.",
+    "Sending a 12-minute voice message after being told not to indicates a potential need for clearer boundaries around communication frequency and format.",
+    "I need space to self-soothe, and her continued messaging without consent is disrupting that process."
+  ],
+  "nextSteps": [
+    "Send Hannah a clear message outlining the next steps in the emotional conversation, including a request for her to confirm whether she agrees with the idea of both reading the playbook before the discussion.",
+    "Review the emotional playbook together in a future session to assess whether the balance of responsibilities is fair and whether adjustments are needed.",
+    "Set a boundary with a written note or message stating that I will not respond to voice messages unless they are under a specific time limit or format."
+  ],
+  "reflectionQuestions": [
+    "Do you agree with me that both of us should read through the emotional playbook before having the conversation about emotions?",
+    "What would make the emotional questions feel less overwhelming or more manageable for you?"
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "urge-surfing-v1-qda-v3",
+  "meditationId": "urge-surfing",
+  "title": "The Tide Does Not Give Orders",
+  "scriptRevision": "urge-surfing-night-sky-v1",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/catalogue/urge-surfing-v1-qda-v3-draft.md",
+  "durationSeconds": 540,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/urge-surfing-v1-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 314759,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Settle somewhere safe enough to pause. This practice is for observing an ordinary urge or craving. If there is an immediate safety or medical concern, seek appropriate help rather than relying on meditation."
+    },
+    {
+      "startSeconds": 60,
+      "text": "Name the urge quietly without turning it into an instruction. Wanting is here... pulling is here... a wave is beginning to gather."
+    },
+    {
+      "startSeconds": 110,
+      "text": "Where does it appear in the body? Perhaps the mouth, hands, chest, belly, or a restless electricity in the legs. Choose one place to observe."
+    },
+    {
+      "startSeconds": 160,
+      "text": "Notice its shape... temperature... pressure... and movement. You are studying the water, not wrestling the ocean."
+    },
+    {
+      "startSeconds": 210,
+      "text": "Imagine the urge as a luminous tide beneath a midnight pier. It can rise without becoming a command. A wave is an event, not a captain."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[reassuringly] If the urge feels stronger for a moment, that does not mean the practice is failing. Crests are part of waves. Let breathing remain ordinary while you watch."
+    },
+    {
+      "startSeconds": 310,
+      "text": "Rate the intensity gently from zero to ten... then become curious about whether the number stays fixed. No need to force it downward."
+    },
+    {
+      "startSeconds": 360,
+      "text": "Notice any thought that bargains, predicts, or demands. Hear it like a radio from a boat offshore. The message can play without steering your hands."
+    },
+    {
+      "startSeconds": 410,
+      "text": "Look again at the body sensation. Has an edge softened, moved, spread, sharpened, or stayed the same? Change can be subtle, and staying the same is also information."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[thoughtfully] You are allowed to choose your next action after the wave, rather than from its loudest point. For now, remain on the pier for a few more breaths."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[softly] Feel your feet or the surface beneath you. Let the tide continue without supervision, and return to the room one steady coordinate at a time."
+    }
+  ]
+}

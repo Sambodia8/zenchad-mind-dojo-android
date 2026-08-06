@@ -1,0 +1,50 @@
+{
+  "name": "zenchad-android",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "audio:preview": "node scripts/generate-elevenlabs-preview.mjs",
+    "audio:namaste": "node scripts/generate-namaste-endings.mjs",
+    "audio:meditation": "node scripts/generate-timed-meditation.mjs",
+    "audio:prepare-catalogue": "node scripts/prepare-audio-catalogue.mjs",
+    "audio:catalogue": "node scripts/generate-meditation-catalogue.mjs",
+    "audio:prepare-variants": "node scripts/prepare-audio-catalogue.mjs --source audio-production/variant-catalogue.json --output-dir audio-production/variants",
+    "audio:variants": "node scripts/generate-meditation-catalogue.mjs --index audio-production/variants/catalogue-index.json",
+    "audio:prepare-fourth-variants": "node scripts/prepare-audio-catalogue.mjs --source audio-production/fourth-variant-catalogue.json --output-dir audio-production/fourth-variants",
+    "audio:fourth-variants": "node scripts/generate-meditation-catalogue.mjs --index audio-production/fourth-variants/catalogue-index.json",
+    "audio:soundscape-pilot": "node scripts/generate-soundscape-pilot.mjs --manifest audio-production/soundscape-pilot.json",
+    "audio:ui-sfx": "node scripts/generate-ui-sfx.mjs --manifest audio-production/ui-sfx.json",
+    "audio:treblo-sample": "node scripts/generate-treblo-sample.mjs --manifest audio-production/treblo-metta-sample.json",
+    "audio:soundscapes:treblo": "node scripts/generate-soundscape-production.mjs --manifest audio-production/treblo-soundscape-production.json",
+    "audio:soundscapes:elevenlabs": "node scripts/generate-soundscape-production.mjs --manifest audio-production/elevenlabs-music-a-production.json",
+    "audio:soundscapes:prepare": "node scripts/prepare-soundscape-catalogue.mjs --manifest audio-production/soundscape-catalogue.json",
+    "audio:retime-acceptance": "node scripts/retime-acceptance-opening.mjs",
+    "audio:verify-catalogue": "node scripts/verify-audio-catalogue.mjs",
+    "android:add": "cap add android",
+    "android:sync": "npm run build && cap sync android",
+    "android:open": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor-community/keep-awake": "7.1.0",
+    "@capacitor/android": "7.6.8",
+    "@capacitor/app": "7.1.2",
+    "@capacitor/core": "7.6.8",
+    "@capacitor/local-notifications": "7.0.7",
+    "@capacitor/splash-screen": "^7.0.5",
+    "lucide-react": "0.563.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "7.6.8",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "5.1.1",
+    "typescript": "5.8.2",
+    "vite": "6.4.3"
+  }
+}

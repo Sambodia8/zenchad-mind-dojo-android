@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "title": "ZenChad Namaste ending variations",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "voiceName": "adam owls soothing v2",
+  "modelId": "eleven_v3",
+  "outputFormat": "opus_48000_192",
+  "outputDirectory": "public/assets/audio/endings",
+  "maxGenerations": 4,
+  "maxApprovedCharacters": 120,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1.0
+  },
+  "samples": [
+    {
+      "order": 1,
+      "fileName": "namaste-softly.ogg",
+      "title": "Namaste — softly",
+      "text": "[softly] Namaste.",
+      "seed": 314159
+    },
+    {
+      "order": 2,
+      "fileName": "namaste-warmly.ogg",
+      "title": "Namaste — warmly",
+      "text": "[warmly] Namaste.",
+      "seed": 271828
+    },
+    {
+      "order": 3,
+      "fileName": "namaste-reassuringly.ogg",
+      "title": "Namaste — reassuringly",
+      "text": "[reassuringly] Namaste.",
+      "seed": 161803
+    },
+    {
+      "order": 4,
+      "fileName": "namaste-thoughtfully.ogg",
+      "title": "Namaste — thoughtfully",
+      "text": "[thoughtfully] Namaste.",
+      "seed": 141421
+    }
+  ]
+}

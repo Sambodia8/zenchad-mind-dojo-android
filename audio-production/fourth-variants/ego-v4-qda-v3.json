@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "ego-v4-qda-v3",
+  "meditationId": "ego",
+  "title": "The Theatre After the Applause",
+  "scriptRevision": "ego-theatre-v4",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/ego-v4-qda-v3-draft.md",
+  "durationSeconds": 540,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/ego-v4-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 600500,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Settle into breathing and imagine a theatre after the audience has gone home. The stage remains, but nobody needs to perform."
+    },
+    {
+      "startSeconds": 60,
+      "text": "Notice a familiar role you play: helper, achiever, outsider, expert, troublemaker, or something else. See it as a costume resting on a chair."
+    },
+    {
+      "startSeconds": 110,
+      "text": "The costume may be useful and meaningful. Still, ask quietly: when I am not wearing this role, what notices its absence?"
+    },
+    {
+      "startSeconds": 160,
+      "text": "A thought enters like an actor rehearsing one last line. Who hears the thought? Do not answer in words too quickly."
+    },
+    {
+      "startSeconds": 210,
+      "text": "An emotion may cross the stage with dramatic lighting. What is aware of the lighting, the feeling, and the wish for it to change?"
+    },
+    {
+      "startSeconds": 260,
+      "text": "Notice the body breathing in the front row. Is awareness located in one exact seat, or is that another idea appearing?"
+    },
+    {
+      "startSeconds": 310,
+      "text": "[thoughtfully] Let the question remain open. This is curiosity, not an attempt to erase your history, personality, or practical self."
+    },
+    {
+      "startSeconds": 360,
+      "text": "Imagine the stage lights dimming. Names, opinions, memories, and plans can rest backstage without being destroyed."
+    },
+    {
+      "startSeconds": 410,
+      "text": "For a few breaths, experience simple noticing before the next line is spoken. Nothing needs to claim ownership of the silence."
+    },
+    {
+      "startSeconds": 460,
+      "text": "Now allow your ordinary identity to return, like a favourite coat chosen consciously rather than mistaken for the whole sky."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[softly] Hear the room around you. The theatre is not empty; it is spacious enough for every role and the quiet behind them."
+    }
+  ]
+}

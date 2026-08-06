@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "sound-awareness-v2-qda-v3",
+  "meditationId": "sound-awareness",
+  "title": "A Forest of Small Transmissions",
+  "scriptRevision": "sound-forest-v2",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/sound-awareness-v2-qda-v3-draft.md",
+  "durationSeconds": 405,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/sound-awareness-v2-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 500600,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Close your eyes if comfortable and imagine every sound as a small transmitter hidden in a night forest."
+    },
+    {
+      "startSeconds": 55,
+      "text": "Hear the whole forest at once. Let sound arrive before the mind decides what made it."
+    },
+    {
+      "startSeconds": 95,
+      "text": "Choose the most distant signal. Rest attention there as though a tiny lamp is blinking beyond the trees."
+    },
+    {
+      "startSeconds": 135,
+      "text": "Now find a middle-distance sound... something neither far away nor inside your body."
+    },
+    {
+      "startSeconds": 175,
+      "text": "Tune to the nearest sound: breath, fabric, swallowing, or a quiet movement beside you."
+    },
+    {
+      "startSeconds": 215,
+      "text": "Move from far... to middle... to near... allowing attention to travel without rushing."
+    },
+    {
+      "startSeconds": 255,
+      "text": "Notice a sound beginning, changing, and ending. No transmission remains exactly itself."
+    },
+    {
+      "startSeconds": 300,
+      "text": "[thoughtfully] Release the categories and hear one living field. The forest needs no conductor."
+    },
+    {
+      "startSeconds": 345,
+      "text": "Include the body that is listening and the silence that appears between signals."
+    },
+    {
+      "startSeconds": 375,
+      "text": "[softly] Open your eyes. Let the forest become an ordinary room again, still full of small transmissions."
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+Model: Qwen/Qwen3-1.7B
+Generation elapsed: 8.5 seconds
+Generated tokens: 458
+Validation: Invalid JSON: Expecting ',' delimiter at line 25, column 5.

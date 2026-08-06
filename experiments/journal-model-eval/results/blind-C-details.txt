@@ -1,0 +1,4 @@
+Model: google/gemma-3-1b-it
+Generation elapsed: 11.0 seconds
+Generated tokens: 257
+Validation: Valid JSON with the required fields.

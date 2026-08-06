@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "id": "trataka-v2-qda-v3",
+  "meditationId": "trataka",
+  "title": "The Ember in the Snow",
+  "scriptRevision": "trataka-ember-v2",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/trataka-v2-qda-v3-draft.md",
+  "durationSeconds": 740,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/trataka-v2-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 501600,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Place the flame near eye level and sit comfortably. Blink whenever needed, and stop for pain, dizziness, excessive tearing, or lasting eye discomfort."
+    },
+    {
+      "startSeconds": 40,
+      "text": "Let the flame become one warm ember resting in a wide field of snow. Keep the gaze gentle rather than rigid."
+    },
+    {
+      "startSeconds": 90,
+      "text": "Notice the blue near the wick, the gold above it, and the soft halo around the edges."
+    },
+    {
+      "startSeconds": 140,
+      "text": "Blink naturally. Each time the eyes reopen, meet the ember without trying to pin it in place."
+    },
+    {
+      "startSeconds": 185,
+      "text": "Allow attention to rest on the quiet contrast between warmth and darkness."
+    },
+    {
+      "startSeconds": 205,
+      "text": "Close your eyes. Notice any after-image floating behind the eyelids like an ember beneath snow."
+    },
+    {
+      "startSeconds": 255,
+      "text": "Let the image change colour, move, fade, or disappear. There is nothing to preserve."
+    },
+    {
+      "startSeconds": 305,
+      "text": "If no image appears, rest with the dark field itself and feel the body breathing."
+    },
+    {
+      "startSeconds": 355,
+      "text": "Allow the eye muscles to soften completely."
+    },
+    {
+      "startSeconds": 385,
+      "text": "[softly] Open the eyes and return to the flame. Notice movement without losing the centre."
+    },
+    {
+      "startSeconds": 435,
+      "text": "The ember leans and rises, never holding one shape for long."
+    },
+    {
+      "startSeconds": 485,
+      "text": "Stay with colour and light while allowing easy blinks."
+    },
+    {
+      "startSeconds": 535,
+      "text": "Let the wide dark room support the small bright point."
+    },
+    {
+      "startSeconds": 565,
+      "text": "Close your eyes again. Watch the remembered ember or the simple darkness where it had been."
+    },
+    {
+      "startSeconds": 620,
+      "text": "Feel forehead, cheeks, jaw, and eyes becoming quiet as snow."
+    },
+    {
+      "startSeconds": 675,
+      "text": "Widen to the whole body and the sounds around you."
+    },
+    {
+      "startSeconds": 710,
+      "text": "[softly] Open your eyes slowly. Leave the ember in the flame and carry only the steadiness."
+    }
+  ]
+}

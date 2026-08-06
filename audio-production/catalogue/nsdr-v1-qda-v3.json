@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "id": "nsdr-v1-qda-v3",
+  "meditationId": "nsdr",
+  "title": "When the City Powers Down",
+  "scriptRevision": "nsdr-night-sky-v1",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/catalogue/nsdr-v1-qda-v3-draft.md",
+  "durationSeconds": 780,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/nsdr-v1-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 314359,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Lie down in a position that feels sustainable. Support your head or knees if that helps. This is a practice of rest, not a replacement for sleep, and there is nothing you need to achieve."
+    },
+    {
+      "startSeconds": 60,
+      "text": "Imagine the body as a small city after midnight. The roads are quiet, the windows are dim, and one district at a time can set down its work."
+    },
+    {
+      "startSeconds": 110,
+      "text": "Bring attention to the toes of the left foot... the sole... the heel... the ankle. You do not need to move them. Notice whatever sensation is present as those streetlights soften."
+    },
+    {
+      "startSeconds": 160,
+      "text": "Travel through the left calf... the knee... the thigh... and the whole left leg. Let its weight be received by the surface beneath you."
+    },
+    {
+      "startSeconds": 210,
+      "text": "Now the toes of the right foot... the sole... the heel... the ankle. Then the calf... the knee... and the thigh. Allow the right leg to become as heavy or as ordinary as it is."
+    },
+    {
+      "startSeconds": 260,
+      "text": "Notice both legs together. Perhaps there is warmth, tingling, pressure, or very little at all. The city does not require every window to go dark in the same way."
+    },
+    {
+      "startSeconds": 310,
+      "text": "Bring attention to the pelvis and lower back. Feel the broad architecture of this area resting. Let the belly move naturally, with no need to deepen or control the breath."
+    },
+    {
+      "startSeconds": 360,
+      "text": "Notice the lower ribs... the centre of the chest... the upper back. With each easy exhale, imagine one more office switching off its blue computer glow."
+    },
+    {
+      "startSeconds": 410,
+      "text": "Move into the fingers of the left hand... the palm... the wrist... the forearm... the elbow... and the upper arm. Let the entire left arm be carried."
+    },
+    {
+      "startSeconds": 460,
+      "text": "Now the fingers of the right hand... the palm... the wrist... the forearm... the elbow... and the upper arm. Nothing to hold. Nothing to put down correctly."
+    },
+    {
+      "startSeconds": 510,
+      "text": "Notice both shoulders. Give them permission to remain exactly where they are, while the muscles around them receive the message that no immediate task is waiting."
+    },
+    {
+      "startSeconds": 560,
+      "text": "Bring attention to the throat... the jaw... the mouth... the cheeks. Let the tongue rest. Allow the tiny control room behind the face to become quiet."
+    },
+    {
+      "startSeconds": 620,
+      "text": "Notice the eyes in their sockets... the space between the eyebrows... the forehead... the scalp. Imagine the last high window in the city turning from silver to dark."
+    },
+    {
+      "startSeconds": 680,
+      "text": "[reassuringly] Feel the whole body at once, lying here and breathing by itself. You may remain awake, drift near sleep, or notice a busy mind. Every version of the practice is allowed."
+    },
+    {
+      "startSeconds": 745,
+      "text": "[softly] Deepen the breath a little. Move fingers and toes, then stretch if you wish. Open your eyes slowly and let the city wake one light at a time."
+    }
+  ]
+}

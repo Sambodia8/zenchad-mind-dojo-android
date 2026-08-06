@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "focused-attention-v4-qda-v3",
+  "meditationId": "focused-attention",
+  "title": "The Telescope Chooses One Star",
+  "scriptRevision": "focus-telescope-v4",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/focused-attention-v4-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/focused-attention-v4-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 601100,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Settle into a stable position and choose one place where breathing is easy to feel. This will be your single star."
+    },
+    {
+      "startSeconds": 65,
+      "text": "Imagine a small telescope turning toward that sensation: nostrils, chest, belly, or another clear point."
+    },
+    {
+      "startSeconds": 115,
+      "text": "Follow one inhale from beginning to end... then one exhale. Let the telescope remain light in your hands."
+    },
+    {
+      "startSeconds": 165,
+      "text": "Attention will discover other constellations: plans, sounds, memories, and interesting mistakes. Notice where it went."
+    },
+    {
+      "startSeconds": 215,
+      "text": "Name the distraction softly if useful... thinking... hearing... feeling... then turn back to the chosen star."
+    },
+    {
+      "startSeconds": 265,
+      "text": "[reassuringly] The return is the exercise. Wandering does not cancel the meditation; it creates another repetition."
+    },
+    {
+      "startSeconds": 315,
+      "text": "Stay with three natural breaths... one... two... three... and begin again whenever counting is lost."
+    },
+    {
+      "startSeconds": 365,
+      "text": "Notice the exact instant an inhale appears and the instant it becomes an exhale."
+    },
+    {
+      "startSeconds": 415,
+      "text": "Let effort soften. Clear focus can be interested and awake without becoming narrow or severe."
+    },
+    {
+      "startSeconds": 465,
+      "text": "For a little longer, keep choosing the same star. Each return polishes the lens."
+    },
+    {
+      "startSeconds": 515,
+      "text": "Now widen attention to include the whole breathing body while the original point remains somewhere within it."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[softly] Open your eyes when ready. Carry the skill of returning, not a demand to remain perfectly fixed."
+    }
+  ]
+}

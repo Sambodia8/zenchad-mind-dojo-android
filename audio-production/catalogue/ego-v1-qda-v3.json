@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "ego-v1-qda-v3",
+  "meditationId": "ego",
+  "title": "The Sky Behind the Mirror",
+  "scriptRevision": "ego-inquiry-night-sky-v1",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/catalogue/ego-v1-qda-v3-draft.md",
+  "durationSeconds": 540,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/ego-v1-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 314459,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Settle into an upright or supported position. Let breathing happen naturally. This inquiry is not asking you to erase yourself; it is an experiment in noticing."
+    },
+    {
+      "startSeconds": 60,
+      "text": "Notice a thought as it appears. It may be a sentence, picture, memory, or plan. Imagine it briefly reflected in a dark window."
+    },
+    {
+      "startSeconds": 110,
+      "text": "Quietly ask: who is aware of this thought? Do not rush to answer with another sentence. Let the question open like a window rather than close like a quiz."
+    },
+    {
+      "startSeconds": 160,
+      "text": "A feeling may appear. Notice its texture in the body, then ask: what is noticing this feeling? Rest for a moment before the mind begins writing its biography."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[thoughtfully] Names, roles, and stories are useful reflections. Friend... worker... dreamer... person who got something wrong. See whether each description can be noticed without becoming the whole sky."
+    },
+    {
+      "startSeconds": 260,
+      "text": "Notice that sounds are known... sensations are known... thoughts are known. What is the quality of the knowing itself? You do not need a mystical answer."
+    },
+    {
+      "startSeconds": 310,
+      "text": "If the mind says, I found it, notice that thought too. Another reflection has appeared on the glass. Let it be present inside the wider field."
+    },
+    {
+      "startSeconds": 360,
+      "text": "For several breaths, drop the question. Rest as simple noticing... open enough for a sound, a sensation, or a passing thought to arrive and leave."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[reassuringly] Nothing needs to dissolve. Your ordinary self can remain useful and intact. This practice only reminds us that a reflection is not the entire night."
+    },
+    {
+      "startSeconds": 460,
+      "text": "Feel the body sitting or lying here. Include your name, your history, and the room around you as parts of experience rather than problems to solve."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[softly] Let the question go. Move gently, open your eyes when ready, and return as the very ordinary, wonderfully unfinished person you are."
+    }
+  ]
+}

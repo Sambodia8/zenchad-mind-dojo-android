@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "title": "Zen Chad UI sound effects",
+  "outputDirectory": "public/assets/audio/ui",
+  "outputFormat": "mp3_44100_128",
+  "modelId": "eleven_text_to_sound_v2",
+  "promptInfluence": 0.62,
+  "maxGenerations": 9,
+  "maxApprovedSeconds": 12,
+  "sounds": [
+    {
+      "id": "xp-roll",
+      "fileName": "xp-roll.mp3",
+      "durationSeconds": 1.8,
+      "prompt": "A satisfying rolling experience-points gain sound for a calm but playful meditation and stretching app: a quick sequence of soft wooden and brushed-brass clicks stepping upward, like several points being collected one after another, ending with a tiny bright chime. Rhythmic, rewarding, tactile, polished, no voice, no harsh digital beep, no arcade coins, no melody."
+    },
+    {
+      "id": "victory",
+      "fileName": "victory.mp3",
+      "durationSeconds": 1.6,
+      "prompt": "A unique warm victory sting for a serene meditation and stretching app: two gentle harp plucks rising into a rich resonant harp-and-crystal chord, with a soft low ceremonial drum hit underneath and a clear final ta-da flourish. A calm, premium sense of achievement, uplifting but not loud, no voice, no arcade fanfare, no harsh digital beep."
+    },
+    {
+      "id": "wheel-spin",
+      "fileName": "wheel-spin.mp3",
+      "durationSeconds": 2.3,
+      "prompt": "A single continuous meditation roulette wheel spin: smooth tactile wooden dial rotating with quick delicate brushed-brass ticks that naturally slow down over two seconds. Warm, refined, playful and calming. Dry close sound, no music, no voice, no whistle, no harsh impact."
+    },
+    {
+      "id": "wheel-land",
+      "fileName": "wheel-land.mp3",
+      "durationSeconds": 1.3,
+      "prompt": "A meditation roulette wheel gently landing on its result: one satisfying soft wooden click followed by a short warm singing-bowl shimmer. Calm sense of discovery and completion. Refined, intimate, no whistle, no voice, no melody, no arcade sound."
+    },
+    {
+      "id": "confirm",
+      "fileName": "confirm.mp3",
+      "durationSeconds": 0.75,
+      "prompt": "A very short gentle confirmation sound for a premium meditation app: soft bamboo tap with a tiny warm brass chime bloom. Reassuring, grounded, polished, quiet, no voice, no digital beep, no melody."
+    },
+    {
+      "id": "select",
+      "fileName": "select.mp3",
+      "durationSeconds": 0.5,
+      "prompt": "A minimal soft UI selection sound for a calming meditation app: one subtle rounded wooden bead tap with a faint airy texture. Warm, tactile, quiet, no clicky plastic, no voice, no digital beep."
+    },
+    {
+      "id": "tab",
+      "fileName": "tab.mp3",
+      "durationSeconds": 0.5,
+      "prompt": "A minimal tab-change sound for a calming meditation app: a tiny smooth paper-and-air sweep ending in a soft wooden tick. Light, elegant, relaxed, quiet, no voice, no whistle, no digital beep."
+    },
+    {
+      "id": "back",
+      "fileName": "back.mp3",
+      "durationSeconds": 0.6,
+      "prompt": "A subtle back-navigation sound for a calming meditation app: short soft reverse airy brush resolving into a muted wooden tap. Gentle, natural, unobtrusive, no voice, no whistle, no digital beep."
+    }
+  ]
+}

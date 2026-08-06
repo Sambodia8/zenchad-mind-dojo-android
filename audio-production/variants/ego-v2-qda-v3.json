@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "ego-v2-qda-v3",
+  "meditationId": "ego",
+  "title": "The Museum of Borrowed Costumes",
+  "scriptRevision": "ego-costume-museum-v2",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/ego-v2-qda-v3-draft.md",
+  "durationSeconds": 540,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/ego-v2-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 500800,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Settle and let breathing become ordinary. Imagine walking through a museum where every role you have worn is displayed as a costume."
+    },
+    {
+      "startSeconds": 60,
+      "text": "Notice one role: friend, worker, child, helper, outsider, expert. See it hanging beneath a small museum light."
+    },
+    {
+      "startSeconds": 110,
+      "text": "Quietly ask: what notices this role? Wait without replacing the question with a clever answer."
+    },
+    {
+      "startSeconds": 160,
+      "text": "A memory appears like an old coat. It belongs to your history, yet it can also be observed from here."
+    },
+    {
+      "startSeconds": 210,
+      "text": "A judgment appears: I am this kind of person. Place that sentence beside the costume and notice the space around both."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[thoughtfully] Roles are not false; they are useful clothing for particular rooms. The inquiry asks whether the wearer is larger than any single outfit."
+    },
+    {
+      "startSeconds": 310,
+      "text": "Notice a sound, a sensation, and a thought. Each becomes an exhibit inside awareness. What is the open museum that contains them?"
+    },
+    {
+      "startSeconds": 360,
+      "text": "If the mind produces an answer, display that answer too. Let it stand beneath glass for a moment."
+    },
+    {
+      "startSeconds": 410,
+      "text": "Drop the question and rest as simple noticing. Costumes remain, stories remain, and the room around them stays spacious."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[reassuringly] You do not need to lose identity. You can wear your name gently without sewing it to the sky."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[softly] Feel the body here. Leave the museum wearing whatever role the next moment needs, and open your eyes when ready."
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "pratyahara-v3-qda-v3",
+  "meditationId": "pratyahara",
+  "title": "The Library After Closing",
+  "scriptRevision": "pratyahara-library-v3",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/pratyahara-v3-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/pratyahara-v3-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 500300,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Settle as though you have entered a library just after closing. The building remains awake, but no new information is required."
+    },
+    {
+      "startSeconds": 60,
+      "text": "Listen to distant sounds as books being returned somewhere far between the shelves. Let each thump and whisper belong to its own aisle."
+    },
+    {
+      "startSeconds": 110,
+      "text": "Notice nearby sounds, then imagine the listening desk lowering its lamp. Hearing continues without becoming the main assignment."
+    },
+    {
+      "startSeconds": 160,
+      "text": "Behind closed eyes, let the reading room of sight grow dim. Shapes and colours can remain like illustrations in books you do not need to open."
+    },
+    {
+      "startSeconds": 210,
+      "text": "Notice touch at the skin... then deeper contact and weight. Choose the simplest sensation as a bookmark for attention."
+    },
+    {
+      "startSeconds": 260,
+      "text": "Allow taste and scent to become background notes in the catalogue. Nothing is rejected; it is simply filed for later."
+    },
+    {
+      "startSeconds": 310,
+      "text": "Turn inward toward breath, pulse, or warmth. Imagine a private reading room where the only text is the body happening now."
+    },
+    {
+      "startSeconds": 360,
+      "text": "[reassuringly] A loud sound or thought may reopen a door. Gently close it after the message arrives, without blaming the librarian."
+    },
+    {
+      "startSeconds": 410,
+      "text": "Rest between the shelves of inner sensation. There is no need to find a secret book or achieve blankness."
+    },
+    {
+      "startSeconds": 460,
+      "text": "For a little while, let awareness read only one quiet page... inhale... exhale... pressure... warmth."
+    },
+    {
+      "startSeconds": 510,
+      "text": "Now switch on the outer rooms again. Hear the building, feel the air, and notice light waiting beyond the eyelids."
+    },
+    {
+      "startSeconds": 570,
+      "text": "[softly] Open your eyes and leave the library unhurriedly. The quiet page remains available whenever you return."
+    }
+  ]
+}

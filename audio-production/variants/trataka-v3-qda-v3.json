@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "id": "trataka-v3-qda-v3",
+  "meditationId": "trataka",
+  "title": "A Candle Beyond the Spaceship Glass",
+  "scriptRevision": "trataka-spaceship-window-v3",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/trataka-v3-qda-v3-draft.md",
+  "durationSeconds": 740,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/trataka-v3-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 501700,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Sit with the flame near eye level. Keep blinking naturally and stop if the eyes become painful, dizzy, excessively watery, or persistently uncomfortable."
+    },
+    {
+      "startSeconds": 40,
+      "text": "Imagine the flame as a tiny sun beyond the glass of a quiet spacecraft."
+    },
+    {
+      "startSeconds": 90,
+      "text": "Rest the gaze near the wick. Let the surrounding room become deep space without forcing it away."
+    },
+    {
+      "startSeconds": 140,
+      "text": "Notice flicker, colour, brightness, and the small dark centre. Gentle attention is enough."
+    },
+    {
+      "startSeconds": 185,
+      "text": "Blink and return, as though the navigation window refreshes itself."
+    },
+    {
+      "startSeconds": 205,
+      "text": "Close your eyes. Notice whether the tiny sun remains as an after-image behind the lids."
+    },
+    {
+      "startSeconds": 255,
+      "text": "Watch it drift, pulse, reverse colour, or fade through the inner dark."
+    },
+    {
+      "startSeconds": 305,
+      "text": "No image is also a complete experience. Rest with the window closed."
+    },
+    {
+      "startSeconds": 355,
+      "text": "Feel breath and body while the eyes recover."
+    },
+    {
+      "startSeconds": 385,
+      "text": "[softly] Open the eyes and find the flame again, one bright coordinate in a wide cabin."
+    },
+    {
+      "startSeconds": 435,
+      "text": "Let attention stay near the centre without hardening the brow."
+    },
+    {
+      "startSeconds": 485,
+      "text": "Notice that the flame changes constantly while remaining easy to recognise."
+    },
+    {
+      "startSeconds": 535,
+      "text": "Rest with this small sun for several natural breaths."
+    },
+    {
+      "startSeconds": 565,
+      "text": "Close the eyes once more and allow the outer flame to become inner memory."
+    },
+    {
+      "startSeconds": 620,
+      "text": "Let the image travel beyond the window and disappear into a larger darkness."
+    },
+    {
+      "startSeconds": 675,
+      "text": "Feel the whole face, whole body, and ordinary room returning."
+    },
+    {
+      "startSeconds": 710,
+      "text": "[softly] Open your eyes slowly. Navigation is complete; take your time moving on."
+    }
+  ]
+}

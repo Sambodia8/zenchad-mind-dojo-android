@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "sound-awareness-v4-qda-v3",
+  "meditationId": "sound-awareness",
+  "title": "The Harbour of Listening Lights",
+  "scriptRevision": "sound-harbour-v4",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/sound-awareness-v4-qda-v3-draft.md",
+  "durationSeconds": 405,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/sound-awareness-v4-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 600400,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Let hearing open like a dark harbour at night. You do not need to identify every vessel; simply notice where each light appears."
+    },
+    {
+      "startSeconds": 55,
+      "text": "Find the furthest sound available. Let it blink at the horizon, faint but complete."
+    },
+    {
+      "startSeconds": 95,
+      "text": "Move to a sound in the middle distance. Notice its texture, rhythm, and the silence around it."
+    },
+    {
+      "startSeconds": 135,
+      "text": "Now hear something close: breath, fabric, a tiny mechanical hum. This is the lamp beside the dock."
+    },
+    {
+      "startSeconds": 175,
+      "text": "Choose one sound and stay with it for a while. When attention sails away, guide it back by the same small beacon."
+    },
+    {
+      "startSeconds": 215,
+      "text": "Let that sound go and choose another. Attention can turn gracefully without declaring the first sound wrong."
+    },
+    {
+      "startSeconds": 255,
+      "text": "Notice sounds arriving from the left... then the right... ahead... and behind, if those directions are available."
+    },
+    {
+      "startSeconds": 300,
+      "text": "Open to the entire harbour. Loud and quiet sounds share one field, appearing and disappearing by themselves."
+    },
+    {
+      "startSeconds": 345,
+      "text": "[reassuringly] There is no perfect listening state. Even distraction is another brief signal noticed by awareness."
+    },
+    {
+      "startSeconds": 375,
+      "text": "[softly] Feel the body in the room and let the harbour remain open as you return to seeing."
+    }
+  ]
+}

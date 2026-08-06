@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "title": "ZenChad Acceptance Meditation — 30-Second Four-Way Audition",
+  "approved": true,
+  "approvedAt": "2026-07-27",
+  "outputDirectory": "output/elevenlabs-tests/acceptance-30s",
+  "outputFormat": "mp3_44100_128",
+  "seed": 271828,
+  "maxGenerations": 4,
+  "maxApprovedCharacters": 2000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "spokenText": "Take a moment to settle... and let your body be held by whatever is beneath you.\n\nThere is nothing you need to fix right now.\n\nNotice what is already here — perhaps a feeling... a thought... or a sensation. See if you can make just a little room for it.\n\nYou do not have to like it. For this moment... simply let it be here.",
+  "textByModel": {
+    "eleven_v3": "[softly] Take a moment to settle... and let your body be held by whatever is beneath you.\n\nThere is nothing you need to fix right now.\n\nNotice what is already here — perhaps a feeling... a thought... or a sensation. See if you can make just a little room for it.\n\n[reassuringly] You do not have to like it. For this moment... simply let it be here.",
+    "eleven_multilingual_v2": "Take a moment to settle... and let your body be held by whatever is beneath you.\n\nThere is nothing you need to fix right now.\n\nNotice what is already here — perhaps a feeling... a thought... or a sensation. See if you can make just a little room for it.\n\nYou do not have to like it. For this moment... simply let it be here."
+  },
+  "samples": [
+    {
+      "order": 1,
+      "fileName": "01-max-soothing-eleven-v3.mp3",
+      "title": "Max Soothing — Eleven v3",
+      "voiceName": "adam owls max soothing",
+      "voiceId": "p8theabdjkRVofw8j1ad",
+      "modelId": "eleven_v3"
+    },
+    {
+      "order": 2,
+      "fileName": "02-max-soothing-multilingual-v2.mp3",
+      "title": "Max Soothing — Eleven Multilingual v2",
+      "voiceName": "adam owls max soothing",
+      "voiceId": "p8theabdjkRVofw8j1ad",
+      "modelId": "eleven_multilingual_v2"
+    },
+    {
+      "order": 3,
+      "fileName": "03-soothing-v2-remix-eleven-v3.mp3",
+      "title": "Soothing v2 Remix — Eleven v3",
+      "voiceName": "adam owls soothing v2",
+      "voiceId": "qDaEJf74mtxsdGvyyq8t",
+      "modelId": "eleven_v3"
+    },
+    {
+      "order": 4,
+      "fileName": "04-soothing-v2-remix-multilingual-v2.mp3",
+      "title": "Soothing v2 Remix — Eleven Multilingual v2",
+      "voiceName": "adam owls soothing v2",
+      "voiceId": "qDaEJf74mtxsdGvyyq8t",
+      "modelId": "eleven_multilingual_v2"
+    }
+  ]
+}

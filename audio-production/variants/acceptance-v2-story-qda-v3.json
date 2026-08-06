@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "acceptance-v2-story-qda-v3",
+  "meditationId": "acceptance",
+  "title": "The Museum of Unfinished Things",
+  "scriptRevision": "acceptance-museum-v2",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/acceptance-v2-story-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/acceptance-v2-story-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 501400,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Settle and imagine entering a museum after closing, where unfinished feelings and unanswered questions are allowed to remain on display."
+    },
+    {
+      "startSeconds": 65,
+      "text": "Notice what is present now. Perhaps tension, sadness, restlessness, numbness, or something without a name."
+    },
+    {
+      "startSeconds": 115,
+      "text": "Imagine placing the experience on a simple pedestal. Acceptance does not call it beautiful or permanent. It only stops hiding it in the basement."
+    },
+    {
+      "startSeconds": 165,
+      "text": "Feel where the exhibit appears in the body. Notice shape, pressure, temperature, and movement."
+    },
+    {
+      "startSeconds": 215,
+      "text": "The mind may arrive with tools and warning signs. Let the repair crew sit on a bench for a little while."
+    },
+    {
+      "startSeconds": 265,
+      "text": "Quietly say: this is part of the room right now. It does not have to become the entire museum."
+    },
+    {
+      "startSeconds": 315,
+      "text": "[reassuringly] If resistance appears, give it a small display card too. The wish not to feel this is also something being felt."
+    },
+    {
+      "startSeconds": 365,
+      "text": "Broaden attention to sounds, breath, hands, feet, and the surface beneath you. More than one exhibit can exist at once."
+    },
+    {
+      "startSeconds": 415,
+      "text": "For several breaths, allow the unfinished thing to remain without completing its story."
+    },
+    {
+      "startSeconds": 465,
+      "text": "[thoughtfully] Acceptance is not permission for harm and not a contract with forever. It is honest admission to the room you are already in."
+    },
+    {
+      "startSeconds": 515,
+      "text": "Imagine the gallery lights softening. The exhibit can stay while you walk toward the exit."
+    },
+    {
+      "startSeconds": 570,
+      "text": "[softly] Move gently and open your eyes. Leave the museum without needing to take every unfinished thing home."
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "provider": "elevenlabs",
+  "approved": true,
+  "approvedBy": "Sam",
+  "approvalReference": "Approved Music A over Music B, approved the two-track-per-style plan, and instructed Codex to do the rest",
+  "title": "ZenChad ElevenLabs Music A Soundscapes",
+  "outputDirectory": "output/elevenlabs-tests/soundscape-production/elevenlabs",
+  "apiKeyFile": "D:\\My Drive\\ZenChad\\api key.txt",
+  "endpoint": "https://api.elevenlabs.io/v1/music",
+  "model": "music_v2",
+  "outputFormat": "opus_48000_192",
+  "durationSeconds": 60,
+  "forceInstrumental": true,
+  "loopPreparation": {
+    "loopStartSeconds": 2,
+    "crossfadeSeconds": 5,
+    "outroTrimSeconds": 12,
+    "targetBitRate": "192k",
+    "sampleRate": 48000
+  },
+  "estimatedCreditsPerGeneration": 1600,
+  "maxGenerations": 9,
+  "maxApprovedCredits": 14400,
+  "candidates": [
+    {
+      "order": 1,
+      "id": "pratyahara",
+      "meditationName": "Pratyahara",
+      "story": "Quiet Spacecraft",
+      "fileName": "01-pratyahara-eleven-music-a-loop.ogg",
+      "prompt": "Extremely calm instrumental ambient bed for Pratyahara meditation inside a quiet spacecraft dimming its outer instruments. Warm low synthesizer pads, soft electrical glow and rare filtered electronic points receding into an inward hush. Very slow, weightless and minimal. No drums, percussion, vocals, brass, horns, jazz, alarms, melody-led performance or science-fiction drama. Leave the midrange uncluttered for narration. Keep dynamics and harmony nearly static, with no intro, ending, climax, final cadence, fade or silence."
+    },
+    {
+      "order": 2,
+      "id": "nsdr",
+      "meditationName": "NSDR",
+      "story": "Sleeping City",
+      "fileName": "02-nsdr-eleven-music-a-loop.ogg",
+      "prompt": "Deeply restful instrumental ambient bed for NSDR, like a sleeping city quietly powering down one district at a time. Long warm nocturnal synthesizer pads, an almost imperceptible downward harmonic drift and distant softened electrical air. Dark blue, safe and nearly motionless. No beat, percussion, vocals, brass, jazz, acoustic solo, recognizable melody, tension or cinematic drama. Preserve open midrange for narration and uniform low intensity, with no intro, ending, climax, cadence, fade or silence."
+    },
+    {
+      "order": 3,
+      "id": "sound-awareness",
+      "meditationName": "Sound Awareness",
+      "story": "Celestial Radio",
+      "fileName": "03-sound-awareness-eleven-music-a-loop.ogg",
+      "prompt": "Calm instrumental ambient bed for rotating sound awareness, like a gentle old celestial radio tuning between far and near signals. Broad airy synthesizer noise, soft sustained pads and rare blurred harmonic glimmers moving across a wide stereo field. Curious, tranquil and minimal. No crackling static, speech, beat, percussion, brass, jazz, recognizable melody, bright pings or sudden movement. Keep the centre clear for narration and loudness nearly constant, with no intro, ending, climax, cadence, fade or silence."
+    },
+    {
+      "order": 4,
+      "id": "ego",
+      "meditationName": "Ego Inquiry",
+      "story": "Open Sky and Windows",
+      "fileName": "04-ego-inquiry-eleven-music-a-loop.ogg",
+      "prompt": "Spacious instrumental ambient bed for gentle ego inquiry, like moonlit windows reflecting an open night sky. Transparent synthesizer layers, soft filtered glass harmonics, warm air and very slow unresolved colour. Thoughtful and emotionally neutral rather than dramatic. No beat, percussion, vocals, brass, jazz, acoustic solo, recognizable melody, sadness or cinematic tension. Leave room for spoken inquiry and hold a steady circular texture with no intro, ending, climax, cadence, fade or silence."
+    },
+    {
+      "order": 5,
+      "id": "ajna",
+      "meditationName": "Ajna Chakra",
+      "story": "Indigo Lighthouse",
+      "fileName": "05-ajna-chakra-eleven-music-a-loop.ogg",
+      "prompt": "Steady instrumental ambient bed for an optional Ajna focus meditation, like a calm indigo lighthouse glowing through a violet night. One soft sustained tonal centre, slow blue synthesizer halos and faint filtered upper harmonics. Lucid, gentle and minimal without mystical theatre. No beat, percussion, chanting, bells, brass, jazz, recognizable melody, dramatic swell or supernatural spectacle. Keep the midrange open beneath narration and energy uniform, with no intro, ending, climax, cadence, fade or silence."
+    },
+    {
+      "order": 6,
+      "id": "acceptance",
+      "meditationName": "Radical Acceptance",
+      "story": "Inner Weather",
+      "fileName": "06-radical-acceptance-eleven-music-a-loop.ogg",
+      "prompt": "Tender instrumental ambient bed for radical acceptance, like gentle inner weather moving beneath a glass observatory dome. Warm cloudlike synthesizer pads, distant softened rain-coloured harmonics and a patient steady glow. Spacious and non-dramatic. No literal rain, beat, percussion, vocals, brass, jazz, melancholy solo, recognizable melody, tension or emotional climax. Keep the midrange uncluttered for narration and maintain almost static loudness and harmony, with no intro, ending, cadence, fade or silence."
+    },
+    {
+      "order": 7,
+      "id": "diaphragmatic-breathing",
+      "meditationName": "Diaphragmatic Breathing",
+      "story": "Underground Garden",
+      "fileName": "07-diaphragmatic-breathing-eleven-music-a-loop.ogg",
+      "prompt": "Warm instrumental ambient bed for comfortable diaphragmatic breathing in an underground garden. Rounded synthesizer pads expand and settle by a very small amount beneath faint moss-green harmonics. Easy, organic, reassuring and minimal. No audible breathing, beat, percussion, bass pulse, vocals, brass, jazz, melody-led performance, acoustic ensemble or dramatic swell. Keep the centre open for narration and dynamics extremely narrow, with no intro, ending, climax, cadence, fade or silence."
+    },
+    {
+      "order": 8,
+      "id": "focused-attention",
+      "meditationName": "Focused Attention",
+      "story": "Patient Satellite",
+      "fileName": "08-focused-attention-eleven-music-a-loop.ogg",
+      "prompt": "Clear instrumental ambient bed for focused-attention meditation, like a small patient satellite following a quiet circular orbit through a velvet night. Stable warm synthesizer pads, one faint recurring electronic glimmer and slow soft harmonic rotation. Friendly, consistent and minimally stimulating. No beat, percussion, busy arpeggio, vocals, brass, jazz, recognizable melody, alarm or dramatic soundtrack. Leave the midrange open for narration and keep the texture even, with no intro, ending, climax, cadence, fade or silence."
+    },
+    {
+      "order": 9,
+      "id": "grounding",
+      "meditationName": "Five-Sense Grounding",
+      "story": "Safe Ordinary Room",
+      "fileName": "09-grounding-eleven-music-a-loop.ogg",
+      "prompt": "Comforting instrumental ambient bed for five-sense grounding in a safe ordinary room at night. A warm lamp, quiet walls and softened distant city glow become low synthesizer pads, subtle earthy harmonics and almost no movement. Present and familiar rather than dreamy. No field recordings, beat, percussion, vocals, brass, jazz, recognizable melody, acoustic instruments, tension or cinematic atmosphere. Keep the centre clear for narration and volume uniform, with no intro, ending, climax, cadence, fade or silence."
+    }
+  ]
+}

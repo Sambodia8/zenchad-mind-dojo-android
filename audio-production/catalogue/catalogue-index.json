@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "manifests": [
+    "audio-production/catalogue/metta-v1-qda-v3.json",
+    "audio-production/catalogue/pratyahara-v1-qda-v3.json",
+    "audio-production/catalogue/nsdr-v1-qda-v3.json",
+    "audio-production/catalogue/ego-v1-qda-v3.json",
+    "audio-production/catalogue/ajna-v1-qda-v3.json",
+    "audio-production/catalogue/sound-awareness-v1-qda-v3.json",
+    "audio-production/catalogue/urge-surfing-v1-qda-v3.json",
+    "audio-production/catalogue/diaphragmatic-breathing-v1-qda-v3.json",
+    "audio-production/catalogue/focused-attention-v1-qda-v3.json",
+    "audio-production/catalogue/grounding-v1-qda-v3.json",
+    "audio-production/catalogue/trataka-v1-qda-v3.json"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "title": "Reverse glockenspiel phase chime",
+  "source": "audio-production/source-audio/freesound_community-chime-95842.mp3",
+  "sourceSha256": "7D959AF3E7A844685C1EAC7400038D2C4218C62B4C8945E62339B8A276319A57",
+  "outputSha256": "6E75D11493FA9C3E4DD5DC55444647014F524FE039B6FAB74266E971F6B9102A",
+  "output": "public/assets/audio/ui/reverse-glockenspiel-chime.ogg",
+  "transform": {
+    "trimStartSeconds": 0.128367,
+    "trimEndSeconds": 1.4261,
+    "reverse": true,
+    "fadeInSeconds": 0.08,
+    "fadeOutStartSeconds": 1.177733,
+    "fadeOutSeconds": 0.08,
+    "gainDb": 7,
+    "codec": "opus",
+    "sampleRateHz": 48000,
+    "channels": 1,
+    "targetBitrateKbps": 192
+  },
+  "verified": {
+    "durationSeconds": 1.30425,
+    "decodedPeakDb": -17.8,
+    "decodedMeanDb": -33.7,
+    "inAppVolume": 0.65
+  }
+}

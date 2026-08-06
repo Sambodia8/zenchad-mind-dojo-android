@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "manifests": [
+    "audio-production/fourth-variants/metta-v4-qda-v3.json",
+    "audio-production/fourth-variants/pratyahara-v4-qda-v3.json",
+    "audio-production/fourth-variants/nsdr-v4-qda-v3.json",
+    "audio-production/fourth-variants/sound-awareness-v4-qda-v3.json",
+    "audio-production/fourth-variants/ego-v4-qda-v3.json",
+    "audio-production/fourth-variants/ajna-v4-qda-v3.json",
+    "audio-production/fourth-variants/urge-surfing-v4-qda-v3.json",
+    "audio-production/fourth-variants/acceptance-v4-story-qda-v3.json",
+    "audio-production/fourth-variants/trataka-v4-qda-v3.json",
+    "audio-production/fourth-variants/diaphragmatic-breathing-v4-qda-v3.json",
+    "audio-production/fourth-variants/focused-attention-v4-qda-v3.json",
+    "audio-production/fourth-variants/grounding-v4-qda-v3.json",
+    "audio-production/fourth-variants/yoga-nidra-v4-qda-v3.json"
+  ]
+}

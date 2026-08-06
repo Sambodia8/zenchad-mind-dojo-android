@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-03T19:35:54.393Z",
+  "manifest": "audio-production/ui-sfx.json",
+  "requestCount": 8,
+  "automaticRetries": 0,
+  "normalization": "EBU R128 -22 LUFS, -3 dB true peak",
+  "results": [
+    {
+      "id": "xp-roll",
+      "fileName": "xp-roll.mp3",
+      "requestedDurationSeconds": 1.8,
+      "requestId": null,
+      "characterCost": "18",
+      "bytes": 29428,
+      "durationSeconds": 1.802449,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitRate": 130613
+    },
+    {
+      "id": "victory",
+      "fileName": "victory.mp3",
+      "requestedDurationSeconds": 1.6,
+      "requestId": null,
+      "characterCost": "16",
+      "bytes": 26920,
+      "durationSeconds": 1.645714,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitRate": 130861
+    },
+    {
+      "id": "wheel-spin",
+      "fileName": "wheel-spin.mp3",
+      "requestedDurationSeconds": 2.3,
+      "resumedExistingFile": true,
+      "durationSeconds": 2.324898,
+      "bytes": 37790,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitRate": 130035
+    },
+    {
+      "id": "wheel-land",
+      "fileName": "wheel-land.mp3",
+      "requestedDurationSeconds": 1.3,
+      "resumedExistingFile": true,
+      "durationSeconds": 1.306122,
+      "bytes": 21489,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitRate": 131620
+    },
+    {
+      "id": "confirm",
+      "fileName": "confirm.mp3",
+      "requestedDurationSeconds": 0.75,
+      "resumedExistingFile": true,
+      "durationSeconds": 0.757551,
+      "bytes": 12710,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitRate": 134221
+    },
+    {
+      "id": "select",
+      "fileName": "select.mp3",
+      "requestedDurationSeconds": 0.5,
+      "resumedExistingFile": true,
+      "durationSeconds": 0.522449,
+      "bytes": 8947,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitRate": 137000
+    },
+    {
+      "id": "tab",
+      "fileName": "tab.mp3",
+      "requestedDurationSeconds": 0.5,
+      "resumedExistingFile": true,
+      "durationSeconds": 0.522449,
+      "bytes": 8944,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitRate": 136954
+    },
+    {
+      "id": "back",
+      "fileName": "back.mp3",
+      "requestedDurationSeconds": 0.6,
+      "resumedExistingFile": true,
+      "durationSeconds": 0.626939,
+      "bytes": 10617,
+      "codec": "mp3",
+      "sampleRate": 44100,
+      "channels": 2,
+      "bitRate": 135477
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "id": "yoga-nidra-v3-qda-v3",
+  "meditationId": "yoga-nidra",
+  "title": "The Cabin Under Quiet Snow",
+  "scriptRevision": "yoga-nidra-snow-cabin-v3",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/yoga-nidra-v3-qda-v3-draft.md",
+  "durationSeconds": 1200,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/yoga-nidra-v3-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 502600,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Lie down and arrange the body for twenty minutes of unhurried rest. Imagine a warm cabin while snow gathers quietly outside."
+    },
+    {
+      "startSeconds": 70,
+      "text": "Feel the whole body beneath its coverings. Nothing needs to be held up. The roof, walls, and earth are doing the work."
+    },
+    {
+      "startSeconds": 125,
+      "text": "Right thumb... first finger... second... third... fourth... palm... back of hand... wrist. Snow softens every edge."
+    },
+    {
+      "startSeconds": 180,
+      "text": "Right lower arm... elbow... upper arm... shoulder... armpit... right ribs... waist... hip."
+    },
+    {
+      "startSeconds": 235,
+      "text": "Right thigh... knee... shin... calf... ankle... heel... sole... top of foot... big toe through little toe."
+    },
+    {
+      "startSeconds": 300,
+      "text": "Left thumb... first finger... second... third... fourth... palm... back of hand... wrist."
+    },
+    {
+      "startSeconds": 355,
+      "text": "Left lower arm... elbow... upper arm... shoulder... armpit... left ribs... waist... hip."
+    },
+    {
+      "startSeconds": 410,
+      "text": "Left thigh... knee... shin... calf... ankle... heel... sole... top of foot... big toe through little toe."
+    },
+    {
+      "startSeconds": 475,
+      "text": "Backs of both legs... buttocks... tailbone... lower back... middle back... upper back... shoulder blades... back of neck."
+    },
+    {
+      "startSeconds": 535,
+      "text": "Lower belly... navel... upper belly... ribs... heart area... collarbones... throat. The cabin stove glows without needing attention."
+    },
+    {
+      "startSeconds": 595,
+      "text": "Chin... jaw muscles... lower lip... upper lip... corners of mouth... teeth... gums... tongue lying loose in the floor of the mouth."
+    },
+    {
+      "startSeconds": 655,
+      "text": "Inner cheeks... outer cheeks... nose... nostrils... bridge of nose... skin beneath the eyes."
+    },
+    {
+      "startSeconds": 715,
+      "text": "Right eye... left eye... both eyelids... muscles around the eyes... eyebrows... the soft space between them."
+    },
+    {
+      "startSeconds": 775,
+      "text": "Forehead smoothing... temples... ears... back of skull... top of head... entire scalp. Let the face finish its last conversation."
+    },
+    {
+      "startSeconds": 840,
+      "text": "Feel the entire right side... entire left side... both sides together... back body... front body... complete body."
+    },
+    {
+      "startSeconds": 900,
+      "text": "[reassuringly] You may feel heavy, light, restless, or nearly asleep. The snow does not require a particular kind of quiet."
+    },
+    {
+      "startSeconds": 960,
+      "text": "Rest as the whole cabin, not one room at a time. Breath moves softly through the warm interior."
+    },
+    {
+      "startSeconds": 1020,
+      "text": "Let several long moments pass with the complete body known at once."
+    },
+    {
+      "startSeconds": 1080,
+      "text": "Begin hearing the real room. Feel temperature, coverings, floor, and the shape of the body returning."
+    },
+    {
+      "startSeconds": 1160,
+      "text": "[softly] Move fingers and toes, roll the head gently, and stretch if desired. Open your eyes as snowlight reaches the windows."
+    }
+  ]
+}

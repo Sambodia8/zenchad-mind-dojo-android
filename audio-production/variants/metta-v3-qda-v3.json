@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "metta-v3-qda-v3",
+  "meditationId": "metta",
+  "title": "Paper Boats Under the Moon",
+  "scriptRevision": "metta-paper-boats-v3",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/metta-v3-qda-v3-draft.md",
+  "durationSeconds": 570,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/metta-v3-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 500100,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Let the body be supported. Imagine a moonlit canal beside you, smooth enough to carry a small paper boat."
+    },
+    {
+      "startSeconds": 60,
+      "text": "Write a wish for yourself on the first boat: may I be protected from unnecessary harm... may I know friendship... may I rest when rest is needed."
+    },
+    {
+      "startSeconds": 110,
+      "text": "Set the boat on the water. If self-kindness feels difficult, let the canal hold the wish until you are ready to receive it."
+    },
+    {
+      "startSeconds": 160,
+      "text": "Fold another boat for someone you love. Picture their ordinary face, including the details that make them human rather than perfect."
+    },
+    {
+      "startSeconds": 210,
+      "text": "May you be protected from unnecessary harm... may you know friendship... may you rest when rest is needed. Watch their boat join yours."
+    },
+    {
+      "startSeconds": 260,
+      "text": "Now choose a person who usually stays at the edge of your attention. A stranger has a whole weather system of memories too."
+    },
+    {
+      "startSeconds": 310,
+      "text": "Offer the same wishes and let a third boat drift into the silver current. No emotion is required; intention is enough for this moment."
+    },
+    {
+      "startSeconds": 360,
+      "text": "If it feels possible, include someone with whom life is complicated. Keep your boundaries. Simply wish that suffering and confusion do not keep multiplying."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[reassuringly] You may skip anyone who makes the practice unsafe. Loving kindness includes the person sitting here, and that person is allowed to choose distance."
+    },
+    {
+      "startSeconds": 460,
+      "text": "Imagine the canal widening into a river filled with paper lights. May all of us find safety... connection... and enough gentleness for the next step."
+    },
+    {
+      "startSeconds": 510,
+      "text": "Let the river travel beyond imagination. Feel your hands, your breathing, and the quiet place where the boats began."
+    },
+    {
+      "startSeconds": 540,
+      "text": "[softly] Open your eyes when ready. Keep one blank boat nearby for a kindness you have not thought of yet."
+    }
+  ]
+}

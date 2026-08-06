@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "manifests": [
+    "audio-production/variants/metta-v2-qda-v3.json",
+    "audio-production/variants/metta-v3-qda-v3.json",
+    "audio-production/variants/pratyahara-v2-qda-v3.json",
+    "audio-production/variants/pratyahara-v3-qda-v3.json",
+    "audio-production/variants/nsdr-v2-qda-v3.json",
+    "audio-production/variants/nsdr-v3-qda-v3.json",
+    "audio-production/variants/sound-awareness-v2-qda-v3.json",
+    "audio-production/variants/sound-awareness-v3-qda-v3.json",
+    "audio-production/variants/ego-v2-qda-v3.json",
+    "audio-production/variants/ego-v3-qda-v3.json",
+    "audio-production/variants/ajna-v2-qda-v3.json",
+    "audio-production/variants/ajna-v3-qda-v3.json",
+    "audio-production/variants/urge-surfing-v2-qda-v3.json",
+    "audio-production/variants/urge-surfing-v3-qda-v3.json",
+    "audio-production/variants/acceptance-v2-story-qda-v3.json",
+    "audio-production/variants/acceptance-v3-story-qda-v3.json",
+    "audio-production/variants/trataka-v2-qda-v3.json",
+    "audio-production/variants/trataka-v3-qda-v3.json",
+    "audio-production/variants/diaphragmatic-breathing-v2-qda-v3.json",
+    "audio-production/variants/diaphragmatic-breathing-v3-qda-v3.json",
+    "audio-production/variants/focused-attention-v2-qda-v3.json",
+    "audio-production/variants/focused-attention-v3-qda-v3.json",
+    "audio-production/variants/grounding-v2-qda-v3.json",
+    "audio-production/variants/grounding-v3-qda-v3.json",
+    "audio-production/variants/yoga-nidra-v1-qda-v3.json",
+    "audio-production/variants/yoga-nidra-v2-qda-v3.json",
+    "audio-production/variants/yoga-nidra-v3-qda-v3.json"
+  ]
+}

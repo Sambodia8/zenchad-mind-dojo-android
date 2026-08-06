@@ -1,0 +1,121 @@
+2026-07-24 - Vision 2 watercolour redesign
+- Decision/change: Zen Chad 1.1 uses the warm illustrated journal direction from concept board 2 across the React/Capacitor Android app, with a five-item Home/Library/Roulette/Progress/Toolkit navigation model.
+- Preserve/avoid: Keep the app predominantly light with parchment, muted watercolour, sage-green actions and bronze rewards; do not reintroduce the dark-neon direction from boards 1 or 3 or replace working offline/timer/journal/voice behavior.
+- Key files: src/App.tsx, src/styles.css, src/screens/, public/assets/vision2/, public/assets/meditation-icons/, android/app/src/main/res/.
+- Build: Version 1.1 (code 2), package com.zenchad.minddojo; npm build, Capacitor sync, Android lint, and debug APK assembly verified with JDK 21.
+
+2026-07-27 - Offline ElevenLabs meditation audio
+- Decision/change: Generate approved narration during development with private ElevenLabs voices, then bundle finished audio so meditation playback is offline and never exposes or calls the API.
+- Preserve/avoid: Require written-script approval and a short audition before full generation; write counts as `one... two... three...`; support future non-repeating variants for ADHD-friendly novelty.
+- Key files: AUDIO_PRODUCTION_PLAN.md, audio-production/, scripts/generate-elevenlabs-preview.mjs.
+
+2026-07-27 - ElevenLabs audition winner
+- Decision/change: Use sample 3 for the current acceptance meditation: `adam owls soothing v2` (`qDaEJf74mtxsdGvyyq8t`) rendered with `eleven_v3`.
+- Preserve/avoid: Ranking is 3 first; 2 and 1 joint second; 4 last. Sample 2 resembles the original voice but is more robotic; sample 1 is more soothing but less similar.
+- Key files: AUDIO_PRODUCTION_PLAN.md, audio-production/acceptance-10m-draft.md.
+
+2026-07-27 - Acceptance narration bundled
+- Decision/change: Generated the approved ten-minute acceptance meditation as a timed 600-second MP3, corrected the ending cue timing, and wired v2 to the existing acceptance timer with persisted voice volume.
+- Preserve/avoid: Keep narration offline and separate from the timer bell; do not put the ElevenLabs key in the app or generate audio during playback.
+- Key files: public/assets/audio/meditations/acceptance-v2-qda-v3.mp3, src/guidedAudio.ts, src/screens/TimerScreen.tsx.
+
+2026-07-27 - Evidence-informed stretch profiles
+- Decision/change: Added five fixed run/cycle/daily profiles, coral stretch and blue working-area overlays, explicit mirrored per-side steps, and scroll-safe whole-player tapping.
+- Preserve/avoid: Timed remains the music-friendly default; Voice stays optional behind a warning because Android speech recognition may interrupt other audio. Keep approved Mark stretch PNGs unchanged.
+- Key files: src/data.ts, src/screens/StretchFlowScreen.tsx, src/components/MovementVisual.tsx, public/assets/stretches/generated/.
+
+2026-07-27 - Zen Chad 1.2 APK rebuild
+- Decision/change: Bumped Android versionCode to 3/versionName 1.2, rebuilt the current Capacitor app, and uploaded one verified debug APK to Google Drive.
+- Preserve/avoid: Keep the previous 1.1 APK; do not create duplicate Drive copies for the same build.
+- Key files: android/app/build.gradle, releases/Zen-Chad-1.2-debug.apk, RELEASE_NOTES.md.
+
+2026-07-28 - Acceptance narration format preference
+- Decision/change: Keep voice #3 (qDaEJf74mtxsdGvyyq8t) with eleven_v3 and package acceptance-v3-qda-v3.ogg as Ogg Opus with a 48 kHz mono, 192 kbps generation target. The prior 96 kbps MP3 is retained only under output/elevenlabs-tests/acceptance-final-references.
+- Preserve/avoid: Do not put the ElevenLabs key in the app; keep the existing approval and no-automatic-retry rules.
+
+2026-07-28 - Twelve-track narration roadmap
+- Decision/change: Plan twelve offline guided tracks in four batches of three, with exactly 15 seconds of opening silence inside each advertised duration. After Sam approves the durable narration style guide, continue through every script, paid generation, verification, and app integration without per-script approval pauses.
+- Preserve/avoid: Keep the same whimsical nocturnal, nature-and-technology creative world as the accepted track while writing wholly original prose and never copying lyrics or claiming artist authorship. Stop on paid-call failures rather than retrying automatically.
+- Key files: AUDIO_PRODUCTION_PLAN.md, audio-production/NARRATION_STYLE_GUIDE.md.
+
+2026-07-28 - Base narration catalogue completed
+- Decision/change: Generated and integrated twelve offline Ogg Opus meditation tracks using voice #3 with Eleven v3. Eleven new tracks used 138 paid cues and 20,512 characters with zero retries; Acceptance was locally retimed without a paid call. Every track includes 15 seconds of opening silence and the catalogue totals 56.78 MB.
+- Preserve/avoid: Keep the approved night-sky synth-pop prose guide, exact timer matching, 192 kbps Opus target, and no-automatic-retry rule for future variants.
+- Key files: audio-production/catalogue/, public/assets/audio/meditations/, src/guidedAudio.ts.
+
+2026-07-28 - Three-variant narration catalogue completed
+- Decision/change: Expanded all twelve guided practices to three distinct story variants and added Yoga Nidra with three detailed twenty-minute body scans. Generated 27 new tracks from 356 paid cues and 37,194 characters with zero retries. The full 39-track offline catalogue is 152,850,246 bytes and the app avoids immediately repeating the last narration for each practice.
+- Preserve/avoid: Keep exactly fifteen seconds of opening silence, the approved original whimsical nocturnal voice, voice #3 plus Eleven v3, 48 kHz mono Ogg Opus at a 192 kbps target, detailed face/tongue/forehead coverage in Yoga Nidra, and no automatic paid retries.
+- Key files: audio-production/variant-catalogue.json, audio-production/variants/, public/assets/audio/meditations/, src/guidedAudio.ts, src/screens/TimerScreen.tsx.
+
+2026-07-28 - Fourth narration variant completed
+- Decision/change: Added one new story to every guided type, bringing the app to four variants for each of thirteen types and 52 offline tracks total. The new batch used 168 paid cues and 19,932 characters with zero retries; the rotation logic continues to exclude the last-played narration.
+- Preserve/avoid: Treat each added variant as a genuinely new setting and progression, retain the detailed Yoga Nidra body rotation, fifteen-second opening silence, voice #3 with Eleven v3, and the no-automatic-retry rule.
+- Key files: audio-production/fourth-variant-catalogue.json, audio-production/fourth-variants/, public/assets/audio/meditations/, src/guidedAudio.ts.
+
+2026-07-28 - Soundscape engine audition generated
+- Decision/change: Created an external sixteen-file pilot for Metta, Urge Surfing, Trataka, and Yoga Nidra: two native thirty-second Sound Effects loops and two locally crossfaded Music v2 loops per theme. Nothing is bundled into the app until Sam chooses directions.
+- Preserve/avoid: Music v2 actually consumed about 1,591 shared credits per generated minute in this run, not the public approximate 900; budget future Music v2 at 1,600/minute. Keep Sound Effects and music as separate mixer layers, retain raw Music sources, level-match only selected assets, and never retry paid calls automatically.
+- Key files: audio-production/soundscape-pilot.json, scripts/generate-soundscape-pilot.mjs, output/elevenlabs-tests/soundscape-pilot/.
+
+2026-07-28 - Two-track meditation music catalogue completed
+- Decision/change: Bundled two offline music beds for all thirteen narrated meditation styles: preferred ElevenLabs Music A plus a calm Treblo alternative. The 21 new calls all succeeded with zero retries; the final 26-track 48 kHz stereo Ogg Opus catalogue is 28.85 MiB and now rotates A/B without immediate repetition.
+- Preserve/avoid: Reject Port Blue for this project because it produced jazzy brass and an outro fade. Keep jazz/brass exclusions in Treblo prompts, remove generated outros before loop crossfades, and retain separate persisted voice and music controls; the future third ambient/tonal layer remains separate.
+- Key files: audio-production/soundscape-catalogue.json, audio-production/soundscape-catalogue-verification.json, scripts/generate-soundscape-production.mjs, scripts/prepare-soundscape-catalogue.mjs, src/soundscapeAudio.ts, src/screens/TimerScreen.tsx.
+
+2026-07-28 - Zen Chad 1.3 release staged
+- Decision/change: Bumped Android to versionCode 4/versionName 1.3 after auditing the current shared source for the updated homepage, seven Yoga with Mark classes, adaptive emotional toolbox, 52 narration tracks, and 26 meditation-music tracks.
+- Preserve/avoid: Always rebuild and sync the complete current web bundle before Gradle assembly; do not reuse stale Android assets or overwrite the retained 1.1/1.2 APKs.
+- Key files: android/app/build.gradle, RELEASE_NOTES.md, src/screens/HomeScreen.tsx, src/screens/YogaClassScreen.tsx, src/screens/EmotionalToolbox.tsx, public/assets/audio/.
+
+2026-07-28 - Zen Chad 1.3 APK verified and published
+- Decision/change: Clean-built version 1.3/code 4 with JDK 21, passed Android lint, verified the APK signature matches 1.2, inspected the APK archive for the current homepage/yoga/toolbox/music features and all 78 offline audio tracks, then copied the hash-matched APK to `D:\My Drive\ZenChad`.
+- Build: `Zen-Chad-1.3-debug.apk`, 260,573,625 bytes, SHA-256 `F6DD79EACD237161DFEB4B3CF541F69A71EB63126D993AC853A888212CEE7E55`; no device was connected for installation testing.
+- Key files: releases/Zen-Chad-1.3-debug.apk, D:\My Drive\ZenChad\Zen-Chad-1.3-debug.apk, RELEASE_NOTES.md.
+
+2026-07-31 - Zen Chad 1.4 APK rebuilt and published
+- Decision/change: Bumped Android to versionCode 5/versionName 1.4, synced the current web bundle, and rebuilt the shareable debug APK with Java 21.
+- Preserve/avoid: Keep prior 1.1/1.2/1.3 APKs; deliver the single current artifact to `D:\My Drive\ZenChad`.
+- Build: `Zen-Chad-1.4-debug.apk`, 264,749,291 bytes, SHA-256 `53470B0D6206A7CB4E7A554820C551B54CF0F3310F9194D0E50DE9D3E7A6C303`; lint, signature, package/version, and packaged-asset checks passed; no device installation test was run.
+- Key files: android/app/build.gradle, releases/Zen-Chad-1.4-debug.apk, D:\My Drive\ZenChad\Zen-Chad-1.4-debug.apk, RELEASE_NOTES.md.
+
+2026-08-01 - Gapless meditation music and gentler boundaries
+- Decision/change: Replaced compressed-element music looping with decoded Web Audio buffer looping to eliminate Android's 0.2–0.3 second wrap gap; made a quiet reversed single-note glockenspiel the default section cue; generated four offline Eleven v3 “Namaste” endings with preferred voice #3 and rotate them without immediate repetition.
+- Preserve/avoid: Never play the section cue on initial Play or alongside the final Namaste. Keep phase cues subdued, ending voice at the persisted narration volume, paid ending generation capped with zero retries, and all runtime audio fully offline.
+- Key files: src/gaplessAudioLoop.ts, src/screens/TimerScreen.tsx, src/namasteAudio.ts, audio-production/phase-chime.json, audio-production/namaste-endings.json, public/assets/audio/ui/reverse-glockenspiel-chime.ogg, public/assets/audio/endings/.
+
+2026-08-03 - Offline AI journaling speech spike verified on Pixel 6a
+- Decision/change: Added a Capacitor/Java/JNI voice-reflection bridge backed by official whisper.cpp v1.8.5 and the 59.7 MB English Base Q5_1 model. The Journal screen now records locally, transcribes after Stop, and places the raw transcript into an editable draft; no audio or text is uploaded.
+- Device result: The official 11-second JFK sample transcribed accurately in 4.814 seconds on the connected Pixel 6a after enabling release optimisation and ARMv8.2 dot-product/FP16 instructions. The unoptimised debug baseline was 149.218 seconds. Measured proportional memory during the baseline was about 190 MB and phone temperature remained 31.2 C during two optimised runs. Android build and instrumentation test passed.
+- Preserve/avoid: Keep record-then-transcribe for the first version rather than lag-prone live streaming. Keep the model outside Git/APK during the spike, verify its SHA-256 (`4BAF70DD0D7C4247BA2B81FAFD9C01005AC77C2F9EF064E00DCF195D0E2FDD2F`), compile only arm64-v8a, retain 16 KB ELF alignment, and do not add a paid cloud dependency.
+- Model-formatting next step: Compare Qwen3 0.6B, Qwen3 1.7B, and Gemma 3 1B with the locked supplied 1,520-word transcript in a private Hugging Face ZeroGPU Space, then rerun finalists as the exact phone quantisations before integrating llama.cpp.
+- Key files: android/app/src/main/cpp/, android/app/src/main/java/com/zenchad/minddojo/WhisperJournalPlugin.java, src/native.ts, src/screens/JournalScreen.tsx, experiments/journal-model-eval/.
+
+2026-08-03 - Voice journaling long-form recovery verified
+- Decision/change: Voice reflections append to any existing draft, silence markers such as `[BLANK_AUDIO]` are discarded, supplied-history import lives in the journal overflow menu, and the screen stays awake while recording or transcribing. Cached audio is retained across a failed/interrupted transcription and recovered on the next Voice reflection tap.
+- Device result: A five-minute dense-speech test on the Pixel 6a completed fully offline in 72.1 seconds, peaked at about 670 MB RSS, returned below 400 MB afterward, and ended at 31.7 C. Existing text survived both a recovered speech recording and a silence-only recording.
+- Preserve/avoid: Never clear an open draft when voice capture starts; only delete temporary audio after successful processing; do not surface Whisper silence annotations as journal prose.
+- Key files: src/screens/JournalScreen.tsx, experiments/journal-model-eval/pixel-whisper-test.md.
+
+2026-08-03 - Local journal formatter quality gate
+- Decision/change: Blind-tested Qwen3 0.6B, Qwen3 1.7B, and Gemma 3 1B against the locked 1,520-word voice-journal transcript; all failed factual faithfulness. Qwen3 4B Instruct 2507 was the only plausible backup, scoring 23/30 initially and 19/30 after a stricter prompt, but still invented next steps and presented speculation about another person as fact.
+- Preserve/avoid: Keep the raw transcript as the source of truth. Do not automatically save a tested model's rewrite or download a multi-gigabyte phone model until a conservative light-editing design passes the locked factual checklist. Tiny-model speed is not worth distorted sensitive journal content.
+- Cloud test hygiene: The private Hugging Face ZeroGPU Space remains as a paused test fixture; its HF_TOKEN secret and the temporary local login were removed after testing. No transcript was committed to the Space repository.
+- Key files: experiments/journal-model-eval/scorecard.md, experiments/journal-model-eval/results/, experiments/journal-model-eval/prompt.txt.
+
+2026-08-04 - Qwen 4B app integration and persistent model manager
+- Decision/change: Added a separate arm64 llama.cpp bridge for Qwen3-4B-Instruct-2507 Q4_K_M, a user-triggered editable neat-draft action with raw-transcript restore, and an Android DownloadManager flow that keeps the 2.5 GB model outside the APK and survives app updates.
+- Preserve/avoid: Do not overwrite raw voice text automatically. Keep model installation resumable, Wi-Fi-only by default, cancellable, and stored under app-specific persistent model storage. Desktop fallback `scripts/download-qwen4b.ps1` resumes and verifies the official file hash.
+- Device result: TypeScript build, native Qwen cross-build, Android debug build, APK packaging, and Pixel 6a installation passed. The full Qwen model was not downloaded to the phone during this check.
+- Key files: src/screens/JournalScreen.tsx, src/native.ts, android/app/src/main/java/com/zenchad/minddojo/QwenJournalPlugin.java, android/app/src/main/cpp/qwen_jni.cpp, scripts/download-qwen4b.ps1.
+
+2026-08-04 - Whisper model manager added
+- Decision/change: Added an in-app Download Whisper control alongside Qwen. Android's DownloadManager stores the 59.7 MB tested `ggml-base.en-q5_1.bin` outside the APK, reports progress, and supports cancellation; the voice button explains when the model still needs downloading.
+- Preserve/avoid: Keep both models out of the APK so app updates do not redownload them. Keep downloads Wi-Fi-only by default and require the exact tested Whisper file size before moving it into persistent model storage.
+- Verification: `npm run build`, Android debug Gradle build, APK install, and app launch passed. The already-installed Whisper model remained available after reinstall.
+- Key files: android/app/src/main/java/com/zenchad/minddojo/WhisperJournalPlugin.java, src/native.ts, src/screens/JournalScreen.tsx, experiments/journal-model-eval/README.md.
+
+2026-08-04 - Current 1.4 APK rebuilt and delivered
+- Decision/change: Rebuilt from the complete current workspace so the latest Yoga library, pose additions, audio, and offline AI journaling changes are included, then replaced the established 1.4 debug APK in both `releases/` and `D:\My Drive\ZenChad`.
+- Verification: TypeScript/Vite build, Capacitor asset copy, Android lint, debug APK build, package/version inspection, packaged-asset counts, and matching SHA-256 checksums for local and Drive copies all passed.
+- Artifact: `Zen-Chad-1.4-debug.apk`, 298,387,915 bytes, SHA-256 `99FD966FF332F6D0A137CB64AFF534BB3FDACCB7F083592765361D183597D8FD`.

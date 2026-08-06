@@ -1,0 +1,4 @@
+Model: Qwen/Qwen3-0.6B
+Generation elapsed: 6.2 seconds
+Generated tokens: 300
+Validation: Valid JSON with the required fields.

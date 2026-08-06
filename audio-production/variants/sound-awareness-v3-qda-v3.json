@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "sound-awareness-v3-qda-v3",
+  "meditationId": "sound-awareness",
+  "title": "Rain Builds an Orchestra",
+  "scriptRevision": "sound-rain-orchestra-v3",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/sound-awareness-v3-qda-v3-draft.md",
+  "durationSeconds": 405,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/sound-awareness-v3-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 500700,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Let listening open. Imagine the room is an orchestra warming up beneath a roof of rain."
+    },
+    {
+      "startSeconds": 55,
+      "text": "Find the lowest sound you can hear... a hum, engine, pipe, or distant vibration. Let it be the bass line."
+    },
+    {
+      "startSeconds": 95,
+      "text": "Notice a higher sound... a bird, electronic tone, breath, or faint hiss. No need to hold it."
+    },
+    {
+      "startSeconds": 135,
+      "text": "Listen for rhythm. Some sounds repeat; others arrive once and leave their chair empty."
+    },
+    {
+      "startSeconds": 175,
+      "text": "Shift to the sound closest to the left... then closest to the right. Let attention move like a microphone on a slow rail."
+    },
+    {
+      "startSeconds": 215,
+      "text": "Hear something in front... then behind... without turning the head or searching hard."
+    },
+    {
+      "startSeconds": 255,
+      "text": "Notice silence as part of the arrangement. A rest in music is still held by the song."
+    },
+    {
+      "startSeconds": 300,
+      "text": "Let every sound play together without choosing a favourite. The orchestra assembles itself and dissolves itself."
+    },
+    {
+      "startSeconds": 345,
+      "text": "[reassuringly] If thought has been narrating, let that inner voice become one more instrument, then return to hearing."
+    },
+    {
+      "startSeconds": 375,
+      "text": "[softly] Open your eyes and carry the wide listening field into the next minute."
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "urge-surfing-v3-qda-v3",
+  "meditationId": "urge-surfing",
+  "title": "The Train Can Leave Without You",
+  "scriptRevision": "urge-train-v3",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/urge-surfing-v3-qda-v3-draft.md",
+  "durationSeconds": 540,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/urge-surfing-v3-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 501300,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Find a safe pause. Imagine standing on a quiet platform while an ordinary urge approaches like a train in the distance."
+    },
+    {
+      "startSeconds": 60,
+      "text": "Name the urge without boarding it. Wanting is here... impatience is here... a train is arriving."
+    },
+    {
+      "startSeconds": 110,
+      "text": "Feel where arrival happens in the body: hands, mouth, chest, belly, legs. Notice the first vibration on the rails."
+    },
+    {
+      "startSeconds": 160,
+      "text": "The train grows louder. Observe colour, pressure, temperature, and movement without stepping toward the door."
+    },
+    {
+      "startSeconds": 210,
+      "text": "Thoughts may advertise the destination. Hear the announcement and remain on the platform."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[reassuringly] You do not need to fight the train. Let it be present at full size while breathing remains natural."
+    },
+    {
+      "startSeconds": 310,
+      "text": "Notice the crest: perhaps urgency peaks, flickers, or changes location. Keep both feet connected to the ground."
+    },
+    {
+      "startSeconds": 360,
+      "text": "Listen for the first sign of departure. It may be subtle: one loosened muscle, one quieter sentence, one second of space."
+    },
+    {
+      "startSeconds": 410,
+      "text": "The train may linger or another may follow. Urges can repeat without becoming permanent orders."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[thoughtfully] Let your next choice come from the person on the platform, not from the loudspeaker."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[softly] Watch the red lights travel away. Feel the room around you and decide the next step in your own time."
+    }
+  ]
+}

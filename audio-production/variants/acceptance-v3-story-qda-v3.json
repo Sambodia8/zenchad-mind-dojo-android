@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "acceptance-v3-story-qda-v3",
+  "meditationId": "acceptance",
+  "title": "A River for the Fallen Leaves",
+  "scriptRevision": "acceptance-river-v3",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/acceptance-v3-story-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "public/assets/audio/meditations/acceptance-v3-story-qda-v3.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "adam owls soothing v2",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "modelId": "eleven_v3",
+  "seed": 501500,
+  "maxApprovedCharacters": 8000,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[softly] Let the body rest and imagine sitting beside a slow river beneath autumn trees."
+    },
+    {
+      "startSeconds": 65,
+      "text": "Notice the experience you are resisting. Name it gently if a name comes: fear... pressure... grief... wanting... no."
+    },
+    {
+      "startSeconds": 115,
+      "text": "Feel where it lives in the body. Let sensation be a fallen leaf touching water for the first time."
+    },
+    {
+      "startSeconds": 165,
+      "text": "Acceptance is the river making room for the leaf. It does not approve the storm that brought it down."
+    },
+    {
+      "startSeconds": 215,
+      "text": "Notice the urge to push, solve, explain, or cling. Let that urge become another leaf beside the first."
+    },
+    {
+      "startSeconds": 265,
+      "text": "Quietly repeat: this is what is here now... and this moment is allowed to be known."
+    },
+    {
+      "startSeconds": 315,
+      "text": "Observe whether sensation moves, stays, widens, or changes temperature. No movement is required."
+    },
+    {
+      "startSeconds": 365,
+      "text": "[reassuringly] The river is wider than one leaf. Include sounds, breath, contact points, and the room around the difficulty."
+    },
+    {
+      "startSeconds": 415,
+      "text": "If a thought returns, let it touch the surface and travel at its own pace."
+    },
+    {
+      "startSeconds": 465,
+      "text": "[thoughtfully] You can accept the reality of this moment and still choose boundaries, repair, or change in the next one."
+    },
+    {
+      "startSeconds": 515,
+      "text": "Let the river continue without watching every bend. Feel the body beside it, breathing and supported."
+    },
+    {
+      "startSeconds": 570,
+      "text": "[softly] Open your eyes when ready. Carry the river's spaciousness, not the leaves."
+    }
+  ]
+}
