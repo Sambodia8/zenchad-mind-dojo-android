@@ -1,6 +1,7 @@
 import type { Dispatch, SetStateAction } from "react";
 import {
   Award,
+  Bike,
   BookOpen,
   ChevronRight,
   Flower2,
@@ -27,6 +28,7 @@ const tools: Array<{
   { title: "Live Zen Guide", copy: "A warm recommendation for right now", route: { name: "guide" }, icon: MessageCircleHeart, tone: "sage" },
   { title: "Meditation journal", copy: "Private reflections kept on this device", route: { name: "journal" }, icon: BookOpen, tone: "lavender" },
   { title: "Weekly quests & badges", copy: "Collect gentle milestones without pressure", route: { name: "rewards" }, icon: Award, tone: "gold" },
+  { title: "Bike Quest", copy: "Turn bike prep, riding and recovery into XP", route: { name: "bike-quest" }, icon: Bike, tone: "gold" },
   { title: "Soundscapes", copy: "Offline rain, water and focus textures", route: { name: "soundscapes" }, icon: Headphones, tone: "blue" },
   { title: "Watercolour themes", copy: "Change the atmosphere, not the clarity", route: { name: "themes" }, icon: Palette, tone: "peach" },
   { title: "Emotional toolbox", copy: "Find what genuinely helps you regulate", route: { name: "library", tab: "emotional" }, icon: HeartHandshake, tone: "sage" },
