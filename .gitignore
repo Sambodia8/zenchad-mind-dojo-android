@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .playwright-cli/
+.git-legacy-backup/
 .idea/
 *.iml
 android/.gradle/
