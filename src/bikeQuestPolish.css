@@ -1,0 +1,225 @@
+/* Screenshot-driven Bike Quest polish.
+   These overrides deliberately favour narrow Android screens: narrower widths wrap more text,
+   so vertical whitespace is reduced rather than increased at phone breakpoints. */
+
+/* Dark Bike Quest surfaces must keep their own contrast even when the selected app theme uses dark ink. */
+.bike-step-card,
+.bike-ride-stage,
+.bike-bonus-card,
+.bike-ride-complete,
+.bike-quest-hero {
+  color: #f8fafc;
+}
+
+.bike-step-card h1,
+.bike-step-card h2,
+.bike-step-card h3,
+.bike-ride-stage h1,
+.bike-ride-stage h2,
+.bike-ride-stage strong,
+.bike-bonus-card h1,
+.bike-bonus-card h2,
+.bike-bonus-card h3,
+.bike-bonus-card strong,
+.bike-ride-complete h1,
+.bike-ride-complete h2,
+.bike-ride-complete strong,
+.bike-quest-hero h1 {
+  color: #f8fafc;
+}
+
+.bike-step-card p,
+.bike-step-card small,
+.bike-ride-stage p,
+.bike-ride-stage small,
+.bike-bonus-card p,
+.bike-bonus-card small,
+.bike-ride-complete p,
+.bike-ride-complete small,
+.bike-quest-hero p {
+  color: #cbd5e1;
+}
+
+.bike-step-card .eyebrow,
+.bike-ride-stage .eyebrow,
+.bike-bonus-card .eyebrow,
+.bike-ride-complete .eyebrow {
+  color: #f6c86b;
+}
+
+.bike-ride-clock {
+  color: #fff7d6;
+  text-shadow: 0 3px 24px rgba(250, 204, 21, 0.12);
+}
+
+.bike-ride-xp strong,
+.bike-ride-xp small {
+  color: #fde68a;
+}
+
+.bike-arm-set {
+  color: #f8fafc;
+}
+
+.bike-arm-set strong {
+  color: #f8fafc;
+}
+
+.bike-arm-set small {
+  color: #b9c5dd;
+}
+
+/* The screenshot exposed the tiny dumbbell asset as unreliable. Hide a failed/tiny image-sized
+   dependency here and use a robust in-app badge until the media pipeline is re-tested. */
+.bike-arm-set > img {
+  display: none;
+}
+
+.bike-arm-set::before {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border: 1px solid rgba(196, 181, 253, 0.28);
+  border-radius: 0.72rem;
+  color: #ddd6fe;
+  background: rgba(139, 92, 246, 0.12);
+  content: "ARM";
+  font-size: 0.66rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+/* Codex's browser is wider than the phone. If something is already vertically loose there,
+   narrower wrapping can only make it taller, so compress the ride/recovery vertical rhythm. */
+.bike-ride-stage {
+  padding: 0.85rem;
+}
+
+.bike-ride-stage > img {
+  width: min(62%, 300px);
+  max-height: min(25vh, 230px);
+  margin-bottom: 0.2rem;
+}
+
+.bike-ride-clock {
+  margin: 0.15rem 0 0.25rem;
+  font-size: clamp(3.5rem, 15vw, 5.8rem);
+}
+
+.bike-ride-stage > p {
+  max-width: 34rem;
+  margin: 0 auto 0.55rem;
+  line-height: 1.38;
+}
+
+.bike-ride-xp {
+  margin: 0.25rem auto 0.6rem;
+  padding: 0.55rem 0.8rem;
+}
+
+.bike-arm-set {
+  padding: 0.68rem 0.75rem;
+}
+
+.bike-end-ride {
+  min-height: 3.35rem;
+  margin-top: 0.55rem;
+}
+
+.bike-notification-note {
+  margin-top: 0.45rem;
+  line-height: 1.3;
+}
+
+.bike-ride-complete {
+  padding: 1rem;
+}
+
+.bike-bonus-card {
+  gap: 0.65rem;
+  padding: 0.82rem;
+}
+
+.bike-bonus-card h2,
+.bike-bonus-card p {
+  margin-bottom: 0.15rem;
+}
+
+/* Phone-specific pass. Text takes more lines on the real handset, so use the saved height for wrapping. */
+@media (max-width: 520px) {
+  .bike-quest {
+    gap: 0.65rem;
+  }
+
+  .bike-quest-hud {
+    padding: 0.58rem 0.68rem;
+  }
+
+  .bike-step-card {
+    padding: 0.78rem;
+  }
+
+  .bike-step-image {
+    max-height: min(34vh, 290px);
+    margin-bottom: 0.65rem;
+  }
+
+  .bike-ride-stage {
+    padding: 0.65rem 0.72rem;
+  }
+
+  .bike-ride-stage > img {
+    width: min(56%, 220px);
+    max-height: 19vh;
+  }
+
+  .bike-ride-clock {
+    font-size: clamp(3.25rem, 17vw, 4.9rem);
+  }
+
+  .bike-ride-stage > p {
+    margin-bottom: 0.42rem;
+    font-size: 0.88rem;
+  }
+
+  .bike-ride-xp {
+    margin-bottom: 0.48rem;
+    padding: 0.46rem 0.68rem;
+  }
+
+  .bike-arm-set {
+    grid-template-columns: 2.55rem 1fr;
+    gap: 0.62rem;
+    padding: 0.58rem 0.65rem;
+  }
+
+  .bike-arm-set::before {
+    width: 2.55rem;
+    height: 2.55rem;
+  }
+
+  .bike-end-ride {
+    min-height: 3.05rem;
+    margin-top: 0.42rem;
+  }
+
+  .bike-notification-note {
+    margin-top: 0.35rem;
+    font-size: 0.67rem;
+  }
+
+  .bike-ride-complete {
+    padding: 0.8rem;
+  }
+
+  .bike-bonus-card {
+    gap: 0.55rem;
+    padding: 0.7rem;
+  }
+
+  .bike-bonus-icon {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+}
