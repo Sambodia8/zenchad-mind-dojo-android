@@ -37,6 +37,7 @@ import SoundscapesScreen from "./screens/SoundscapesScreen";
 import RewardsScreen from "./screens/RewardsScreen";
 import ThemesScreen from "./screens/ThemesScreen";
 import SettingsScreen from "./screens/SettingsScreen";
+import BikeQuestScreen from "./screens/BikeQuestScreen";
 import LevelUpModal from "./components/LevelUpModal";
 import { getYogaClass } from "./data";
 import { playUiSfx, preloadUiSfx, type UiSfxName } from "./uiSfx";
@@ -58,6 +59,8 @@ const titleFor = (route: Route) => {
       return getYogaClass(route.classId).name;
     case "yoga-builder":
       return "Routine Builder";
+    case "bike-quest":
+      return "Bike Quest";
     case "timer":
       return "Meditation";
     case "journal":
@@ -89,6 +92,7 @@ export default function App() {
     "yoga-pose",
     "yoga-class",
     "yoga-builder",
+    "bike-quest",
     "journal",
     "guide",
     "soundscapes",
@@ -290,16 +294,29 @@ export default function App() {
         );
       case "yoga-pose":
         return <YogaPoseScreen movementId={route.movementId} navigate={navigate} />;
-      case "yoga-class":
+      case "yoga-class": {
+        const yogaNavigate: Dispatch<SetStateAction<Route>> = (nextRoute) => {
+          if (!route.returnToBikeQuest) {
+            navigate(nextRoute);
+            return;
+          }
+          const resolved = typeof nextRoute === "function" ? nextRoute(route) : nextRoute;
+          if (resolved.name === "yoga") {
+            navigate({ name: "bike-quest", resume: route.returnToBikeQuest });
+            return;
+          }
+          navigate(resolved);
+        };
         return (
           <YogaClassScreen
             key={route.classId}
             classId={route.classId}
             data={data}
             setData={setData}
-            navigate={navigate}
+            navigate={yogaNavigate}
           />
         );
+      }
       case "yoga-builder":
         return (
           <YogaRoutineBuilderScreen
@@ -307,6 +324,15 @@ export default function App() {
             data={data}
             setData={setData}
             navigate={navigate}
+          />
+        );
+      case "bike-quest":
+        return (
+          <BikeQuestScreen
+            data={data}
+            setData={setData}
+            navigate={navigate}
+            resume={route.resume}
           />
         );
       case "journal":
@@ -339,7 +365,7 @@ export default function App() {
       ? "library"
       : route.name === "yoga-pose" || route.name === "yoga-class" || route.name === "yoga-builder"
         ? "yoga"
-        : ["journal", "guide", "soundscapes", "rewards", "themes", "settings"].includes(route.name)
+        : ["bike-quest", "journal", "guide", "soundscapes", "rewards", "themes", "settings"].includes(route.name)
           ? "toolkit"
           : route.name;
 
