@@ -13,6 +13,9 @@ android/**/build/
 android/**/.cxx/
 android/**/.externalNativeBuild/
 android/**/local.properties
+android/app/src/main/assets/
+public/assets/audio/meditations/
+public/assets/audio/soundscapes/
 models/
 tmp/
 output/
