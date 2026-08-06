@@ -4,6 +4,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type CSSProperties,
   type Dispatch,
   type SetStateAction
 } from "react";
@@ -11,7 +12,6 @@ import {
   Bike,
   Check,
   Clock3,
-  Dumbbell,
   Footprints,
   Glasses,
   Play,
@@ -82,7 +82,7 @@ function RewardBurst({ celebration }: { celebration: Celebration }) {
     <div className="bike-reward-burst" role="status" aria-live="polite">
       <div className="bike-fireworks" aria-hidden="true">
         {Array.from({ length: 18 }, (_, index) => (
-          <span key={index} style={{ "--spark": index } as React.CSSProperties} />
+          <span key={index} style={{ "--spark": index } as CSSProperties} />
         ))}
       </div>
       <strong>{celebration.word}</strong>
@@ -127,6 +127,23 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
     [data.preferences.uiSoundsEnabled]
   );
 
+  const persistQuest = useCallback((next: BikeQuestState) => {
+    saveBikeQuestState(next);
+    setQuest(next);
+    setNow(Date.now());
+  }, []);
+
+  const updateQuest = useCallback(
+    (mutate: (current: BikeQuestState) => BikeQuestState) => {
+      const current = loadBikeQuestState();
+      if (!current) return null;
+      const next = mutate(current);
+      persistQuest(next);
+      return next;
+    },
+    [persistQuest]
+  );
+
   const awardXp = useCallback(
     (
       key: string,
@@ -135,24 +152,23 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
       mutate: (current: BikeQuestState) => BikeQuestState,
       stronger = false
     ) => {
-      setQuest((current) => {
-        if (!current || current.awards[key] !== undefined) return current;
-        const awarded = {
-          ...current,
-          awards: { ...current.awards, [key]: amount },
-          totalQuestXp: current.totalQuestXp + amount
-        };
-        const next = mutate(awarded);
-        saveBikeQuestState(next);
-        setData((currentData) => ({
-          ...currentData,
-          stats: addFlatXp(currentData.stats, amount)
-        }));
-        celebrate(label, amount, stronger);
-        return next;
-      });
+      const current = loadBikeQuestState();
+      if (!current || current.awards[key] !== undefined) return current;
+      const awarded: BikeQuestState = {
+        ...current,
+        awards: { ...current.awards, [key]: amount },
+        totalQuestXp: current.totalQuestXp + amount
+      };
+      const next = mutate(awarded);
+      persistQuest(next);
+      setData((currentData) => ({
+        ...currentData,
+        stats: addFlatXp(currentData.stats, amount)
+      }));
+      celebrate(label, amount, stronger);
+      return next;
     },
-    [celebrate, setData]
+    [celebrate, persistQuest, setData]
   );
 
   useEffect(() => {
@@ -190,9 +206,7 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
 
   const startQuest = () => {
     const next = createBikeQuestState();
-    saveBikeQuestState(next);
-    setQuest(next);
-    setNow(Date.now());
+    persistQuest(next);
   };
 
   const resetQuest = () => {
@@ -204,13 +218,18 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
 
   const chooseVr = useCallback(
     (choice: BikeVrChoice, source: "manual" | "coin") => {
-      awardXp("vr-choice", 10, source === "coin" ? `Coin says ${choice === "vr" ? "VR" : "no VR"}` : "Decision made", (current) => ({
-        ...current,
-        vrChoice: choice,
-        vrDecisionSource: source,
-        step: choice === "vr" ? "vr-check" : "gear",
-        stepStartedAt: Date.now()
-      }));
+      awardXp(
+        "vr-choice",
+        10,
+        source === "coin" ? `Coin says ${choice === "vr" ? "VR" : "no VR"}` : "Decision made",
+        (current) => ({
+          ...current,
+          vrChoice: choice,
+          vrDecisionSource: source,
+          step: choice === "vr" ? "vr-check" : "gear",
+          stepStartedAt: Date.now()
+        })
+      );
     },
     [awardXp]
   );
@@ -234,9 +253,10 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
   };
 
   const completeTimedStep = (step: "gear" | "shoes" | "water" | "mount") => {
-    if (!quest) return;
+    const current = loadBikeQuestState();
+    if (!current || current.step !== step) return;
     const config = BIKE_TIMED_STEPS[step];
-    const elapsed = Math.max(0, (Date.now() - quest.stepStartedAt) / 1000);
+    const elapsed = Math.max(0, (Date.now() - current.stepStartedAt) / 1000);
     const xp = timedStepXp(
       elapsed,
       config.targetSeconds,
@@ -244,53 +264,69 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
       config.baseXp,
       config.bonusXp
     );
-    const nextStep = step === "gear" ? "shoes" : step === "shoes" ? "pre-stretch" : step === "water" ? "mount" : "ride";
+    const nextStep =
+      step === "gear"
+        ? "shoes"
+        : step === "shoes"
+          ? "pre-stretch"
+          : step === "water"
+            ? "mount"
+            : "ride";
     const nextStartedAt = Date.now();
-    awardXp(`step-${step}`, xp, config.title, (current) => ({
-      ...current,
-      step: nextStep,
-      stepStartedAt: nextStartedAt,
-      rideStartedAt: step === "mount" ? nextStartedAt : current.rideStartedAt
-    }), step === "mount");
-    if (step === "mount") void showBikeRideRunningNotification();
+    const next = awardXp(
+      `step-${step}`,
+      xp,
+      config.title,
+      (awarded) => ({
+        ...awarded,
+        step: nextStep,
+        stepStartedAt: nextStartedAt,
+        rideStartedAt: step === "mount" ? nextStartedAt : awarded.rideStartedAt
+      }),
+      step === "mount"
+    );
+    if (step === "mount" && next?.step === "ride") void showBikeRideRunningNotification();
   };
 
   const startPreStretch = () => {
-    if (!quest) return;
-    const elapsed = Math.max(0, (Date.now() - quest.stepStartedAt) / 1000);
+    const current = loadBikeQuestState();
+    if (!current || current.step !== "pre-stretch") return;
+    const elapsed = Math.max(0, (Date.now() - current.stepStartedAt) / 1000);
     const xp = immediateBonusXp(elapsed, PRE_STRETCH_BONUS_DRAIN_SECONDS, 20, 30);
-    awardXp("pre-stretch-start", xp, "Started stretches", (current) => current);
-    navigate({ name: "yoga-class", classId: "before-cycling", returnToBikeQuest: "pre-stretch-complete" });
+    awardXp("pre-stretch-start", xp, "Started stretches", (awarded) => awarded);
+    navigate({
+      name: "yoga-class",
+      classId: "before-cycling",
+      returnToBikeQuest: "pre-stretch-complete"
+    });
   };
 
   const logArmSet = () => {
-    if (!quest || quest.step !== "ride") return;
-    const nextNumber = quest.armSets + 1;
-    awardXp(`arm-set-${nextNumber}`, ARM_SET_XP, `Arm set ${nextNumber}`, (current) => ({
-      ...current,
+    const current = loadBikeQuestState();
+    if (!current || current.step !== "ride") return;
+    const nextNumber = current.armSets + 1;
+    awardXp(`arm-set-${nextNumber}`, ARM_SET_XP, `Arm set ${nextNumber}`, (awarded) => ({
+      ...awarded,
       armSets: nextNumber
     }));
   };
 
   const endRide = () => {
-    if (!quest?.rideStartedAt) return;
+    const current = loadBikeQuestState();
+    if (!current?.rideStartedAt || current.step !== "ride" || current.awards.ride !== undefined) return;
     const endedAt = Date.now();
-    const seconds = Math.max(1, Math.round((endedAt - quest.rideStartedAt) / 1000));
+    const seconds = Math.max(1, Math.round((endedAt - current.rideStartedAt) / 1000));
     const rideXp = projectedRideXp(seconds);
-    setQuest((current) => {
-      if (!current || current.awards.ride !== undefined) return current;
-      const next: BikeQuestState = {
-        ...current,
-        rideEndedAt: endedAt,
-        rideSeconds: seconds,
-        step: "recovery",
-        stepStartedAt: endedAt,
-        awards: { ...current.awards, ride: rideXp },
-        totalQuestXp: current.totalQuestXp + rideXp
-      };
-      saveBikeQuestState(next);
-      return next;
-    });
+    const next: BikeQuestState = {
+      ...current,
+      rideEndedAt: endedAt,
+      rideSeconds: seconds,
+      step: "recovery",
+      stepStartedAt: endedAt,
+      awards: { ...current.awards, ride: rideXp },
+      totalQuestXp: current.totalQuestXp + rideXp
+    };
+    persistQuest(next);
     setData((currentData) => ({
       ...currentData,
       stats: addCompletedSession(currentData.stats, seconds)
@@ -300,43 +336,37 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
   };
 
   const startPostStretch = () => {
-    navigate({ name: "yoga-class", classId: "after-cycling", returnToBikeQuest: "post-stretch-complete" });
-  };
-
-  const skipPostStretch = () => {
-    setQuest((current) => {
-      if (!current) return current;
-      const next = { ...current, postStretchSkipped: true };
-      saveBikeQuestState(next);
-      return next;
+    navigate({
+      name: "yoga-class",
+      classId: "after-cycling",
+      returnToBikeQuest: "post-stretch-complete"
     });
   };
 
+  const skipPostStretch = () => {
+    updateQuest((current) => ({ ...current, postStretchSkipped: true }));
+  };
+
   const logShower = () => {
-    if (!quest || quest.showerLogged) return;
-    awardXp("shower", 20, "Shower done", (current) => ({
-      ...current,
+    const current = loadBikeQuestState();
+    if (!current || current.showerLogged) return;
+    awardXp("shower", 20, "Shower done", (awarded) => ({
+      ...awarded,
       showerLogged: true,
       showerSkipped: false
     }));
   };
 
   const skipShower = () => {
-    setQuest((current) => {
-      if (!current) return current;
-      const next = { ...current, showerSkipped: true };
-      saveBikeQuestState(next);
-      return next;
-    });
+    updateQuest((current) => ({ ...current, showerSkipped: true }));
   };
 
   const finishQuest = () => {
-    setQuest((current) => {
-      if (!current) return current;
-      const next = { ...current, step: "complete" as const, stepStartedAt: Date.now() };
-      saveBikeQuestState(next);
-      return next;
-    });
+    updateQuest((current) => ({
+      ...current,
+      step: "complete",
+      stepStartedAt: Date.now()
+    }));
   };
 
   const elapsedForStep = quest ? Math.max(0, (now - quest.stepStartedAt) / 1000) : 0;
@@ -347,7 +377,18 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
 
   const progress = useMemo(() => {
     if (!quest) return 0;
-    const order = ["vr-choice", "vr-check", "gear", "shoes", "pre-stretch", "water", "mount", "ride", "recovery", "complete"];
+    const order = [
+      "vr-choice",
+      "vr-check",
+      "gear",
+      "shoes",
+      "pre-stretch",
+      "water",
+      "mount",
+      "ride",
+      "recovery",
+      "complete"
+    ];
     return Math.max(0, order.indexOf(quest.step));
   }, [quest]);
 
@@ -371,7 +412,9 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
     <div className="bike-quest-hud">
       <span><Bike size={16} /> Bike Quest</span>
       <span><b>+{quest.totalQuestXp}</b> XP this quest</span>
-      <div className="bike-quest-progress"><span style={{ width: `${Math.min(100, (progress / 9) * 100)}%` }} /></div>
+      <div className="bike-quest-progress">
+        <span style={{ width: `${Math.min(100, (progress / 9) * 100)}%` }} />
+      </div>
     </div>
   );
 
@@ -385,15 +428,25 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
           <h1>VR today?</h1>
           <p>If choosing feels like effort, outsource the decision to the stupid little coin.</p>
           <div className="bike-choice-grid">
-            <button onClick={() => chooseVr("vr", "manual")}><Glasses /> VR <small>+10 XP</small></button>
-            <button onClick={() => chooseVr("no-vr", "manual")}><Bike /> No VR <small>+10 XP</small></button>
+            <button onClick={() => chooseVr("vr", "manual")}>
+              <Glasses /> VR <small>+10 XP</small>
+            </button>
+            <button onClick={() => chooseVr("no-vr", "manual")}>
+              <Bike /> No VR <small>+10 XP</small>
+            </button>
           </div>
-          <button className={`bike-coin ${coinFlipping ? "flipping" : ""}`} onClick={flipCoin} disabled={coinFlipping}>
+          <button
+            className={`bike-coin ${coinFlipping ? "flipping" : ""}`}
+            onClick={flipCoin}
+            disabled={coinFlipping}
+          >
             <span>{coinFlipping ? "?" : "I DON’T KNOW"}</span>
             <small>{coinFlipping ? "Fate is doing admin…" : "Flip for VR / no VR"}</small>
           </button>
         </section>
-        <button className="button ghost full" onClick={resetQuest}><RotateCcw size={17} /> Reset quest</button>
+        <button className="button ghost full" onClick={resetQuest}>
+          <RotateCcw size={17} /> Reset quest
+        </button>
         {celebration ? <RewardBurst celebration={celebration} /> : null}
       </div>
     );
@@ -408,8 +461,12 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
           <span className="eyebrow">VR prep</span>
           <h1>Wake the headset</h1>
           <p>Turn it on now. Check Holofit is updated before an enormous surprise download murders the plan.</p>
-          <div className="bike-guarantee"><Check /> This step is worth XP even if Holofit needs an update.</div>
-          <button className="button primary full" onClick={completeVrCheck}>Checked — ready <b>+20 XP</b></button>
+          <div className="bike-guarantee">
+            <Check /> This step is worth XP even if Holofit needs an update.
+          </div>
+          <button className="button primary full" onClick={completeVrCheck}>
+            Checked — ready <b>+20 XP</b>
+          </button>
         </section>
         {celebration ? <RewardBurst celebration={celebration} /> : null}
       </div>
@@ -427,8 +484,16 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
       : Math.max(0, config.graceSeconds - graceElapsed);
     const progressFraction = inTarget
       ? elapsedForStep / config.targetSeconds
-      : config.graceSeconds > 0 ? graceElapsed / config.graceSeconds : 1;
-    const currentXp = timedStepXp(elapsedForStep, config.targetSeconds, config.graceSeconds, config.baseXp, config.bonusXp);
+      : config.graceSeconds > 0
+        ? graceElapsed / config.graceSeconds
+        : 1;
+    const currentXp = timedStepXp(
+      elapsedForStep,
+      config.targetSeconds,
+      config.graceSeconds,
+      config.baseXp,
+      config.bonusXp
+    );
     return (
       <div className="screen-stack bike-quest">
         {questHeader}
@@ -442,11 +507,20 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
           <h1>{config.title}</h1>
           <p>{config.instruction}</p>
           <div className={`bike-momentum ${inTarget ? "target" : inGrace ? "grace" : "base"}`}>
-            <div className="bike-timer-ring" style={{ "--timer-progress": `${Math.min(1, progressFraction) * 360}deg` } as React.CSSProperties}>
+            <div
+              className="bike-timer-ring"
+              style={{ "--timer-progress": `${Math.min(1, progressFraction) * 360}deg` } as CSSProperties}
+            >
               <strong>{formatClock(remaining)}</strong>
             </div>
             <div>
-              <small>{inTarget ? "Full momentum bonus safe" : inGrace ? "Bonus draining" : "Bonus gone — base XP is safe"}</small>
+              <small>
+                {inTarget
+                  ? "Full momentum bonus safe"
+                  : inGrace
+                    ? "Bonus draining"
+                    : "Bonus gone — base XP is safe"}
+              </small>
               <strong>{currentXp} XP if completed now</strong>
               <span>{config.baseXp} XP guaranteed · up to {config.bonusXp} bonus</span>
             </div>
@@ -461,18 +535,32 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
   }
 
   if (quest.step === "pre-stretch") {
-    const startXp = immediateBonusXp(elapsedForStep, PRE_STRETCH_BONUS_DRAIN_SECONDS, 20, 30);
+    const startXp = immediateBonusXp(
+      elapsedForStep,
+      PRE_STRETCH_BONUS_DRAIN_SECONDS,
+      20,
+      30
+    );
     const remaining = Math.max(0, PRE_STRETCH_BONUS_DRAIN_SECONDS - elapsedForStep);
     return (
       <div className="screen-stack bike-quest">
         {questHeader}
         <section className="bike-step-card">
-          <img className="bike-step-image" src="assets/stretches/generated/indoor-cycling.png" alt="Indoor cycling warm-up illustration" />
+          <img
+            className="bike-step-image"
+            src="assets/stretches/generated/indoor-cycling.png"
+            alt="Indoor cycling warm-up illustration"
+          />
           <span className="eyebrow">Yoga with Mark · 4 min</span>
           <h1>Pre-bike stretches</h1>
           <p>The stretch routine keeps its proper pace. The bonus timer only rewards how quickly you begin it.</p>
           <div className="bike-momentum grace">
-            <div className="bike-timer-ring" style={{ "--timer-progress": `${Math.min(1, elapsedForStep / PRE_STRETCH_BONUS_DRAIN_SECONDS) * 360}deg` } as React.CSSProperties}>
+            <div
+              className="bike-timer-ring"
+              style={{
+                "--timer-progress": `${Math.min(1, elapsedForStep / PRE_STRETCH_BONUS_DRAIN_SECONDS) * 360}deg`
+              } as CSSProperties}
+            >
               <strong>{formatClock(remaining)}</strong>
             </div>
             <div>
@@ -481,7 +569,9 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
               <span>The Yoga class awards its normal completion XP as well.</span>
             </div>
           </div>
-          <button className="button primary full" onClick={startPreStretch}><Play fill="currentColor" /> Start Yoga with Mark <b>+{startXp} XP</b></button>
+          <button className="button primary full" onClick={startPreStretch}>
+            <Play fill="currentColor" /> Start Yoga with Mark <b>+{startXp} XP</b>
+          </button>
         </section>
         {celebration ? <RewardBurst celebration={celebration} /> : null}
       </div>
@@ -497,13 +587,21 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
           <span className="eyebrow">Ride live</span>
           <strong className="bike-ride-clock">{formatClock(rideSeconds)}</strong>
           <p>Keep going for however long is useful. Time only increases the reward.</p>
-          <div className="bike-ride-xp"><Sparkles /><span><small>Ride XP building</small><strong>+{liveRideXp} XP</strong></span></div>
+          <div className="bike-ride-xp">
+            <Sparkles />
+            <span><small>Ride XP building</small><strong>+{liveRideXp} XP</strong></span>
+          </div>
           <button className="bike-arm-set" onClick={logArmSet}>
-            <Dumbbell />
-            <span><strong>Log arm set</strong><small>{quest.armSets} logged · +{ARM_SET_XP} XP each</small></span>
+            <img src="assets/bike-quest/dumbbell.webp" alt="" />
+            <span>
+              <strong>Log arm set</strong>
+              <small>{quest.armSets} logged · +{ARM_SET_XP} XP each</small>
+            </span>
           </button>
           <button className="button primary full bike-end-ride" onClick={endRide}>END RIDE</button>
-          <small className="bike-notification-note"><Clock3 size={14} /> Android keeps a Bike Quest notification visible while this timer is running.</small>
+          <small className="bike-notification-note">
+            <Clock3 size={14} /> Android keeps a Bike Quest notification visible while this timer is running.
+          </small>
         </section>
         {celebration ? <RewardBurst celebration={celebration} /> : null}
       </div>
@@ -519,30 +617,50 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
           <span className="eyebrow">The bike part is already complete</span>
           <h1>{formatClock(quest.rideSeconds)} banked.</h1>
           <p>No optional step can take that away. The bits below are bonus quests only.</p>
-          <div className="completion-reward-burst"><Sparkles /><span><strong>+{quest.awards.ride ?? 0} ride XP</strong><small>{quest.armSets} arm set{quest.armSets === 1 ? "" : "s"} logged</small></span></div>
+          <div className="completion-reward-burst">
+            <Sparkles />
+            <span>
+              <strong>+{quest.awards.ride ?? 0} ride XP</strong>
+              <small>{quest.armSets} arm set{quest.armSets === 1 ? "" : "s"} logged</small>
+            </span>
+          </div>
         </section>
 
         <section className={`bike-bonus-card ${quest.postStretchCompleted ? "done" : ""}`}>
           <div className="bike-bonus-icon"><Footprints /></div>
-          <div><span className="eyebrow">Optional bonus</span><h2>5-min warm-down</h2><p>Run the existing After Cycling routine in Yoga with Mark.</p></div>
+          <div>
+            <span className="eyebrow">Optional bonus</span>
+            <h2>5-min warm-down</h2>
+            <p>Run the existing After Cycling routine in Yoga with Mark.</p>
+          </div>
           {quest.postStretchCompleted ? (
             <span className="bike-bonus-done"><Check /> Done</span>
           ) : quest.postStretchSkipped ? (
             <button className="button ghost" onClick={startPostStretch}>Changed my mind</button>
           ) : (
-            <div className="bike-bonus-actions"><button className="button primary" onClick={startPostStretch}>Do warm-down</button><button className="button ghost" onClick={skipPostStretch}>Skip</button></div>
+            <div className="bike-bonus-actions">
+              <button className="button primary" onClick={startPostStretch}>Do warm-down</button>
+              <button className="button ghost" onClick={skipPostStretch}>Skip</button>
+            </div>
           )}
         </section>
 
         <section className={`bike-bonus-card ${quest.showerLogged ? "done" : ""}`}>
           <div className="bike-bonus-icon"><ShowerHead /></div>
-          <div><span className="eyebrow">Optional bonus</span><h2>Shower</h2><p>Useful when you need one; completely skippable when you do not.</p></div>
+          <div>
+            <span className="eyebrow">Optional bonus</span>
+            <h2>Shower</h2>
+            <p>Useful when you need one; completely skippable when you do not.</p>
+          </div>
           {quest.showerLogged ? (
             <span className="bike-bonus-done"><Check /> +20 XP</span>
           ) : quest.showerSkipped ? (
             <button className="button ghost" onClick={logShower}>Actually, showered</button>
           ) : (
-            <div className="bike-bonus-actions"><button className="button primary" onClick={logShower}>Showered +20 XP</button><button className="button ghost" onClick={skipShower}>Not needed</button></div>
+            <div className="bike-bonus-actions">
+              <button className="button primary" onClick={logShower}>Showered +20 XP</button>
+              <button className="button ghost" onClick={skipShower}>Not needed</button>
+            </div>
           )}
         </section>
 
@@ -559,8 +677,13 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
         <span className="completion-mark"><Check /></span>
         <span className="eyebrow">Bike Quest complete</span>
         <h1>{quest.totalQuestXp} quest XP banked.</h1>
-        <p>{formatClock(quest.rideSeconds)} on the bike · {quest.armSets} arm set{quest.armSets === 1 ? "" : "s"}. The next quest starts from zero fuss.</p>
-        <button className="button primary full" onClick={resetQuest}><RotateCcw /> Start a fresh quest</button>
+        <p>
+          {formatClock(quest.rideSeconds)} on the bike · {quest.armSets} arm set
+          {quest.armSets === 1 ? "" : "s"}. The next quest starts from zero fuss.
+        </p>
+        <button className="button primary full" onClick={resetQuest}>
+          <RotateCcw /> Start a fresh quest
+        </button>
       </section>
       {celebration ? <RewardBurst celebration={celebration} /> : null}
     </div>
