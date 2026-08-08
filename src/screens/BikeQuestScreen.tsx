@@ -12,15 +12,17 @@ import {
   Bike,
   Check,
   Clock3,
+  Dumbbell,
   Footprints,
   Glasses,
   Play,
   RotateCcw,
   ShowerHead,
   Sparkles,
-  Trophy
+  Trophy,
+  X
 } from "lucide-react";
-import { LEVEL_THRESHOLDS } from "../data";
+import { LEVEL_THRESHOLDS, getYogaClass, getYogaClassDuration } from "../data";
 import {
   BIKE_TIMED_STEPS,
   clearBikeQuestState,
@@ -52,13 +54,28 @@ interface Props {
 interface Celebration {
   id: number;
   label: string;
-  xp: number;
+  xp?: number;
   word: string;
+  mini?: boolean;
 }
 
 const CELEBRATION_WORDS = ["NICE", "SICK", "RADICAL", "LAD", "LEGEND"];
 const PRE_STRETCH_BONUS_DRAIN_SECONDS = 4 * 60;
 const ARM_SET_XP = 25;
+const RIDE_MILESTONES = [5, 10, 15, 20, 30, 45, 60].map((minutes) => minutes * 60);
+
+const STEP_LABELS: Record<BikeQuestState["step"], string> = {
+  "vr-choice": "Choose VR or no VR",
+  "vr-check": "Check the headset",
+  gear: "Get dressed",
+  shoes: "Put your bike shoes on",
+  "pre-stretch": "Start pre-bike stretches",
+  water: "Get water and towel",
+  mount: "Get on the bike",
+  ride: "Ride in progress",
+  recovery: "Optional recovery bonuses",
+  complete: "Quest complete"
+};
 
 const formatClock = (seconds: number) => {
   const safe = Math.max(0, Math.floor(seconds));
@@ -79,25 +96,57 @@ const addFlatXp = (stats: Stats, amount: number): Stats => {
 
 function RewardBurst({ celebration }: { celebration: Celebration }) {
   return (
-    <div className="bike-reward-burst" role="status" aria-live="polite">
+    <div
+      className={`bike-reward-burst ${celebration.mini ? "mini" : ""}`}
+      role="status"
+      aria-live="polite"
+    >
       <div className="bike-fireworks" aria-hidden="true">
-        {Array.from({ length: 18 }, (_, index) => (
-          <span key={index} style={{ "--spark": index } as CSSProperties} />
+        {Array.from({ length: celebration.mini ? 18 : 30 }, (_, index) => (
+          <span
+            key={index}
+            className={`cluster-${Math.floor(index / 10)}`}
+            style={{ "--spark": index % 10 } as CSSProperties}
+          />
         ))}
       </div>
       <strong>{celebration.word}</strong>
       <span>{celebration.label}</span>
-      <b>+{celebration.xp} XP</b>
+      {celebration.xp !== undefined ? <b>+{celebration.xp} XP</b> : null}
     </div>
   );
 }
 
 export default function BikeQuestScreen({ data, setData, navigate, resume }: Props) {
-  const [quest, setQuest] = useState<BikeQuestState | null>(() => loadBikeQuestState());
+  const restoredQuest = useRef<BikeQuestState | null>(loadBikeQuestState());
+  const [quest, setQuest] = useState<BikeQuestState | null>(restoredQuest.current);
   const [now, setNow] = useState(Date.now());
   const [coinFlipping, setCoinFlipping] = useState(false);
+  const [coinResult, setCoinResult] = useState<BikeVrChoice | null>(null);
   const [celebration, setCelebration] = useState<Celebration | null>(null);
+  const [armSetLocked, setArmSetLocked] = useState(false);
+  const [displayedQuestXp, setDisplayedQuestXp] = useState(restoredQuest.current?.totalQuestXp ?? 0);
+  const [resumeNotice, setResumeNotice] = useState(
+    Boolean(
+      restoredQuest.current &&
+      restoredQuest.current.step !== "complete" &&
+      !resume &&
+      Date.now() - restoredQuest.current.startedAt > 10_000
+    )
+  );
   const celebrationTimer = useRef<number | null>(null);
+  const armLockTimer = useRef<number | null>(null);
+  const milestonesInitialised = useRef(false);
+  const lastMilestone = useRef(0);
+
+  const preStretchDuration = useMemo(
+    () => getYogaClassDuration(getYogaClass("before-cycling")),
+    []
+  );
+  const postStretchDuration = useMemo(
+    () => getYogaClassDuration(getYogaClass("after-cycling")),
+    []
+  );
 
   useEffect(() => {
     if (!quest || quest.step === "complete") return;
@@ -108,21 +157,58 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
   useEffect(
     () => () => {
       if (celebrationTimer.current) window.clearTimeout(celebrationTimer.current);
+      if (armLockTimer.current) window.clearTimeout(armLockTimer.current);
     },
     []
   );
 
+  useEffect(() => {
+    const target = quest?.totalQuestXp ?? 0;
+    if (data.preferences.reducedMotion) {
+      setDisplayedQuestXp(target);
+      return;
+    }
+    const from = displayedQuestXp;
+    if (from === target) return;
+    let frame = 0;
+    const started = performance.now();
+    const duration = 620;
+    const animate = (timestamp: number) => {
+      const progress = Math.min(1, (timestamp - started) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplayedQuestXp(Math.round(from + (target - from) * eased));
+      if (progress < 1) frame = window.requestAnimationFrame(animate);
+    };
+    frame = window.requestAnimationFrame(animate);
+    return () => window.cancelAnimationFrame(frame);
+  }, [quest?.totalQuestXp, data.preferences.reducedMotion]);
+
   const celebrate = useCallback(
-    (label: string, xp: number, stronger = false) => {
+    (
+      label: string,
+      xp?: number,
+      stronger = false,
+      forcedWord?: string,
+      mini = false
+    ) => {
       if (celebrationTimer.current) window.clearTimeout(celebrationTimer.current);
-      const word = CELEBRATION_WORDS[Math.floor(Math.random() * CELEBRATION_WORDS.length)];
-      setCelebration({ id: Date.now(), label, xp, word });
-      navigator.vibrate?.(stronger ? [35, 35, 75, 45, 120, 55, 75] : [28, 32, 65, 35, 90]);
+      const word = forcedWord ?? CELEBRATION_WORDS[Math.floor(Math.random() * CELEBRATION_WORDS.length)];
+      setCelebration({ id: Date.now(), label, xp, word, mini });
+      navigator.vibrate?.(
+        mini
+          ? [22, 28, 52, 36, 72]
+          : stronger
+            ? [32, 28, 78, 36, 120, 42, 88, 32, 135]
+            : [28, 32, 65, 35, 90]
+      );
       if (data.preferences.uiSoundsEnabled) {
         playUiSfx(stronger ? "victory" : "xpGain");
-        if (stronger) window.setTimeout(() => playUiSfx("xpGain"), 380);
+        if (stronger) window.setTimeout(() => playUiSfx("xpGain"), 360);
       }
-      celebrationTimer.current = window.setTimeout(() => setCelebration(null), 1350);
+      celebrationTimer.current = window.setTimeout(
+        () => setCelebration(null),
+        mini ? 1050 : 1550
+      );
     },
     [data.preferences.uiSoundsEnabled]
   );
@@ -173,6 +259,7 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
 
   useEffect(() => {
     if (!quest || !resume) return;
+    setResumeNotice(false);
     if (resume === "pre-stretch-complete" && !quest.preStretchCompleted) {
       awardXp(
         "pre-stretch-finish",
@@ -204,8 +291,42 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
     }
   }, [awardXp, quest, resume]);
 
+  useEffect(() => {
+    if (quest?.step === "ride" && quest.rideStartedAt) {
+      void showBikeRideRunningNotification();
+    }
+  }, [quest?.step, quest?.rideStartedAt]);
+
+  const rideSeconds = quest?.rideStartedAt
+    ? Math.max(1, Math.floor(((quest.rideEndedAt ?? now) - quest.rideStartedAt) / 1000))
+    : 0;
+
+  useEffect(() => {
+    if (quest?.step !== "ride") {
+      milestonesInitialised.current = false;
+      lastMilestone.current = 0;
+      return;
+    }
+    if (!milestonesInitialised.current) {
+      lastMilestone.current =
+        RIDE_MILESTONES.filter((milestone) => milestone <= rideSeconds).at(-1) ?? 0;
+      milestonesInitialised.current = true;
+      return;
+    }
+    const reached = RIDE_MILESTONES.filter(
+      (milestone) => milestone > lastMilestone.current && milestone <= rideSeconds
+    ).at(-1);
+    if (!reached) return;
+    lastMilestone.current = reached;
+    const minutes = Math.round(reached / 60);
+    celebrate(`${minutes} minutes on the bike`, undefined, false, `${minutes} MIN`, true);
+  }, [celebrate, quest?.step, rideSeconds]);
+
   const startQuest = () => {
     const next = createBikeQuestState();
+    restoredQuest.current = null;
+    setResumeNotice(false);
+    setDisplayedQuestXp(0);
     persistQuest(next);
   };
 
@@ -213,15 +334,19 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
     void cancelBikeRideNotification();
     clearBikeQuestState();
     setQuest(null);
+    setCoinResult(null);
     setCelebration(null);
+    setResumeNotice(false);
+    setDisplayedQuestXp(0);
   };
 
   const chooseVr = useCallback(
     (choice: BikeVrChoice, source: "manual" | "coin") => {
+      setCoinResult(null);
       awardXp(
         "vr-choice",
         10,
-        source === "coin" ? `Coin says ${choice === "vr" ? "VR" : "no VR"}` : "Decision made",
+        source === "coin" ? "Decision made" : "Decision made",
         (current) => ({
           ...current,
           vrChoice: choice,
@@ -237,10 +362,15 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
   const flipCoin = () => {
     if (coinFlipping) return;
     setCoinFlipping(true);
-    navigator.vibrate?.([20, 25, 20, 25, 20]);
+    setCoinResult(null);
+    navigator.vibrate?.([18, 22, 18, 22, 18]);
+    if (data.preferences.uiSoundsEnabled) playUiSfx("wheelSpin");
     window.setTimeout(() => {
-      chooseVr(Math.random() < 0.5 ? "vr" : "no-vr", "coin");
+      const result: BikeVrChoice = Math.random() < 0.5 ? "vr" : "no-vr";
+      setCoinResult(result);
       setCoinFlipping(false);
+      navigator.vibrate?.([32, 35, 90]);
+      if (data.preferences.uiSoundsEnabled) playUiSfx("wheelLand");
     }, 900);
   };
 
@@ -302,13 +432,17 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
   };
 
   const logArmSet = () => {
+    if (armSetLocked) return;
     const current = loadBikeQuestState();
     if (!current || current.step !== "ride") return;
+    setArmSetLocked(true);
     const nextNumber = current.armSets + 1;
     awardXp(`arm-set-${nextNumber}`, ARM_SET_XP, `Arm set ${nextNumber}`, (awarded) => ({
       ...awarded,
       armSets: nextNumber
     }));
+    if (armLockTimer.current) window.clearTimeout(armLockTimer.current);
+    armLockTimer.current = window.setTimeout(() => setArmSetLocked(false), 900);
   };
 
   const endRide = () => {
@@ -332,7 +466,7 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
       stats: addCompletedSession(currentData.stats, seconds)
     }));
     void cancelBikeRideNotification();
-    celebrate("Ride complete", rideXp, true);
+    celebrate("Ride complete", rideXp, true, "LEGEND");
   };
 
   const startPostStretch = () => {
@@ -370,9 +504,6 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
   };
 
   const elapsedForStep = quest ? Math.max(0, (now - quest.stepStartedAt) / 1000) : 0;
-  const rideSeconds = quest?.rideStartedAt
-    ? Math.max(1, Math.floor(((quest.rideEndedAt ?? now) - quest.rideStartedAt) / 1000))
-    : 0;
   const liveRideXp = projectedRideXp(rideSeconds);
 
   const progress = useMemo(() => {
@@ -409,16 +540,34 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
   }
 
   const questHeader = (
-    <div className="bike-quest-hud">
-      <span><Bike size={16} /> Bike Quest</span>
-      <span><b>+{quest.totalQuestXp}</b> XP this quest</span>
-      <div className="bike-quest-progress">
-        <span style={{ width: `${Math.min(100, (progress / 9) * 100)}%` }} />
+    <>
+      <div className="bike-quest-hud">
+        <span><Bike size={16} /> Bike Quest</span>
+        <span><b>+{displayedQuestXp}</b> XP this quest</span>
+        <div className="bike-quest-progress">
+          <span style={{ width: `${Math.min(100, (progress / 9) * 100)}%` }} />
+        </div>
       </div>
-    </div>
+      {resumeNotice ? (
+        <section className="bike-resume-banner" role="status">
+          <div>
+            <strong>WELCOME BACK</strong>
+            <span>
+              {quest.step === "ride"
+                ? `Ride still running · ${formatClock(rideSeconds)}`
+                : STEP_LABELS[quest.step]}
+            </span>
+          </div>
+          <button onClick={() => setResumeNotice(false)} aria-label="Dismiss welcome back message">
+            <X size={17} />
+          </button>
+        </section>
+      ) : null}
+    </>
   );
 
   if (quest.step === "vr-choice") {
+    const oppositeChoice: BikeVrChoice = coinResult === "vr" ? "no-vr" : "vr";
     return (
       <div className="screen-stack bike-quest">
         {questHeader}
@@ -426,7 +575,7 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
           <div className="bike-step-illustration"><Glasses size={82} /></div>
           <span className="eyebrow">Step 1</span>
           <h1>VR today?</h1>
-          <p>If choosing feels like effort, outsource the decision to the stupid little coin.</p>
+          <p>If choosing feels like effort, let the coin make a suggestion. You can ignore it with zero penalty.</p>
           <div className="bike-choice-grid">
             <button onClick={() => chooseVr("vr", "manual")}>
               <Glasses /> VR <small>+10 XP</small>
@@ -435,14 +584,29 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
               <Bike /> No VR <small>+10 XP</small>
             </button>
           </div>
-          <button
-            className={`bike-coin ${coinFlipping ? "flipping" : ""}`}
-            onClick={flipCoin}
-            disabled={coinFlipping}
-          >
-            <span>{coinFlipping ? "?" : "I DON’T KNOW"}</span>
-            <small>{coinFlipping ? "Fate is doing admin…" : "Flip for VR / no VR"}</small>
-          </button>
+          {coinResult ? (
+            <div className="bike-coin-result">
+              <small>COIN SAYS</small>
+              <strong>{coinResult === "vr" ? "VR" : "NO VR"}</strong>
+              <div>
+                <button className="button primary" onClick={() => chooseVr(coinResult, "coin")}>
+                  Go with it +10 XP
+                </button>
+                <button className="button ghost" onClick={() => chooseVr(oppositeChoice, "coin")}>
+                  Nah — {oppositeChoice === "vr" ? "VR" : "no VR"}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              className={`bike-coin ${coinFlipping ? "flipping" : ""}`}
+              onClick={flipCoin}
+              disabled={coinFlipping}
+            >
+              <span>{coinFlipping ? "?" : "I DON’T KNOW"}</span>
+              <small>{coinFlipping ? "Fate is doing admin…" : "Flip for a VR / no-VR suggestion"}</small>
+            </button>
+          )}
         </section>
         <button className="button ghost full" onClick={resetQuest}>
           <RotateCcw size={17} /> Reset quest
@@ -482,11 +646,11 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
     const remaining = inTarget
       ? config.targetSeconds - elapsedForStep
       : Math.max(0, config.graceSeconds - graceElapsed);
-    const progressFraction = inTarget
-      ? elapsedForStep / config.targetSeconds
-      : config.graceSeconds > 0
-        ? graceElapsed / config.graceSeconds
-        : 1;
+    const remainingFraction = inTarget
+      ? remaining / config.targetSeconds
+      : inGrace && config.graceSeconds > 0
+        ? remaining / config.graceSeconds
+        : 0;
     const currentXp = timedStepXp(
       elapsedForStep,
       config.targetSeconds,
@@ -509,7 +673,7 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
           <div className={`bike-momentum ${inTarget ? "target" : inGrace ? "grace" : "base"}`}>
             <div
               className="bike-timer-ring"
-              style={{ "--timer-progress": `${Math.min(1, progressFraction) * 360}deg` } as CSSProperties}
+              style={{ "--timer-progress": `${Math.max(0, Math.min(1, remainingFraction)) * 360}deg` } as CSSProperties}
             >
               <strong>{formatClock(remaining)}</strong>
             </div>
@@ -542,6 +706,7 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
       30
     );
     const remaining = Math.max(0, PRE_STRETCH_BONUS_DRAIN_SECONDS - elapsedForStep);
+    const remainingFraction = remaining / PRE_STRETCH_BONUS_DRAIN_SECONDS;
     return (
       <div className="screen-stack bike-quest">
         {questHeader}
@@ -551,14 +716,14 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
             src="assets/stretches/generated/indoor-cycling.png"
             alt="Indoor cycling warm-up illustration"
           />
-          <span className="eyebrow">Yoga with Mark · 4 min</span>
+          <span className="eyebrow">Yoga with Mark · {formatClock(preStretchDuration)}</span>
           <h1>Pre-bike stretches</h1>
           <p>The stretch routine keeps its proper pace. The bonus timer only rewards how quickly you begin it.</p>
           <div className="bike-momentum grace">
             <div
               className="bike-timer-ring"
               style={{
-                "--timer-progress": `${Math.min(1, elapsedForStep / PRE_STRETCH_BONUS_DRAIN_SECONDS) * 360}deg`
+                "--timer-progress": `${Math.max(0, Math.min(1, remainingFraction)) * 360}deg`
               } as CSSProperties}
             >
               <strong>{formatClock(remaining)}</strong>
@@ -591,16 +756,16 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
             <Sparkles />
             <span><small>Ride XP building</small><strong>+{liveRideXp} XP</strong></span>
           </div>
-          <button className="bike-arm-set" onClick={logArmSet}>
-            <img src="assets/bike-quest/dumbbell.webp" alt="" />
+          <button className="bike-arm-set" onClick={logArmSet} disabled={armSetLocked}>
+            <Dumbbell aria-hidden="true" />
             <span>
-              <strong>Log arm set</strong>
-              <small>{quest.armSets} logged · +{ARM_SET_XP} XP each</small>
+              <strong>{armSetLocked ? "SET BANKED ✓" : `SET DONE +${ARM_SET_XP} XP`}</strong>
+              <small>{quest.armSets} arm set{quest.armSets === 1 ? "" : "s"} logged</small>
             </span>
           </button>
           <button className="button primary full bike-end-ride" onClick={endRide}>END RIDE</button>
           <small className="bike-notification-note">
-            <Clock3 size={14} /> Android keeps a Bike Quest notification visible while this timer is running.
+            <Clock3 size={14} /> The pinned Android notification is restored if Zenchad reloads mid-ride.
           </small>
         </section>
         {celebration ? <RewardBurst celebration={celebration} /> : null}
@@ -609,6 +774,7 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
   }
 
   if (quest.step === "recovery") {
+    const postMinutes = Math.max(1, Math.ceil(postStretchDuration / 60));
     return (
       <div className="screen-stack bike-quest recovery">
         {questHeader}
@@ -630,8 +796,8 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
           <div className="bike-bonus-icon"><Footprints /></div>
           <div>
             <span className="eyebrow">Optional bonus</span>
-            <h2>5-min warm-down</h2>
-            <p>Run the existing After Cycling routine in Yoga with Mark.</p>
+            <h2>{postMinutes}-min warm-down</h2>
+            <p>Run the {formatClock(postStretchDuration)} After Cycling routine in Yoga with Mark.</p>
           </div>
           {quest.postStretchCompleted ? (
             <span className="bike-bonus-done"><Check /> Done</span>
