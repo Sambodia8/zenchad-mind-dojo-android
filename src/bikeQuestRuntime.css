@@ -55,6 +55,24 @@ html.bike-quest-focus-mode .bike-quest-resume-dock {
   display: none;
 }
 
+/* Override the older modulo-based delays with valid, deterministic CSS. Each cluster gets a
+   full 360-degree burst and a later start than the previous one. */
+.bike-fireworks span {
+  --angle: calc(var(--spark) * 36deg);
+}
+
+.bike-fireworks span.cluster-0 {
+  animation-delay: calc(var(--spark) * 16ms);
+}
+
+.bike-fireworks span.cluster-1 {
+  animation-delay: calc(130ms + var(--spark) * 16ms);
+}
+
+.bike-fireworks span.cluster-2 {
+  animation-delay: calc(270ms + var(--spark) * 16ms);
+}
+
 @media (max-width: 420px) {
   .bike-quest-resume-dock {
     bottom: calc(4.95rem + env(safe-area-inset-bottom));
