@@ -46,8 +46,8 @@ function clickButtonContaining(selector: string, copy: string) {
 }
 
 function openBikeQuest() {
-  if (bikeQuestIsVisible()) return;
-  if (!clickButtonContaining(".bottom-nav button", "Toolkit")) return;
+  if (bikeQuestIsVisible()) return true;
+  if (!clickButtonContaining(".bottom-nav button", "Toolkit")) return false;
 
   const attempts = [40, 120, 260, 480];
   attempts.forEach((delay) => {
@@ -56,6 +56,7 @@ function openBikeQuest() {
       clickButtonContaining(".tool-journey-card", "Bike Quest");
     }, delay);
   });
+  return true;
 }
 
 function makeResumeDock() {
@@ -97,8 +98,30 @@ function updateResumeDock(quest: PersistedBikeQuest | null, focusMode: boolean) 
   if (!existing) document.body.appendChild(dock);
 }
 
+let activeRideAutoResumeScheduled = false;
+
+function scheduleActiveRideAutoResume(quest: PersistedBikeQuest | null) {
+  if (
+    activeRideAutoResumeScheduled ||
+    quest?.step !== "ride" ||
+    !quest.rideStartedAt ||
+    bikeQuestIsVisible()
+  ) {
+    return;
+  }
+
+  activeRideAutoResumeScheduled = true;
+  [80, 220, 520, 900].forEach((delay) => {
+    window.setTimeout(() => {
+      if (bikeQuestIsVisible()) return;
+      openBikeQuest();
+    }, delay);
+  });
+}
+
 function syncBikeQuestChrome() {
   const quest = activeQuest();
+  scheduleActiveRideAutoResume(quest);
   const focusMode = bikeQuestIsVisible() || cyclingYogaIsVisible(quest);
   document.documentElement.classList.toggle("bike-quest-focus-mode", focusMode);
   updateResumeDock(quest, focusMode);
