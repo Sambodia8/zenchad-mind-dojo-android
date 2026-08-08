@@ -58,6 +58,26 @@ function openBikeQuest() {
   });
 }
 
+function makeResumeDock() {
+  const dock = document.createElement("button");
+  dock.id = RESUME_DOCK_ID;
+  dock.className = "bike-quest-resume-dock";
+  dock.type = "button";
+  dock.onclick = openBikeQuest;
+
+  const icon = document.createElement("span");
+  icon.textContent = "🚲";
+
+  const copy = document.createElement("span");
+  const title = document.createElement("strong");
+  title.textContent = "RESUME BIKE QUEST";
+  const detail = document.createElement("small");
+  detail.dataset.role = "bike-quest-resume-detail";
+  copy.append(title, detail);
+  dock.append(icon, copy);
+  return dock;
+}
+
 function updateResumeDock(quest: PersistedBikeQuest | null, focusMode: boolean) {
   const existing = document.getElementById(RESUME_DOCK_ID) as HTMLButtonElement | null;
   if (!quest || focusMode) {
@@ -65,19 +85,15 @@ function updateResumeDock(quest: PersistedBikeQuest | null, focusMode: boolean) 
     return;
   }
 
-  const dock = existing ?? document.createElement("button");
-  dock.id = RESUME_DOCK_ID;
-  dock.className = "bike-quest-resume-dock";
-  dock.type = "button";
-  dock.onclick = openBikeQuest;
-
+  const dock = existing ?? makeResumeDock();
   let detail = "Continue your current step";
   if (quest.step === "ride" && quest.rideStartedAt) {
     const elapsed = ((quest.rideEndedAt ?? Date.now()) - quest.rideStartedAt) / 1000;
     detail = `Ride still running · ${formatClock(elapsed)}`;
   }
-  dock.innerHTML = `<span>🚲</span><span><strong>RESUME BIKE QUEST</strong><small>${detail}</small></span>`;
 
+  const detailNode = dock.querySelector<HTMLElement>("[data-role='bike-quest-resume-detail']");
+  if (detailNode && detailNode.textContent !== detail) detailNode.textContent = detail;
   if (!existing) document.body.appendChild(dock);
 }
 
