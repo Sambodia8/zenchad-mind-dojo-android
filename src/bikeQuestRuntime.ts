@@ -99,6 +99,7 @@ function updateResumeDock(quest: PersistedBikeQuest | null, focusMode: boolean) 
 }
 
 let activeRideAutoResumeScheduled = false;
+let autoResumedRide = false;
 
 function scheduleActiveRideAutoResume(quest: PersistedBikeQuest | null) {
   if (
@@ -111,6 +112,7 @@ function scheduleActiveRideAutoResume(quest: PersistedBikeQuest | null) {
   }
 
   activeRideAutoResumeScheduled = true;
+  autoResumedRide = true;
   [80, 220, 520, 900].forEach((delay) => {
     window.setTimeout(() => {
       if (bikeQuestIsVisible()) return;
@@ -119,9 +121,20 @@ function scheduleActiveRideAutoResume(quest: PersistedBikeQuest | null) {
   });
 }
 
+function syncResumeBannerState(quest: PersistedBikeQuest | null) {
+  if (autoResumedRide && quest?.step !== "ride") {
+    document.documentElement.classList.add("bike-quest-hide-resume-banner");
+    autoResumedRide = false;
+  }
+  if (quest?.step === "ride") {
+    document.documentElement.classList.remove("bike-quest-hide-resume-banner");
+  }
+}
+
 function syncBikeQuestChrome() {
   const quest = activeQuest();
   scheduleActiveRideAutoResume(quest);
+  syncResumeBannerState(quest);
   const focusMode = bikeQuestIsVisible() || cyclingYogaIsVisible(quest);
   document.documentElement.classList.toggle("bike-quest-focus-mode", focusMode);
   updateResumeDock(quest, focusMode);
