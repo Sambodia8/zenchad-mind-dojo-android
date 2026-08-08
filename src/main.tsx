@@ -6,6 +6,7 @@ import "./styles.css";
 import "./bikeQuest.css";
 import "./bikeQuestMedia.css";
 import "./bikeQuestPolish.css";
+import "./bikeQuestRuntime.css";
 
 startBikeQuestRuntime();
 
