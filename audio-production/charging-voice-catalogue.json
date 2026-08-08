@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "title": "ZenChad charging and unplugged voice catalogue",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "voiceName": "adam owls soothing v2",
+  "modelId": "eleven_v3",
+  "outputFormat": "opus_48000_192",
+  "outputDirectory": "public/assets/audio/charging",
+  "maxGenerations": 16,
+  "maxApprovedCharacters": 2600,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1.0
+  },
+  "samples": [
+    {
+      "order": 1,
+      "id": "overnight-01",
+      "category": "time",
+      "trigger": "22:00-05:59",
+      "fileName": "time/overnight-01.ogg",
+      "title": "Overnight — sleep well",
+      "text": "[softly] You’ve made it through another day. Sleep well, little starlight.",
+      "seed": 810001
+    },
+    {
+      "order": 2,
+      "id": "overnight-02",
+      "category": "time",
+      "trigger": "22:00-05:59",
+      "fileName": "time/overnight-02.ogg",
+      "title": "Overnight — rest easy",
+      "text": "[reassuringly] The world can keep turning without you for a while. Rest easy tonight.",
+      "seed": 810002
+    },
+    {
+      "order": 3,
+      "id": "overnight-03",
+      "category": "time",
+      "trigger": "22:00-05:59",
+      "fileName": "time/overnight-03.ogg",
+      "title": "Overnight — moonlit watch",
+      "text": "[warmly] Let the moon keep watch for a bit. Sleep well, and drift gently.",
+      "seed": 810003
+    },
+    {
+      "order": 4,
+      "id": "morning-01",
+      "category": "time",
+      "trigger": "06:00-11:59",
+      "fileName": "time/morning-01.ogg",
+      "title": "Morning — friendly possibilities",
+      "text": "[brightly] Good morning, little sunrise. May your day unfold like a sky full of friendly possibilities.",
+      "seed": 820001
+    },
+    {
+      "order": 5,
+      "id": "morning-02",
+      "category": "time",
+      "trigger": "06:00-11:59",
+      "fileName": "time/morning-02.ogg",
+      "title": "Morning — pockets of wonder",
+      "text": "[warmly] Good morning. The day is waiting with its pockets full of small wonders.",
+      "seed": 820002
+    },
+    {
+      "order": 6,
+      "id": "morning-03",
+      "category": "time",
+      "trigger": "06:00-11:59",
+      "fileName": "time/morning-03.ogg",
+      "title": "Morning — room for wonder",
+      "text": "[cheerfully] Morning, starlight. Take a breath, stretch into the day, and let something lovely surprise you.",
+      "seed": 820003
+    },
+    {
+      "order": 7,
+      "id": "afternoon-01",
+      "category": "time",
+      "trigger": "12:00-16:59",
+      "fileName": "time/afternoon-01.ogg",
+      "title": "Afternoon — brighter than expected",
+      "text": "[warmly] Have a wonderful afternoon. May the rest of your day glow a little brighter than expected.",
+      "seed": 830001
+    },
+    {
+      "order": 8,
+      "id": "afternoon-02",
+      "category": "time",
+      "trigger": "12:00-16:59",
+      "fileName": "time/afternoon-02.ogg",
+      "title": "Afternoon — tiny adventures",
+      "text": "[lightly] Enjoy your afternoon. There are still plenty of tiny adventures hiding in the hours ahead.",
+      "seed": 830002
+    },
+    {
+      "order": 9,
+      "id": "afternoon-03",
+      "category": "time",
+      "trigger": "12:00-16:59",
+      "fileName": "time/afternoon-03.ogg",
+      "title": "Afternoon — doing better",
+      "text": "[reassuringly] Have a beautiful afternoon. You’re doing better than the clock makes it seem.",
+      "seed": 830003
+    },
+    {
+      "order": 10,
+      "id": "evening-01",
+      "category": "time",
+      "trigger": "17:00-21:59",
+      "fileName": "time/evening-01.ogg",
+      "title": "Evening — enchanting constellation",
+      "text": "[softly] Have an enchanting evening. Let the day fold itself into a little constellation of memories.",
+      "seed": 840001
+    },
+    {
+      "order": 11,
+      "id": "evening-02",
+      "category": "time",
+      "trigger": "17:00-21:59",
+      "fileName": "time/evening-02.ogg",
+      "title": "Evening — lights coming on",
+      "text": "[warmly] Have a lovely evening. May the lights come on gently, one by one, wherever you go.",
+      "seed": 840002
+    },
+    {
+      "order": 12,
+      "id": "evening-03",
+      "category": "time",
+      "trigger": "17:00-21:59",
+      "fileName": "time/evening-03.ogg",
+      "title": "Evening — leave room for wonder",
+      "text": "[dreamily] Enjoy the evening, starlight. Leave a little room for wonder before the night arrives.",
+      "seed": 840003
+    },
+    {
+      "order": 13,
+      "id": "battery-low",
+      "category": "charging-thanks",
+      "trigger": "0-15%",
+      "fileName": "thanks/battery-low.ogg",
+      "title": "Charging thanks — relieved",
+      "text": "[relieved] Oh, thank you for charging me. I was running on fumes down here.",
+      "seed": 850001
+    },
+    {
+      "order": 14,
+      "id": "battery-mid-low",
+      "category": "charging-thanks",
+      "trigger": "16-39%",
+      "fileName": "thanks/battery-mid-low.ogg",
+      "title": "Charging thanks — grateful top-up",
+      "text": "[gratefully] Thank you for the top-up. That gives me a little more sparkle for the journey.",
+      "seed": 850002
+    },
+    {
+      "order": 15,
+      "id": "battery-mid-high",
+      "category": "charging-thanks",
+      "trigger": "40-79%",
+      "fileName": "thanks/battery-mid-high.ogg",
+      "title": "Charging thanks — powered up",
+      "text": "[warmly] Thank you for charging me. I’m feeling nicely powered up again.",
+      "seed": 850003
+    },
+    {
+      "order": 16,
+      "id": "battery-high",
+      "category": "charging-thanks",
+      "trigger": "80-100%",
+      "fileName": "thanks/battery-high.ogg",
+      "title": "Charging thanks — delighted surprise",
+      "text": "[surprised, pleased] Oh! You charged me all the way? Thank you. That’s wonderfully excessive.",
+      "seed": 850004
+    }
+  ]
+}

@@ -84,6 +84,21 @@
 - Preserve/avoid: Never play the section cue on initial Play or alongside the final Namaste. Keep phase cues subdued, ending voice at the persisted narration volume, paid ending generation capped with zero retries, and all runtime audio fully offline.
 - Key files: src/gaplessAudioLoop.ts, src/screens/TimerScreen.tsx, src/namasteAudio.ts, audio-production/phase-chime.json, audio-production/namaste-endings.json, public/assets/audio/ui/reverse-glockenspiel-chime.ogg, public/assets/audio/endings/.
 
+2026-08-08 - Charging and unplugged voice catalogue
+- Decision/change: Approved a 16-clip offline Eleven v3 catalogue using voice #3: three original variations for overnight, morning, afternoon, and evening unplug moments, plus four battery-band charging thank-yous from relieved at low charge to pleasantly surprised when full.
+- Preserve/avoid: Keep the whimsical starry technology mood without copying artist lyrics or signature phrasing; use only packaged audio and never generate at runtime. The Android power-event listener remains a separate follow-up because none exists in the current app.
+- Key files: audio-production/charging-voice-catalogue.json, scripts/generate-charging-voice.mjs, src/chargingAudio.ts, public/assets/audio/charging/.
+
+2026-08-08 - Charging voice batch completed
+- Decision/change: Generated all 16 approved charging/unplugged clips with voice #3 and Eleven v3 in one sequential batch: 1,435 characters, zero failures, zero retries. Every file decodes as 48 kHz mono Opus and was copied into the Android web bundle.
+- Preserve/avoid: Keep the API key external; do not add runtime ElevenLabs calls. The selector catalogue is ready, but automatic playback still requires a native Android power-event listener.
+- Key files: public/assets/audio/charging/generation.json, public/assets/audio/charging/README.md, android/app/src/main/assets/public/assets/audio/charging/.
+
+2026-08-08 - Tasker charging voice profile
+- Decision/change: Created an importable Tasker Power State profile using the offline catalogue: battery-aware charging thanks on connection and three-variation time-aware greetings on unplug. Copied the profile, instructions, and all 16 Ogg clips to `D:\My Drive\Tasker\ZenChad Charging\`.
+- Preserve/avoid: Copy the entire Drive folder to `/storage/emulated/0/Tasker/ZenChad Charging/` before importing; disable the older “Charging Sounds” profile to prevent duplicate playback. No network calls are used on the phone.
+- Key files: audio-production/tasker/ZenChad-Charging-Voice.prf.xml, audio-production/tasker/README.md, D:\My Drive\Tasker\ZenChad Charging\.
+
 2026-08-03 - Offline AI journaling speech spike verified on Pixel 6a
 - Decision/change: Added a Capacitor/Java/JNI voice-reflection bridge backed by official whisper.cpp v1.8.5 and the 59.7 MB English Base Q5_1 model. The Journal screen now records locally, transcribes after Stop, and places the raw transcript into an editable draft; no audio or text is uploaded.
 - Device result: The official 11-second JFK sample transcribed accurately in 4.814 seconds on the connected Pixel 6a after enabling release optimisation and ARMv8.2 dot-product/FP16 instructions. The unoptimised debug baseline was 149.218 seconds. Measured proportional memory during the baseline was about 190 MB and phone temperature remained 31.2 C during two optimised runs. Android build and instrumentation test passed.

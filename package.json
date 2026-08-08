@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "audio:preview": "node scripts/generate-elevenlabs-preview.mjs",
     "audio:namaste": "node scripts/generate-namaste-endings.mjs",
+    "audio:charging": "node scripts/generate-charging-voice.mjs",
     "audio:meditation": "node scripts/generate-timed-meditation.mjs",
     "audio:prepare-catalogue": "node scripts/prepare-audio-catalogue.mjs",
     "audio:catalogue": "node scripts/generate-meditation-catalogue.mjs",
