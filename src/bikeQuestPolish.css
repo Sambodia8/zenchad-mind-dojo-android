@@ -1,0 +1,377 @@
+/* Screenshot-driven Bike Quest polish.
+   Narrower Android screens wrap more text, so deliberate dead-space is reduced rather than added. */
+
+.bike-step-card,
+.bike-ride-stage,
+.bike-bonus-card,
+.bike-ride-complete,
+.bike-quest-hero {
+  color: #f8fafc;
+}
+
+.bike-step-card h1,
+.bike-step-card h2,
+.bike-step-card h3,
+.bike-ride-stage h1,
+.bike-ride-stage h2,
+.bike-ride-stage strong,
+.bike-bonus-card h1,
+.bike-bonus-card h2,
+.bike-bonus-card h3,
+.bike-bonus-card strong,
+.bike-ride-complete h1,
+.bike-ride-complete h2,
+.bike-ride-complete strong,
+.bike-quest-hero h1 {
+  color: #f8fafc;
+}
+
+.bike-step-card p,
+.bike-step-card small,
+.bike-ride-stage p,
+.bike-ride-stage small,
+.bike-bonus-card p,
+.bike-bonus-card small,
+.bike-ride-complete p,
+.bike-ride-complete small,
+.bike-quest-hero p {
+  color: #cbd5e1;
+}
+
+.bike-step-card .eyebrow,
+.bike-ride-stage .eyebrow,
+.bike-bonus-card .eyebrow,
+.bike-ride-complete .eyebrow {
+  color: #f6c86b;
+}
+
+/* Focus mode is synchronised by bikeQuestRuntime.ts. It applies to Bike Quest itself and
+   the cycling Yoga classes launched from the quest. */
+html.bike-quest-focus-mode .bottom-nav {
+  display: none;
+}
+
+html.bike-quest-focus-mode .main-content {
+  padding-bottom: calc(1.1rem + env(safe-area-inset-bottom));
+}
+
+.bike-resume-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.68rem 0.78rem;
+  border: 1px solid rgba(45, 212, 191, 0.28);
+  border-radius: 0.95rem;
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.16), rgba(124, 58, 237, 0.13));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.bike-resume-banner > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.12rem;
+}
+
+.bike-resume-banner strong {
+  color: #a7f3d0;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+
+.bike-resume-banner span {
+  color: #e2e8f0;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.bike-resume-banner button {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.bike-coin-result {
+  display: grid;
+  margin-top: 0.8rem;
+  place-items: center;
+  gap: 0.35rem;
+  padding: 1rem;
+  border: 1px solid rgba(250, 204, 21, 0.26);
+  border-radius: 1rem;
+  background: radial-gradient(circle at 50% 10%, rgba(250, 204, 21, 0.14), transparent 52%), rgba(255, 255, 255, 0.04);
+  text-align: center;
+}
+
+.bike-coin-result > small {
+  color: #fde68a;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.bike-coin-result > strong {
+  color: #fff7cc;
+  font-size: clamp(2rem, 10vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.bike-coin-result > div {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+  margin-top: 0.45rem;
+}
+
+.bike-ride-clock {
+  color: #fff7d6;
+  text-shadow: 0 3px 24px rgba(250, 204, 21, 0.12);
+}
+
+.bike-ride-xp strong,
+.bike-ride-xp small {
+  color: #fde68a;
+}
+
+.bike-arm-set {
+  color: #f8fafc;
+}
+
+.bike-arm-set > svg {
+  width: 2.35rem;
+  height: 2.35rem;
+  justify-self: center;
+  color: #ddd6fe;
+}
+
+.bike-arm-set strong {
+  color: #f8fafc;
+}
+
+.bike-arm-set small {
+  color: #b9c5dd;
+}
+
+.bike-arm-set:disabled {
+  cursor: default;
+  border-color: rgba(45, 212, 191, 0.28);
+  background: rgba(45, 212, 191, 0.11);
+  opacity: 1;
+}
+
+.bike-arm-set:disabled > svg,
+.bike-arm-set:disabled strong {
+  color: #a7f3d0;
+}
+
+/* A failed media thumbnail must never consume the arm-set control again. */
+.bike-arm-set > img {
+  display: none;
+}
+
+.bike-ride-stage {
+  padding: 0.85rem;
+}
+
+.bike-ride-stage > img {
+  width: min(62%, 300px);
+  max-height: min(25vh, 230px);
+  margin-bottom: 0.2rem;
+  object-fit: contain;
+}
+
+.bike-ride-clock {
+  margin: 0.15rem 0 0.25rem;
+  font-size: clamp(3.5rem, 15vw, 5.8rem);
+}
+
+.bike-ride-stage > p {
+  max-width: 34rem;
+  margin: 0 auto 0.55rem;
+  line-height: 1.38;
+}
+
+.bike-ride-xp {
+  margin: 0.25rem auto 0.6rem;
+  padding: 0.55rem 0.8rem;
+}
+
+.bike-arm-set {
+  min-height: 3.55rem;
+  padding: 0.68rem 0.75rem;
+}
+
+/* END RIDE stays available while the rest of the ride card scrolls. With focus mode active there is
+   no bottom navigation competing for the safe-area. */
+.bike-end-ride {
+  position: sticky;
+  z-index: 18;
+  bottom: calc(0.55rem + env(safe-area-inset-bottom));
+  min-height: 3.45rem;
+  margin-top: 0.55rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.34), 0 0 0 3px rgba(34, 197, 94, 0.08);
+}
+
+.bike-notification-note {
+  margin-top: 0.45rem;
+  line-height: 1.3;
+}
+
+.bike-ride-complete {
+  padding: 1rem;
+}
+
+.bike-bonus-card {
+  gap: 0.65rem;
+  padding: 0.82rem;
+}
+
+.bike-bonus-card h2,
+.bike-bonus-card p {
+  margin-bottom: 0.15rem;
+}
+
+/* Three separate firework origins make the reward feel like several impacts rather than one CSS starburst. */
+.bike-fireworks span.cluster-0 {
+  left: 27%;
+  top: 45%;
+}
+
+.bike-fireworks span.cluster-1 {
+  left: 50%;
+  top: 52%;
+  animation-delay: calc(120ms + (var(--spark) % 3) * 34ms);
+}
+
+.bike-fireworks span.cluster-2 {
+  left: 73%;
+  top: 43%;
+  animation-delay: calc(260ms + (var(--spark) % 3) * 34ms);
+}
+
+.bike-reward-burst.mini {
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: calc(7.2rem + env(safe-area-inset-top));
+  background: transparent;
+  animation-duration: 1.05s;
+}
+
+.bike-reward-burst.mini > strong {
+  padding: 0.42rem 0.75rem;
+  border: 1px solid rgba(250, 204, 21, 0.28);
+  border-radius: 999px;
+  background: rgba(14, 22, 41, 0.92);
+  font-size: clamp(1.8rem, 9vw, 3.2rem);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+}
+
+.bike-reward-burst.mini > span {
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(14, 22, 41, 0.9);
+}
+
+@media (max-width: 520px) {
+  .bike-quest {
+    gap: 0.65rem;
+  }
+
+  .bike-quest-hud {
+    padding: 0.58rem 0.68rem;
+  }
+
+  .bike-step-card {
+    padding: 0.78rem;
+  }
+
+  .bike-step-image {
+    max-height: min(34vh, 290px);
+    margin-bottom: 0.65rem;
+  }
+
+  .bike-choice-grid,
+  .bike-coin-result > div {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bike-coin-result > div .button {
+    min-height: 3rem;
+    padding-inline: 0.55rem;
+    font-size: 0.84rem;
+  }
+
+  .bike-ride-stage {
+    padding: 0.65rem 0.72rem;
+  }
+
+  .bike-ride-stage > img {
+    width: min(56%, 220px);
+    max-height: 19vh;
+  }
+
+  .bike-ride-clock {
+    font-size: clamp(3.25rem, 17vw, 4.9rem);
+  }
+
+  .bike-ride-stage > p {
+    margin-bottom: 0.42rem;
+    font-size: 0.88rem;
+  }
+
+  .bike-ride-xp {
+    margin-bottom: 0.48rem;
+    padding: 0.46rem 0.68rem;
+  }
+
+  .bike-arm-set {
+    grid-template-columns: 2.55rem 1fr;
+    gap: 0.62rem;
+    min-height: 3.15rem;
+    padding: 0.58rem 0.65rem;
+  }
+
+  .bike-arm-set > svg {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .bike-end-ride {
+    min-height: 3.2rem;
+    margin-top: 0.42rem;
+  }
+
+  .bike-notification-note {
+    margin-top: 0.35rem;
+    font-size: 0.67rem;
+  }
+
+  .bike-ride-complete {
+    padding: 0.8rem;
+  }
+
+  .bike-bonus-card {
+    gap: 0.55rem;
+    padding: 0.7rem;
+  }
+
+  .bike-bonus-icon {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .bike-choice-grid,
+  .bike-coin-result > div {
+    grid-template-columns: 1fr;
+  }
+}
