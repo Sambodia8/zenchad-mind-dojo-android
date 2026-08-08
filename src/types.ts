@@ -140,6 +140,33 @@ export interface EmotionalToolAttempt {
   notes?: string;
 }
 
+export type MysteryMeditationCategory = "Emotional" | "Sensory";
+
+export interface MysteryMeditationCompletion {
+  meditationId: string;
+  category: MysteryMeditationCategory;
+  completedAt: string;
+}
+
+export interface MysteryChallengeRun {
+  id: string;
+  startedAt: string;
+  meditations: MysteryMeditationCompletion[];
+  journalEntryId: string | null;
+}
+
+export interface MysteryChallengeState {
+  version: 1;
+  secretOrder: [MysteryMeditationCategory, MysteryMeditationCategory];
+  currentRun: MysteryChallengeRun | null;
+  completedRuns: number;
+  lastCompletedAt: string | null;
+  lastJournalEntryId: string | null;
+  lastRunMatchedSecret: boolean;
+  clueVisible: boolean;
+  bonusUnlocked: boolean;
+}
+
 export interface AppPreferences {
   gentleReminderEnabled: boolean;
   gentleReminderTime: string;
@@ -182,6 +209,7 @@ export interface AppData {
   moodScaleVersion: number;
   customYogaClasses: YogaClass[];
   downloadedSoundscapes: string[];
+  mysteryChallenge: MysteryChallengeState;
 }
 
 export type Route =
@@ -191,14 +219,20 @@ export type Route =
   | { name: "roulette"; autoSpin?: boolean; spinKey?: number }
   | { name: "yoga" }
   | { name: "bike-quest"; resume?: "pre-stretch-complete" | "post-stretch-complete" }
-  | { name: "timer"; meditationId: string }
+  | {
+      name: "timer";
+      meditationId: string;
+      mysteryCategory?: MysteryMeditationCategory;
+      mysteryRunId?: string;
+    }
   | { name: "yoga-pose"; movementId: string }
   | {
       name: "yoga-class";
       classId: string;
       returnToBikeQuest?: "pre-stretch-complete" | "post-stretch-complete";
     }
-  | { name: "journal"; draftMeditation?: string }
+  | { name: "mystery-challenge" }
+  | { name: "journal"; draftMeditation?: string; mysteryRunId?: string }
   | { name: "progress" }
   | { name: "guide" }
   | { name: "soundscapes" }

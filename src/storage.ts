@@ -6,9 +6,11 @@ import type {
   JournalEntry,
   JournalEntry as JournalEntryType,
   MoodEntry,
+  MysteryChallengeState,
   Stats
 } from "./types";
 import { LEVEL_THRESHOLDS } from "./data";
+import { createMysteryChallengeState } from "./mysteryChallenge";
 
 const STORAGE_KEY = "zenchad_app_data_v1";
 export const JOURNAL_XP = 20;
@@ -144,7 +146,8 @@ export const defaultData: AppData = {
   preferences: defaultPreferences,
   moodScaleVersion: 2,
   customYogaClasses: [],
-  downloadedSoundscapes: []
+  downloadedSoundscapes: [],
+  mysteryChallenge: createMysteryChallengeState()
 };
 
 export function loadData(): AppData {
@@ -194,11 +197,45 @@ export function loadData(): AppData {
       preferences: { ...defaultPreferences, ...parsed.preferences },
       moodScaleVersion: 2,
       customYogaClasses: Array.isArray(parsed.customYogaClasses) ? parsed.customYogaClasses : [],
-      downloadedSoundscapes: Array.isArray(parsed.downloadedSoundscapes) ? parsed.downloadedSoundscapes : []
+      downloadedSoundscapes: Array.isArray(parsed.downloadedSoundscapes) ? parsed.downloadedSoundscapes : [],
+      mysteryChallenge: migrateMysteryChallenge(parsed.mysteryChallenge)
     };
   } catch {
     return defaultData;
   }
+}
+
+function migrateMysteryChallenge(value: unknown): MysteryChallengeState {
+  const fallback = createMysteryChallengeState();
+  if (!value || typeof value !== "object") return fallback;
+  const saved = value as Partial<MysteryChallengeState>;
+  const order = Array.isArray(saved.secretOrder) && saved.secretOrder.length === 2
+    && saved.secretOrder.every((item) => item === "Emotional" || item === "Sensory")
+    ? saved.secretOrder as MysteryChallengeState["secretOrder"]
+    : fallback.secretOrder;
+  const currentRun = saved.currentRun && typeof saved.currentRun === "object"
+    ? {
+        id: typeof saved.currentRun.id === "string" ? saved.currentRun.id : crypto.randomUUID(),
+        startedAt: typeof saved.currentRun.startedAt === "string" ? saved.currentRun.startedAt : new Date().toISOString(),
+        meditations: Array.isArray(saved.currentRun.meditations)
+          ? saved.currentRun.meditations.filter(
+              (item) => item && (item.category === "Emotional" || item.category === "Sensory") && typeof item.meditationId === "string"
+            )
+          : [],
+        journalEntryId: typeof saved.currentRun.journalEntryId === "string" ? saved.currentRun.journalEntryId : null
+      }
+    : null;
+  return {
+    version: 1,
+    secretOrder: order,
+    currentRun,
+    completedRuns: typeof saved.completedRuns === "number" ? Math.max(0, Math.floor(saved.completedRuns)) : 0,
+    lastCompletedAt: typeof saved.lastCompletedAt === "string" ? saved.lastCompletedAt : null,
+    lastJournalEntryId: typeof saved.lastJournalEntryId === "string" ? saved.lastJournalEntryId : null,
+    lastRunMatchedSecret: saved.lastRunMatchedSecret === true,
+    clueVisible: saved.clueVisible === true,
+    bonusUnlocked: saved.bonusUnlocked === true
+  };
 }
 
 export function saveData(data: AppData) {

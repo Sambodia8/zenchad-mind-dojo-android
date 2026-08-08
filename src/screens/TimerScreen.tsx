@@ -43,8 +43,9 @@ import {
   requestNotificationPermission,
   scheduleTimerNotifications
 } from "../native";
+import { recordMysteryMeditation } from "../mysteryChallenge";
 import { addCompletedSession, makeMood } from "../storage";
-import type { AppData, Meditation, Route } from "../types";
+import type { AppData, Meditation, MysteryMeditationCategory, Route } from "../types";
 import { playUiSfx } from "../uiSfx";
 
 interface Props {
@@ -52,6 +53,8 @@ interface Props {
   data: AppData;
   setData: Dispatch<SetStateAction<AppData>>;
   navigate: Dispatch<SetStateAction<Route>>;
+  mysteryCategory?: MysteryMeditationCategory;
+  mysteryRunId?: string;
 }
 
 type AlertSound = "reverse-chime" | "bell" | "gong" | "digital" | "none";
@@ -155,7 +158,14 @@ function restoreTimer(meditation: Meditation): PersistedTimer {
   }
 }
 
-export default function TimerScreen({ meditationId, data, setData, navigate }: Props) {
+export default function TimerScreen({
+  meditationId,
+  data,
+  setData,
+  navigate,
+  mysteryCategory,
+  mysteryRunId
+}: Props) {
   const meditation = MEDITATIONS.find((item) => item.id === meditationId) ?? MEDITATIONS[0];
   const restored = useMemo(() => restoreTimer(meditation), [meditation]);
   const [guidedAudio, setGuidedAudio] = useState(() =>
@@ -185,6 +195,8 @@ export default function TimerScreen({ meditationId, data, setData, navigate }: P
   const guidedAudioRef = useRef<HTMLAudioElement | null>(null);
   const meditationMusicRef = useRef<GaplessAudioLoop | null>(null);
   const namasteAudioRef = useRef<HTMLAudioElement | null>(null);
+  const completionSavedRef = useRef(false);
+  const mysteryMode = Boolean(mysteryCategory && mysteryRunId);
   const currentPhase = meditation.phases[phaseIndex];
   const totalDuration = meditation.phases.reduce((sum, item) => sum + item.duration, 0);
   const elapsedBefore = meditation.phases
@@ -579,13 +591,31 @@ export default function TimerScreen({ meditationId, data, setData, navigate }: P
   };
 
   const saveCompletion = (destination: "progress" | "journal" = "progress") => {
+    if (completionSavedRef.current) return;
+    completionSavedRef.current = true;
     const creditedSeconds = Math.max(60, Math.round(elapsedRef.current));
-    setData((current) => ({
-      ...current,
-      stats: addCompletedSession(current.stats, creditedSeconds),
-      moods: [makeMood("after", afterMood, `After ${meditation.name}`), ...current.moods]
-    }));
-    navigate(destination === "journal" ? { name: "journal", draftMeditation: meditation.name } : { name: "progress" });
+    setData((current) => {
+      const next = {
+        ...current,
+        stats: addCompletedSession(current.stats, creditedSeconds),
+        moods: [makeMood("after", afterMood, `After ${meditation.name}`), ...current.moods]
+      };
+      if (mysteryCategory && mysteryRunId) {
+        next.mysteryChallenge = recordMysteryMeditation(
+          current.mysteryChallenge,
+          mysteryRunId,
+          { meditationId: meditation.id, category: mysteryCategory }
+        );
+      }
+      return next;
+    });
+    navigate(
+      mysteryMode
+        ? { name: "mystery-challenge" }
+        : destination === "journal"
+          ? { name: "journal", draftMeditation: meditation.name }
+          : { name: "progress" }
+    );
   };
 
   if (completed) {
@@ -617,8 +647,12 @@ export default function TimerScreen({ meditationId, data, setData, navigate }: P
           />
           <strong className="current-mood">{afterMood}/10</strong>
         </div>
-        <button className="button primary full" onClick={() => saveCompletion("progress")}>Save session & view progress</button>
-        <button className="button secondary full" onClick={() => saveCompletion("journal")}><BookOpen size={17} /> Save session & journal it</button>
+        <button className="button primary full" onClick={() => saveCompletion("progress")}>
+          {mysteryMode ? "Mark meditation complete" : "Save session & view progress"}
+        </button>
+        <button className="button secondary full" onClick={() => saveCompletion("journal")}>
+          <BookOpen size={17} /> {mysteryMode ? "Return to the sequence" : "Save session & journal it"}
+        </button>
         <button className="button ghost full" onClick={reset}><RotateCcw size={17} /> Do it again</button>
       </section>
     );

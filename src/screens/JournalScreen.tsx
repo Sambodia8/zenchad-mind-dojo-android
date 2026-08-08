@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ChangeEvent, type Dispatch, type SetStateAction } from "react";
 import { BookOpen, CalendarDays, Clock3, Download, FileUp, Mic, MoreVertical, Plus, Save, Sparkles, Square, Trash2 } from "lucide-react";
 import { MEDITATIONS } from "../data";
+import { completeMysteryJournal } from "../mysteryChallenge";
 import {
   deleteWhisperJournalRecording,
   cancelWhisperJournalDownload,
@@ -24,6 +25,7 @@ interface Props {
   data: AppData;
   setData: Dispatch<SetStateAction<AppData>>;
   draftMeditation?: string;
+  mysteryRunId?: string;
 }
 
 type EditorMode = "journal" | "meditation" | null;
@@ -63,7 +65,7 @@ function cleanWhisperTranscript(transcript: string) {
     .trim();
 }
 
-export default function JournalScreen({ data, setData, draftMeditation }: Props) {
+export default function JournalScreen({ data, setData, draftMeditation, mysteryRunId }: Props) {
   const [editorMode, setEditorMode] = useState<EditorMode>(null);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -94,6 +96,7 @@ export default function JournalScreen({ data, setData, draftMeditation }: Props)
   const [journalMenuOpen, setJournalMenuOpen] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const journalMenuRef = useRef<HTMLDivElement>(null);
+  const mysteryJournalSavedRef = useRef<string | null>(null);
 
   const voiceErrorMessage = (error: unknown) =>
     error instanceof Error ? error.message : "The voice reflection could not be completed.";
@@ -174,21 +177,27 @@ export default function JournalScreen({ data, setData, draftMeditation }: Props)
   const saveEntry = () => {
     const cleanBody = body.trim();
     if (!cleanBody) return;
+    if (mysteryRunId && mysteryJournalSavedRef.current === mysteryRunId) return;
     const linkedMeditation = meditationLabel.trim() || undefined;
-    setData((current) => ({
-      ...current,
-      stats: addJournalXp(current.stats),
-      journal: [
-        makeJournal(
-          title.trim() || (linkedMeditation ? "Post-session reflection" : "Journal entry"),
-          cleanBody,
-          linkedMeditation,
-          linkedMeditation ? "meditation" : "journal"
-        ),
-        ...current.journal
-      ]
-    }));
-    setImportMessage("Journal saved. +20 XP");
+    const entry = makeJournal(
+      title.trim() || (linkedMeditation ? "Post-session reflection" : "Journal entry"),
+      cleanBody,
+      linkedMeditation,
+      linkedMeditation ? "meditation" : "journal"
+    );
+    if (mysteryRunId) mysteryJournalSavedRef.current = mysteryRunId;
+    setData((current) => {
+      const next = {
+        ...current,
+        stats: addJournalXp(current.stats),
+        journal: [entry, ...current.journal]
+      };
+      if (mysteryRunId) {
+        next.mysteryChallenge = completeMysteryJournal(current.mysteryChallenge, mysteryRunId, entry.id);
+      }
+      return next;
+    });
+    setImportMessage(mysteryRunId ? "The reflection is sealed. +20 XP" : "Journal saved. +20 XP");
     closeEditor();
   };
 

@@ -1,5 +1,6 @@
 import {
   Award,
+  ArrowRight,
   BookHeart,
   Check,
   Flame,
@@ -13,16 +14,18 @@ import {
   TimerReset,
   WandSparkles
 } from "lucide-react";
-import type { AppData } from "../types";
+import type { AppData, Route } from "../types";
+import type { Dispatch, SetStateAction } from "react";
 
 interface Props {
   data: AppData;
+  navigate: Dispatch<SetStateAction<Route>>;
 }
 
 const questPageProgress = (value: number, target: number) =>
   value === 0 ? 0 : value % target || target;
 
-export default function RewardsScreen({ data }: Props) {
+export default function RewardsScreen({ data, navigate }: Props) {
   const badges = [
     {
       name: "Minimum Viable Session",
@@ -96,6 +99,15 @@ export default function RewardsScreen({ data }: Props) {
       current: data.stats.totalSeconds,
       target: 3600,
       hidden: true
+    },
+    {
+      name: "The Unseen Flame",
+      note: "You noticed the pattern beneath the pattern.",
+      icon: Flame,
+      current: data.mysteryChallenge.bonusUnlocked ? 1 : 0,
+      target: 1,
+      hidden: true,
+      image: "assets/badges/unseen-flame.jpg"
     }
   ];
   const questProgress = questPageProgress(data.stats.sessionsCompleted, 3);
@@ -147,6 +159,22 @@ export default function RewardsScreen({ data }: Props) {
         </div>
       </section>
 
+      <button className="mystery-invitation-card" onClick={() => navigate({ name: "mystery-challenge" })}>
+        <span className="mystery-invitation-icon">
+          {data.mysteryChallenge.bonusUnlocked ? <Check /> : <LockKeyhole />}
+        </span>
+        <span>
+          <span className="eyebrow">{data.mysteryChallenge.bonusUnlocked ? "Seal opened" : "Unlisted invitation"}</span>
+          <strong>{data.mysteryChallenge.bonusUnlocked ? "The quiet sequence" : "Something is waiting"}</strong>
+          <small>
+            {data.mysteryChallenge.bonusUnlocked
+              ? "See what was hidden in the badge cabinet."
+              : "Two doors, one page, and a detail you may notice later."}
+          </small>
+        </span>
+        <ArrowRight />
+      </button>
+
       <section>
         <div className="section-heading">
           <div>
@@ -177,6 +205,7 @@ export default function RewardsScreen({ data }: Props) {
                 }}>
                   <Icon />
                 </span>
+                {unlocked && "image" in badge && badge.image ? <img className="badge-art" src={badge.image} alt="" /> : null}
                 <strong>{hidden ? "Hidden keepsake" : badge.name}</strong>
                 <small>
                   {unlocked

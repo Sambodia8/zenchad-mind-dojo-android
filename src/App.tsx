@@ -38,6 +38,7 @@ import RewardsScreen from "./screens/RewardsScreen";
 import ThemesScreen from "./screens/ThemesScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import BikeQuestScreen from "./screens/BikeQuestScreen";
+import MysteryChallengeScreen from "./screens/MysteryChallengeScreen";
 import LevelUpModal from "./components/LevelUpModal";
 import { getYogaClass } from "./data";
 import { playUiSfx, preloadUiSfx, type UiSfxName } from "./uiSfx";
@@ -61,6 +62,8 @@ const titleFor = (route: Route) => {
       return "Routine Builder";
     case "bike-quest":
       return "Bike Quest";
+    case "mystery-challenge":
+      return "The Quiet Sequence";
     case "timer":
       return "Meditation";
     case "journal":
@@ -93,6 +96,7 @@ export default function App() {
     "yoga-class",
     "yoga-builder",
     "bike-quest",
+    "mystery-challenge",
     "journal",
     "guide",
     "soundscapes",
@@ -290,6 +294,8 @@ export default function App() {
             data={data}
             setData={setData}
             navigate={navigate}
+            mysteryCategory={route.mysteryCategory}
+            mysteryRunId={route.mysteryRunId}
           />
         );
       case "yoga-pose":
@@ -335,8 +341,17 @@ export default function App() {
             resume={route.resume}
           />
         );
+      case "mystery-challenge":
+        return <MysteryChallengeScreen data={data} setData={setData} navigate={navigate} />;
       case "journal":
-        return <JournalScreen data={data} setData={setData} draftMeditation={route.draftMeditation} />;
+        return (
+          <JournalScreen
+            data={data}
+            setData={setData}
+            draftMeditation={route.draftMeditation}
+            mysteryRunId={route.mysteryRunId}
+          />
+        );
       case "progress":
         return <ProgressScreen data={data} />;
       case "guide":
@@ -344,7 +359,7 @@ export default function App() {
       case "soundscapes":
         return <SoundscapesScreen data={data} setData={setData} />;
       case "rewards":
-        return <RewardsScreen data={data} />;
+        return <RewardsScreen data={data} navigate={navigate} />;
       case "themes":
         return <ThemesScreen data={data} setData={setData} />;
       case "settings":
@@ -365,7 +380,7 @@ export default function App() {
       ? "library"
       : route.name === "yoga-pose" || route.name === "yoga-class" || route.name === "yoga-builder"
         ? "yoga"
-        : ["bike-quest", "journal", "guide", "soundscapes", "rewards", "themes", "settings"].includes(route.name)
+        : ["bike-quest", "mystery-challenge", "journal", "guide", "soundscapes", "rewards", "themes", "settings"].includes(route.name)
           ? "toolkit"
           : route.name;
 
