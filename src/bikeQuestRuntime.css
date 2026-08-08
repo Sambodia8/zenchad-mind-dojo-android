@@ -1,0 +1,64 @@
+.bike-quest-resume-dock {
+  position: fixed;
+  z-index: 58;
+  left: 50%;
+  bottom: calc(5.25rem + env(safe-area-inset-bottom));
+  display: grid;
+  width: min(calc(100% - 1.25rem), 32rem);
+  grid-template-columns: 2.4rem 1fr;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.62rem 0.78rem;
+  border: 1px solid rgba(45, 212, 191, 0.34);
+  border-radius: 1rem;
+  color: #f8fafc;
+  background: rgba(12, 21, 40, 0.94);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(18px);
+  transform: translateX(-50%);
+  text-align: left;
+}
+
+.bike-quest-resume-dock > span:first-child {
+  display: grid;
+  width: 2.35rem;
+  height: 2.35rem;
+  place-items: center;
+  border-radius: 0.72rem;
+  background: rgba(45, 212, 191, 0.12);
+  font-size: 1.2rem;
+}
+
+.bike-quest-resume-dock > span:last-child {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.06rem;
+}
+
+.bike-quest-resume-dock strong {
+  color: #a7f3d0;
+  font-size: 0.73rem;
+  letter-spacing: 0.09em;
+}
+
+.bike-quest-resume-dock small {
+  overflow: hidden;
+  color: #dbe4f3;
+  font-size: 0.76rem;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html.bike-quest-focus-mode .bike-quest-resume-dock {
+  display: none;
+}
+
+@media (max-width: 420px) {
+  .bike-quest-resume-dock {
+    bottom: calc(4.95rem + env(safe-area-inset-bottom));
+    width: calc(100% - 0.9rem);
+    padding: 0.55rem 0.65rem;
+  }
+}
