@@ -6,7 +6,8 @@ export type UiSfxName =
   | "wheelSpin"
   | "wheelLand"
   | "xpGain"
-  | "victory";
+  | "victory"
+  | "reward";
 
 const SOURCES: Record<UiSfxName, string> = {
   select: "assets/audio/ui/select.mp3",
@@ -16,7 +17,8 @@ const SOURCES: Record<UiSfxName, string> = {
   wheelSpin: "assets/audio/ui/wheel-spin.mp3",
   wheelLand: "assets/audio/ui/wheel-land.mp3",
   xpGain: "assets/audio/ui/xp-roll.mp3",
-  victory: "assets/audio/ui/victory.mp3"
+  victory: "assets/audio/ui/victory.mp3",
+  reward: "assets/audio/ui/menu-reward.mp3"
 };
 
 const VOLUMES: Record<UiSfxName, number> = {
@@ -27,23 +29,38 @@ const VOLUMES: Record<UiSfxName, number> = {
   wheelSpin: 0.26,
   wheelLand: 0.28,
   xpGain: 0.38,
-  victory: 0.3
+  victory: 0.3,
+  reward: 0.3
 };
 
 const players = new Map<UiSfxName, HTMLAudioElement>();
+const prefetched = new Set<UiSfxName>();
+
+function sourceUrl(name: UiSfxName) {
+  return new URL(SOURCES[name], document.baseURI).toString();
+}
 
 function playerFor(name: UiSfxName) {
   const existing = players.get(name);
   if (existing) return existing;
-  const player = new Audio(new URL(SOURCES[name], document.baseURI).toString());
+  const player = new Audio();
   player.preload = "auto";
+  player.src = sourceUrl(name);
   player.volume = VOLUMES[name];
   players.set(name, player);
   return player;
 }
 
 export function preloadUiSfx() {
-  (Object.keys(SOURCES) as UiSfxName[]).forEach((name) => playerFor(name).load());
+  (Object.keys(SOURCES) as UiSfxName[]).forEach((name) => {
+    if (prefetched.has(name)) return;
+    prefetched.add(name);
+    void fetch(sourceUrl(name), { cache: "force-cache" })
+      .then((response) => response.arrayBuffer())
+      .catch(() => {
+        // The first explicit tap can still load the local asset on demand.
+      });
+  });
 }
 
 export function playUiSfx(name: UiSfxName) {

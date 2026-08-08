@@ -190,9 +190,14 @@ export type Route =
   | { name: "toolkit" }
   | { name: "roulette"; autoSpin?: boolean; spinKey?: number }
   | { name: "yoga" }
+  | { name: "bike-quest"; resume?: "pre-stretch-complete" | "post-stretch-complete" }
   | { name: "timer"; meditationId: string }
   | { name: "yoga-pose"; movementId: string }
-  | { name: "yoga-class"; classId: string }
+  | {
+      name: "yoga-class";
+      classId: string;
+      returnToBikeQuest?: "pre-stretch-complete" | "post-stretch-complete";
+    }
   | { name: "journal"; draftMeditation?: string }
   | { name: "progress" }
   | { name: "guide" }

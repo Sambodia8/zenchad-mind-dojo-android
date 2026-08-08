@@ -1,0 +1,486 @@
+.bike-quest {
+  position: relative;
+  gap: 1rem;
+}
+
+.bike-quest-hud {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.45rem 0.8rem;
+  align-items: center;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: rgba(10, 16, 32, 0.74);
+  backdrop-filter: blur(16px);
+}
+
+.bike-quest-hud > span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #dbeafe;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.bike-quest-hud > span:last-of-type {
+  justify-content: flex-end;
+  color: #fde68a;
+}
+
+.bike-quest-progress {
+  grid-column: 1 / -1;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.bike-quest-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2dd4bf, #8b5cf6, #f59e0b);
+  transition: width 320ms ease;
+}
+
+.bike-quest-hero,
+.bike-step-card,
+.bike-ride-stage,
+.bike-bonus-card,
+.bike-ride-complete {
+  border: 1px solid var(--line);
+  border-radius: 1.45rem;
+  background: linear-gradient(160deg, rgba(25, 35, 62, 0.94), rgba(10, 16, 32, 0.93));
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.25);
+}
+
+.bike-quest-hero {
+  padding: 2rem 1.25rem;
+  text-align: center;
+}
+
+.bike-quest-hero-icon,
+.bike-step-illustration {
+  display: grid;
+  place-items: center;
+  margin: 0 auto 1rem;
+  color: #5eead4;
+}
+
+.bike-quest-hero-icon {
+  width: 5.5rem;
+  height: 5.5rem;
+  border: 1px solid rgba(45, 212, 191, 0.32);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(45, 212, 191, 0.18), rgba(45, 212, 191, 0.02));
+}
+
+.bike-quest-hero-icon svg {
+  width: 2.8rem;
+  height: 2.8rem;
+}
+
+.bike-step-card {
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.bike-step-card h1 {
+  margin-top: 0.35rem;
+}
+
+.bike-step-image {
+  display: block;
+  width: 100%;
+  max-height: min(48vh, 430px);
+  margin: 0 0 1rem;
+  object-fit: contain;
+  border-radius: 1.1rem;
+  background: #f7f3ec;
+}
+
+.bike-step-illustration {
+  width: 100%;
+  min-height: 14rem;
+  border-radius: 1.1rem;
+  color: #93c5fd;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(59, 130, 246, 0.15), transparent 38%),
+    rgba(255, 255, 255, 0.035);
+}
+
+.bike-choice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.bike-choice-grid button,
+.bike-coin,
+.bike-arm-set {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.055);
+  cursor: pointer;
+}
+
+.bike-choice-grid button {
+  display: grid;
+  min-height: 7.5rem;
+  place-items: center;
+  gap: 0.45rem;
+  padding: 0.85rem;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.bike-choice-grid button svg {
+  color: #a7f3d0;
+}
+
+.bike-choice-grid small {
+  font-weight: 700;
+}
+
+.bike-coin {
+  display: flex;
+  width: 100%;
+  min-height: 5rem;
+  margin-top: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.2rem;
+  color: #fef3c7;
+  background: linear-gradient(145deg, rgba(245, 158, 11, 0.16), rgba(124, 58, 237, 0.13));
+}
+
+.bike-coin span {
+  font-size: 1.02rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.bike-coin.flipping {
+  animation: bikeCoinFlip 180ms linear infinite alternate;
+}
+
+@keyframes bikeCoinFlip {
+  from { transform: rotateX(0deg) scale(1); }
+  to { transform: rotateX(78deg) scale(0.94); }
+}
+
+.bike-guarantee,
+.bike-notification-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #bfdbfe;
+}
+
+.bike-guarantee {
+  margin: 1rem 0;
+  padding: 0.8rem;
+  border-radius: 0.9rem;
+  background: rgba(59, 130, 246, 0.1);
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+.bike-momentum {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 0.9rem;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.1rem;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.bike-timer-ring {
+  --timer-progress: 0deg;
+  position: relative;
+  display: grid;
+  width: 5.2rem;
+  height: 5.2rem;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(#2dd4bf 0 var(--timer-progress), rgba(255, 255, 255, 0.08) var(--timer-progress) 360deg);
+}
+
+.bike-momentum.grace .bike-timer-ring {
+  background: conic-gradient(#f59e0b 0 var(--timer-progress), rgba(255, 255, 255, 0.08) var(--timer-progress) 360deg);
+}
+
+.bike-momentum.base .bike-timer-ring {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.bike-timer-ring::after {
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: #10182d;
+  content: "";
+}
+
+.bike-timer-ring strong {
+  position: relative;
+  z-index: 1;
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+}
+
+.bike-momentum > div:last-child {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.bike-momentum > div:last-child strong {
+  color: #f8fafc;
+  font-size: 1rem;
+}
+
+.bike-momentum > div:last-child span {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.bike-done-button b,
+.bike-step-card .button b {
+  margin-left: auto;
+  color: #fef3c7;
+}
+
+.bike-ride-stage {
+  padding: 1rem;
+  text-align: center;
+}
+
+.bike-ride-stage > img {
+  width: min(78%, 380px);
+  max-height: 34vh;
+  object-fit: contain;
+  border-radius: 1rem;
+  background: #f7f3ec;
+}
+
+.bike-ride-clock {
+  display: block;
+  margin: 0.35rem 0;
+  font-size: clamp(4rem, 18vw, 7rem);
+  line-height: 1;
+  letter-spacing: -0.075em;
+}
+
+.bike-ride-xp {
+  display: inline-flex;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0.5rem auto 1rem;
+  padding: 0.7rem 0.95rem;
+  border: 1px solid rgba(250, 204, 21, 0.22);
+  border-radius: 999px;
+  color: #fde68a;
+  background: rgba(250, 204, 21, 0.08);
+}
+
+.bike-ride-xp span {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.bike-arm-set {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 3rem 1fr;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.9rem;
+  text-align: left;
+}
+
+.bike-arm-set > svg {
+  color: #c4b5fd;
+}
+
+.bike-arm-set span {
+  display: flex;
+  flex-direction: column;
+}
+
+.bike-end-ride {
+  margin-top: 0.8rem;
+  min-height: 4rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.bike-notification-note {
+  justify-content: center;
+  margin-top: 0.75rem;
+  font-size: 0.72rem;
+}
+
+.bike-ride-complete {
+  padding: 1.35rem;
+  text-align: center;
+}
+
+.bike-bonus-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.8rem;
+  padding: 1rem;
+}
+
+.bike-bonus-card.done {
+  border-color: rgba(45, 212, 191, 0.28);
+  background: linear-gradient(160deg, rgba(20, 63, 67, 0.74), rgba(10, 16, 32, 0.93));
+}
+
+.bike-bonus-icon {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border-radius: 0.9rem;
+  color: #a7f3d0;
+  background: rgba(45, 212, 191, 0.1);
+}
+
+.bike-bonus-card h2,
+.bike-bonus-card p {
+  margin-bottom: 0.25rem;
+}
+
+.bike-bonus-actions,
+.bike-bonus-done,
+.bike-bonus-card > .button {
+  grid-column: 1 / -1;
+}
+
+.bike-bonus-actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.6rem;
+}
+
+.bike-bonus-done {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  color: #a7f3d0;
+  font-weight: 850;
+}
+
+.bike-quest-final {
+  border-radius: 1.4rem;
+}
+
+.bike-reward-burst {
+  position: fixed;
+  z-index: 120;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  pointer-events: none;
+  text-align: center;
+  background: radial-gradient(circle, rgba(91, 33, 182, 0.42), rgba(8, 13, 27, 0.06) 45%, transparent 68%);
+  animation: bikeBurstFade 1.35s ease both;
+}
+
+.bike-reward-burst > strong {
+  z-index: 2;
+  color: #fff7cc;
+  font-size: clamp(3.2rem, 17vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: -0.07em;
+  text-shadow: 0 0 28px rgba(250, 204, 21, 0.7);
+  transform: rotate(-5deg);
+  animation: bikeWordPunch 600ms cubic-bezier(.17,.89,.32,1.49) both;
+}
+
+.bike-reward-burst > span,
+.bike-reward-burst > b {
+  z-index: 2;
+  margin-top: 0.4rem;
+}
+
+.bike-reward-burst > span {
+  color: #e0e7ff;
+  font-weight: 800;
+}
+
+.bike-reward-burst > b {
+  color: #fde68a;
+  font-size: 1.55rem;
+}
+
+.bike-fireworks {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.bike-fireworks span {
+  --angle: calc(var(--spark) * 20deg);
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: hsl(calc(42 + var(--spark) * 19) 92% 66%);
+  box-shadow: 0 0 18px currentColor;
+  animation: bikeSpark 850ms ease-out both;
+  animation-delay: calc((var(--spark) % 4) * 45ms);
+}
+
+@keyframes bikeSpark {
+  0% { transform: translate(-50%, -50%) rotate(var(--angle)) translateX(0) scale(0.2); opacity: 1; }
+  100% { transform: translate(-50%, -50%) rotate(var(--angle)) translateX(min(43vw, 260px)) scale(0); opacity: 0; }
+}
+
+@keyframes bikeWordPunch {
+  0% { transform: scale(0.25) rotate(-12deg); opacity: 0; }
+  55% { transform: scale(1.18) rotate(-3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-5deg); opacity: 1; }
+}
+
+@keyframes bikeBurstFade {
+  0%, 72% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.reduce-motion .bike-reward-burst,
+.reduce-motion .bike-reward-burst > strong,
+.reduce-motion .bike-fireworks span,
+.reduce-motion .bike-coin.flipping {
+  animation: none;
+}
+
+@media (max-width: 440px) {
+  .bike-momentum {
+    grid-template-columns: 4.7rem 1fr;
+  }
+
+  .bike-timer-ring {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+
+  .bike-bonus-actions {
+    grid-template-columns: 1fr;
+  }
+}

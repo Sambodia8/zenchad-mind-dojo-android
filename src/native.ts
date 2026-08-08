@@ -4,6 +4,7 @@ import { KeepAwake } from "@capacitor-community/keep-awake";
 
 const GENTLE_REMINDER_ID = 4101;
 const TIMER_NOTIFICATION_IDS = Array.from({ length: 20 }, (_, index) => 5200 + index);
+const BIKE_RIDE_NOTIFICATION_ID = 6101;
 
 export interface TimerNotificationBoundary {
   at: Date;
@@ -156,6 +157,18 @@ async function ensureGentleChannel() {
   });
 }
 
+async function ensureBikeQuestChannel() {
+  if (!isNativeAndroid()) return;
+  await LocalNotifications.createChannel({
+    id: "bike-quest",
+    name: "Bike Quest",
+    description: "Keeps the active Bike Quest ride easy to find while you use other apps.",
+    importance: 3,
+    vibration: false,
+    lights: false
+  });
+}
+
 export async function requestNotificationPermission(): Promise<NativeActionResult> {
   if (!Capacitor.isNativePlatform()) {
     return { ok: false, reason: "Notifications are available in the installed Android app." };
@@ -239,6 +252,38 @@ export async function cancelTimerNotifications() {
   await LocalNotifications.cancel({
     notifications: TIMER_NOTIFICATION_IDS.map((id) => ({ id }))
   });
+}
+
+export async function showBikeRideRunningNotification(): Promise<NativeActionResult> {
+  if (!Capacitor.isNativePlatform()) return { ok: true };
+  const permission = await requestNotificationPermission();
+  if (!permission.ok) return permission;
+
+  try {
+    await ensureBikeQuestChannel();
+    await LocalNotifications.cancel({ notifications: [{ id: BIKE_RIDE_NOTIFICATION_ID }] });
+    await LocalNotifications.schedule({
+      notifications: [
+        {
+          id: BIKE_RIDE_NOTIFICATION_ID,
+          title: "Bike Quest is running 🚲",
+          body: "Your ride timer is still running. Open Zenchad when you finish pedalling.",
+          channelId: "bike-quest",
+          ongoing: true,
+          autoCancel: false,
+          extra: { kind: "bike-ride-running" }
+        }
+      ]
+    });
+    return { ok: true };
+  } catch {
+    return { ok: false, reason: "Android could not pin the Bike Quest notification." };
+  }
+}
+
+export async function cancelBikeRideNotification() {
+  if (!Capacitor.isNativePlatform()) return;
+  await LocalNotifications.cancel({ notifications: [{ id: BIKE_RIDE_NOTIFICATION_ID }] });
 }
 
 export async function keepScreenAwake() {

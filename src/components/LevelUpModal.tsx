@@ -17,7 +17,7 @@ export default function LevelUpModal({ data, onDismiss }: Props) {
       // Small delay to allow main screen to render first
       const t = setTimeout(() => {
         setShow(true);
-        playUiSfx("confirm");
+        playUiSfx("reward");
       }, 500);
       return () => clearTimeout(t);
     }
