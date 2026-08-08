@@ -51,7 +51,8 @@
   white-space: nowrap;
 }
 
-html.bike-quest-focus-mode .bike-quest-resume-dock {
+html.bike-quest-focus-mode .bike-quest-resume-dock,
+html.bike-quest-hide-resume-banner .bike-resume-banner {
   display: none;
 }
 
