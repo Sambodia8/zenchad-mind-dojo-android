@@ -42,4 +42,4 @@ jobs:
       - name: Compile Android Java
         if: ${{ always() }}
         working-directory: android
-        run: ./gradlew :app:compileDebugJavaWithJavac --no-daemon
+        run: bash ./gradlew :app:compileDebugJavaWithJavac --no-daemon
