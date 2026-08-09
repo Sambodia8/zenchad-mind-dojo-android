@@ -39,6 +39,10 @@ jobs:
       - name: Type-check and build
         run: npm run build
 
+      - name: Sync Capacitor Android
+        if: ${{ always() }}
+        run: npx cap sync android
+
       - name: Compile Android Java
         if: ${{ always() }}
         working-directory: android
