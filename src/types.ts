@@ -167,6 +167,8 @@ export interface MysteryChallengeState {
   bonusUnlocked: boolean;
 }
 
+export type AppearanceMode = "light" | "dark" | "auto";
+
 export interface AppPreferences {
   gentleReminderEnabled: boolean;
   gentleReminderTime: string;
@@ -179,7 +181,7 @@ export interface AppPreferences {
   stretchMusicTrack: "grounding" | "lofi" | "sunrise";
   stretchMusicVolume: number;
   selectedTheme: "dawn" | "forest" | "rain" | "moon" | "ember";
-  themeMode: "light" | "dark" | "auto";
+  appearanceMode: AppearanceMode;
   reducedMotion: boolean;
 }
 
