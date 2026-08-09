@@ -24,6 +24,12 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
       - name: Install dependencies
         run: npm ci
 
@@ -32,3 +38,7 @@ jobs:
 
       - name: Type-check and build
         run: npm run build
+
+      - name: Compile Android Java
+        working-directory: android
+        run: ./gradlew :app:compileDebugJavaWithJavac --no-daemon
