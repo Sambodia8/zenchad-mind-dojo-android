@@ -419,7 +419,7 @@ export default function RunningModeScreen({ data, setData }: Props) {
 
   const totals = useMemo(() => {
     const history = profile.history;
-    const bestMap = new Map<string, RunBestEffort>();
+    const bestMap = new globalThis.Map<string, RunBestEffort>();
     for (const run of history) {
       for (const effort of run.bestEfforts) {
         const currentBest = bestMap.get(effort.key);
