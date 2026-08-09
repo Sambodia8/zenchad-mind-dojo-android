@@ -179,6 +179,7 @@ export interface AppPreferences {
   stretchMusicTrack: "grounding" | "lofi" | "sunrise";
   stretchMusicVolume: number;
   selectedTheme: "dawn" | "forest" | "rain" | "moon" | "ember";
+  themeMode: "light" | "dark" | "auto";
   reducedMotion: boolean;
 }
 
