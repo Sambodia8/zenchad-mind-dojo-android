@@ -10,6 +10,7 @@ import "./bikeQuestMedia.css";
 import "./bikeQuestPolish.css";
 import "./bikeQuestRuntime.css";
 import "./runningMode.css";
+import "./runningInsights.css";
 import "./theme.css";
 
 startBikeQuestRuntime();

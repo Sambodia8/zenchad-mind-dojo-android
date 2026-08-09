@@ -3,12 +3,13 @@ import {
   ArrowRight,
   Check,
   Clock3,
+  EyeOff,
   Footprints,
   Headphones,
   History,
   Map,
+  Medal,
   Navigation,
-  Play,
   RotateCcw,
   ShoppingBag,
   Sparkles,
@@ -27,7 +28,10 @@ import {
 import {
   RUN_PREP_STEPS,
   addRunningXp,
+  calculateBestEfforts,
+  calculateKilometreSplits,
   calculateRunXp,
+  compactRunPoints,
   createRunSession,
   distanceMeters,
   formatRunClock,
@@ -35,9 +39,12 @@ import {
   formatRunPace,
   loadRunSession,
   loadRunningProfile,
+  personalBestKeysFor,
   prepStepXp,
   saveRunSession,
   saveRunningProfile,
+  trimRouteForPrivacy,
+  type RunBestEffort,
   type RunMode,
   type RunPoint,
   type RunRecord,
@@ -63,6 +70,7 @@ type RunningView =
   | "progress";
 
 const DURATIONS = [20, 30, 45, 60];
+const PLAN_MILESTONES = [0.5, 0.75, 1];
 
 const STORE_ITEMS = [
   { id: "runner-red", name: "Signal Red runner jacket", price: 350, note: "Cosmetic prototype" },
@@ -102,6 +110,42 @@ function recordPace(record: RunRecord) {
   return formatRunPace(record.averagePaceSecondsPerKm);
 }
 
+function RouteTrace({ points, label }: { points: RunPoint[]; label: string }) {
+  const trace = routeTrace(points);
+  return (
+    <div className="running-route-trace">
+      {trace ? (
+        <svg viewBox="0 0 100 100" role="img" aria-label={label}>
+          <polyline points={trace} />
+        </svg>
+      ) : (
+        <div><Map /><span>Route trace appears once GPS has enough points.</span></div>
+      )}
+    </div>
+  );
+}
+
+function BestEffortList({ efforts, personalBestKeys }: { efforts: RunBestEffort[]; personalBestKeys: string[] }) {
+  if (!efforts.length) return null;
+  return (
+    <section className="running-insight-section">
+      <div className="section-heading"><div><span className="eyebrow">Positive comparisons only</span><h2>Best efforts</h2></div><Medal /></div>
+      <div className="running-effort-list">
+        {efforts.map((effort) => {
+          const personalBest = personalBestKeys.includes(effort.key);
+          return (
+            <article className={`running-effort-row ${personalBest ? "personal-best" : ""}`} key={effort.key}>
+              <span className="running-effort-medal"><Medal /></span>
+              <span><strong>{effort.label}</strong><small>{formatRunClock(effort.durationSeconds)} · {formatRunPace(effort.paceSecondsPerKm)}</small></span>
+              <b>{personalBest ? "NEW BEST" : "BANKED"}</b>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 export default function RunningModeScreen({ data, setData }: Props) {
   const restored = useRef<RunSession | null>(loadRunSession());
   const [session, setSession] = useState<RunSession | null>(restored.current);
@@ -113,6 +157,10 @@ export default function RunningModeScreen({ data, setData }: Props) {
   const [toast, setToast] = useState<string | null>(null);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const lastAnnouncedKm = useRef(Math.floor((restored.current?.distanceMeters ?? 0) / 1000));
+  const restoredPlanRatio = restored.current?.stage === "active" && restored.current.runStartedAt
+    ? (Date.now() - restored.current.runStartedAt) / Math.max(60_000, restored.current.plannedMinutes * 60_000)
+    : 0;
+  const lastPlanMilestone = useRef(restoredPlanRatio >= 1 ? 3 : restoredPlanRatio >= 0.75 ? 2 : restoredPlanRatio >= 0.5 ? 1 : 0);
   const toastTimer = useRef<number | null>(null);
 
   const setSavedSession = (next: RunSession | null) => {
@@ -160,7 +208,7 @@ export default function RunningModeScreen({ data, setData }: Props) {
     setGpsStatus("Finding GPS…");
     const watchId = navigator.geolocation.watchPosition(
       (position) => {
-        const point: RunPoint = {
+        const rawPoint: RunPoint = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
           accuracy: position.coords.accuracy,
@@ -169,30 +217,32 @@ export default function RunningModeScreen({ data, setData }: Props) {
 
         setSession((current) => {
           if (!current || current.stage !== "active") return current;
-          if (point.accuracy > 80) {
-            setGpsStatus(`GPS weak · ±${Math.round(point.accuracy)} m`);
+          if (rawPoint.accuracy > 80) {
+            setGpsStatus(`GPS weak · ±${Math.round(rawPoint.accuracy)} m`);
             return current;
           }
 
           const previous = current.points[current.points.length - 1];
           let extraDistance = 0;
           if (previous) {
-            const segment = distanceMeters(previous, point);
-            const elapsed = Math.max(1, (point.at - previous.at) / 1000);
+            const segment = distanceMeters(previous, rawPoint);
+            const elapsed = Math.max(1, (rawPoint.at - previous.at) / 1000);
             const plausible = segment >= 2 && segment <= 120 && segment / elapsed <= 12;
             if (plausible) extraDistance = segment;
           }
 
-          const shouldAppend = !previous || extraDistance > 0 || point.at - previous.at >= 10_000;
+          const shouldAppend = !previous || extraDistance > 0 || rawPoint.at - previous.at >= 10_000;
           if (!shouldAppend) return current;
 
+          const nextDistance = current.distanceMeters + extraDistance;
+          const point: RunPoint = { ...rawPoint, distanceFromStart: nextDistance };
           const next: RunSession = {
             ...current,
             points: [...current.points, point].slice(-4000),
-            distanceMeters: current.distanceMeters + extraDistance
+            distanceMeters: nextDistance
           };
           saveRunSession(next);
-          setGpsStatus(`GPS locked · ±${Math.round(point.accuracy)} m`);
+          setGpsStatus(`GPS locked · ±${Math.round(rawPoint.accuracy)} m`);
           return next;
         });
       },
@@ -218,22 +268,31 @@ export default function RunningModeScreen({ data, setData }: Props) {
     showToast(`${kilometres} KM BANKED · NICE`);
   }, [session?.distanceMeters, session?.stage]);
 
-  useEffect(() => {
-    if (session?.stage !== "complete") return;
-    navigator.vibrate?.([45, 35, 90, 45, 140]);
-  }, [session?.stage]);
-
   const elapsedRunSeconds = session?.runStartedAt
     ? Math.max(0, Math.floor(((session.runEndedAt ?? now) - session.runStartedAt) / 1000))
     : 0;
-  const averagePace =
-    session && session.distanceMeters >= 100
-      ? elapsedRunSeconds / (session.distanceMeters / 1000)
-      : null;
+  const averagePace = session && session.distanceMeters >= 100
+    ? elapsedRunSeconds / (session.distanceMeters / 1000)
+    : null;
   const plannedSeconds = (session?.plannedMinutes ?? 1) * 60;
   const completionRatio = plannedSeconds > 0 ? elapsedRunSeconds / plannedSeconds : 0;
   const currentPrep = session?.stage === "prep" ? RUN_PREP_STEPS[session.prepStepIndex] : null;
   const prepElapsed = session ? Math.max(0, (now - session.stepStartedAt) / 1000) : 0;
+
+  useEffect(() => {
+    if (session?.stage !== "active") return;
+    const reached = completionRatio >= 1 ? 3 : completionRatio >= 0.75 ? 2 : completionRatio >= 0.5 ? 1 : 0;
+    if (reached <= lastPlanMilestone.current) return;
+    lastPlanMilestone.current = reached;
+    const percent = Math.round(PLAN_MILESTONES[reached - 1] * 100);
+    navigator.vibrate?.([28, 30, 62]);
+    showToast(`${percent}% OF THE PLAN BANKED`);
+  }, [completionRatio, session?.stage]);
+
+  useEffect(() => {
+    if (session?.stage !== "complete") return;
+    navigator.vibrate?.([45, 35, 90, 45, 140]);
+  }, [session?.stage]);
 
   useEffect(() => {
     if (!currentPrep?.speedBonus) return;
@@ -286,6 +345,7 @@ export default function RunningModeScreen({ data, setData }: Props) {
 
     setData((currentData) => ({ ...currentData, stats: addRunningXp(currentData.stats, xp + startBonus) }));
     lastAnnouncedKm.current = 0;
+    lastPlanMilestone.current = 0;
     setSavedSession(next);
     setNow(Date.now());
     showToast(isLast ? `RUN STARTED · +${xp + startBonus} XP` : `+${xp} XP`);
@@ -300,6 +360,10 @@ export default function RunningModeScreen({ data, setData }: Props) {
     const runXp = calculateRunXp(durationSeconds, current.distanceMeters, current.plannedMinutes);
     const ratio = durationSeconds / Math.max(60, current.plannedMinutes * 60);
     const pace = current.distanceMeters >= 100 ? durationSeconds / (current.distanceMeters / 1000) : null;
+    const previousProfile = loadRunningProfile();
+    const splits = calculateKilometreSplits(current.points);
+    const bestEfforts = calculateBestEfforts(current.points);
+    const personalBestKeys = personalBestKeysFor(bestEfforts, previousProfile.history.filter((item) => item.id !== current.id));
     const record: RunRecord = {
       id: current.id,
       mode: current.mode,
@@ -311,13 +375,16 @@ export default function RunningModeScreen({ data, setData }: Props) {
       averagePaceSecondsPerKm: pace,
       completionRatio: ratio,
       xp: current.prepXp + runXp,
-      points: current.points
+      points: compactRunPoints(current.points),
+      splits,
+      bestEfforts,
+      personalBestKeys
     };
     const nextSession: RunSession = { ...current, stage: "complete", runEndedAt: endedAt, runXp };
     const nextProfile: RunningProfile = {
-      ...profile,
-      credits: profile.credits + current.prepXp + runXp,
-      history: [record, ...profile.history.filter((item) => item.id !== record.id)].slice(0, 100)
+      ...previousProfile,
+      credits: previousProfile.credits + current.prepXp + runXp,
+      history: [record, ...previousProfile.history.filter((item) => item.id !== record.id)].slice(0, 100)
     };
 
     setData((currentData) => ({ ...currentData, stats: addRunningXp(currentData.stats, runXp) }));
@@ -338,25 +405,38 @@ export default function RunningModeScreen({ data, setData }: Props) {
 
   const buyStoreItem = (id: string, price: number) => {
     if (profile.unlockedStoreIds.includes(id) || profile.credits < price) return;
-    const next: RunningProfile = {
+    setSavedProfile({
       ...profile,
       credits: profile.credits - price,
       unlockedStoreIds: [...profile.unlockedStoreIds, id]
-    };
-    setSavedProfile(next);
+    });
     showToast("UNLOCKED");
+  };
+
+  const setRoutePrivacy = (meters: number) => {
+    setSavedProfile({ ...profile, routePrivacyMeters: meters });
   };
 
   const totals = useMemo(() => {
     const history = profile.history;
+    const bestMap = new Map<string, RunBestEffort>();
+    for (const run of history) {
+      for (const effort of run.bestEfforts) {
+        const currentBest = bestMap.get(effort.key);
+        if (!currentBest || effort.durationSeconds < currentBest.durationSeconds) bestMap.set(effort.key, effort);
+      }
+    }
     return {
       runs: history.length,
       distance: history.reduce((sum, run) => sum + run.distanceMeters, 0),
       seconds: history.reduce((sum, run) => sum + run.durationSeconds, 0),
       xp: history.reduce((sum, run) => sum + run.xp, 0),
-      storyRuns: history.filter((run) => run.mode === "story").length
+      storyRuns: history.filter((run) => run.mode === "story").length,
+      bestEfforts: Array.from(bestMap.values())
     };
   }, [profile.history]);
+
+  const completedRecord = session ? profile.history.find((record) => record.id === session.id) ?? null : null;
 
   if (view === "hub") {
     return (
@@ -450,7 +530,13 @@ export default function RunningModeScreen({ data, setData }: Props) {
 
   if (view === "active" && session) {
     const plannedProgress = Math.min(1, elapsedRunSeconds / plannedSeconds);
-    const storyCopy = completionRatio < 0.2 ? "COMMS ONLINE · Keep moving. The mission director is standing by." : completionRatio < 0.45 ? "RUNNER CHANNEL · Route telemetry is clean." : completionRatio < 0.7 ? "PURSUIT WINDOW · Adaptive chase events will plug into this stage." : "HOME STRETCH · Keep the line moving.";
+    const storyCopy = completionRatio < 0.2
+      ? "COMMS ONLINE · Keep moving. The mission director is standing by."
+      : completionRatio < 0.45
+        ? "RUNNER CHANNEL · Route telemetry is clean."
+        : completionRatio < 0.7
+          ? "PURSUIT WINDOW · Adaptive chase events will plug into this stage."
+          : "HOME STRETCH · Keep the line moving.";
     return (
       <div className="screen-stack running-mode running-active">
         <section className="running-live-hud">
@@ -459,7 +545,9 @@ export default function RunningModeScreen({ data, setData }: Props) {
           <div className="running-live-stats"><span><small>PACE</small><b>{formatRunPace(averagePace)}</b></span><span><small>PLAN</small><b>{session.plannedMinutes} min</b></span><span><small>PROGRESS</small><b>{Math.round(plannedProgress * 100)}%</b></span></div>
           <div className="running-progress-track active"><span style={{ width: `${plannedProgress * 100}%` }} /></div>
         </section>
-        {session.mode === "story" ? <section className="running-story-radio"><Activity /><div><span className="eyebrow">Runner radio</span><strong>{storyCopy}</strong><small>Live dialogue, helicopter audio and chase logic come in the native story/audio pass.</small></div></section> : <section className="running-km-card"><Zap /><div><strong>Next celebration: {Math.floor(session.distanceMeters / 1000) + 1} km</strong><small>No previous-run comparisons while you are moving.</small></div></section>}
+        {session.mode === "story"
+          ? <section className="running-story-radio"><Activity /><div><span className="eyebrow">Runner radio</span><strong>{storyCopy}</strong><small>Live dialogue, helicopter audio and chase logic come in the native story/audio pass.</small></div></section>
+          : <section className="running-km-card"><Zap /><div><strong>Next celebration: {Math.floor(session.distanceMeters / 1000) + 1} km</strong><small>No previous-run comparisons while you are moving.</small></div></section>}
         <button className={`button full running-end-button ${confirmEnd ? "confirming" : ""}`} onClick={() => confirmEnd ? finishRun() : setConfirmEnd(true)}>{confirmEnd ? "Tap again — finish & bank run" : "END RUN"}</button>
         {confirmEnd ? <button className="button ghost full" onClick={() => setConfirmEnd(false)}>Keep running</button> : null}
         {toast ? <div className="running-toast">{toast}</div> : null}
@@ -468,8 +556,8 @@ export default function RunningModeScreen({ data, setData }: Props) {
   }
 
   if (view === "summary" && session) {
-    const trace = routeTrace(session.points);
     const totalXp = session.prepXp + session.runXp;
+    const record = completedRecord;
     return (
       <div className="screen-stack running-mode running-summary">
         <div className="running-confetti" aria-hidden="true">{Array.from({ length: 24 }, (_, index) => <span key={index} style={{ "--i": index } as CSSProperties} />)}</div>
@@ -477,9 +565,18 @@ export default function RunningModeScreen({ data, setData }: Props) {
         <section className="card running-results-card">
           <span className="eyebrow">Here’s how you did</span>
           <div className="running-result-grid"><span><small>Distance</small><strong>{formatRunDistance(session.distanceMeters)}</strong></span><span><small>Time</small><strong>{formatRunClock(elapsedRunSeconds)}</strong></span><span><small>Avg pace</small><strong>{formatRunPace(averagePace)}</strong></span><span><small>Plan</small><strong>{Math.round(completionRatio * 100)}%</strong></span></div>
-          <div className="running-route-trace">{trace ? <svg viewBox="0 0 100 100" role="img" aria-label="Trace of your recorded route"><polyline points={trace} /></svg> : <div><Map /><span>Route trace appears once GPS has enough points.</span></div>}</div>
+          <RouteTrace points={session.points} label="Trace of your recorded route" />
           <div className="running-milestones"><span className={completionRatio >= 0.5 ? "done" : ""}>50%</span><span className={completionRatio >= 0.75 ? "done" : ""}>75%</span><span className={completionRatio >= 1 ? "done" : ""}>100%</span></div>
         </section>
+
+        {record?.personalBestKeys.length ? (
+          <section className="running-new-best-banner"><Medal /><div><span className="eyebrow">Post-run discovery</span><strong>{record.personalBestKeys.length} new personal best{record.personalBestKeys.length === 1 ? "" : "s"}</strong><small>Zenchad waited until the run was over before comparing anything.</small></div></section>
+        ) : null}
+        {record ? <BestEffortList efforts={record.bestEfforts} personalBestKeys={record.personalBestKeys} /> : null}
+        {record?.splits.length ? (
+          <section className="running-insight-section"><div className="section-heading"><div><span className="eyebrow">Kilometre by kilometre</span><h2>Pace laps</h2></div><Clock3 /></div><div className="running-split-list">{record.splits.map((split) => <div key={split.index}><strong>{split.index} km</strong><span>{formatRunClock(split.durationSeconds)}</span><small>{formatRunPace(split.paceSecondsPerKm)}</small></div>)}</div></section>
+        ) : null}
+        <section className="card running-xp-breakdown"><span><small>Prep + starting</small><strong>+{session.prepXp} XP</strong></span><span><small>Run + plan milestones</small><strong>+{session.runXp} XP</strong></span></section>
         <button className="button primary full" onClick={resetRun}><RotateCcw /> Start a fresh run</button>
         <button className="button ghost full" onClick={() => setView("history")}><History /> Run history</button>
       </div>
@@ -491,7 +588,26 @@ export default function RunningModeScreen({ data, setData }: Props) {
       <div className="screen-stack running-mode">
         <button className="running-inline-back" onClick={() => setView("hub")}>← Running hub</button>
         <section className="page-intro"><span className="eyebrow">Your routes, kept local</span><h1>Run history</h1><p>Positive records and useful information. No feed, no leaderboard, no shame.</p></section>
-        <div className="running-history-list">{profile.history.length ? profile.history.map((record) => <article className="card running-history-card" key={record.id}><div><span className="eyebrow">{record.mode === "story" ? "Story Run" : "Quick Run"}</span><strong>{new Date(record.startedAt).toLocaleDateString()}</strong></div><div className="running-history-stats"><span>{formatRunDistance(record.distanceMeters)}</span><span>{formatRunClock(record.durationSeconds)}</span><span>{recordPace(record)}</span></div><small>+{record.xp} running XP · {Math.round(record.completionRatio * 100)}% of planned time</small></article>) : <section className="card running-empty"><Footprints /><strong>No runs banked yet</strong><p>Your first one will appear here.</p></section>}</div>
+        <section className="card running-privacy-card">
+          <EyeOff /><div><strong>Route privacy preview</strong><small>Hide the start and end of saved route maps. The full GPS data still stays on this device for your own stats.</small></div>
+          <div className="running-privacy-options">{[0, 200, 400].map((meters) => <button className={profile.routePrivacyMeters === meters ? "active" : ""} key={meters} onClick={() => setRoutePrivacy(meters)}>{meters === 0 ? "Full" : `${meters} m`}</button>)}</div>
+        </section>
+        <div className="running-history-list">
+          {profile.history.length ? profile.history.map((record) => {
+            const privatePoints = trimRouteForPrivacy(record.points, profile.routePrivacyMeters);
+            return (
+              <details className="card running-history-card" key={record.id}>
+                <summary><div><span className="eyebrow">{record.mode === "story" ? "Story Run" : "Quick Run"}</span><strong>{new Date(record.startedAt).toLocaleDateString()}</strong></div><div className="running-history-stats"><span>{formatRunDistance(record.distanceMeters)}</span><span>{formatRunClock(record.durationSeconds)}</span><span>{recordPace(record)}</span></div><small>+{record.xp} running XP · {Math.round(record.completionRatio * 100)}% of planned time{record.personalBestKeys.length ? ` · ${record.personalBestKeys.length} new best` : ""}</small></summary>
+                <div className="running-history-detail">
+                  <RouteTrace points={privatePoints} label="Privacy-trimmed trace of this run" />
+                  {profile.routePrivacyMeters > 0 ? <span className="running-privacy-badge"><EyeOff /> Start & end hidden by {profile.routePrivacyMeters} m</span> : null}
+                  {record.personalBestKeys.length ? <BestEffortList efforts={record.bestEfforts} personalBestKeys={record.personalBestKeys} /> : null}
+                  {record.splits.length ? <div className="running-split-list compact">{record.splits.map((split) => <div key={split.index}><strong>{split.index} km</strong><span>{formatRunClock(split.durationSeconds)}</span><small>{formatRunPace(split.paceSecondsPerKm)}</small></div>)}</div> : null}
+                </div>
+              </details>
+            );
+          }) : <section className="card running-empty"><Footprints /><strong>No runs banked yet</strong><p>Your first one will appear here.</p></section>}
+        </div>
       </div>
     );
   }
@@ -513,7 +629,8 @@ export default function RunningModeScreen({ data, setData }: Props) {
       <button className="running-inline-back" onClick={() => setView("hub")}>← Running hub</button>
       <section className="page-intro"><span className="eyebrow">Progress without punishment</span><h1>Runner progress</h1><p>What you have accumulated. Nothing here tells you what you “should” have done.</p></section>
       <div className="running-progress-grid"><article><strong>{totals.runs}</strong><span>runs</span></article><article><strong>{formatRunDistance(totals.distance)}</strong><span>distance</span></article><article><strong>{formatRunClock(totals.seconds)}</strong><span>time outside</span></article><article><strong>{totals.storyRuns}</strong><span>story runs</span></article><article><strong>{totals.xp}</strong><span>running XP earned</span></article><article><strong>{profile.credits}</strong><span>credits available</span></article></div>
-      <section className="card running-principle"><Trophy /><div><strong>Next progression pass</strong><p>Personal bests, Runner Sectors, achievements, streak multipliers and watch/heart-rate data plug in here next.</p></div></section>
+      {totals.bestEfforts.length ? <BestEffortList efforts={totals.bestEfforts} personalBestKeys={totals.bestEfforts.map((effort) => effort.key)} /> : null}
+      <section className="card running-principle"><Trophy /><div><strong>Next progression pass</strong><p>Runner Sectors, achievements, streak multipliers and watch/heart-rate data plug in here next.</p></div></section>
     </div>
   );
 }
