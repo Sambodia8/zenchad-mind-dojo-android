@@ -5,6 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#080d1b" />
     <meta name="color-scheme" content="light dark" />
+    <style id="appearance-bootstrap">html,body{background:#080d1b;color:#eef2ff}</style>
+    <script>
+      (() => {
+        let mode = "auto";
+        try {
+          const raw = localStorage.getItem("zenchad_app_data_v1");
+          if (raw) {
+            const preferences = JSON.parse(raw)?.preferences ?? {};
+            mode = preferences.appearanceMode ?? preferences.themeMode ?? "auto";
+          }
+        } catch {
+          mode = "auto";
+        }
+
+        const hour = new Date().getHours();
+        const appearance = mode === "light" || mode === "dark"
+          ? mode
+          : hour >= 19 || hour < 7 ? "dark" : "light";
+        const background = appearance === "dark" ? "#080d1b" : "#f4f1ea";
+        const foreground = appearance === "dark" ? "#eef2ff" : "#1d2738";
+
+        document.documentElement.dataset.appearance = appearance;
+        document.documentElement.style.colorScheme = appearance;
+        document.querySelector('meta[name="theme-color"]')?.setAttribute("content", background);
+        const bootstrapStyle = document.getElementById("appearance-bootstrap");
+        if (bootstrapStyle) bootstrapStyle.textContent = `html,body{background:${background};color:${foreground}}`;
+      })();
+    </script>
     <link rel="icon" type="image/png" href="/favicon.png" />
     <title>Zen Chad — Your Wellness Adventure</title>
   </head>
