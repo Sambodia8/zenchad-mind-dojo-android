@@ -9,11 +9,11 @@ import "./bikeQuest.css";
 import "./bikeQuestMedia.css";
 import "./bikeQuestPolish.css";
 import "./bikeQuestRuntime.css";
-import "./theme.css";
 import "./runningMode.css";
+import "./theme.css";
 
 startBikeQuestRuntime();
-startAppearanceController(() => loadData().preferences.themeMode);
+startAppearanceController(loadData().preferences.appearanceMode);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
