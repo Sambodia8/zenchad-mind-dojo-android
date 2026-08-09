@@ -6,6 +6,10 @@ This is the current feature backlog for Codex. Keep changes incremental and pres
 
 - [ ] **DO NOT implement Beacon / live location sharing.** The Strava-style safety beacon idea has been deliberately scrapped because it adds too much backend/cloud complexity.
 
+## Important Bike Quest constraint
+
+**Bike Quest is for an indoor/stationary exercise bike.** Do not add GPS, outdoor route tracking, elevation, or location-derived distance/speed to Bike Quest. Any future outdoor Run/Walk/Bike tracker must be a separate feature.
+
 ---
 
 ## 1. ZenPoints currency
@@ -98,27 +102,27 @@ Add a proper dark theme that can switch automatically at night, similar in spiri
 
 ### Theme modes
 
-- [ ] `Light`
-- [ ] `Dark`
-- [ ] `Auto`
+- [x] `Light`
+- [x] `Dark`
+- [x] `Auto`
 
 ### Implementation
 
-- [ ] Add a persisted `themeMode: "light" | "dark" | "auto"` setting.
-- [ ] Refactor hard-coded UI colours into shared theme/CSS variables before styling individual screens.
-- [ ] Create a complete dark palette: deep charcoal/navy background, slightly lighter cards/surfaces, readable softened light text, existing ZenChad accent colours preserved where practical.
-- [ ] Avoid pure black for every surface unless visually necessary.
-- [ ] Theme every existing screen, modal, dialog, card, form field, button, progress bar, achievement/reward UI and celebration state.
-- [ ] Match Android status bar/navigation bar colours to the active theme.
-- [ ] Re-evaluate Auto mode when the app launches and resumes.
-- [ ] Ensure the theme can change while the app remains open across the day/night boundary.
+- [x] Add a persisted `themeMode: "light" | "dark" | "auto"` setting.
+- [x] Add shared appearance variables/overrides so common components can inherit light/dark colours.
+- [x] Preserve the existing deep charcoal/navy dark palette.
+- [x] Avoid pure black for every surface unless visually necessary.
+- [ ] Finish visual QA across every specialised screen, modal, dialog, card, form field, button, progress bar, achievement/reward UI and celebration state.
+- [ ] Match native Android status bar/navigation bar colours to the active theme if a suitable Capacitor/native hook is added.
+- [x] Re-evaluate Auto mode when the app launches, regains focus, or resumes visibility.
+- [x] Ensure the theme can change while the app remains open across the day/night boundary.
 
 ### Auto behaviour
 
-- [ ] Auto mode should become dark at night and light during the day without requiring location permission.
-- [ ] Keep the day/night rule centralized and easy to change.
-- [ ] Initial fallback schedule: approximately 19:00–07:00 local device time.
-- [ ] If Android/system scheduled dark-mode information can be used reliably, prefer respecting that where appropriate while still providing predictable ZenChad Auto behaviour.
+- [x] Auto mode becomes dark at night and light during the day without requiring location permission.
+- [x] Keep the day/night rule centralized and easy to change.
+- [x] Initial schedule: 19:00–07:00 local device time.
+- [ ] Consider respecting Android/system scheduled dark-mode information later if it can be done reliably without making behaviour unpredictable.
 
 ---
 
@@ -175,21 +179,22 @@ Notification example:
 
 ---
 
-## 7. Outdoor activity tracking — no Beacon
+## 7. Outdoor activity tracking — separate from Bike Quest
 
 ### Goal
-Retain the useful Strava-inspired exercise metrics without any live-location sharing or cloud safety feature.
+Retain useful Strava-inspired metrics for separate outdoor activities without any live-location sharing or cloud safety feature.
 
-- [ ] Support at least `Run`, `Walk` and `Bike` activity types.
+- [ ] Add a separate outdoor activity tracker for at least `Run`, `Walk` and outdoor `Bike` activity types.
 - [ ] Track elapsed time.
-- [ ] Track distance.
+- [ ] Track GPS distance for outdoor activities only.
 - [ ] Track current and average running pace.
-- [ ] Track current and average cycling speed.
+- [ ] Track current and average outdoor cycling speed.
 - [ ] Track elevation and total ascent/descent where device GPS data is adequate.
 - [ ] Show a simple route/map only if it can remain local and does not create unnecessary backend complexity.
-- [ ] Make background/screen-off tracking reliable using the appropriate Android foreground location service if/when this feature is implemented.
-- [ ] Integrate the Bike activity tracker with the existing Bike Quest rather than replacing Bike Quest's gamified preparation/reward flow.
-- [ ] Keep all recorded activity data local by default.
+- [ ] Make background/screen-off outdoor tracking reliable using the appropriate Android foreground location service if/when this feature is implemented.
+- [ ] Keep all recorded outdoor activity data local by default.
+- [ ] Do **not** integrate GPS tracking into Bike Quest.
+- [ ] Do **not** replace or alter Bike Quest's indoor preparation, riding and reward flow as part of outdoor-tracker work.
 
 **Do not add live sharing, safety contacts, public tracking URLs or a Beacon backend.**
 
@@ -201,11 +206,12 @@ Retain the useful Strava-inspired exercise metrics without any live-location sha
 2. [ ] Zen Shop + purchase/inventory foundation.
 3. [ ] Mala bracelet.
 4. [ ] Streak Freezes.
-5. [ ] Theme token refactor + Light/Dark/Auto mode.
-6. [ ] Timed-meditation daily challenge data model/UI.
-7. [ ] Timed-challenge Android local notifications.
-8. [ ] Outdoor activity data model/UI.
-9. [ ] Native Android background GPS tracking and Bike Quest integration.
+5. [x] Light/Dark/Auto appearance foundation.
+6. [ ] Finish dark/light visual QA on specialised screens.
+7. [ ] Timed-meditation daily challenge data model/UI.
+8. [ ] Timed-challenge Android local notifications.
+9. [ ] Separate outdoor activity data model/UI.
+10. [ ] Native Android background GPS tracking for the separate outdoor activity tracker only.
 
 ## Codex implementation notes
 
