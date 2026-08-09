@@ -3,6 +3,33 @@
   --muted: #9ba8c7;
   --panel: rgba(20, 29, 52, 0.82);
   --line: rgba(255, 255, 255, 0.09);
+  --app-bg: #080d1b;
+  --app-violet-glow: rgba(124, 58, 237, 0.22);
+  --app-teal-glow: rgba(13, 148, 136, 0.14);
+  --ambient-violet: rgba(124, 58, 237, 0.12);
+  --ambient-teal: rgba(13, 148, 136, 0.1);
+  --topbar-bg: rgba(8, 13, 27, 0.82);
+  --bottom-nav-bg: rgba(8, 13, 27, 0.9);
+  --surface-raised: rgba(17, 25, 45, 0.88);
+  --surface-control: rgba(255, 255, 255, 0.06);
+  --surface-soft: rgba(255, 255, 255, 0.04);
+  --input-bg: rgba(5, 10, 23, 0.55);
+  --search-bg: rgba(5, 10, 23, 0.5);
+  --hud-text: #cbd5e1;
+  --nav-text: #71809f;
+  --nav-active: #c4b5fd;
+  --accent-text: #a5b4fc;
+  --secondary-text: #ddd6fe;
+  --secondary-bg: rgba(124, 58, 237, 0.1);
+  --ghost-text: #b8c2d9;
+  --ghost-bg: rgba(255, 255, 255, 0.025);
+  --segmented-bg: rgba(4, 9, 20, 0.55);
+  --segmented-text: #8491ac;
+  --segmented-active-text: #ede9fe;
+  --segmented-active-bg: rgba(124, 58, 237, 0.3);
+  --progress-track-bg: rgba(255, 255, 255, 0.07);
+  --recommendation-bg: rgba(124, 58, 237, 0.09);
+  --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.14);
 }
 
 :root[data-appearance="light"] {
@@ -10,118 +37,137 @@
   --muted: #657086;
   --panel: rgba(255, 255, 255, 0.88);
   --line: rgba(29, 39, 56, 0.12);
-  background: #f4f1ea;
+  --app-bg: #f4f1ea;
+  --app-violet-glow: rgba(124, 58, 237, 0.12);
+  --app-teal-glow: rgba(13, 148, 136, 0.09);
+  --ambient-violet: rgba(124, 58, 237, 0.08);
+  --ambient-teal: rgba(13, 148, 136, 0.07);
+  --topbar-bg: rgba(244, 241, 234, 0.88);
+  --bottom-nav-bg: rgba(244, 241, 234, 0.94);
+  --surface-raised: rgba(255, 255, 255, 0.86);
+  --surface-control: rgba(29, 39, 56, 0.06);
+  --surface-soft: rgba(255, 255, 255, 0.58);
+  --input-bg: rgba(255, 255, 255, 0.82);
+  --search-bg: rgba(255, 255, 255, 0.82);
+  --hud-text: #465269;
+  --nav-text: #758097;
+  --nav-active: #6652b8;
+  --accent-text: #6652b8;
+  --secondary-text: #5d49ad;
+  --secondary-bg: rgba(124, 58, 237, 0.08);
+  --ghost-text: #526078;
+  --ghost-bg: rgba(255, 255, 255, 0.55);
+  --segmented-bg: rgba(29, 39, 56, 0.055);
+  --segmented-text: #69758c;
+  --segmented-active-text: #4c3a91;
+  --segmented-active-bg: rgba(124, 58, 237, 0.15);
+  --progress-track-bg: rgba(29, 39, 56, 0.08);
+  --recommendation-bg: rgba(124, 58, 237, 0.065);
+  --card-shadow: 0 18px 45px rgba(53, 45, 34, 0.08);
 }
 
-:root[data-appearance="light"] body {
+:root[data-appearance] {
+  --card-bg: var(--panel);
+  --border: var(--line);
+  --text-primary: var(--ink);
+  --text-muted: var(--muted);
+  background: var(--app-bg);
+}
+
+:root[data-appearance] body {
   color: var(--ink);
   background:
-    radial-gradient(circle at 85% -10%, rgba(124, 58, 237, 0.12), transparent 35%),
-    radial-gradient(circle at -10% 60%, rgba(13, 148, 136, 0.09), transparent 33%),
-    #f4f1ea;
+    radial-gradient(circle at 85% -10%, var(--app-violet-glow), transparent 35%),
+    radial-gradient(circle at -10% 60%, var(--app-teal-glow), transparent 33%),
+    var(--app-bg);
 }
 
-:root[data-appearance="light"] .ambient-one {
-  background: rgba(124, 58, 237, 0.08);
+:root[data-appearance] .ambient-one { background: var(--ambient-violet); }
+:root[data-appearance] .ambient-two { background: var(--ambient-teal); }
+:root[data-appearance] .topbar { background: var(--topbar-bg); }
+:root[data-appearance] .bottom-nav { background: var(--bottom-nav-bg); }
+
+:root[data-appearance] .card,
+:root[data-appearance] .meditation-card {
+  border-color: var(--border);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
 }
 
-:root[data-appearance="light"] .ambient-two {
-  background: rgba(13, 148, 136, 0.07);
+:root[data-appearance] .hud span,
+:root[data-appearance] .section-row > span {
+  color: var(--hud-text);
+  background: var(--surface-soft);
 }
 
-:root[data-appearance="light"] .topbar {
-  background: rgba(244, 241, 234, 0.88);
-}
+:root[data-appearance] .bottom-nav button { color: var(--nav-text); }
+:root[data-appearance] .bottom-nav button.active,
+:root[data-appearance] .back-link,
+:root[data-appearance] .eyebrow { color: var(--accent-text); }
 
-:root[data-appearance="light"] .bottom-nav {
-  background: rgba(244, 241, 234, 0.94);
-}
-
-:root[data-appearance="light"] .card,
-:root[data-appearance="light"] .meditation-card {
-  box-shadow: 0 18px 45px rgba(53, 45, 34, 0.08);
-}
-
-:root[data-appearance="light"] .hud span,
-:root[data-appearance="light"] .section-row > span {
-  color: #465269;
-  background: rgba(255, 255, 255, 0.58);
-}
-
-:root[data-appearance="light"] .bottom-nav button {
-  color: #758097;
-}
-
-:root[data-appearance="light"] .bottom-nav button.active,
-:root[data-appearance="light"] .back-link,
-:root[data-appearance="light"] .eyebrow {
-  color: #6652b8;
-}
-
-:root[data-appearance="light"] textarea,
-:root[data-appearance="light"] input,
-:root[data-appearance="light"] select,
-:root[data-appearance="light"] .search-box {
+:root[data-appearance] textarea,
+:root[data-appearance] input,
+:root[data-appearance] select {
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.82);
+  background: var(--input-bg);
 }
 
-:root[data-appearance="light"] .icon-button,
-:root[data-appearance="light"] .action-card > svg:first-child {
-  background: rgba(29, 39, 56, 0.06);
+:root[data-appearance] .search-box { background: var(--search-bg); }
+:root[data-appearance] .icon-button,
+:root[data-appearance] .action-card > svg:first-child { background: var(--surface-control); }
+:root[data-appearance] .action-card { background: var(--surface-raised); }
+
+:root[data-appearance] .button.secondary {
+  color: var(--secondary-text);
+  background: var(--secondary-bg);
 }
 
-:root[data-appearance="light"] .action-card {
-  background: rgba(255, 255, 255, 0.86);
+:root[data-appearance] .button.ghost {
+  color: var(--ghost-text);
+  background: var(--ghost-bg);
 }
 
-:root[data-appearance="light"] .button.secondary {
-  color: #5d49ad;
-  background: rgba(124, 58, 237, 0.08);
+:root[data-appearance] .segmented { background: var(--segmented-bg); }
+:root[data-appearance] .segmented button { color: var(--segmented-text); }
+:root[data-appearance] .segmented button.active {
+  color: var(--segmented-active-text);
+  background: var(--segmented-active-bg);
 }
 
-:root[data-appearance="light"] .button.ghost {
-  color: #526078;
-  background: rgba(255, 255, 255, 0.55);
-}
+:root[data-appearance] .progress-track { background: var(--progress-track-bg); }
+:root[data-appearance] .recommendation { background: var(--recommendation-bg); }
+:root[data-appearance] .topbar-menu-popover,
+:root[data-appearance] .settings-sheet,
+:root[data-appearance] .privacy-note { color: var(--ink); }
 
-:root[data-appearance="light"] .segmented {
-  background: rgba(29, 39, 56, 0.055);
-}
+:root[data-appearance="light"] .mood-labels { color: #6f7a90; }
 
-:root[data-appearance="light"] .segmented button {
-  color: #69758c;
-}
-
-:root[data-appearance="light"] .segmented button.active {
-  color: #4c3a91;
-  background: rgba(124, 58, 237, 0.15);
-  box-shadow: 0 5px 15px rgba(53, 45, 34, 0.08);
-}
-
-:root[data-appearance="light"] .progress-track {
-  background: rgba(29, 39, 56, 0.08);
-}
-
-:root[data-appearance="light"] .mood-labels {
-  color: #6f7a90;
-}
-
-:root[data-appearance="light"] .recommendation {
-  background: rgba(124, 58, 237, 0.065);
-}
-
-:root[data-appearance="light"] .topbar-menu-popover,
-:root[data-appearance="light"] .settings-sheet,
-:root[data-appearance="light"] .privacy-note {
+/* Running Mode already consumes these shared aliases; dark mode only needs
+   overrides for its intentionally light presentation cards. */
+:root[data-appearance="dark"] .running-hero,
+:root[data-appearance="dark"] .running-briefing,
+:root[data-appearance="dark"] .running-summary-hero {
   color: var(--ink);
+  background:
+    radial-gradient(circle at 85% 10%, rgba(101, 86, 217, 0.2), transparent 34%),
+    linear-gradient(145deg, rgba(20, 29, 52, 0.96), rgba(12, 20, 35, 0.94));
 }
 
-.appearance-segmented button {
-  gap: 0.3rem;
+:root[data-appearance="dark"] .running-prep-timer.calm {
+  color: var(--ink);
+  background: var(--surface-control);
 }
 
-.appearance-summary {
-  margin: 0.7rem 0 0;
-  font-size: 0.8rem;
+:root[data-appearance="dark"] .running-route-trace {
+  background:
+    linear-gradient(rgba(20, 29, 52, 0.76), rgba(20, 29, 52, 0.76)),
+    repeating-linear-gradient(45deg, rgba(47, 148, 108, 0.12) 0 1px, transparent 1px 14px);
 }
+
+:root[data-appearance="dark"] .running-end-button {
+  color: #fca5a5;
+  background: rgba(163, 54, 44, 0.18);
+}
+
+.appearance-segmented button { gap: 0.3rem; }
+.appearance-summary { margin: 0.7rem 0 0; font-size: 0.8rem; }
