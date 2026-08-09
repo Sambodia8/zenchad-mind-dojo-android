@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { startBikeQuestRuntime } from "./bikeQuestRuntime";
 import { startRunningNativeGeolocationBridge } from "./runningNativeGeolocationBridge";
+import { startRunningRuntime } from "./runningRuntime";
 import { loadData } from "./storage";
 import { startAppearanceController } from "./theme";
 import "./styles.css";
@@ -16,6 +17,7 @@ import "./theme.css";
 
 startBikeQuestRuntime();
 startRunningNativeGeolocationBridge();
+startRunningRuntime();
 startAppearanceController(loadData().preferences.appearanceMode);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
