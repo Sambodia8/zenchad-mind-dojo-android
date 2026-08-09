@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
+    "test:theme": "node scripts/test-theme.mjs",
     "preview": "vite preview",
     "audio:preview": "node scripts/generate-elevenlabs-preview.mjs",
     "audio:namaste": "node scripts/generate-namaste-endings.mjs",
