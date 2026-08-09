@@ -9,6 +9,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(WhisperJournalPlugin.class);
         registerPlugin(QwenJournalPlugin.class);
         registerPlugin(AppearancePlugin.class);
+        registerPlugin(RunningTrackerPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }
