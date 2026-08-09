@@ -38,6 +38,7 @@ import RewardsScreen from "./screens/RewardsScreen";
 import ThemesScreen from "./screens/ThemesScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import BikeQuestScreen from "./screens/BikeQuestScreen";
+import RunningModeScreen from "./screens/RunningModeScreen";
 import MysteryChallengeScreen from "./screens/MysteryChallengeScreen";
 import LevelUpModal from "./components/LevelUpModal";
 import { getYogaClass } from "./data";
@@ -45,41 +46,25 @@ import { playUiSfx, preloadUiSfx, type UiSfxName } from "./uiSfx";
 
 const titleFor = (route: Route) => {
   switch (route.name) {
-    case "home":
-      return "Home";
-    case "library":
-      return "Library";
-    case "toolkit":
-      return "Toolkit";
-    case "roulette":
-      return "Meditation Roulette";
+    case "home": return "Home";
+    case "library": return "Library";
+    case "toolkit": return "Toolkit";
+    case "roulette": return "Meditation Roulette";
     case "yoga":
-    case "yoga-pose":
-      return "Yoga with Mark";
-    case "yoga-class":
-      return getYogaClass(route.classId).name;
-    case "yoga-builder":
-      return "Routine Builder";
-    case "bike-quest":
-      return "Bike Quest";
-    case "mystery-challenge":
-      return "The Quiet Sequence";
-    case "timer":
-      return "Meditation";
-    case "journal":
-      return "Meditation Journal";
-    case "progress":
-      return "Progress";
-    case "guide":
-      return "Live Zen Guide";
-    case "soundscapes":
-      return "Soundscapes";
-    case "rewards":
-      return "Badges & Quests";
-    case "themes":
-      return "Watercolour Themes";
-    case "settings":
-      return "Settings";
+    case "yoga-pose": return "Yoga with Mark";
+    case "yoga-class": return getYogaClass(route.classId).name;
+    case "yoga-builder": return "Routine Builder";
+    case "bike-quest": return "Bike Quest";
+    case "running": return "Running";
+    case "mystery-challenge": return "The Quiet Sequence";
+    case "timer": return "Meditation";
+    case "journal": return "Meditation Journal";
+    case "progress": return "Progress";
+    case "guide": return "Live Zen Guide";
+    case "soundscapes": return "Soundscapes";
+    case "rewards": return "Badges & Quests";
+    case "themes": return "Watercolour Themes";
+    case "settings": return "Settings";
   }
 };
 
@@ -91,18 +76,8 @@ export default function App() {
   const [topMenuOpen, setTopMenuOpen] = useState(false);
   const topMenuRef = useRef<HTMLDivElement>(null);
   const showBackButton = [
-    "timer",
-    "yoga-pose",
-    "yoga-class",
-    "yoga-builder",
-    "bike-quest",
-    "mystery-challenge",
-    "journal",
-    "guide",
-    "soundscapes",
-    "rewards",
-    "themes",
-    "settings"
+    "timer", "yoga-pose", "yoga-class", "yoga-builder", "bike-quest", "running",
+    "mystery-challenge", "journal", "guide", "soundscapes", "rewards", "themes", "settings"
   ].includes(route.name);
 
   useEffect(() => saveData(data), [data]);
@@ -114,7 +89,6 @@ export default function App() {
       localStorage.setItem(historyKey, "skipped");
       return;
     }
-
     let active = true;
     void fetch("assets/imports/meditation-journal-history.json")
       .then((response) => {
@@ -139,12 +113,8 @@ export default function App() {
         });
         localStorage.setItem(historyKey, "imported");
       })
-      .catch(() => {
-        // The Journal screen still offers a manual retry when the bundled asset is unavailable.
-      });
-    return () => {
-      active = false;
-    };
+      .catch(() => {});
+    return () => { active = false; };
   }, []);
 
   useEffect(() => preloadUiSfx(), []);
@@ -160,17 +130,11 @@ export default function App() {
         return;
       }
       if (!data.preferences.uiSoundsEnabled) return;
-
       let sound: UiSfxName = "select";
-      if (explicitSound) {
-        sound = explicitSound as UiSfxName;
-      } else if (control.closest(".bottom-nav, .segmented")) {
-        sound = "tab";
-      } else if (control.matches(".back-link, .brand")) {
-        sound = "back";
-      } else if (control.matches(".primary, .treasure-button")) {
-        sound = "confirm";
-      }
+      if (explicitSound) sound = explicitSound as UiSfxName;
+      else if (control.closest(".bottom-nav, .segmented")) sound = "tab";
+      else if (control.matches(".back-link, .brand")) sound = "back";
+      else if (control.matches(".primary, .treasure-button")) sound = "confirm";
       playUiSfx(sound);
     },
     [data.preferences.uiSoundsEnabled]
@@ -181,11 +145,7 @@ export default function App() {
       if (!data.preferences.uiSoundsEnabled) return;
       const control = event.target as HTMLInputElement | HTMLSelectElement;
       if (control.dataset.sfx === "none") return;
-      if (
-        control instanceof HTMLSelectElement ||
-        (control instanceof HTMLInputElement &&
-          ["checkbox", "radio", "time"].includes(control.type))
-      ) {
+      if (control instanceof HTMLSelectElement || (control instanceof HTMLInputElement && ["checkbox", "radio", "time"].includes(control.type))) {
         playUiSfx("select");
       }
     },
@@ -223,11 +183,8 @@ export default function App() {
     void CapacitorApp.addListener("backButton", () => {
       if (!goBack()) void CapacitorApp.exitApp();
     }).then((handle) => {
-      if (active) {
-        removeListener = () => handle.remove();
-      } else {
-        void handle.remove();
-      }
+      if (active) removeListener = () => handle.remove();
+      else void handle.remove();
     });
     return () => {
       active = false;
@@ -239,9 +196,7 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: data.preferences.reducedMotion ? "auto" : "smooth" });
   }, [data.preferences.reducedMotion, route]);
 
-  useEffect(() => {
-    setTopMenuOpen(false);
-  }, [route]);
+  useEffect(() => { setTopMenuOpen(false); }, [route]);
 
   useEffect(() => {
     if (!topMenuOpen) return;
@@ -261,45 +216,13 @@ export default function App() {
 
   const screen = useMemo(() => {
     switch (route.name) {
-      case "home":
-        return <HomeScreen data={data} setData={setData} navigate={navigate} />;
-      case "library":
-        return (
-          <ToolkitScreen
-            initialTab={route.tab}
-            data={data}
-            setData={setData}
-            navigate={navigate}
-          />
-        );
-      case "toolkit":
-        return <ToolkitHubScreen navigate={navigate} />;
-      case "roulette":
-        return (
-          <RouletteScreen
-            key={route.spinKey ?? "roulette"}
-            autoSpin={route.autoSpin}
-            uiSoundsEnabled={data.preferences.uiSoundsEnabled}
-            setData={setData}
-            navigate={navigate}
-          />
-        );
-      case "yoga":
-        return <YogaScreen data={data} navigate={navigate} />;
-      case "timer":
-        return (
-          <TimerScreen
-            key={route.meditationId}
-            meditationId={route.meditationId}
-            data={data}
-            setData={setData}
-            navigate={navigate}
-            mysteryCategory={route.mysteryCategory}
-            mysteryRunId={route.mysteryRunId}
-          />
-        );
-      case "yoga-pose":
-        return <YogaPoseScreen movementId={route.movementId} navigate={navigate} />;
+      case "home": return <HomeScreen data={data} setData={setData} navigate={navigate} />;
+      case "library": return <ToolkitScreen initialTab={route.tab} data={data} setData={setData} navigate={navigate} />;
+      case "toolkit": return <ToolkitHubScreen navigate={navigate} />;
+      case "roulette": return <RouletteScreen key={route.spinKey ?? "roulette"} autoSpin={route.autoSpin} uiSoundsEnabled={data.preferences.uiSoundsEnabled} setData={setData} navigate={navigate} />;
+      case "yoga": return <YogaScreen data={data} navigate={navigate} />;
+      case "timer": return <TimerScreen key={route.meditationId} meditationId={route.meditationId} data={data} setData={setData} navigate={navigate} mysteryCategory={route.mysteryCategory} mysteryRunId={route.mysteryRunId} />;
+      case "yoga-pose": return <YogaPoseScreen movementId={route.movementId} navigate={navigate} />;
       case "yoga-class": {
         const yogaNavigate: Dispatch<SetStateAction<Route>> = (nextRoute) => {
           if (!route.returnToBikeQuest) {
@@ -313,57 +236,19 @@ export default function App() {
           }
           navigate(resolved);
         };
-        return (
-          <YogaClassScreen
-            key={route.classId}
-            classId={route.classId}
-            data={data}
-            setData={setData}
-            navigate={yogaNavigate}
-          />
-        );
+        return <YogaClassScreen key={route.classId} classId={route.classId} data={data} setData={setData} navigate={yogaNavigate} />;
       }
-      case "yoga-builder":
-        return (
-          <YogaRoutineBuilderScreen
-            editClassId={route.editClassId}
-            data={data}
-            setData={setData}
-            navigate={navigate}
-          />
-        );
-      case "bike-quest":
-        return (
-          <BikeQuestScreen
-            data={data}
-            setData={setData}
-            navigate={navigate}
-            resume={route.resume}
-          />
-        );
-      case "mystery-challenge":
-        return <MysteryChallengeScreen data={data} setData={setData} navigate={navigate} />;
-      case "journal":
-        return (
-          <JournalScreen
-            data={data}
-            setData={setData}
-            draftMeditation={route.draftMeditation}
-            mysteryRunId={route.mysteryRunId}
-          />
-        );
-      case "progress":
-        return <ProgressScreen data={data} />;
-      case "guide":
-        return <GuideScreen navigate={navigate} />;
-      case "soundscapes":
-        return <SoundscapesScreen data={data} setData={setData} />;
-      case "rewards":
-        return <RewardsScreen data={data} navigate={navigate} />;
-      case "themes":
-        return <ThemesScreen data={data} setData={setData} />;
-      case "settings":
-        return <SettingsScreen data={data} setData={setData} />;
+      case "yoga-builder": return <YogaRoutineBuilderScreen editClassId={route.editClassId} data={data} setData={setData} navigate={navigate} />;
+      case "bike-quest": return <BikeQuestScreen data={data} setData={setData} navigate={navigate} resume={route.resume} />;
+      case "running": return <RunningModeScreen data={data} setData={setData} />;
+      case "mystery-challenge": return <MysteryChallengeScreen data={data} setData={setData} navigate={navigate} />;
+      case "journal": return <JournalScreen data={data} setData={setData} draftMeditation={route.draftMeditation} mysteryRunId={route.mysteryRunId} />;
+      case "progress": return <ProgressScreen data={data} />;
+      case "guide": return <GuideScreen navigate={navigate} />;
+      case "soundscapes": return <SoundscapesScreen data={data} setData={setData} />;
+      case "rewards": return <RewardsScreen data={data} navigate={navigate} />;
+      case "themes": return <ThemesScreen data={data} setData={setData} />;
+      case "settings": return <SettingsScreen data={data} setData={setData} />;
     }
   }, [data, navigate, route]);
 
@@ -375,81 +260,38 @@ export default function App() {
     { route: { name: "toolkit" } as Route, label: "Toolkit", icon: Grid2X2 }
   ];
 
-  const activeName =
-    route.name === "timer"
-      ? "library"
-      : route.name === "yoga-pose" || route.name === "yoga-class" || route.name === "yoga-builder"
-        ? "yoga"
-        : ["bike-quest", "mystery-challenge", "journal", "guide", "soundscapes", "rewards", "themes", "settings"].includes(route.name)
-          ? "toolkit"
-          : route.name;
+  const activeName = route.name === "timer"
+    ? "library"
+    : route.name === "yoga-pose" || route.name === "yoga-class" || route.name === "yoga-builder"
+      ? "yoga"
+      : ["bike-quest", "running", "mystery-challenge", "journal", "guide", "soundscapes", "rewards", "themes", "settings"].includes(route.name)
+        ? "toolkit"
+        : route.name;
 
   const handleLevelUpDismiss = useCallback((newLevel: number) => {
-    setData(prev => ({
-      ...prev,
-      stats: {
-        ...prev.stats,
-        lastSeenLevel: newLevel
-      }
-    }));
+    setData(prev => ({ ...prev, stats: { ...prev.stats, lastSeenLevel: newLevel } }));
   }, []);
 
   return (
-    <div
-      className={`app-shell ${data.preferences.reducedMotion ? "reduce-motion" : ""}`}
-      data-theme={data.preferences.selectedTheme}
-      onClickCapture={handleUiClick}
-      onChangeCapture={handleUiChange}
-    >
+    <div className={`app-shell ${data.preferences.reducedMotion ? "reduce-motion" : ""}`} data-theme={data.preferences.selectedTheme} onClickCapture={handleUiClick} onChangeCapture={handleUiChange}>
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
       <header className="topbar">
-        <button
-          className="brand"
-          onClick={() => navigate({ name: "home" })}
-          aria-label="Go to Home"
-        >
-          <span className="brand-mark">
-            <img src="assets/branding/eye-of-horus.png" alt="" />
-          </span>
-          <span>
-            <strong>Zen Chad</strong>
-            <small>{titleFor(route)}</small>
-          </span>
+        <button className="brand" onClick={() => navigate({ name: "home" })} aria-label="Go to Home">
+          <span className="brand-mark"><img src="assets/branding/eye-of-horus.png" alt="" /></span>
+          <span><strong>Zen Chad</strong><small>{titleFor(route)}</small></span>
         </button>
         <div className="topbar-actions">
           <div className="hud">
-            <span aria-label={`${data.stats.streak} day rhythm`}>
-              <Flame size={15} /> {data.stats.streak}
-            </span>
-            <span aria-label={`${data.stats.xp} XP`}>
-              <b className="xp-glyph">XP</b> {data.stats.xp}
-            </span>
+            <span aria-label={`${data.stats.streak} day rhythm`}><Flame size={15} /> {data.stats.streak}</span>
+            <span aria-label={`${data.stats.xp} XP`}><b className="xp-glyph">XP</b> {data.stats.xp}</span>
           </div>
           <div className="topbar-menu" ref={topMenuRef}>
-            <button
-              className="topbar-menu-trigger"
-              onClick={() => setTopMenuOpen((open) => !open)}
-              aria-label="Open app menu"
-              aria-haspopup="menu"
-              aria-expanded={topMenuOpen}
-            >
-              <MoreVertical size={20} />
-            </button>
+            <button className="topbar-menu-trigger" onClick={() => setTopMenuOpen((open) => !open)} aria-label="Open app menu" aria-haspopup="menu" aria-expanded={topMenuOpen}><MoreVertical size={20} /></button>
             {topMenuOpen ? (
               <div className="topbar-menu-popover" role="menu">
-                <button
-                  role="menuitem"
-                  onClick={() => {
-                    setTopMenuOpen(false);
-                    navigate({ name: "progress" });
-                  }}
-                >
-                  <BarChart3 size={18} />
-                  <span>
-                    <strong>Progress</strong>
-                    <small>Sessions, streaks and activity</small>
-                  </span>
+                <button role="menuitem" onClick={() => { setTopMenuOpen(false); navigate({ name: "progress" }); }}>
+                  <BarChart3 size={18} /><span><strong>Progress</strong><small>Sessions, streaks and activity</small></span>
                 </button>
               </div>
             ) : null}
@@ -458,11 +300,7 @@ export default function App() {
       </header>
 
       <main className="main-content">
-        {showBackButton ? (
-          <button className="back-link" onClick={goBack}>
-            ← Back
-          </button>
-        ) : null}
+        {showBackButton ? <button className="back-link" onClick={goBack}>← Back</button> : null}
         {screen}
       </main>
 
@@ -470,26 +308,8 @@ export default function App() {
         {nav.map(({ route: itemRoute, label, icon: Icon }) => {
           const isRoulette = itemRoute.name === "roulette";
           return (
-            <button
-              key={label}
-              className={`${activeName === itemRoute.name ? "active" : ""} ${isRoulette ? "roulette-tab" : ""}`.trim()}
-              onClick={() =>
-                navigate(
-                  isRoulette
-                    ? { name: "roulette", autoSpin: true, spinKey: Date.now() }
-                    : itemRoute
-                )
-              }
-              aria-current={activeName === itemRoute.name ? "page" : undefined}
-              aria-label={isRoulette ? "Spin meditation roulette" : label}
-            >
-              {isRoulette ? (
-                <span className="roulette-tab-mark">
-                  <img src="assets/branding/eye-of-horus.png" alt="" />
-                </span>
-              ) : Icon ? (
-                <Icon size={21} />
-              ) : null}
+            <button key={label} className={`${activeName === itemRoute.name ? "active" : ""} ${isRoulette ? "roulette-tab" : ""}`.trim()} onClick={() => navigate(isRoulette ? { name: "roulette", autoSpin: true, spinKey: Date.now() } : itemRoute)} aria-current={activeName === itemRoute.name ? "page" : undefined} aria-label={isRoulette ? "Spin meditation roulette" : label}>
+              {isRoulette ? <span className="roulette-tab-mark"><img src="assets/branding/eye-of-horus.png" alt="" /></span> : Icon ? <Icon size={21} /> : null}
               <span>{label}</span>
             </button>
           );

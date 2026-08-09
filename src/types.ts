@@ -220,6 +220,7 @@ export type Route =
   | { name: "roulette"; autoSpin?: boolean; spinKey?: number }
   | { name: "yoga" }
   | { name: "bike-quest"; resume?: "pre-stretch-complete" | "post-stretch-complete" }
+  | { name: "running" }
   | {
       name: "timer";
       meditationId: string;
