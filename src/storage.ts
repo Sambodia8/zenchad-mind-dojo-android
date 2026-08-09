@@ -1,4 +1,5 @@
 import type {
+  AppearanceMode,
   AppData,
   AppPreferences,
   EmotionalTool,
@@ -40,9 +41,31 @@ const defaultPreferences: AppPreferences = {
   stretchMusicTrack: "grounding",
   stretchMusicVolume: 24,
   selectedTheme: "dawn",
-  themeMode: "auto",
+  appearanceMode: "auto",
   reducedMotion: false
 };
+
+function isAppearanceMode(value: unknown): value is AppearanceMode {
+  return value === "light" || value === "dark" || value === "auto";
+}
+
+function migratePreferences(value: unknown): AppPreferences {
+  const saved = value && typeof value === "object"
+    ? value as Partial<AppPreferences> & { themeMode?: AppearanceMode }
+    : {};
+  const { themeMode: legacyThemeMode, ...current } = saved;
+  const appearanceMode = isAppearanceMode(current.appearanceMode)
+    ? current.appearanceMode
+    : isAppearanceMode(legacyThemeMode)
+      ? legacyThemeMode
+      : defaultPreferences.appearanceMode;
+
+  return {
+    ...defaultPreferences,
+    ...current,
+    appearanceMode
+  };
+}
 
 export const starterEmotionalTools: EmotionalTool[] = [
   {
@@ -195,7 +218,7 @@ export function loadData(): AppData {
       journal: Array.isArray(parsed.journal) ? parsed.journal : [],
       emotionalTools: [...starterEmotionalTools, ...historicalStarterTools, ...customTools],
       emotionalToolAttempts: savedAttempts,
-      preferences: { ...defaultPreferences, ...parsed.preferences },
+      preferences: migratePreferences(parsed.preferences),
       moodScaleVersion: 2,
       customYogaClasses: Array.isArray(parsed.customYogaClasses) ? parsed.customYogaClasses : [],
       downloadedSoundscapes: Array.isArray(parsed.downloadedSoundscapes) ? parsed.downloadedSoundscapes : [],
