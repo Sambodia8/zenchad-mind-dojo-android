@@ -26,17 +26,33 @@ function latestStoredPointTime() {
 }
 
 function toPosition(point: RunPoint): GeolocationPosition {
+  const coords: GeolocationCoordinates = {
+    latitude: point.lat,
+    longitude: point.lng,
+    accuracy: point.accuracy,
+    altitude: null,
+    altitudeAccuracy: null,
+    heading: null,
+    speed: null,
+    toJSON() {
+      return {
+        latitude: this.latitude,
+        longitude: this.longitude,
+        accuracy: this.accuracy,
+        altitude: this.altitude,
+        altitudeAccuracy: this.altitudeAccuracy,
+        heading: this.heading,
+        speed: this.speed
+      };
+    }
+  };
+
   return {
-    coords: {
-      latitude: point.lat,
-      longitude: point.lng,
-      accuracy: point.accuracy,
-      altitude: null,
-      altitudeAccuracy: null,
-      heading: null,
-      speed: null
-    },
-    timestamp: point.at
+    coords,
+    timestamp: point.at,
+    toJSON() {
+      return { coords: coords.toJSON(), timestamp: point.at };
+    }
   };
 }
 
