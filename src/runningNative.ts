@@ -3,6 +3,7 @@ import type { RunPoint } from "./running";
 
 export interface NativeRunningSnapshot {
   running: boolean;
+  sessionId: string;
   startedAt: number;
   distanceMeters: number;
   lastAccuracy: number;
@@ -12,7 +13,7 @@ export interface NativeRunningSnapshot {
 }
 
 interface RunningTrackerPlugin {
-  start(options?: { reset?: boolean }): Promise<NativeRunningSnapshot>;
+  start(options: { sessionId: string; reset?: boolean }): Promise<NativeRunningSnapshot>;
   getSnapshot(options?: { includePoints?: boolean }): Promise<NativeRunningSnapshot>;
   stop(): Promise<NativeRunningSnapshot>;
   clear(): Promise<void>;
@@ -20,8 +21,8 @@ interface RunningTrackerPlugin {
 
 const RunningTracker = registerPlugin<RunningTrackerPlugin>("RunningTracker");
 
-export function startNativeRunningTracker(reset = true) {
-  return RunningTracker.start({ reset });
+export function startNativeRunningTracker(sessionId: string, reset = false) {
+  return RunningTracker.start({ sessionId, reset });
 }
 
 export function getNativeRunningSnapshot(includePoints = false) {

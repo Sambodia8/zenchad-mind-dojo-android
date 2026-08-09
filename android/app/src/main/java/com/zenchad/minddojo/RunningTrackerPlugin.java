@@ -78,7 +78,8 @@ public class RunningTrackerPlugin extends Plugin {
         Context context = getContext();
         Intent intent = new Intent(context, RunningTrackerService.class);
         intent.setAction(RunningTrackerService.ACTION_START);
-        intent.putExtra(RunningTrackerService.EXTRA_RESET, Boolean.TRUE.equals(call.getBoolean("reset", true)));
+        intent.putExtra(RunningTrackerService.EXTRA_RESET, Boolean.TRUE.equals(call.getBoolean("reset", false)));
+        intent.putExtra(RunningTrackerService.EXTRA_SESSION_ID, call.getString("sessionId", ""));
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(intent);
@@ -95,6 +96,7 @@ public class RunningTrackerPlugin extends Plugin {
         SharedPreferences prefs = RunningTrackerService.getStore(getContext());
         JSObject result = new JSObject();
         result.put("running", prefs.getBoolean(RunningTrackerService.KEY_RUNNING, false));
+        result.put("sessionId", prefs.getString(RunningTrackerService.KEY_SESSION_ID, ""));
         result.put("startedAt", prefs.getLong(RunningTrackerService.KEY_STARTED_AT, 0L));
         result.put("distanceMeters", readDouble(prefs, RunningTrackerService.KEY_DISTANCE_BITS, 0d));
         result.put("lastAccuracy", readDouble(prefs, RunningTrackerService.KEY_LAST_ACCURACY_BITS, -1d));

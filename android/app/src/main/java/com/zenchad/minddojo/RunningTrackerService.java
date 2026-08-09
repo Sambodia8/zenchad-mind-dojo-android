@@ -29,9 +29,11 @@ public class RunningTrackerService extends Service implements LocationListener {
     public static final String ACTION_START = "com.zenchad.minddojo.running.START";
     public static final String ACTION_STOP = "com.zenchad.minddojo.running.STOP";
     public static final String EXTRA_RESET = "reset";
+    public static final String EXTRA_SESSION_ID = "sessionId";
 
     public static final String PREFS_NAME = "zenchad_running_native_v1";
     public static final String KEY_RUNNING = "running";
+    public static final String KEY_SESSION_ID = "sessionId";
     public static final String KEY_STARTED_AT = "startedAt";
     public static final String KEY_DISTANCE_BITS = "distanceBits";
     public static final String KEY_LAST_LAT_BITS = "lastLatBits";
@@ -68,9 +70,16 @@ public class RunningTrackerService extends Service implements LocationListener {
             return START_NOT_STICKY;
         }
 
+        String incomingSessionId = intent == null ? "" : intent.getStringExtra(EXTRA_SESSION_ID);
+        if (incomingSessionId == null) incomingSessionId = "";
+        String storedSessionId = prefs.getString(KEY_SESSION_ID, "");
         boolean reset = intent != null && intent.getBooleanExtra(EXTRA_RESET, false);
+        if (!incomingSessionId.isEmpty() && !incomingSessionId.equals(storedSessionId)) reset = true;
+
         if (reset || prefs.getLong(KEY_STARTED_AT, 0L) <= 0L) {
-            resetStoredRun();
+            resetStoredRun(incomingSessionId);
+        } else if (!incomingSessionId.isEmpty()) {
+            prefs.edit().putString(KEY_SESSION_ID, incomingSessionId).apply();
         }
 
         prefs.edit().putBoolean(KEY_RUNNING, true).apply();
@@ -97,6 +106,8 @@ public class RunningTrackerService extends Service implements LocationListener {
 
         long at = location.getTime() > 0 ? location.getTime() : System.currentTimeMillis();
         long previousAt = prefs.getLong(KEY_LAST_AT, 0L);
+        if (previousAt > 0L && at <= previousAt) return;
+
         double distance = readDouble(KEY_DISTANCE_BITS, 0d);
         double extraDistance = 0d;
 
@@ -107,9 +118,7 @@ public class RunningTrackerService extends Service implements LocationListener {
             float segment = previous.distanceTo(location);
             double elapsedSeconds = Math.max(1d, (at - previousAt) / 1000d);
 
-            if (segment > 120f || segment / elapsedSeconds > 12d) {
-                return;
-            }
+            if (segment > 120f || segment / elapsedSeconds > 12d) return;
             if (segment >= 2f) {
                 extraDistance = segment;
             } else if (at - previousAt < 10_000L) {
@@ -119,13 +128,13 @@ public class RunningTrackerService extends Service implements LocationListener {
 
         distance += extraDistance;
         appendPoint(location, at, distance);
-        SharedPreferences.Editor editor = prefs.edit()
+        prefs.edit()
             .putLong(KEY_DISTANCE_BITS, Double.doubleToRawLongBits(distance))
             .putLong(KEY_LAST_LAT_BITS, Double.doubleToRawLongBits(location.getLatitude()))
             .putLong(KEY_LAST_LNG_BITS, Double.doubleToRawLongBits(location.getLongitude()))
             .putLong(KEY_LAST_ACCURACY_BITS, Double.doubleToRawLongBits(location.hasAccuracy() ? location.getAccuracy() : -1d))
-            .putLong(KEY_LAST_AT, at);
-        editor.apply();
+            .putLong(KEY_LAST_AT, at)
+            .apply();
         updateNotification(distance);
     }
 
@@ -152,10 +161,11 @@ public class RunningTrackerService extends Service implements LocationListener {
         getStore(context).edit().clear().apply();
     }
 
-    private void resetStoredRun() {
+    private void resetStoredRun(String sessionId) {
         prefs.edit()
             .clear()
             .putBoolean(KEY_RUNNING, true)
+            .putString(KEY_SESSION_ID, sessionId == null ? "" : sessionId)
             .putLong(KEY_STARTED_AT, System.currentTimeMillis())
             .putLong(KEY_DISTANCE_BITS, Double.doubleToRawLongBits(0d))
             .putString(KEY_POINTS, "[]")
@@ -238,11 +248,7 @@ public class RunningTrackerService extends Service implements LocationListener {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager == null) return;
-        NotificationChannel channel = new NotificationChannel(
-            CHANNEL_ID,
-            "Active run",
-            NotificationManager.IMPORTANCE_LOW
-        );
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Active run", NotificationManager.IMPORTANCE_LOW);
         channel.setDescription("Keeps GPS run tracking active while the screen is off or you use another app.");
         channel.setShowBadge(false);
         manager.createNotificationChannel(channel);
