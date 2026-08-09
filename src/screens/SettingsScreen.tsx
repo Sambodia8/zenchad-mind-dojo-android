@@ -1,7 +1,8 @@
 import { useState, type Dispatch, type SetStateAction } from "react";
-import { Bell, BellOff, Check, Gauge, MoonStar, Volume2, VolumeX } from "lucide-react";
+import { Bell, BellOff, Check, Clock, Gauge, Moon, MoonStar, Sun, Volume2, VolumeX } from "lucide-react";
 import { cancelGentleReminder, scheduleGentleReminder } from "../native";
-import type { AppData } from "../types";
+import { applyAppearance } from "../theme";
+import type { AppData, AppPreferences } from "../types";
 
 interface Props {
   data: AppData;
@@ -10,6 +11,14 @@ interface Props {
 
 export default function SettingsScreen({ data, setData }: Props) {
   const [message, setMessage] = useState("");
+
+  const setThemeMode = (themeMode: AppPreferences["themeMode"]) => {
+    applyAppearance(themeMode);
+    setData((current) => ({
+      ...current,
+      preferences: { ...current.preferences, themeMode }
+    }));
+  };
 
   const toggleReminder = async () => {
     if (data.preferences.gentleReminderEnabled) {
@@ -39,6 +48,47 @@ export default function SettingsScreen({ data, setData }: Props) {
         <span className="eyebrow">Make it comfortable</span>
         <h1>Settings</h1>
         <p>Calm defaults, clear choices, and no attention traps.</p>
+      </section>
+
+      <section className="card settings-sheet">
+        <div className="setting-row illustrated-setting">
+          <span>
+            {data.preferences.themeMode === "light" ? <Sun /> : data.preferences.themeMode === "dark" ? <Moon /> : <Clock />}
+            <span>
+              <strong>Appearance</strong>
+              <small>Use a bright daytime look and a calmer dark palette at night</small>
+            </span>
+          </span>
+        </div>
+        <div className="segmented three appearance-segmented" role="group" aria-label="Appearance mode">
+          <button
+            type="button"
+            className={data.preferences.themeMode === "light" ? "active" : ""}
+            onClick={() => setThemeMode("light")}
+            aria-pressed={data.preferences.themeMode === "light"}
+          >
+            <Sun size={16} /> Light
+          </button>
+          <button
+            type="button"
+            className={data.preferences.themeMode === "auto" ? "active" : ""}
+            onClick={() => setThemeMode("auto")}
+            aria-pressed={data.preferences.themeMode === "auto"}
+          >
+            <Clock size={16} /> Auto
+          </button>
+          <button
+            type="button"
+            className={data.preferences.themeMode === "dark" ? "active" : ""}
+            onClick={() => setThemeMode("dark")}
+            aria-pressed={data.preferences.themeMode === "dark"}
+          >
+            <Moon size={16} /> Dark
+          </button>
+        </div>
+        <p className="setting-note appearance-summary">
+          Auto uses your device's local time: light from 07:00, dark from 19:00.
+        </p>
       </section>
 
       <section className="card settings-sheet">
