@@ -40,6 +40,7 @@ const defaultPreferences: AppPreferences = {
   stretchMusicTrack: "grounding",
   stretchMusicVolume: 24,
   selectedTheme: "dawn",
+  themeMode: "auto",
   reducedMotion: false
 };
 
