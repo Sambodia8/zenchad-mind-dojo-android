@@ -10,9 +10,7 @@ type NativeWatcher = {
   success: PositionCallback;
   error?: PositionErrorCallback | null;
   lastDeliveredAt: number;
-  timer: number | null;
-  usingFallback: boolean;
-  fallbackWatchId?: number;
+  browserWatchId: number;
 };
 
 let installed = false;
@@ -56,51 +54,31 @@ function toPosition(point: RunPoint): GeolocationPosition {
   };
 }
 
-function toPositionError(error: unknown): GeolocationPositionError {
-  const message = error instanceof Error ? error.message : String(error ?? "Location tracking failed");
-  return {
-    code: 2,
-    message,
-    PERMISSION_DENIED: 1,
-    POSITION_UNAVAILABLE: 2,
-    TIMEOUT: 3
-  } as GeolocationPositionError;
-}
-
-async function pollNativeWatcher(id: number) {
+async function syncMissedNativePoints(id: number) {
   const watcher = watchers.get(id);
-  if (!watcher || watcher.usingFallback) return;
+  if (!watcher) return;
 
   const session = loadRunSession();
-  if (!session || session.stage !== "active") {
-    watchers.delete(id);
-    void stopNativeRunningTracker().catch(() => {});
-    return;
-  }
+  if (!session || session.stage !== "active") return;
 
   try {
-    let snapshot = await getNativeRunningSnapshot(false);
+    let snapshot = await getNativeRunningSnapshot(true);
     if (!snapshot.running || snapshot.sessionId !== session.id) {
-      snapshot = await startNativeRunningTracker(session.id, snapshot.sessionId !== session.id);
+      await startNativeRunningTracker(session.id, snapshot.sessionId !== session.id);
+      snapshot = await getNativeRunningSnapshot(true);
     }
 
-    if (snapshot.lastLocationAt > watcher.lastDeliveredAt) {
-      const withPoints = await getNativeRunningSnapshot(true);
-      const newPoints = (withPoints.points ?? [])
-        .filter((point) => point.at > watcher.lastDeliveredAt)
-        .sort((a, b) => a.at - b.at);
+    const newPoints = (snapshot.points ?? [])
+      .filter((point) => point.at > watcher.lastDeliveredAt)
+      .sort((a, b) => a.at - b.at);
 
-      for (const point of newPoints) {
-        watcher.success(toPosition(point));
-        watcher.lastDeliveredAt = Math.max(watcher.lastDeliveredAt, point.at);
-      }
+    for (const point of newPoints) {
+      watcher.success(toPosition(point));
+      watcher.lastDeliveredAt = Math.max(watcher.lastDeliveredAt, point.at);
     }
-  } catch (error) {
-    watcher.error?.(toPositionError(error));
+  } catch {
+    // The browser GPS watcher remains active even if native background tracking is unavailable.
   }
-
-  if (!watchers.has(id)) return;
-  watcher.timer = window.setTimeout(() => void pollNativeWatcher(id), 1250);
 }
 
 export function startRunningNativeGeolocationBridge() {
@@ -122,18 +100,23 @@ export function startRunningNativeGeolocationBridge() {
       success,
       error,
       lastDeliveredAt: latestStoredPointTime(),
-      timer: null,
-      usingFallback: false
+      browserWatchId: -1
     };
+
+    watcher.browserWatchId = originalWatchPosition(
+      (position) => {
+        watcher.lastDeliveredAt = Math.max(watcher.lastDeliveredAt, position.timestamp);
+        success(position);
+      },
+      error,
+      options
+    );
     watchers.set(id, watcher);
 
     void startNativeRunningTracker(session.id, false)
-      .then(() => pollNativeWatcher(id))
-      .catch((nativeError) => {
-        if (!watchers.has(id)) return;
-        watcher.usingFallback = true;
-        watcher.error?.(toPositionError(nativeError));
-        watcher.fallbackWatchId = originalWatchPosition(success, error, options);
+      .then(() => syncMissedNativePoints(id))
+      .catch(() => {
+        // Foreground WebView geolocation still works as the fallback tracker.
       });
 
     return id;
@@ -147,15 +130,17 @@ export function startRunningNativeGeolocationBridge() {
     }
 
     watchers.delete(id);
-    if (watcher.timer) window.clearTimeout(watcher.timer);
-    if (watcher.fallbackWatchId !== undefined) originalClearWatch(watcher.fallbackWatchId);
+    if (watcher.browserWatchId >= 0) originalClearWatch(watcher.browserWatchId);
 
     const session = loadRunSession();
     if (!session || session.stage !== "active") void stopNativeRunningTracker().catch(() => {});
   }) as Geolocation["clearWatch"];
 
-  document.addEventListener("visibilitychange", () => {
+  const syncVisibleWatchers = () => {
     if (document.visibilityState !== "visible") return;
-    for (const id of watchers.keys()) void pollNativeWatcher(id);
-  });
+    for (const id of watchers.keys()) void syncMissedNativePoints(id);
+  };
+
+  document.addEventListener("visibilitychange", syncVisibleWatchers);
+  window.addEventListener("pageshow", syncVisibleWatchers);
 }
