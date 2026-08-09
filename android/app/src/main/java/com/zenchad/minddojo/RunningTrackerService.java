@@ -19,10 +19,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 public class RunningTrackerService extends Service implements LocationListener {
@@ -32,6 +35,7 @@ public class RunningTrackerService extends Service implements LocationListener {
     public static final String EXTRA_SESSION_ID = "sessionId";
 
     public static final String PREFS_NAME = "zenchad_running_native_v1";
+    public static final String POINTS_FILE = "zenchad_running_points_v1.jsonl";
     public static final String KEY_RUNNING = "running";
     public static final String KEY_SESSION_ID = "sessionId";
     public static final String KEY_STARTED_AT = "startedAt";
@@ -40,11 +44,10 @@ public class RunningTrackerService extends Service implements LocationListener {
     public static final String KEY_LAST_LNG_BITS = "lastLngBits";
     public static final String KEY_LAST_ACCURACY_BITS = "lastAccuracyBits";
     public static final String KEY_LAST_AT = "lastAt";
-    public static final String KEY_POINTS = "points";
+    public static final String KEY_POINT_COUNT = "pointCount";
 
     private static final int NOTIFICATION_ID = 7201;
     private static final String CHANNEL_ID = "running-tracker";
-    private static final int MAX_POINTS = 4000;
 
     private LocationManager locationManager;
     private SharedPreferences prefs;
@@ -91,6 +94,7 @@ public class RunningTrackerService extends Service implements LocationListener {
     @Override
     public void onDestroy() {
         removeLocationUpdates();
+        stopForeground(true);
         super.onDestroy();
     }
 
@@ -127,13 +131,14 @@ public class RunningTrackerService extends Service implements LocationListener {
         }
 
         distance += extraDistance;
-        appendPoint(location, at, distance);
+        if (!appendPoint(location, at, distance)) return;
         prefs.edit()
             .putLong(KEY_DISTANCE_BITS, Double.doubleToRawLongBits(distance))
             .putLong(KEY_LAST_LAT_BITS, Double.doubleToRawLongBits(location.getLatitude()))
             .putLong(KEY_LAST_LNG_BITS, Double.doubleToRawLongBits(location.getLongitude()))
             .putLong(KEY_LAST_ACCURACY_BITS, Double.doubleToRawLongBits(location.hasAccuracy() ? location.getAccuracy() : -1d))
             .putLong(KEY_LAST_AT, at)
+            .putInt(KEY_POINT_COUNT, prefs.getInt(KEY_POINT_COUNT, 0) + 1)
             .apply();
         updateNotification(distance);
     }
@@ -159,16 +164,18 @@ public class RunningTrackerService extends Service implements LocationListener {
 
     public static void clearStore(Context context) {
         getStore(context).edit().clear().apply();
+        context.deleteFile(POINTS_FILE);
     }
 
     private void resetStoredRun(String sessionId) {
+        deleteFile(POINTS_FILE);
         prefs.edit()
             .clear()
             .putBoolean(KEY_RUNNING, true)
             .putString(KEY_SESSION_ID, sessionId == null ? "" : sessionId)
             .putLong(KEY_STARTED_AT, System.currentTimeMillis())
             .putLong(KEY_DISTANCE_BITS, Double.doubleToRawLongBits(0d))
-            .putString(KEY_POINTS, "[]")
+            .putInt(KEY_POINT_COUNT, 0)
             .apply();
     }
 
@@ -216,14 +223,7 @@ public class RunningTrackerService extends Service implements LocationListener {
             || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    private void appendPoint(Location location, long at, double distance) {
-        JSONArray points;
-        try {
-            points = new JSONArray(prefs.getString(KEY_POINTS, "[]"));
-        } catch (JSONException ignored) {
-            points = new JSONArray();
-        }
-
+    private boolean appendPoint(Location location, long at, double distance) {
         JSONObject point = new JSONObject();
         try {
             point.put("lat", location.getLatitude());
@@ -231,11 +231,18 @@ public class RunningTrackerService extends Service implements LocationListener {
             point.put("accuracy", location.hasAccuracy() ? location.getAccuracy() : -1d);
             point.put("at", at);
             point.put("distanceFromStart", distance);
-            points.put(point);
-            while (points.length() > MAX_POINTS) points.remove(0);
-            prefs.edit().putString(KEY_POINTS, points.toString()).apply();
         } catch (JSONException ignored) {
-            // A malformed single sample should never end an otherwise valid run.
+            return false;
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(
+            new OutputStreamWriter(openFileOutput(POINTS_FILE, MODE_APPEND), StandardCharsets.UTF_8)
+        )) {
+            writer.write(point.toString());
+            writer.newLine();
+            return true;
+        } catch (IOException ignored) {
+            return false;
         }
     }
 
@@ -270,11 +277,9 @@ public class RunningTrackerService extends Service implements LocationListener {
 
     private Notification buildNotification(double distanceMeters) {
         long startedAt = prefs.getLong(KEY_STARTED_AT, System.currentTimeMillis());
-        long elapsedSeconds = Math.max(0L, (System.currentTimeMillis() - startedAt) / 1000L);
         String distance = distanceMeters < 1000d
             ? String.format(Locale.UK, "%.0f m", distanceMeters)
             : String.format(Locale.UK, "%.2f km", distanceMeters / 1000d);
-        String body = distance + " · " + formatClock(elapsedSeconds) + " · run still tracking";
 
         Intent openApp = new Intent(this, MainActivity.class);
         openApp.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -291,19 +296,14 @@ public class RunningTrackerService extends Service implements LocationListener {
         return builder
             .setSmallIcon(android.R.drawable.ic_menu_mylocation)
             .setContentTitle("Zenchad Run")
-            .setContentText(body)
+            .setContentText(distance + " · run still tracking")
+            .setWhen(startedAt)
+            .setUsesChronometer(true)
+            .setShowWhen(true)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setCategory(Notification.CATEGORY_SERVICE)
             .build();
-    }
-
-    private static String formatClock(long seconds) {
-        long hours = seconds / 3600L;
-        long minutes = (seconds % 3600L) / 60L;
-        long remainder = seconds % 60L;
-        if (hours > 0L) return String.format(Locale.UK, "%d:%02d:%02d", hours, minutes, remainder);
-        return String.format(Locale.UK, "%d:%02d", minutes, remainder);
     }
 }

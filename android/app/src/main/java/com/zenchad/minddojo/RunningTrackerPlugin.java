@@ -16,9 +16,14 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
 import com.getcapacitor.annotation.PermissionCallback;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 @CapacitorPlugin(
     name = "RunningTracker",
@@ -101,32 +106,39 @@ public class RunningTrackerPlugin extends Plugin {
         result.put("distanceMeters", readDouble(prefs, RunningTrackerService.KEY_DISTANCE_BITS, 0d));
         result.put("lastAccuracy", readDouble(prefs, RunningTrackerService.KEY_LAST_ACCURACY_BITS, -1d));
         result.put("lastLocationAt", prefs.getLong(RunningTrackerService.KEY_LAST_AT, 0L));
+        result.put("pointCount", prefs.getInt(RunningTrackerService.KEY_POINT_COUNT, 0));
 
-        String rawPoints = prefs.getString(RunningTrackerService.KEY_POINTS, "[]");
-        JSONArray source;
-        try {
-            source = new JSONArray(rawPoints);
-        } catch (JSONException ignored) {
-            source = new JSONArray();
-        }
-        result.put("pointCount", source.length());
-
-        if (includePoints) {
-            JSArray points = new JSArray();
-            for (int index = 0; index < source.length(); index += 1) {
-                JSONObject sourcePoint = source.optJSONObject(index);
-                if (sourcePoint == null) continue;
-                JSObject point = new JSObject();
-                point.put("lat", sourcePoint.optDouble("lat"));
-                point.put("lng", sourcePoint.optDouble("lng"));
-                point.put("accuracy", sourcePoint.optDouble("accuracy", -1d));
-                point.put("at", sourcePoint.optLong("at"));
-                point.put("distanceFromStart", sourcePoint.optDouble("distanceFromStart", 0d));
-                points.put(point);
-            }
-            result.put("points", points);
-        }
+        if (includePoints) result.put("points", readPoints());
         return result;
+    }
+
+    private JSArray readPoints() {
+        JSArray points = new JSArray();
+        try (BufferedReader reader = new BufferedReader(
+            new InputStreamReader(getContext().openFileInput(RunningTrackerService.POINTS_FILE), StandardCharsets.UTF_8)
+        )) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                try {
+                    JSONObject sourcePoint = new JSONObject(line);
+                    JSObject point = new JSObject();
+                    point.put("lat", sourcePoint.optDouble("lat"));
+                    point.put("lng", sourcePoint.optDouble("lng"));
+                    point.put("accuracy", sourcePoint.optDouble("accuracy", -1d));
+                    point.put("at", sourcePoint.optLong("at"));
+                    point.put("distanceFromStart", sourcePoint.optDouble("distanceFromStart", 0d));
+                    points.put(point);
+                } catch (JSONException ignored) {
+                    // Skip a malformed line instead of losing the rest of the recorded route.
+                }
+            }
+        } catch (FileNotFoundException ignored) {
+            // No accepted GPS fix has been stored yet.
+        } catch (IOException ignored) {
+            // Return the points read successfully before the I/O error.
+        }
+        return points;
     }
 
     private static double readDouble(SharedPreferences prefs, String key, double fallback) {
