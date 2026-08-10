@@ -14,6 +14,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(RunningSpeechPlugin.class);
         registerPlugin(RunningBackgroundNavigationPlugin.class);
         registerPlugin(RunningStorySpeechPlugin.class);
+        registerPlugin(RunningStoryDirectorPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }
