@@ -134,14 +134,17 @@ public class RunningHealthPlugin extends Plugin {
 
     private List<?> readRecords(String recordClassName, Instant start, Instant end) throws Exception {
         Class<?> recordClass = Class.forName(recordClassName);
-        Class<?> timeRangeClass = Class.forName("android.health.connect.TimeRangeFilter");
-        Method between = timeRangeClass.getMethod("between", Instant.class, Instant.class);
-        Object timeRange = between.invoke(null, start, end);
+        Class<?> timeRangeInterface = Class.forName("android.health.connect.TimeRangeFilter");
+        Class<?> timeRangeBuilderClass = Class.forName("android.health.connect.TimeInstantRangeFilter$Builder");
+        Object timeRangeBuilder = timeRangeBuilderClass.getConstructor().newInstance();
+        timeRangeBuilderClass.getMethod("setStartTime", Instant.class).invoke(timeRangeBuilder, start);
+        timeRangeBuilderClass.getMethod("setEndTime", Instant.class).invoke(timeRangeBuilder, end);
+        Object timeRange = timeRangeBuilderClass.getMethod("build").invoke(timeRangeBuilder);
 
         Class<?> builderClass = Class.forName("android.health.connect.ReadRecordsRequestUsingFilters$Builder");
         Constructor<?> constructor = builderClass.getConstructor(Class.class);
         Object builder = constructor.newInstance(recordClass);
-        Method setTimeRange = builderClass.getMethod("setTimeRangeFilter", timeRangeClass);
+        Method setTimeRange = builderClass.getMethod("setTimeRangeFilter", timeRangeInterface);
         setTimeRange.invoke(builder, timeRange);
         Object request = builderClass.getMethod("build").invoke(builder);
 
@@ -162,17 +165,22 @@ public class RunningHealthPlugin extends Plugin {
             }
         );
 
+        Object healthManager = manager();
         Method readMethod = null;
-        for (Method method : manager().getClass().getMethods()) {
+        for (Method method : healthManager.getClass().getMethods()) {
             if ("readRecords".equals(method.getName()) && method.getParameterTypes().length == 3) {
                 readMethod = method;
                 break;
             }
         }
         if (readMethod == null) throw new NoSuchMethodException("HealthConnectManager.readRecords");
-        readMethod.invoke(manager(), request, callbacks, receiver);
+        readMethod.invoke(healthManager, request, callbacks, receiver);
         if (!latch.await(10, TimeUnit.SECONDS)) throw new IllegalStateException("Health Connect read timed out");
-        if (failure.get() != null) throw failure.get();
+        Throwable readFailure = failure.get();
+        if (readFailure != null) {
+            if (readFailure instanceof Exception) throw (Exception) readFailure;
+            throw new RuntimeException(readFailure);
+        }
         Object result = response.get();
         if (result == null) return new ArrayList<>();
         Object records = result.getClass().getMethod("getRecords").invoke(result);
