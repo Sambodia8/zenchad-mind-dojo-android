@@ -1,6 +1,13 @@
 import { Capacitor, registerPlugin } from "@capacitor/core";
 import type { ChaseDifficulty } from "./runningStory";
 
+export interface NativeStoryRouteEvent {
+  type: "chase-start" | "chase-outcome" | "helicopter-start" | "helicopter-cover" | string;
+  at: number;
+  distanceMeters: number;
+  detail: string;
+}
+
 export interface NativeStorySnapshot {
   sessionId: string;
   enabled: boolean;
@@ -19,6 +26,7 @@ export interface NativeStorySnapshot {
   lastOutcome: string;
   helicopterTriggered: boolean;
   helicopterTargetDistanceMeters: number;
+  eventsJson: string;
   updatedAt: number;
 }
 
@@ -34,6 +42,28 @@ export const usesNativeStoryDirector = () => Capacitor.getPlatform() === "androi
 
 export function getNativeStorySnapshot() {
   return RunningStoryDirector.getSnapshot();
+}
+
+export function parseNativeStoryEvents(snapshot: Pick<NativeStorySnapshot, "eventsJson">): NativeStoryRouteEvent[] {
+  try {
+    const parsed = JSON.parse(snapshot.eventsJson || "[]");
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((event): event is NativeStoryRouteEvent =>
+      Boolean(
+        event &&
+        typeof event.type === "string" &&
+        Number.isFinite(event.at) &&
+        Number.isFinite(event.distanceMeters)
+      )
+    ).map((event) => ({
+      type: event.type,
+      at: event.at,
+      distanceMeters: Math.max(0, event.distanceMeters),
+      detail: typeof event.detail === "string" ? event.detail : ""
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export function setNativeStoryDifficulty(difficulty: ChaseDifficulty) {
