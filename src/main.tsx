@@ -6,6 +6,9 @@ import { startRunningNativeGeolocationBridge } from "./runningNativeGeolocationB
 import { startRunningRuntime } from "./runningRuntime";
 import { startRunningRouteRuntime } from "./runningRouteRuntime";
 import { startRunningStoryRuntime } from "./runningStoryRuntime";
+import { startRunningNativeStoryRuntime } from "./runningNativeStoryRuntime";
+import { startRunningNativeStoryRouteSync } from "./runningNativeStoryRouteSync";
+import { usesNativeStoryDirector } from "./runningNativeStory";
 import { startRunningProgressionRuntime } from "./runningProgressionRuntime";
 import { startRunningElevationRuntime } from "./runningElevationRuntime";
 import { loadData } from "./storage";
@@ -27,7 +30,12 @@ startBikeQuestRuntime();
 startRunningNativeGeolocationBridge();
 startRunningRuntime();
 startRunningRouteRuntime();
-startRunningStoryRuntime();
+if (usesNativeStoryDirector()) {
+  startRunningNativeStoryRouteSync();
+  startRunningNativeStoryRuntime();
+} else {
+  startRunningStoryRuntime();
+}
 startRunningProgressionRuntime();
 startRunningElevationRuntime();
 startAppearanceController(loadData().preferences.appearanceMode);
