@@ -136,7 +136,6 @@ export default function App() {
               row.body || "",
               "Historical meditation",
               "meditation",
-              "meditation",
               row.createdAt || new Date().toISOString(),
               "imported"
             )
