@@ -60,9 +60,7 @@ public class RunningTrackerService extends Service implements LocationListener {
         super.onCreate();
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        backgroundNavigator = new RunningBackgroundNavigator(this);
-        backgroundStoryDirector = new RunningBackgroundStoryDirector(this);
-        storySfxController = new RunningStorySfxController(this);
+        createNativeDirectors();
         ensureNotificationChannel();
     }
 
@@ -85,6 +83,7 @@ public class RunningTrackerService extends Service implements LocationListener {
         boolean reset = intent != null && intent.getBooleanExtra(EXTRA_RESET, false);
         if (!incomingSessionId.isEmpty() && !incomingSessionId.equals(storedSessionId)) reset = true;
 
+        if (reset) resetNativeDirectors();
         if (reset || prefs.getLong(KEY_STARTED_AT, 0L) <= 0L) {
             resetStoredRun(incomingSessionId);
         } else if (!incomingSessionId.isEmpty()) {
@@ -103,18 +102,7 @@ public class RunningTrackerService extends Service implements LocationListener {
     @Override
     public void onDestroy() {
         removeLocationUpdates();
-        if (backgroundNavigator != null) {
-            backgroundNavigator.shutdown();
-            backgroundNavigator = null;
-        }
-        if (backgroundStoryDirector != null) {
-            backgroundStoryDirector.shutdown();
-            backgroundStoryDirector = null;
-        }
-        if (storySfxController != null) {
-            storySfxController.shutdown();
-            storySfxController = null;
-        }
+        shutdownNativeDirectors();
         stopForeground(true);
         super.onDestroy();
     }
@@ -167,6 +155,32 @@ public class RunningTrackerService extends Service implements LocationListener {
             .apply();
         updateNotification(distance);
         updateNativeDirectors(location, distance);
+    }
+
+    private void createNativeDirectors() {
+        backgroundNavigator = new RunningBackgroundNavigator(this);
+        backgroundStoryDirector = new RunningBackgroundStoryDirector(this);
+        storySfxController = new RunningStorySfxController(this);
+    }
+
+    private void shutdownNativeDirectors() {
+        if (backgroundNavigator != null) {
+            backgroundNavigator.shutdown();
+            backgroundNavigator = null;
+        }
+        if (backgroundStoryDirector != null) {
+            backgroundStoryDirector.shutdown();
+            backgroundStoryDirector = null;
+        }
+        if (storySfxController != null) {
+            storySfxController.shutdown();
+            storySfxController = null;
+        }
+    }
+
+    private void resetNativeDirectors() {
+        shutdownNativeDirectors();
+        createNativeDirectors();
     }
 
     private void updateNativeDirectors(Location location, double distanceMeters) {
