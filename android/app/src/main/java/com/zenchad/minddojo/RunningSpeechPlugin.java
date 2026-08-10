@@ -3,6 +3,7 @@ package com.zenchad.minddojo;
 import android.media.AudioAttributes;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -10,7 +11,9 @@ import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @CapacitorPlugin(name = "RunningSpeech")
 public class RunningSpeechPlugin extends Plugin implements TextToSpeech.OnInitListener {
@@ -18,6 +21,7 @@ public class RunningSpeechPlugin extends Plugin implements TextToSpeech.OnInitLi
     private boolean ready = false;
     private PluginCall pendingCall;
     private String pendingText;
+    private final Map<String, PluginCall> activeCalls = new ConcurrentHashMap<>();
 
     @Override
     public void load() {
@@ -36,6 +40,24 @@ public class RunningSpeechPlugin extends Plugin implements TextToSpeech.OnInitLi
                     .build();
                 tts.setAudioAttributes(attributes);
             }
+            tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                @Override
+                public void onStart(String utteranceId) {
+                    // Keep the Capacitor promise open so transient audio focus stays held.
+                }
+
+                @Override
+                public void onDone(String utteranceId) {
+                    PluginCall call = activeCalls.remove(utteranceId);
+                    if (call != null) call.resolve();
+                }
+
+                @Override
+                public void onError(String utteranceId) {
+                    PluginCall call = activeCalls.remove(utteranceId);
+                    if (call != null) call.reject("Navigation instruction could not be spoken.");
+                }
+            });
         }
         if (pendingCall != null) {
             PluginCall call = pendingCall;
@@ -65,6 +87,8 @@ public class RunningSpeechPlugin extends Plugin implements TextToSpeech.OnInitLi
     @PluginMethod
     public void stop(PluginCall call) {
         if (tts != null) tts.stop();
+        for (PluginCall active : activeCalls.values()) active.resolve();
+        activeCalls.clear();
         call.resolve();
     }
 
@@ -75,9 +99,12 @@ public class RunningSpeechPlugin extends Plugin implements TextToSpeech.OnInitLi
         }
         Bundle params = new Bundle();
         String utteranceId = "zenchad-nav-" + UUID.randomUUID();
+        activeCalls.put(utteranceId, call);
         int result = tts.speak(text, TextToSpeech.QUEUE_FLUSH, params, utteranceId);
-        if (result == TextToSpeech.ERROR) call.reject("Navigation instruction could not be spoken.");
-        else call.resolve();
+        if (result == TextToSpeech.ERROR) {
+            activeCalls.remove(utteranceId);
+            call.reject("Navigation instruction could not be spoken.");
+        }
     }
 
     @Override
@@ -87,6 +114,8 @@ public class RunningSpeechPlugin extends Plugin implements TextToSpeech.OnInitLi
             tts.shutdown();
             tts = null;
         }
+        for (PluginCall active : activeCalls.values()) active.resolve();
+        activeCalls.clear();
         ready = false;
         pendingCall = null;
         pendingText = null;
