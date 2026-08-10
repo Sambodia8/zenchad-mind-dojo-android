@@ -157,11 +157,13 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
         String nowKey = next.id + ":now";
         String previewKey = next.id + ":preview";
         if (distanceToTurn <= 38d && !spoken.contains(nowKey)) {
-            markSpoken(nowKey);
-            speak(next.verbalAlert.isEmpty() ? next.instruction : next.verbalAlert);
+            if (speak(next.verbalAlert.isEmpty() ? next.instruction : next.verbalAlert)) {
+                markSpoken(nowKey);
+            }
         } else if (distanceToTurn <= 135d && distanceToTurn > 38d && !spoken.contains(previewKey)) {
-            markSpoken(previewKey);
-            speak(next.verbalInstruction.isEmpty() ? next.instruction : next.verbalInstruction);
+            if (speak(next.verbalInstruction.isEmpty() ? next.instruction : next.verbalInstruction)) {
+                markSpoken(previewKey);
+            }
         }
     }
 
@@ -269,13 +271,17 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
         return builder.toString();
     }
 
-    private void speak(String text) {
-        if (!ttsReady || tts == null || text == null || text.trim().isEmpty() || speaking) return;
+    private boolean speak(String text) {
+        if (!ttsReady || tts == null || text == null || text.trim().isEmpty() || speaking) return false;
         requestAudioFocus();
         Bundle params = new Bundle();
         String utteranceId = "zenchad-background-nav-" + UUID.randomUUID();
         int result = tts.speak(text.trim(), TextToSpeech.QUEUE_FLUSH, params, utteranceId);
-        if (result == TextToSpeech.ERROR) releaseAudioFocus();
+        if (result == TextToSpeech.ERROR) {
+            releaseAudioFocus();
+            return false;
+        }
+        return true;
     }
 
     private void requestAudioFocus() {
