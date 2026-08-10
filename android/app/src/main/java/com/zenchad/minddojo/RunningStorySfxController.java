@@ -26,21 +26,22 @@ public class RunningStorySfxController {
         String currentSession = prefs.getString(RunningBackgroundStoryDirector.KEY_SESSION_ID, "");
         if (!currentSession.equals(sessionId)) {
             sessionId = currentSession;
-            chaseWasActive = false;
-            helicopterWasActive = false;
-            lastOutcome = "";
+            // Reconstruct persisted mission state instead of assuming this is a new run.
+            // Android can recreate this controller after killing the process while the same
+            // foreground run is still active.
+            chaseWasActive = prefs.getBoolean(RunningBackgroundStoryDirector.KEY_ACTIVE_CHASE, false);
+            helicopterWasActive = "helicopter".equals(prefs.getString(RunningBackgroundStoryDirector.KEY_PHASE, ""));
+            lastOutcome = prefs.getString(RunningBackgroundStoryDirector.KEY_LAST_OUTCOME, "");
+            previousSfxEnabled = false;
             engine.stopHelicopter();
-            // Do not clear the persisted event log here. A process restart recreates this
-            // controller even though the same run is still active. RunningStoryEventLog.append
-            // already resets itself when (and only when) the actual run session ID changes.
+            // Do not clear the persisted event log here. RunningStoryEventLog.append already
+            // resets itself when (and only when) the actual run session ID changes.
         }
 
         boolean enabled = prefs.getBoolean(RunningBackgroundStoryDirector.KEY_ENABLED, false);
         boolean sfxEnabled = RunningStoryAudioSettings.isSfxEnabled(context);
         if (!enabled || !sfxEnabled) {
             engine.stopHelicopter();
-            chaseWasActive = false;
-            helicopterWasActive = false;
             previousSfxEnabled = sfxEnabled;
             return;
         }
