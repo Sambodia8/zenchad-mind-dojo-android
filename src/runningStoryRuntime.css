@@ -1,0 +1,86 @@
+.running-story-chase-dock {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "pulse copy clock"
+    "track track track";
+  align-items: center;
+  gap: 12px 14px;
+  padding: 16px;
+  border: 1px solid rgba(239, 68, 68, 0.42);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(74, 15, 24, 0.94), rgba(20, 15, 29, 0.96));
+  box-shadow: 0 18px 50px rgba(105, 14, 25, 0.26);
+}
+
+.running-chase-pulse {
+  grid-area: pulse;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: currentColor;
+  color: #ff5964;
+  box-shadow: 0 0 0 0 currentColor;
+  animation: running-chase-pulse 1.05s infinite;
+}
+
+.running-chase-copy {
+  grid-area: copy;
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.running-chase-copy strong {
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.running-chase-copy small {
+  opacity: 0.72;
+  line-height: 1.25;
+}
+
+.running-story-chase-dock > b {
+  grid-area: clock;
+  font-size: 1.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.running-chase-track {
+  grid-area: track;
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.running-chase-track span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: currentColor;
+  color: #ff5964;
+  transition: width 0.7s linear;
+}
+
+@keyframes running-chase-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 89, 100, 0.58); transform: scale(0.92); }
+  70% { box-shadow: 0 0 0 12px rgba(255, 89, 100, 0); transform: scale(1); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 89, 100, 0); transform: scale(0.92); }
+}
+
+html[data-theme="light"] .running-story-chase-dock,
+html:not(.dark) .running-story-chase-dock {
+  background: linear-gradient(135deg, rgba(255, 232, 233, 0.98), rgba(255, 249, 244, 0.98));
+  color: #541621;
+  border-color: rgba(190, 24, 45, 0.32);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .running-chase-pulse { animation: none; }
+  .running-chase-track span { transition: none; }
+}
