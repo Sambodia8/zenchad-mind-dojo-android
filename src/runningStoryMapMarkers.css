@@ -1,0 +1,48 @@
+.running-story-map-marker {
+  stroke: rgba(255,255,255,0.96);
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.45));
+}
+
+.running-story-map-marker-chase {
+  fill: currentColor;
+}
+
+.running-story-map-marker-air {
+  fill: none;
+  stroke-width: 2.4;
+}
+
+.running-story-map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 12px;
+  margin-top: 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  opacity: 0.76;
+}
+
+.running-story-map-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.running-story-marker-key {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid currentColor;
+}
+
+.running-story-marker-key-chase {
+  transform: rotate(45deg);
+  background: currentColor;
+}
+
+.running-story-marker-key-air {
+  border-radius: 999px;
+  background: transparent;
+}
