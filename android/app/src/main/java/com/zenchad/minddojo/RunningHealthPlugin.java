@@ -85,14 +85,19 @@ public class RunningHealthPlugin extends Plugin {
                 Instant start = Instant.ofEpochMilli(startedAt);
                 Instant end = Instant.ofEpochMilli(endedAt);
                 List<?> heartRecords = readRecords("android.health.connect.datatypes.HeartRateRecord", start, end);
-                List<?> stepRecords = readRecords("android.health.connect.datatypes.StepsRecord", start, end);
+                long steps = aggregateLong(
+                    "android.health.connect.datatypes.StepsRecord",
+                    "STEPS_COUNT_TOTAL",
+                    start,
+                    end
+                );
                 List<?> cadenceRecords;
                 try {
                     cadenceRecords = readRecords("android.health.connect.datatypes.StepsCadenceRecord", start, end);
                 } catch (Throwable ignored) {
                     cadenceRecords = new ArrayList<>();
                 }
-                call.resolve(buildHealthResult(heartRecords, stepRecords, cadenceRecords));
+                call.resolve(buildHealthResult(heartRecords, steps, cadenceRecords));
             } catch (Throwable error) {
                 call.reject("Could not read Health Connect records: " + safeMessage(error));
             }
@@ -132,22 +137,15 @@ public class RunningHealthPlugin extends Plugin {
         return manager;
     }
 
-    private List<?> readRecords(String recordClassName, Instant start, Instant end) throws Exception {
-        Class<?> recordClass = Class.forName(recordClassName);
-        Class<?> timeRangeInterface = Class.forName("android.health.connect.TimeRangeFilter");
-        Class<?> timeRangeBuilderClass = Class.forName("android.health.connect.TimeInstantRangeFilter$Builder");
-        Object timeRangeBuilder = timeRangeBuilderClass.getConstructor().newInstance();
-        timeRangeBuilderClass.getMethod("setStartTime", Instant.class).invoke(timeRangeBuilder, start);
-        timeRangeBuilderClass.getMethod("setEndTime", Instant.class).invoke(timeRangeBuilder, end);
-        Object timeRange = timeRangeBuilderClass.getMethod("build").invoke(timeRangeBuilder);
+    private Object timeRange(Instant start, Instant end) throws Exception {
+        Class<?> builderClass = Class.forName("android.health.connect.TimeInstantRangeFilter$Builder");
+        Object builder = builderClass.getConstructor().newInstance();
+        builderClass.getMethod("setStartTime", Instant.class).invoke(builder, start);
+        builderClass.getMethod("setEndTime", Instant.class).invoke(builder, end);
+        return builderClass.getMethod("build").invoke(builder);
+    }
 
-        Class<?> builderClass = Class.forName("android.health.connect.ReadRecordsRequestUsingFilters$Builder");
-        Constructor<?> constructor = builderClass.getConstructor(Class.class);
-        Object builder = constructor.newInstance(recordClass);
-        Method setTimeRange = builderClass.getMethod("setTimeRangeFilter", timeRangeInterface);
-        setTimeRange.invoke(builder, timeRange);
-        Object request = builderClass.getMethod("build").invoke(builder);
-
+    private Object awaitHealthCall(Object request, String methodName) throws Exception {
         Class<?> outcomeReceiverClass = Class.forName("android.os.OutcomeReceiver");
         CountDownLatch latch = new CountDownLatch(1);
         AtomicReference<Object> response = new AtomicReference<>();
@@ -166,28 +164,55 @@ public class RunningHealthPlugin extends Plugin {
         );
 
         Object healthManager = manager();
-        Method readMethod = null;
+        Method target = null;
         for (Method method : healthManager.getClass().getMethods()) {
-            if ("readRecords".equals(method.getName()) && method.getParameterTypes().length == 3) {
-                readMethod = method;
+            if (methodName.equals(method.getName()) && method.getParameterTypes().length == 3) {
+                target = method;
                 break;
             }
         }
-        if (readMethod == null) throw new NoSuchMethodException("HealthConnectManager.readRecords");
-        readMethod.invoke(healthManager, request, callbacks, receiver);
-        if (!latch.await(10, TimeUnit.SECONDS)) throw new IllegalStateException("Health Connect read timed out");
+        if (target == null) throw new NoSuchMethodException("HealthConnectManager." + methodName);
+        target.invoke(healthManager, request, callbacks, receiver);
+        if (!latch.await(10, TimeUnit.SECONDS)) throw new IllegalStateException("Health Connect " + methodName + " timed out");
         Throwable readFailure = failure.get();
         if (readFailure != null) {
             if (readFailure instanceof Exception) throw (Exception) readFailure;
             throw new RuntimeException(readFailure);
         }
-        Object result = response.get();
+        return response.get();
+    }
+
+    private List<?> readRecords(String recordClassName, Instant start, Instant end) throws Exception {
+        Class<?> recordClass = Class.forName(recordClassName);
+        Class<?> timeRangeInterface = Class.forName("android.health.connect.TimeRangeFilter");
+        Class<?> builderClass = Class.forName("android.health.connect.ReadRecordsRequestUsingFilters$Builder");
+        Constructor<?> constructor = builderClass.getConstructor(Class.class);
+        Object builder = constructor.newInstance(recordClass);
+        Method setTimeRange = builderClass.getMethod("setTimeRangeFilter", timeRangeInterface);
+        setTimeRange.invoke(builder, timeRange(start, end));
+        Object request = builderClass.getMethod("build").invoke(builder);
+        Object result = awaitHealthCall(request, "readRecords");
         if (result == null) return new ArrayList<>();
         Object records = result.getClass().getMethod("getRecords").invoke(result);
         return records instanceof List ? (List<?>) records : new ArrayList<>();
     }
 
-    private JSObject buildHealthResult(List<?> heartRecords, List<?> stepRecords, List<?> cadenceRecords) throws Exception {
+    private long aggregateLong(String recordClassName, String aggregationFieldName, Instant start, Instant end) throws Exception {
+        Class<?> recordClass = Class.forName(recordClassName);
+        Object aggregationType = recordClass.getField(aggregationFieldName).get(null);
+        Class<?> timeRangeInterface = Class.forName("android.health.connect.TimeRangeFilter");
+        Class<?> aggregationTypeClass = Class.forName("android.health.connect.datatypes.AggregationType");
+        Class<?> builderClass = Class.forName("android.health.connect.AggregateRecordsRequest$Builder");
+        Object builder = builderClass.getConstructor(timeRangeInterface).newInstance(timeRange(start, end));
+        builderClass.getMethod("addAggregationType", aggregationTypeClass).invoke(builder, aggregationType);
+        Object request = builderClass.getMethod("build").invoke(builder);
+        Object result = awaitHealthCall(request, "aggregate");
+        if (result == null) return 0L;
+        Object value = result.getClass().getMethod("get", aggregationTypeClass).invoke(result, aggregationType);
+        return value instanceof Number ? Math.max(0L, ((Number) value).longValue()) : 0L;
+    }
+
+    private JSObject buildHealthResult(List<?> heartRecords, long steps, List<?> cadenceRecords) throws Exception {
         JSObject result = new JSObject();
         JSArray heartSamples = new JSArray();
         double heartTotal = 0d;
@@ -211,11 +236,6 @@ public class RunningHealthPlugin extends Plugin {
                 point.put("bpm", bpm);
                 heartSamples.put(point);
             }
-        }
-
-        long steps = 0L;
-        for (Object record : stepRecords) {
-            steps += Math.max(0L, longFrom(record, "getCount", 0L));
         }
 
         JSArray cadenceSamples = new JSArray();
@@ -244,7 +264,7 @@ public class RunningHealthPlugin extends Plugin {
         result.put("averageHeartRate", heartCount == 0 ? null : heartTotal / heartCount);
         result.put("minimumHeartRate", heartCount == 0 ? null : heartMin);
         result.put("maximumHeartRate", heartCount == 0 ? null : heartMax);
-        result.put("steps", steps);
+        result.put("steps", Math.max(0L, steps));
         result.put("cadenceSamples", cadenceSamples);
         result.put("cadenceSampleCount", cadenceCount);
         result.put("averageCadence", cadenceCount == 0 ? null : cadenceTotal / cadenceCount);
@@ -256,15 +276,6 @@ public class RunningHealthPlugin extends Plugin {
         try {
             Object value = object.getClass().getMethod(methodName).invoke(object);
             return value instanceof Number ? ((Number) value).doubleValue() : fallback;
-        } catch (Throwable ignored) {
-            return fallback;
-        }
-    }
-
-    private long longFrom(Object object, String methodName, long fallback) {
-        try {
-            Object value = object.getClass().getMethod(methodName).invoke(object);
-            return value instanceof Number ? ((Number) value).longValue() : fallback;
         } catch (Throwable ignored) {
             return fallback;
         }
