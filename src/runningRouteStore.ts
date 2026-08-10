@@ -19,6 +19,7 @@ export interface PlannedRunningRoute {
   version: 1;
   sessionId: string;
   mode: RunMode;
+  plannedMinutes: number;
   provider: string;
   createdAt: number;
   start: RunningRoutePoint;
@@ -50,10 +51,13 @@ export function loadPlannedRunningRoute(sessionId?: string | null): PlannedRunni
   try {
     const raw = localStorage.getItem(ROUTE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as PlannedRunningRoute;
-    if (parsed?.version !== 1 || !parsed.sessionId || !Array.isArray(parsed.geometry)) return null;
+    const parsed = JSON.parse(raw) as Partial<PlannedRunningRoute>;
+    if (parsed?.version !== 1 || !parsed.sessionId || !Array.isArray(parsed.geometry) || !parsed.mode) return null;
     if (sessionId && parsed.sessionId !== sessionId) return null;
-    return parsed;
+    return {
+      ...(parsed as PlannedRunningRoute),
+      plannedMinutes: Math.max(8, Math.round(parsed.plannedMinutes ?? parsed.estimatedMinutes ?? 30))
+    };
   } catch {
     return null;
   }
