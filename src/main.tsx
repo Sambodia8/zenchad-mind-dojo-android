@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { startBikeQuestRuntime } from "./bikeQuestRuntime";
 import { startRunningNativeGeolocationBridge } from "./runningNativeGeolocationBridge";
+import { startRunningFinishGuardRuntime } from "./runningFinishGuardRuntime";
 import { startRunningRuntime } from "./runningRuntime";
 import { startRunningRouteRuntime } from "./runningRouteRuntime";
 import { startRunningRouteFallbackRuntime } from "./runningRouteFallbackRuntime";
@@ -46,6 +47,7 @@ import "./theme.css";
 
 startBikeQuestRuntime();
 startRunningNativeGeolocationBridge();
+startRunningFinishGuardRuntime();
 startRunningRuntime();
 startRunningRouteRuntime();
 startRunningRouteFallbackRuntime();
