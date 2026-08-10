@@ -1,0 +1,67 @@
+.running-diagnostics-card {
+  margin-top: 14px;
+}
+
+.running-diagnostics-card > p {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.running-diagnostics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.running-diagnostics-grid span {
+  min-width: 0;
+  padding: 11px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
+}
+
+.running-diagnostics-grid small,
+.running-diagnostics-grid strong,
+.running-diagnostics-grid b {
+  display: block;
+}
+
+.running-diagnostics-grid small {
+  color: var(--muted);
+  font-size: .64rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+}
+
+.running-diagnostics-grid strong {
+  margin-top: 3px;
+  font-size: .9rem;
+}
+
+.running-diagnostics-grid b {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 650;
+}
+
+.running-diagnostics-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.running-diagnostics-card > small {
+  display: block;
+  margin-top: 9px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+@media (max-width: 390px) {
+  .running-diagnostics-grid,
+  .running-diagnostics-actions {
+    grid-template-columns: 1fr;
+  }
+}
