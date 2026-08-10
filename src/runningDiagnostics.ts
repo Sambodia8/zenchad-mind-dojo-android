@@ -169,7 +169,7 @@ export async function collectRunningDiagnostics(): Promise<RunningDiagnosticsSna
       distanceMeters: route ? Math.round(route.distanceMeters) : null,
       estimatedMinutes: route ? Math.round(route.estimatedMinutes) : null,
       maneuverCount: route?.maneuvers.length ?? 0,
-      shapePointCount: route?.shape.length ?? 0,
+      shapePointCount: route?.geometry.length ?? 0,
       rerouteCount: route?.rerouteCount ?? 0,
       semanticsStatus: route?.semanticsStatus ?? "none",
       storyAnchorCount: route?.storyAnchors?.length ?? 0,
