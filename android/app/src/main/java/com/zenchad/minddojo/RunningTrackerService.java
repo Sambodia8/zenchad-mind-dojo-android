@@ -53,6 +53,7 @@ public class RunningTrackerService extends Service implements LocationListener {
     private SharedPreferences prefs;
     private RunningBackgroundNavigator backgroundNavigator;
     private RunningBackgroundStoryDirector backgroundStoryDirector;
+    private RunningStorySfxController storySfxController;
 
     @Override
     public void onCreate() {
@@ -61,6 +62,7 @@ public class RunningTrackerService extends Service implements LocationListener {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         backgroundNavigator = new RunningBackgroundNavigator(this);
         backgroundStoryDirector = new RunningBackgroundStoryDirector(this);
+        storySfxController = new RunningStorySfxController(this);
         ensureNotificationChannel();
     }
 
@@ -108,6 +110,10 @@ public class RunningTrackerService extends Service implements LocationListener {
         if (backgroundStoryDirector != null) {
             backgroundStoryDirector.shutdown();
             backgroundStoryDirector = null;
+        }
+        if (storySfxController != null) {
+            storySfxController.shutdown();
+            storySfxController = null;
         }
         stopForeground(true);
         super.onDestroy();
@@ -165,21 +171,22 @@ public class RunningTrackerService extends Service implements LocationListener {
 
     private void updateNativeDirectors(Location location, double distanceMeters) {
         if (backgroundNavigator != null) backgroundNavigator.onLocation(location);
-        if (backgroundStoryDirector == null) return;
-
-        double routeProgress = backgroundNavigator == null ? distanceMeters : backgroundNavigator.getLastRouteProgressMeters();
-        double offRoute = backgroundNavigator == null ? Double.POSITIVE_INFINITY : backgroundNavigator.getLastOffRouteMeters();
-        double distanceToManeuver = backgroundNavigator == null ? Double.POSITIVE_INFINITY : backgroundNavigator.getLastDistanceToManeuverMeters();
-        boolean navigationSpeaking = backgroundNavigator != null && backgroundNavigator.isSpeaking();
-        backgroundStoryDirector.onLocation(
-            location,
-            distanceMeters,
-            prefs.getLong(KEY_STARTED_AT, 0L),
-            routeProgress,
-            offRoute,
-            distanceToManeuver,
-            navigationSpeaking
-        );
+        if (backgroundStoryDirector != null) {
+            double routeProgress = backgroundNavigator == null ? distanceMeters : backgroundNavigator.getLastRouteProgressMeters();
+            double offRoute = backgroundNavigator == null ? Double.POSITIVE_INFINITY : backgroundNavigator.getLastOffRouteMeters();
+            double distanceToManeuver = backgroundNavigator == null ? Double.POSITIVE_INFINITY : backgroundNavigator.getLastDistanceToManeuverMeters();
+            boolean navigationSpeaking = backgroundNavigator != null && backgroundNavigator.isSpeaking();
+            backgroundStoryDirector.onLocation(
+                location,
+                distanceMeters,
+                prefs.getLong(KEY_STARTED_AT, 0L),
+                routeProgress,
+                offRoute,
+                distanceToManeuver,
+                navigationSpeaking
+            );
+        }
+        if (storySfxController != null) storySfxController.sync();
     }
 
     @Override
