@@ -7,6 +7,10 @@ on:
       - feature/bike-quest-v1
   pull_request:
 
+concurrency:
+  group: build-check-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
