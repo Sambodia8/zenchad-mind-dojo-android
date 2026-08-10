@@ -12,8 +12,11 @@ export async function setNativeBackgroundRunningRoute(route: PlannedRunningRoute
   if (Capacitor.getPlatform() !== "android") return;
   const payload = {
     sessionId: route.sessionId,
+    mode: route.mode,
+    plannedMinutes: Math.max(8, Math.round(route.estimatedMinutes || 0)) || 30,
     geometry: route.geometry,
     cumulativeMeters: route.cumulativeMeters,
+    storyAnchors: route.storyAnchors ?? [],
     maneuvers: route.maneuvers.map((maneuver) => ({
       id: maneuver.id,
       instruction: maneuver.instruction,
