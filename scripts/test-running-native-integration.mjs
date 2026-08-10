@@ -39,6 +39,12 @@ assert.ok(
 );
 assert.match(navigator, /private boolean speak\(String text\)/, "background navigation speech must report whether the cue was accepted");
 
+const storySfxController = source("android/app/src/main/java/com/zenchad/minddojo/RunningStorySfxController.java");
+assert.ok(!storySfxController.includes("RunningStoryEventLog.reset(context, sessionId)"), "Android process restart must not erase earlier Story event markers for the same run");
+assert.ok(storySfxController.includes("chaseWasActive = prefs.getBoolean(RunningBackgroundStoryDirector.KEY_ACTIVE_CHASE, false);"), "Story SFX state should reconstruct an active chase after process restart instead of logging a duplicate chase start");
+assert.ok(storySfxController.includes('helicopterWasActive = "helicopter".equals(prefs.getString(RunningBackgroundStoryDirector.KEY_PHASE, ""));'), "Story SFX state should reconstruct an active helicopter set-piece after process restart");
+assert.ok(storySfxController.includes("previousSfxEnabled = false;"), "restored helicopter audio should be allowed to resume without creating a duplicate event marker");
+
 const workflow = source(".github/workflows/build.yml");
 assert.match(workflow, /cancel-in-progress:\s*true/, "superseded Running build checks should be cancelled instead of queueing stale commits");
 
