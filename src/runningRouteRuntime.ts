@@ -3,6 +3,7 @@ import { navigationStateForLocation, cueForNavigationState, formatNavigationDist
 import { buildValhallaRunningRoute } from "./runningValhalla";
 import { loadPlannedRunningRoute, loadRunningRouteBuildState, savePlannedRunningRoute, saveRunningRouteBuildState, clearRunningRouteState, type PlannedRunningRoute } from "./runningRouteStore";
 import { speakRunningNavigation } from "./runningSpeech";
+import { clearNativeBackgroundRunningRoute, setNativeBackgroundRunningRoute } from "./runningBackgroundNavigation";
 
 const RUNTIME_DOCK_ID = "zenchad-running-navigation-dock";
 const MIN_REROUTE_INTERVAL_MS = 45_000;
@@ -17,6 +18,7 @@ let nearestShapeIndex = 0;
 let offRouteSince = 0;
 let spoken: Record<string, NavigationCueLevel[]> = {};
 let speaking = false;
+let nativeRouteSignature = "";
 
 function positionOnce() {
   return new Promise<GeolocationPosition>((resolve, reject) => {
@@ -41,10 +43,28 @@ function setBuildState(sessionId: string, status: "idle" | "locating" | "buildin
   saveRunningRouteBuildState({ sessionId, status, message, updatedAt: Date.now() });
 }
 
+function syncNativeRoute(route: PlannedRunningRoute) {
+  const signature = `${route.sessionId}:${route.createdAt}:${route.rerouteCount}`;
+  if (signature === nativeRouteSignature) return;
+  nativeRouteSignature = signature;
+  void setNativeBackgroundRunningRoute(route).catch(() => {
+    nativeRouteSignature = "";
+  });
+}
+
+function clearNativeRouteOnce() {
+  if (!nativeRouteSignature) return;
+  nativeRouteSignature = "";
+  void clearNativeBackgroundRunningRoute().catch(() => {});
+}
+
 async function buildInitialRoute(session: RunSession) {
   if (buildingSessionId === session.id || Date.now() < nextBuildRetryAt) return;
   const existing = loadPlannedRunningRoute(session.id);
-  if (existing) return;
+  if (existing) {
+    syncNativeRoute(existing);
+    return;
+  }
 
   buildingSessionId = session.id;
   try {
@@ -58,6 +78,7 @@ async function buildInitialRoute(session: RunSession) {
     );
     const saved: PlannedRunningRoute = { ...route, sessionId: session.id };
     savePlannedRunningRoute(saved);
+    syncNativeRoute(saved);
     setBuildState(session.id, "ready", `${(saved.distanceMeters / 1000).toFixed(1)} km route ready · about ${Math.round(saved.estimatedMinutes)} min`);
     nearestShapeIndex = 0;
     spoken = {};
@@ -90,6 +111,7 @@ async function reroute(session: RunSession, route: PlannedRunningRoute) {
       rerouteCount: route.rerouteCount + 1
     };
     savePlannedRunningRoute(saved);
+    syncNativeRoute(saved);
     setBuildState(session.id, "ready", "Route recalculated. Keep moving.");
     nearestShapeIndex = 0;
     offRouteSince = 0;
@@ -110,6 +132,7 @@ function syncBriefingNote(session: RunSession) {
   const route = loadPlannedRunningRoute(session.id);
 
   if (route) {
+    syncNativeRoute(route);
     if (strong) strong.textContent = "Route ready";
     if (small) {
       const reasons = route.reasons.slice(0, 2).join(" · ");
@@ -142,6 +165,7 @@ function ensureNavigationDock() {
 }
 
 function updateNavigationDock(route: PlannedRunningRoute, session: RunSession) {
+  syncNativeRoute(route);
   const dock = ensureNavigationDock();
   if (!dock) return;
   const latest = latestSessionLocation(session);
@@ -189,6 +213,7 @@ function tick() {
   const session = loadRunSession();
   if (!session) {
     clearRunningRouteState();
+    clearNativeRouteOnce();
     removeNavigationDock();
     return;
   }
