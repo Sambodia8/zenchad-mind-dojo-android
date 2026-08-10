@@ -1,13 +1,14 @@
 import { loadRunSession } from "./running";
 import {
   getNativeStorySnapshot,
+  setNativeStoryAudioSettings,
   setNativeStoryDifficulty,
   type NativeStorySnapshot
 } from "./runningNativeStory";
 import type { ChaseDifficulty } from "./runningStory";
 
 const CHASE_DOCK_ID = "zenchad-story-chase-dock";
-const DIFFICULTY_ID = "zenchad-story-difficulty";
+const SETTINGS_ID = "zenchad-story-difficulty";
 let started = false;
 let polling = false;
 let lastSnapshot: NativeStorySnapshot | null = null;
@@ -64,46 +65,92 @@ function difficultyLabel(value: ChaseDifficulty) {
   return value === "casual" ? "Casual" : value === "intense" ? "Intense" : "Standard";
 }
 
-function syncDifficultyControl(snapshot: NativeStorySnapshot) {
+function percent(value: number | undefined, fallback: number) {
+  const safe = Number.isFinite(value) ? Number(value) : fallback;
+  return Math.round(Math.max(0, Math.min(1, safe)) * 100);
+}
+
+function syncStorySettings(snapshot: NativeStorySnapshot) {
   const session = loadRunSession();
   const briefing = document.querySelector<HTMLElement>(".running-briefing");
   if (!session || session.mode !== "story" || session.stage !== "briefing" || !briefing) {
-    document.getElementById(DIFFICULTY_ID)?.remove();
+    document.getElementById(SETTINGS_ID)?.remove();
     return;
   }
 
-  let panel = document.getElementById(DIFFICULTY_ID);
+  let panel = document.getElementById(SETTINGS_ID);
   if (!panel) {
     panel = document.createElement("section");
-    panel.id = DIFFICULTY_ID;
+    panel.id = SETTINGS_ID;
     panel.className = "running-story-difficulty";
     const primary = briefing.querySelector(".button.primary");
     if (primary) briefing.insertBefore(panel, primary);
     else briefing.appendChild(panel);
   }
 
+  const sfxPercent = percent(snapshot.sfxVolume, 0.72);
+  const voicePercent = percent(snapshot.voiceVolume, 0.92);
   panel.innerHTML = `
     <div><span class="eyebrow">Chase intensity</span><strong>${difficultyLabel(snapshot.difficulty)}</strong><small>The Director still adapts to your recent pace and how far into the run you are.</small></div>
     <div class="running-story-difficulty-buttons">
       ${(["casual", "standard", "intense"] as ChaseDifficulty[]).map((value) => `<button type="button" data-story-difficulty="${value}" class="${snapshot.difficulty === value ? "active" : ""}">${difficultyLabel(value)}</button>`).join("")}
     </div>
+    <div class="running-story-audio-settings">
+      <div class="running-story-audio-heading"><div><span class="eyebrow">Story audio</span><strong>Mix over your music</strong></div><button type="button" data-story-sfx-toggle class="${snapshot.sfxEnabled ? "active" : ""}">${snapshot.sfxEnabled ? "EFFECTS ON" : "EFFECTS MUTED"}</button></div>
+      <label><span><strong>Effects</strong><small>Helicopter, gunfire, bullet passes and stingers</small></span><b data-story-sfx-value>${sfxPercent}%</b><input data-story-sfx-volume type="range" min="0" max="100" step="5" value="${sfxPercent}" ${snapshot.sfxEnabled ? "" : "disabled"}></label>
+      <label><span><strong>Radio voice</strong><small>Story dialogue only — navigation stays separate</small></span><b data-story-voice-value>${voicePercent}%</b><input data-story-voice-volume type="range" min="0" max="100" step="5" value="${voicePercent}"></label>
+      <small class="running-story-audio-note">These controls affect Zenchad only. They do not change your external music volume.</small>
+    </div>
   `;
+
   panel.querySelectorAll<HTMLButtonElement>("[data-story-difficulty]").forEach((button) => {
     button.onclick = () => {
       const difficulty = button.dataset.storyDifficulty as ChaseDifficulty;
       void setNativeStoryDifficulty(difficulty).then((next) => {
         lastSnapshot = next;
-        syncDifficultyControl(next);
+        syncStorySettings(next);
       }).catch(() => {});
     };
   });
+
+  const toggle = panel.querySelector<HTMLButtonElement>("[data-story-sfx-toggle]");
+  if (toggle) {
+    toggle.onclick = () => {
+      void setNativeStoryAudioSettings({ sfxEnabled: !snapshot.sfxEnabled }).then((next) => {
+        lastSnapshot = next;
+        syncStorySettings(next);
+      }).catch(() => {});
+    };
+  }
+
+  const sfxSlider = panel.querySelector<HTMLInputElement>("[data-story-sfx-volume]");
+  const sfxValue = panel.querySelector<HTMLElement>("[data-story-sfx-value]");
+  if (sfxSlider) {
+    sfxSlider.oninput = () => { if (sfxValue) sfxValue.textContent = `${sfxSlider.value}%`; };
+    sfxSlider.onchange = () => {
+      void setNativeStoryAudioSettings({ sfxVolume: Number(sfxSlider.value) / 100 }).then((next) => {
+        lastSnapshot = next;
+      }).catch(() => {});
+    };
+  }
+
+  const voiceSlider = panel.querySelector<HTMLInputElement>("[data-story-voice-volume]");
+  const voiceValue = panel.querySelector<HTMLElement>("[data-story-voice-value]");
+  if (voiceSlider) {
+    voiceSlider.oninput = () => { if (voiceValue) voiceValue.textContent = `${voiceSlider.value}%`; };
+    voiceSlider.onchange = () => {
+      void setNativeStoryAudioSettings({ voiceVolume: Number(voiceSlider.value) / 100 }).then((next) => {
+        lastSnapshot = next;
+      }).catch(() => {});
+    };
+  }
 }
 
 function render(snapshot: NativeStorySnapshot) {
   const session = loadRunSession();
   if (!session || session.mode !== "story") {
     document.getElementById(CHASE_DOCK_ID)?.remove();
-    document.getElementById(DIFFICULTY_ID)?.remove();
+    document.getElementById(SETTINGS_ID)?.remove();
     return;
   }
   if (session.stage === "active") {
@@ -112,7 +159,7 @@ function render(snapshot: NativeStorySnapshot) {
   } else {
     document.getElementById(CHASE_DOCK_ID)?.remove();
   }
-  syncDifficultyControl(snapshot);
+  syncStorySettings(snapshot);
 }
 
 async function poll() {
