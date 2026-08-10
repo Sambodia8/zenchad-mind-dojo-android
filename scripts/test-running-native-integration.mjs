@@ -24,6 +24,23 @@ assert.match(rationale, /Health Connect is optional/i);
 assert.match(rationale, /local app storage/i);
 assert.match(rationale, /not required to track a run|never required to track a run/i);
 
+const trackerService = source("android/app/src/main/java/com/zenchad/minddojo/RunningTrackerService.java");
+assert.ok(trackerService.includes("if (reset) resetNativeDirectors();"), "a new run session must tear down any old native navigation/story audio first");
+assert.ok(trackerService.includes("shutdownNativeDirectors();\n        createNativeDirectors();"), "session reset must recreate fresh native directors after shutdown");
+
+const navigator = source("android/app/src/main/java/com/zenchad/minddojo/RunningBackgroundNavigator.java");
+assert.match(
+  navigator,
+  /if \(speak\([^)]*\)\) \{\s*markSpoken\(nowKey\);/s,
+  "turn-now cues should be marked delivered only after TTS accepts them"
+);
+assert.match(
+  navigator,
+  /if \(speak\([^)]*\)\) \{\s*markSpoken\(previewKey\);/s,
+  "preview cues should be marked delivered only after TTS accepts them"
+);
+assert.match(navigator, /private boolean speak\(String text\)/, "background navigation speech must report whether the cue was accepted");
+
 const workflow = source(".github/workflows/build.yml");
 assert.match(workflow, /cancel-in-progress:\s*true/, "superseded Running build checks should be cancelled instead of queueing stale commits");
 
