@@ -413,7 +413,9 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
     private boolean speak(String text) {
         if (!ttsReady || tts == null || speaking || text == null || text.trim().isEmpty()) return false;
         String utteranceId = "zenchad-native-story-" + UUID.randomUUID();
-        int result = tts.speak(text.trim(), TextToSpeech.QUEUE_ADD, new Bundle(), utteranceId);
+        Bundle params = new Bundle();
+        params.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, (float) RunningStoryAudioSettings.getVoiceVolume(context));
+        int result = tts.speak(text.trim(), TextToSpeech.QUEUE_ADD, params, utteranceId);
         return result != TextToSpeech.ERROR;
     }
 
