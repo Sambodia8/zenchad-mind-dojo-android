@@ -4,6 +4,7 @@ import { buildValhallaRunningRoute } from "./runningValhalla";
 import { loadPlannedRunningRoute, loadRunningRouteBuildState, savePlannedRunningRoute, saveRunningRouteBuildState, clearRunningRouteState, type PlannedRunningRoute } from "./runningRouteStore";
 import { speakRunningNavigation } from "./runningSpeech";
 import { clearNativeBackgroundRunningRoute, setNativeBackgroundRunningRoute } from "./runningBackgroundNavigation";
+import { annotateRunningRouteSemantics } from "./runningRouteSemantics";
 
 const RUNTIME_DOCK_ID = "zenchad-running-navigation-dock";
 const MIN_REROUTE_INTERVAL_MS = 45_000;
@@ -19,6 +20,7 @@ let offRouteSince = 0;
 let spoken: Record<string, NavigationCueLevel[]> = {};
 let speaking = false;
 let nativeRouteSignature = "";
+const semanticsInFlight = new Set<string>();
 
 function positionOnce() {
   return new Promise<GeolocationPosition>((resolve, reject) => {
@@ -43,8 +45,12 @@ function setBuildState(sessionId: string, status: "idle" | "locating" | "buildin
   saveRunningRouteBuildState({ sessionId, status, message, updatedAt: Date.now() });
 }
 
+function routeIdentity(route: PlannedRunningRoute) {
+  return `${route.sessionId}:${route.createdAt}:${route.rerouteCount}`;
+}
+
 function syncNativeRoute(route: PlannedRunningRoute) {
-  const signature = `${route.sessionId}:${route.createdAt}:${route.rerouteCount}`;
+  const signature = routeIdentity(route);
   if (signature === nativeRouteSignature) return;
   nativeRouteSignature = signature;
   void setNativeBackgroundRunningRoute(route).catch(() => {
@@ -58,11 +64,39 @@ function clearNativeRouteOnce() {
   void clearNativeBackgroundRunningRoute().catch(() => {});
 }
 
+function enrichRouteSemantics(route: PlannedRunningRoute) {
+  const identity = routeIdentity(route);
+  if (route.semanticsStatus === "ready" || semanticsInFlight.has(identity)) return;
+  semanticsInFlight.add(identity);
+  if (route.semanticsStatus !== "pending") {
+    savePlannedRunningRoute({ ...route, semanticsStatus: "pending" });
+  }
+
+  void annotateRunningRouteSemantics(route)
+    .then((anchors) => {
+      const current = loadPlannedRunningRoute(route.sessionId);
+      if (!current || routeIdentity(current) !== identity) return;
+      savePlannedRunningRoute({
+        ...current,
+        storyAnchors: anchors,
+        semanticsStatus: "ready",
+        semanticsUpdatedAt: Date.now()
+      });
+    })
+    .catch(() => {
+      const current = loadPlannedRunningRoute(route.sessionId);
+      if (!current || routeIdentity(current) !== identity) return;
+      savePlannedRunningRoute({ ...current, semanticsStatus: "unavailable", semanticsUpdatedAt: Date.now() });
+    })
+    .finally(() => semanticsInFlight.delete(identity));
+}
+
 async function buildInitialRoute(session: RunSession) {
   if (buildingSessionId === session.id || Date.now() < nextBuildRetryAt) return;
   const existing = loadPlannedRunningRoute(session.id);
   if (existing) {
     syncNativeRoute(existing);
+    enrichRouteSemantics(existing);
     return;
   }
 
@@ -76,9 +110,10 @@ async function buildInitialRoute(session: RunSession) {
       { mode: session.mode, plannedMinutes: session.plannedMinutes, start },
       { history: loadRunningProfile().history, home: start }
     );
-    const saved: PlannedRunningRoute = { ...route, sessionId: session.id };
+    const saved: PlannedRunningRoute = { ...route, sessionId: session.id, semanticsStatus: "pending" };
     savePlannedRunningRoute(saved);
     syncNativeRoute(saved);
+    enrichRouteSemantics(saved);
     setBuildState(session.id, "ready", `${(saved.distanceMeters / 1000).toFixed(1)} km route ready · about ${Math.round(saved.estimatedMinutes)} min`);
     nearestShapeIndex = 0;
     spoken = {};
@@ -108,10 +143,12 @@ async function reroute(session: RunSession, route: PlannedRunningRoute) {
       ...replacement,
       sessionId: session.id,
       finish: route.start,
-      rerouteCount: route.rerouteCount + 1
+      rerouteCount: route.rerouteCount + 1,
+      semanticsStatus: "pending"
     };
     savePlannedRunningRoute(saved);
     syncNativeRoute(saved);
+    enrichRouteSemantics(saved);
     setBuildState(session.id, "ready", "Route recalculated. Keep moving.");
     nearestShapeIndex = 0;
     offRouteSince = 0;
@@ -133,10 +170,12 @@ function syncBriefingNote(session: RunSession) {
 
   if (route) {
     syncNativeRoute(route);
+    enrichRouteSemantics(route);
     if (strong) strong.textContent = "Route ready";
     if (small) {
       const reasons = route.reasons.slice(0, 2).join(" · ");
-      small.textContent = `${(route.distanceMeters / 1000).toFixed(1)} km · about ${Math.round(route.estimatedMinutes)} min${reasons ? ` · ${reasons}` : ""}`;
+      const storyNote = session.mode === "story" && route.semanticsStatus === "ready" ? " · set pieces mapped" : "";
+      small.textContent = `${(route.distanceMeters / 1000).toFixed(1)} km · about ${Math.round(route.estimatedMinutes)} min${reasons ? ` · ${reasons}` : ""}${storyNote}`;
     }
     note.dataset.routeStatus = "ready";
     return;
@@ -166,6 +205,7 @@ function ensureNavigationDock() {
 
 function updateNavigationDock(route: PlannedRunningRoute, session: RunSession) {
   syncNativeRoute(route);
+  enrichRouteSemantics(route);
   const dock = ensureNavigationDock();
   if (!dock) return;
   const latest = latestSessionLocation(session);
