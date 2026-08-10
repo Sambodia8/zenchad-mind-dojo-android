@@ -17,9 +17,22 @@ public class RunningStorySfxEngine {
     private final Random random = new Random();
     private AudioTrack helicopterTrack;
     private boolean helicopterActive = false;
+    private volatile double volumeMultiplier = 0.72d;
+
+    public void setVolume(double volume) {
+        volumeMultiplier = Math.max(0d, Math.min(1d, Double.isFinite(volume) ? volume : 1d));
+        AudioTrack active = helicopterTrack;
+        if (active != null) {
+            try {
+                active.setVolume((float) volumeMultiplier);
+            } catch (RuntimeException ignored) {
+                // The next effect will use the new setting even if this track cannot update live.
+            }
+        }
+    }
 
     public synchronized void startHelicopter() {
-        if (helicopterActive) return;
+        if (helicopterActive || volumeMultiplier <= 0d) return;
         helicopterActive = true;
         short[] pcm = makeHelicopterLoop(2.4d);
         helicopterTrack = createStaticTrack(pcm);
@@ -47,15 +60,15 @@ public class RunningStorySfxEngine {
     }
 
     public void playPursuitStinger() {
-        playOneShot(makePursuitStinger(0.65d));
+        if (volumeMultiplier > 0d) playOneShot(makePursuitStinger(0.65d));
     }
 
     public void playEscapeStinger() {
-        playOneShot(makeEscapeStinger(0.7d));
+        if (volumeMultiplier > 0d) playOneShot(makeEscapeStinger(0.7d));
     }
 
     public void playInterceptionStinger() {
-        playOneShot(makeInterceptionStinger(0.75d));
+        if (volumeMultiplier > 0d) playOneShot(makeInterceptionStinger(0.75d));
     }
 
     public void shutdown() {
@@ -65,16 +78,18 @@ public class RunningStorySfxEngine {
 
     private void scheduleGunfireCluster(long delayMs) {
         executor.schedule(() -> {
-            if (!helicopterActive) return;
+            if (!helicopterActive || volumeMultiplier <= 0d) return;
             int bursts = 2 + random.nextInt(3);
             for (int index = 0; index < bursts; index += 1) {
                 final int shot = index;
                 executor.schedule(() -> {
-                    if (!helicopterActive) return;
+                    if (!helicopterActive || volumeMultiplier <= 0d) return;
                     double pan = random.nextDouble() * 1.6d - 0.8d;
                     playOneShot(makeGunshot(0.18d + random.nextDouble() * 0.08d, pan));
                     if (shot == bursts - 1 && random.nextBoolean()) {
-                        executor.schedule(() -> playOneShot(makeBulletPass(0.42d, -pan)), 130, TimeUnit.MILLISECONDS);
+                        executor.schedule(() -> {
+                            if (helicopterActive && volumeMultiplier > 0d) playOneShot(makeBulletPass(0.42d, -pan));
+                        }, 130, TimeUnit.MILLISECONDS);
                     }
                 }, index * (110L + random.nextInt(90)), TimeUnit.MILLISECONDS);
             }
@@ -106,6 +121,7 @@ public class RunningStorySfxEngine {
                 safeRelease(track);
                 return null;
             }
+            track.setVolume((float) volumeMultiplier);
             return track;
         } catch (RuntimeException ignored) {
             return null;
@@ -113,6 +129,7 @@ public class RunningStorySfxEngine {
     }
 
     private void playOneShot(short[] pcm) {
+        if (volumeMultiplier <= 0d) return;
         executor.execute(() -> {
             AudioTrack track = createStaticTrack(pcm);
             if (track == null) return;
