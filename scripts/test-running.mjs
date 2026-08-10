@@ -177,6 +177,7 @@ assert.doesNotMatch(valhallaSource, /Promise\.all\s*\([^)]*fetchCandidate/s, "pu
 const mainSource = source("src/main.tsx");
 for (const runtimeStart of [
   "startRunningNativeGeolocationBridge()",
+  "startRunningFinishGuardRuntime()",
   "startRunningRouteRuntime()",
   "startRunningRouteFallbackRuntime()",
   "startRunningRoutePreviewRuntime()",
@@ -192,6 +193,11 @@ for (const runtimeStart of [
 ]) {
   assert.ok(mainSource.includes(runtimeStart), `${runtimeStart} must stay active in the app bootstrap`);
 }
+
+const finishGuardSource = source("src/runningFinishGuardRuntime.ts");
+assert.ok(finishGuardSource.includes("stopNativeRunningTracker()"), "END RUN must stop and snapshot the native tracker before banking");
+assert.ok(finishGuardSource.includes("snapshot.sessionId !== current.id"), "final native GPS must never be attached to a different run session");
+assert.ok(finishGuardSource.includes("BANKING FINAL GPS"), "END RUN should visibly prevent duplicate payout taps while native points are being banked");
 
 const appSource = source("src/App.tsx");
 assert.ok(appSource.includes("pendingRunningRewardBonuses()"), "global app state must consume queued Running streak bonuses");
