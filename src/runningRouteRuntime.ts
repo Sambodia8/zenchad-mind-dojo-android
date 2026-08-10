@@ -5,6 +5,7 @@ import { loadPlannedRunningRoute, loadRunningRouteBuildState, savePlannedRunning
 import { speakRunningNavigation } from "./runningSpeech";
 import { clearNativeBackgroundRunningRoute, setNativeBackgroundRunningRoute } from "./runningBackgroundNavigation";
 import { annotateRunningRouteSemantics } from "./runningRouteSemantics";
+import { chooseStoryMission } from "./runningCampaign";
 
 const RUNTIME_DOCK_ID = "zenchad-running-navigation-dock";
 const MIN_REROUTE_INTERVAL_MS = 45_000;
@@ -110,7 +111,12 @@ async function buildInitialRoute(session: RunSession) {
       { mode: session.mode, plannedMinutes: session.plannedMinutes, start },
       { history: loadRunningProfile().history, home: start }
     );
-    const saved: PlannedRunningRoute = { ...route, sessionId: session.id, semanticsStatus: "pending" };
+    const saved: PlannedRunningRoute = {
+      ...route,
+      sessionId: session.id,
+      storyMission: session.mode === "story" ? chooseStoryMission(session.id) : undefined,
+      semanticsStatus: "pending"
+    };
     savePlannedRunningRoute(saved);
     syncNativeRoute(saved);
     enrichRouteSemantics(saved);
@@ -143,6 +149,7 @@ async function reroute(session: RunSession, route: PlannedRunningRoute) {
       ...replacement,
       sessionId: session.id,
       finish: route.start,
+      storyMission: route.storyMission,
       rerouteCount: route.rerouteCount + 1,
       semanticsStatus: "pending"
     };
@@ -171,11 +178,12 @@ function syncBriefingNote(session: RunSession) {
   if (route) {
     syncNativeRoute(route);
     enrichRouteSemantics(route);
-    if (strong) strong.textContent = "Route ready";
+    if (strong) strong.textContent = route.storyMission ? `Mission · ${route.storyMission.title}` : "Route ready";
     if (small) {
       const reasons = route.reasons.slice(0, 2).join(" · ");
       const storyNote = session.mode === "story" && route.semanticsStatus === "ready" ? " · set pieces mapped" : "";
-      small.textContent = `${(route.distanceMeters / 1000).toFixed(1)} km · about ${Math.round(route.estimatedMinutes)} min${reasons ? ` · ${reasons}` : ""}${storyNote}`;
+      const missionNote = route.storyMission ? ` · ${route.storyMission.objective}` : "";
+      small.textContent = `${(route.distanceMeters / 1000).toFixed(1)} km · about ${Math.round(route.estimatedMinutes)} min${reasons ? ` · ${reasons}` : ""}${storyNote}${missionNote}`;
     }
     note.dataset.routeStatus = "ready";
     return;
