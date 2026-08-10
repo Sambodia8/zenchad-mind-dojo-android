@@ -63,7 +63,7 @@ async function settleCurrentStoryResult() {
     saveStoryRunResult({
       runId: session.id,
       missionId: routeMission?.id ?? "ghost-signal-001",
-      missionTitle: routeMission?.title ?? snapshot.missionTitle || "Ghost Signal",
+      missionTitle: (routeMission?.title ?? snapshot.missionTitle) || "Ghost Signal",
       difficulty: snapshot.difficulty,
       chaseCount: snapshot.chaseCount,
       lastOutcome: snapshot.lastOutcome === "escaped" || snapshot.lastOutcome === "pressure" || snapshot.lastOutcome === "caught-branch"
