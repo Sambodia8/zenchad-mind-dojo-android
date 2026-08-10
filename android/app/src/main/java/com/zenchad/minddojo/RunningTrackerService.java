@@ -51,12 +51,14 @@ public class RunningTrackerService extends Service implements LocationListener {
 
     private LocationManager locationManager;
     private SharedPreferences prefs;
+    private RunningBackgroundNavigator backgroundNavigator;
 
     @Override
     public void onCreate() {
         super.onCreate();
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        backgroundNavigator = new RunningBackgroundNavigator(this);
         ensureNotificationChannel();
     }
 
@@ -85,6 +87,8 @@ public class RunningTrackerService extends Service implements LocationListener {
             prefs.edit().putString(KEY_SESSION_ID, incomingSessionId).apply();
         }
 
+        String activeSessionId = prefs.getString(KEY_SESSION_ID, incomingSessionId);
+        if (backgroundNavigator != null) backgroundNavigator.setSessionId(activeSessionId);
         prefs.edit().putBoolean(KEY_RUNNING, true).apply();
         startAsForeground();
         requestLocationUpdates();
@@ -94,6 +98,10 @@ public class RunningTrackerService extends Service implements LocationListener {
     @Override
     public void onDestroy() {
         removeLocationUpdates();
+        if (backgroundNavigator != null) {
+            backgroundNavigator.shutdown();
+            backgroundNavigator = null;
+        }
         stopForeground(true);
         super.onDestroy();
     }
@@ -126,6 +134,7 @@ public class RunningTrackerService extends Service implements LocationListener {
             if (segment >= 2f) {
                 extraDistance = segment;
             } else if (at - previousAt < 10_000L) {
+                if (backgroundNavigator != null) backgroundNavigator.onLocation(location);
                 return;
             }
         }
@@ -141,6 +150,7 @@ public class RunningTrackerService extends Service implements LocationListener {
             .putInt(KEY_POINT_COUNT, prefs.getInt(KEY_POINT_COUNT, 0) + 1)
             .apply();
         updateNotification(distance);
+        if (backgroundNavigator != null) backgroundNavigator.onLocation(location);
     }
 
     @Override
