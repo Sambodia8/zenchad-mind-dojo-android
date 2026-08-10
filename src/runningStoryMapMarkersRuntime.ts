@@ -117,7 +117,7 @@ function annotateSummary() {
   const record = profile.history.find((item) => item.id === session.id);
   const container = document.querySelector<HTMLElement>(".running-results-card .running-route-trace");
   if (!record || !container) return;
-  annotateTrace(container, record, trimRouteForPrivacy(record.points, profile.privacyRadiusMeters));
+  annotateTrace(container, record, trimRouteForPrivacy(record.points, profile.routePrivacyMeters));
 }
 
 function annotateHistory() {
