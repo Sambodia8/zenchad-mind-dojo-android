@@ -13,7 +13,7 @@ export async function setNativeBackgroundRunningRoute(route: PlannedRunningRoute
   const payload = {
     sessionId: route.sessionId,
     mode: route.mode,
-    plannedMinutes: Math.max(8, Math.round(route.estimatedMinutes || 0)) || 30,
+    plannedMinutes: Math.max(8, Math.round(route.plannedMinutes || 30)),
     geometry: route.geometry,
     cumulativeMeters: route.cumulativeMeters,
     storyAnchors: route.storyAnchors ?? [],
