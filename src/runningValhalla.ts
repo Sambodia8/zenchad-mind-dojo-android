@@ -49,11 +49,16 @@ export interface BuildValhallaRoutesOptions {
   candidateCount?: number;
 }
 
-const DEFAULT_BASE_URL = "https://valhalla.openstreetmap.de";
+// Valhalla's public demo web app is hosted on valhalla.openstreetmap.de,
+// but the HTTP API is served from valhalla1.openstreetmap.de.
+const DEFAULT_BASE_URL = "https://valhalla1.openstreetmap.de";
+const PUBLIC_DEMO_CLIENT_ID = "zenchad-mind-dojo-running";
+const PUBLIC_DEMO_REQUEST_INTERVAL_MS = 1100;
 const EARTH_RADIUS_M = 6_371_000;
 
 const radians = (degrees: number) => degrees * Math.PI / 180;
 const degrees = (radiansValue: number) => radiansValue * 180 / Math.PI;
+const sleep = (milliseconds: number) => new Promise<void>((resolve) => window.setTimeout(resolve, milliseconds));
 
 function haversineMeters(a: RunningRoutePoint, b: RunningRoutePoint) {
   const lat1 = radians(a.lat);
@@ -196,6 +201,14 @@ function mergeLegs(legs: ValhallaLeg[]) {
   return { geometry, cumulative, maneuvers };
 }
 
+function isPublicDemo(baseUrl: string) {
+  try {
+    return new URL(baseUrl).hostname.endsWith("openstreetmap.de");
+  } catch {
+    return false;
+  }
+}
+
 async function fetchCandidate(
   baseUrl: string,
   locations: RunningRoutePoint[],
@@ -203,9 +216,13 @@ async function fetchCandidate(
   runnerSpeedMps: number,
   seed: number
 ): Promise<ValhallaRunningRouteCandidate> {
+  const publicDemo = isPublicDemo(baseUrl);
   const response = await fetch(`${baseUrl.replace(/\/$/, "")}/route`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(publicDemo ? { "X-Client-Id": PUBLIC_DEMO_CLIENT_ID } : {})
+    },
     body: JSON.stringify({
       locations: locations.map((point) => ({ lat: point.lat, lon: point.lng, type: "break" })),
       costing: "pedestrian",
@@ -215,7 +232,10 @@ async function fetchCandidate(
     })
   });
 
-  if (!response.ok) throw new Error(`Routing server returned ${response.status}`);
+  if (!response.ok) {
+    if (response.status === 429) throw new Error("Routing service is busy. Zenchad will retry shortly.");
+    throw new Error(`Routing server returned ${response.status}`);
+  }
   const payload = await response.json() as ValhallaResponse;
   const legs = payload.trip?.legs ?? [];
   if (!legs.length) throw new Error(payload.trip?.status_message || payload.error || "No pedestrian route returned");
@@ -244,7 +264,7 @@ async function fetchCandidate(
     labels: ["OpenStreetMap pedestrian route", `candidate ${seed + 1}`],
     maneuvers,
     cumulativeMeters: cumulative,
-    provider: "Valhalla / OpenStreetMap"
+    provider: publicDemo ? "Valhalla / OpenStreetMap demo" : "Valhalla / OpenStreetMap"
   };
 }
 
@@ -258,13 +278,33 @@ export async function buildValhallaRunningRoute(
   const finish = options.home ?? request.start;
   const count = Math.max(3, Math.min(6, options.candidateCount ?? 4));
   const baseUrl = options.baseUrl || import.meta.env.VITE_VALHALLA_BASE_URL || DEFAULT_BASE_URL;
-  const attempts = Array.from({ length: count }, (_, seed) =>
-    fetchCandidate(baseUrl, createLoopLocations(request.start, finish, targetDistance, seed), history, runnerSpeed, seed)
-      .catch(() => null)
-  );
-  const candidates = (await Promise.all(attempts)).filter((candidate): candidate is ValhallaRunningRouteCandidate => Boolean(candidate));
+  const candidates: ValhallaRunningRouteCandidate[] = [];
+  let lastError: unknown = null;
+
+  // The public FOSSGIS demo is rate-limited. Candidate routes are intentionally
+  // requested one at a time there instead of firing a burst of parallel calls.
+  for (let seed = 0; seed < count; seed += 1) {
+    try {
+      candidates.push(await fetchCandidate(
+        baseUrl,
+        createLoopLocations(request.start, finish, targetDistance, seed),
+        history,
+        runnerSpeed,
+        seed
+      ));
+    } catch (error) {
+      lastError = error;
+    }
+    if (isPublicDemo(baseUrl) && seed < count - 1) {
+      await sleep(PUBLIC_DEMO_REQUEST_INTERVAL_MS);
+    }
+  }
+
   const choice = chooseRunningRoute(candidates, request);
-  if (!choice) throw new Error("No usable running route could be built from the current location");
+  if (!choice) {
+    if (lastError instanceof Error && lastError.message.includes("busy")) throw lastError;
+    throw new Error("No usable running route could be built from the current location");
+  }
   const candidate = choice.candidate as ValhallaRunningRouteCandidate;
 
   return {
