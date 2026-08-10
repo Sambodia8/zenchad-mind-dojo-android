@@ -36,8 +36,9 @@ public class RunningStoryDirectorPlugin extends Plugin {
 
     private JSObject snapshot() {
         SharedPreferences prefs = RunningBackgroundStoryDirector.getStore(getContext());
+        String sessionId = prefs.getString(RunningBackgroundStoryDirector.KEY_SESSION_ID, "");
         JSObject result = new JSObject();
-        result.put("sessionId", prefs.getString(RunningBackgroundStoryDirector.KEY_SESSION_ID, ""));
+        result.put("sessionId", sessionId);
         result.put("enabled", prefs.getBoolean(RunningBackgroundStoryDirector.KEY_ENABLED, false));
         result.put("missionId", prefs.getString(RunningBackgroundStoryDirector.KEY_MISSION_ID, "ghost-signal-001"));
         result.put("missionTitle", prefs.getString(RunningBackgroundStoryDirector.KEY_MISSION_TITLE, "Ghost Signal"));
@@ -54,6 +55,7 @@ public class RunningStoryDirectorPlugin extends Plugin {
         result.put("lastOutcome", prefs.getString(RunningBackgroundStoryDirector.KEY_LAST_OUTCOME, ""));
         result.put("helicopterTriggered", prefs.getBoolean(RunningBackgroundStoryDirector.KEY_HELICOPTER_TRIGGERED, false));
         result.put("helicopterTargetDistanceMeters", readDouble(prefs, RunningBackgroundStoryDirector.KEY_HELICOPTER_TARGET_BITS, -1d));
+        result.put("eventsJson", RunningStoryEventLog.json(getContext(), sessionId));
         result.put("updatedAt", prefs.getLong(RunningBackgroundStoryDirector.KEY_UPDATED_AT, 0L));
         return result;
     }
