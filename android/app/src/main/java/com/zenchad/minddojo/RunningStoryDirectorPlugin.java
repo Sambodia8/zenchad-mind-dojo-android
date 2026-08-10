@@ -39,7 +39,8 @@ public class RunningStoryDirectorPlugin extends Plugin {
         JSObject result = new JSObject();
         result.put("sessionId", prefs.getString(RunningBackgroundStoryDirector.KEY_SESSION_ID, ""));
         result.put("enabled", prefs.getBoolean(RunningBackgroundStoryDirector.KEY_ENABLED, false));
-        result.put("missionTitle", "Ghost Signal");
+        result.put("missionId", prefs.getString(RunningBackgroundStoryDirector.KEY_MISSION_ID, "ghost-signal-001"));
+        result.put("missionTitle", prefs.getString(RunningBackgroundStoryDirector.KEY_MISSION_TITLE, "Ghost Signal"));
         result.put("difficulty", prefs.getString(RunningBackgroundStoryDirector.KEY_DIFFICULTY, "standard"));
         result.put("phase", prefs.getString(RunningBackgroundStoryDirector.KEY_PHASE, "opening"));
         result.put("radioTitle", prefs.getString(RunningBackgroundStoryDirector.KEY_RADIO_TITLE, "COMMS ONLINE"));
