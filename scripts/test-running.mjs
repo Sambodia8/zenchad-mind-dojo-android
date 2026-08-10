@@ -5,10 +5,14 @@ import ts from "typescript";
 
 const root = process.cwd();
 
+function source(relativePath) {
+  return fs.readFileSync(path.join(root, relativePath), "utf8");
+}
+
 function loadTsModule(relativePath) {
   const filename = path.join(root, relativePath);
-  const source = fs.readFileSync(filename, "utf8");
-  const output = ts.transpileModule(source, {
+  const sourceText = fs.readFileSync(filename, "utf8");
+  const output = ts.transpileModule(sourceText, {
     fileName: filename,
     compilerOptions: {
       module: ts.ModuleKind.CommonJS,
@@ -158,5 +162,44 @@ let progressState = progression.processRunningRecord(baseState, runOne, [runOne]
 assert.equal(progressState.sectors.some((sector) => sector.discovered), false);
 progressState = progression.processRunningRecord(progressState, runTwo, [runOne, runTwo]);
 assert.equal(progressState.sectors.some((sector) => sector.discovered), true, "repeated real-world stretches should become Runner Sectors");
+
+// Integration wiring: lock down easy-to-regress pieces that CI can prove without a phone.
+const valhallaSource = source("src/runningValhalla.ts");
+assert.match(
+  valhallaSource,
+  /const DEFAULT_BASE_URL = ["']https:\/\/valhalla1\.openstreetmap\.de["']/, 
+  "Running must point at the Valhalla API host rather than the demo web-app host"
+);
+assert.match(valhallaSource, /X-Client-Id/, "public Valhalla requests should identify Zenchad");
+assert.match(valhallaSource, /PUBLIC_DEMO_REQUEST_INTERVAL_MS\s*=\s*1100/, "public demo candidate requests should be paced");
+assert.doesNotMatch(valhallaSource, /Promise\.all\s*\([^)]*fetchCandidate/s, "public route candidates must not be burst-requested in parallel");
+
+const mainSource = source("src/main.tsx");
+for (const runtimeStart of [
+  "startRunningNativeGeolocationBridge()",
+  "startRunningRouteRuntime()",
+  "startRunningRouteFallbackRuntime()",
+  "startRunningRoutePreviewRuntime()",
+  "startRunningCampaignRuntime()",
+  "startRunningStoryResultsRuntime()",
+  "startRunningStoryMapMarkersRuntime()",
+  "startRunningProgressionRuntime()",
+  "startRunningRewardBonusRuntime()",
+  "startRunningElevationRuntime()",
+  "startRunningHistoryEnrichmentRuntime()",
+  "startRunningHealthRuntime()",
+  "startRunningDiagnosticsRuntime()"
+]) {
+  assert.ok(mainSource.includes(runtimeStart), `${runtimeStart} must stay active in the app bootstrap`);
+}
+
+const appSource = source("src/App.tsx");
+assert.ok(appSource.includes("pendingRunningRewardBonuses()"), "global app state must consume queued Running streak bonuses");
+assert.ok(appSource.includes("addRunningXp(current.stats, total)"), "Running streak bonus must feed global XP");
+assert.ok(appSource.includes("markRunningRewardBonusesApplied"), "Running streak bonuses need replay protection");
+
+const diagnosticsSource = source("src/runningDiagnostics.ts");
+assert.ok(diagnosticsSource.includes("exact GPS coordinates and route geometry are intentionally omitted"), "copied diagnostics must carry the privacy guarantee");
+assert.doesNotMatch(diagnosticsSource, /`[^`]*(?:lat|lng)=\$\{/i, "diagnostics text must not interpolate raw latitude/longitude");
 
 console.log("Running logic tests passed.");
