@@ -1,0 +1,54 @@
+.running-elevation-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.running-elevation-chart {
+  width: 100%;
+  height: 130px;
+  overflow: visible;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.015));
+}
+
+.running-elevation-chart polyline {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.running-elevation-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+}
+
+.running-elevation-stats span {
+  display: grid;
+  gap: 3px;
+  padding: 10px 8px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.045);
+  text-align: center;
+}
+
+.running-elevation-stats small {
+  opacity: 0.62;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.running-elevation-stats strong {
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-theme="light"] .running-elevation-chart,
+html:not(.dark) .running-elevation-chart,
+html[data-theme="light"] .running-elevation-stats span,
+html:not(.dark) .running-elevation-stats span {
+  background: rgba(15,23,42,0.04);
+}
