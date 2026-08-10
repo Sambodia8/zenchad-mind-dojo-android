@@ -134,3 +134,9 @@
 - Decision/change: Rebuilt from the complete current workspace so the latest Yoga library, pose additions, audio, and offline AI journaling changes are included, then replaced the established 1.4 debug APK in both `releases/` and `D:\My Drive\ZenChad`.
 - Verification: TypeScript/Vite build, Capacitor asset copy, Android lint, debug APK build, package/version inspection, packaged-asset counts, and matching SHA-256 checksums for local and Drive copies all passed.
 - Artifact: `Zen-Chad-1.4-debug.apk`, 298,387,915 bytes, SHA-256 `99FD966FF332F6D0A137CB64AFF534BB3FDACCB7F083592765361D183597D8FD`.
+
+2026-08-10 - Running real-phone baseline started
+- Decision/change: Installed current GitHub main as an isolated `com.zenchad.minddojo.fieldtest` build on the Pixel 6a so the newer installed 1.5/code 6 app and its data remained untouched. Added a durable field-test record and made the native integration source assertions portable across Windows and Linux line endings.
+- Device result: App launch, Running Hub, Quick/Story cards, time-only Quick Run selection, and Android precise-location grant were physically verified. Outdoor route, GPS, audio, lifecycle, Story, route-failure, Health Connect, and diagnostics tests remain unverified.
+- Preserve/avoid: Do not claim route generation or active-run behavior passed from this baseline. Continue from `RUNNING_FIELD_TEST_LOG.md`, use Java 21 for Gradle, and keep raw logcat/GPS evidence out of Git.
+- Key files: RUNNING_FIELD_TEST_LOG.md, scripts/test-running-native-integration.mjs.

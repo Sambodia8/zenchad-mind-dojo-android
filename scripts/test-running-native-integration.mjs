@@ -3,7 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const source = (relativePath) => fs.readFileSync(path.join(root, relativePath), "utf8");
+const source = (relativePath) =>
+  fs.readFileSync(path.join(root, relativePath), "utf8").replace(/\r\n/g, "\n");
 
 const manifest = source("android/app/src/main/AndroidManifest.xml");
 assert.ok(manifest.includes("android.permission.health.READ_HEART_RATE"), "Health Connect heart-rate permission must stay declared");
