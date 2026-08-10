@@ -36,6 +36,9 @@ jobs:
       - name: Appearance boundary tests
         run: npm run test:theme
 
+      - name: Running logic tests
+        run: npm run test:running
+
       - name: Type-check and build
         run: npm run build
 
