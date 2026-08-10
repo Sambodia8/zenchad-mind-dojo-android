@@ -14,6 +14,7 @@ export async function setNativeBackgroundRunningRoute(route: PlannedRunningRoute
     sessionId: route.sessionId,
     mode: route.mode,
     plannedMinutes: Math.max(8, Math.round(route.plannedMinutes || 30)),
+    storyMission: route.storyMission ?? null,
     geometry: route.geometry,
     cumulativeMeters: route.cumulativeMeters,
     storyAnchors: route.storyAnchors ?? [],
