@@ -1,5 +1,6 @@
 import type { RunMode } from "./running";
 import type { RunningRoutePoint } from "./runningRouteDirector";
+import type { StoryRouteAnchor } from "./runningStory";
 
 export interface RunningNavigationManeuver {
   id: string;
@@ -30,6 +31,9 @@ export interface PlannedRunningRoute {
   routeScore: number;
   reasons: string[];
   rerouteCount: number;
+  storyAnchors?: StoryRouteAnchor[];
+  semanticsStatus?: "pending" | "ready" | "unavailable";
+  semanticsUpdatedAt?: number;
 }
 
 export interface RunningRouteBuildState {
