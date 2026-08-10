@@ -5,6 +5,7 @@ import { startBikeQuestRuntime } from "./bikeQuestRuntime";
 import { startRunningNativeGeolocationBridge } from "./runningNativeGeolocationBridge";
 import { startRunningRuntime } from "./runningRuntime";
 import { startRunningRouteRuntime } from "./runningRouteRuntime";
+import { startRunningRoutePreviewRuntime } from "./runningRoutePreviewRuntime";
 import { startRunningStoryRuntime } from "./runningStoryRuntime";
 import { startRunningNativeStoryRuntime } from "./runningNativeStoryRuntime";
 import { startRunningNativeStoryRouteSync } from "./runningNativeStoryRouteSync";
@@ -30,6 +31,7 @@ startBikeQuestRuntime();
 startRunningNativeGeolocationBridge();
 startRunningRuntime();
 startRunningRouteRuntime();
+startRunningRoutePreviewRuntime();
 if (usesNativeStoryDirector()) {
   startRunningNativeStoryRouteSync();
   startRunningNativeStoryRuntime();
