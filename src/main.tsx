@@ -14,6 +14,7 @@ import { usesNativeStoryDirector } from "./runningNativeStory";
 import { startRunningStoryResultsRuntime } from "./runningStoryResultsRuntime";
 import { startRunningProgressionRuntime } from "./runningProgressionRuntime";
 import { startRunningElevationRuntime } from "./runningElevationRuntime";
+import { startRunningHistoryEnrichmentRuntime } from "./runningHistoryEnrichmentRuntime";
 import { loadData } from "./storage";
 import { startAppearanceController } from "./theme";
 import "./styles.css";
@@ -29,6 +30,7 @@ import "./runningStoryRuntime.css";
 import "./runningStoryResults.css";
 import "./runningProgression.css";
 import "./runningElevation.css";
+import "./runningHistoryEnrichment.css";
 import "./theme.css";
 
 startBikeQuestRuntime();
@@ -46,6 +48,7 @@ if (usesNativeStoryDirector()) {
 startRunningStoryResultsRuntime();
 startRunningProgressionRuntime();
 startRunningElevationRuntime();
+startRunningHistoryEnrichmentRuntime();
 startAppearanceController(loadData().preferences.appearanceMode);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
