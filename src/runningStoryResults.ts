@@ -1,5 +1,12 @@
 import type { ChaseDifficulty, ChaseOutcomeKind } from "./runningStory";
 
+export interface StoryRouteEvent {
+  type: "chase-start" | "chase-outcome" | "helicopter-start" | "helicopter-cover" | string;
+  at: number;
+  distanceMeters: number;
+  detail: string;
+}
+
 export interface StoryRunResult {
   runId: string;
   missionId: string;
@@ -10,6 +17,7 @@ export interface StoryRunResult {
   helicopterEncountered: boolean;
   completedAt: number;
   source: "native" | "browser";
+  events?: StoryRouteEvent[];
 }
 
 interface StoryResultStore {
