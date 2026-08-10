@@ -10,6 +10,7 @@ import { startRunningStoryRuntime } from "./runningStoryRuntime";
 import { startRunningNativeStoryRuntime } from "./runningNativeStoryRuntime";
 import { startRunningNativeStoryRouteSync } from "./runningNativeStoryRouteSync";
 import { usesNativeStoryDirector } from "./runningNativeStory";
+import { startRunningStoryResultsRuntime } from "./runningStoryResultsRuntime";
 import { startRunningProgressionRuntime } from "./runningProgressionRuntime";
 import { startRunningElevationRuntime } from "./runningElevationRuntime";
 import { loadData } from "./storage";
@@ -23,6 +24,7 @@ import "./runningMode.css";
 import "./runningInsights.css";
 import "./runningNavigation.css";
 import "./runningStoryRuntime.css";
+import "./runningStoryResults.css";
 import "./runningProgression.css";
 import "./runningElevation.css";
 import "./theme.css";
@@ -38,6 +40,7 @@ if (usesNativeStoryDirector()) {
 } else {
   startRunningStoryRuntime();
 }
+startRunningStoryResultsRuntime();
 startRunningProgressionRuntime();
 startRunningElevationRuntime();
 startAppearanceController(loadData().preferences.appearanceMode);
