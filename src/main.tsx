@@ -12,9 +12,12 @@ import { startRunningNativeStoryRuntime } from "./runningNativeStoryRuntime";
 import { startRunningNativeStoryRouteSync } from "./runningNativeStoryRouteSync";
 import { usesNativeStoryDirector } from "./runningNativeStory";
 import { startRunningStoryResultsRuntime } from "./runningStoryResultsRuntime";
+import { startRunningStoryMapMarkersRuntime } from "./runningStoryMapMarkersRuntime";
 import { startRunningProgressionRuntime } from "./runningProgressionRuntime";
+import { startRunningRewardBonusRuntime } from "./runningRewardBonusRuntime";
 import { startRunningElevationRuntime } from "./runningElevationRuntime";
 import { startRunningHistoryEnrichmentRuntime } from "./runningHistoryEnrichmentRuntime";
+import { startRunningHealthRuntime } from "./runningHealthRuntime";
 import { loadData } from "./storage";
 import { startAppearanceController } from "./theme";
 import "./styles.css";
@@ -27,10 +30,14 @@ import "./runningInsights.css";
 import "./runningNavigation.css";
 import "./runningCampaign.css";
 import "./runningStoryRuntime.css";
+import "./runningStoryAudio.css";
 import "./runningStoryResults.css";
+import "./runningStoryMapMarkers.css";
 import "./runningProgression.css";
+import "./runningRewardBonus.css";
 import "./runningElevation.css";
 import "./runningHistoryEnrichment.css";
+import "./runningHealth.css";
 import "./theme.css";
 
 startBikeQuestRuntime();
@@ -46,9 +53,12 @@ if (usesNativeStoryDirector()) {
   startRunningStoryRuntime();
 }
 startRunningStoryResultsRuntime();
+startRunningStoryMapMarkersRuntime();
 startRunningProgressionRuntime();
+startRunningRewardBonusRuntime();
 startRunningElevationRuntime();
 startRunningHistoryEnrichmentRuntime();
+startRunningHealthRuntime();
 startAppearanceController(loadData().preferences.appearanceMode);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
