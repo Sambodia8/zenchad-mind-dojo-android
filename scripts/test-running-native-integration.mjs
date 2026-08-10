@@ -1,0 +1,30 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+
+const root = process.cwd();
+const source = (relativePath) => fs.readFileSync(path.join(root, relativePath), "utf8");
+
+const manifest = source("android/app/src/main/AndroidManifest.xml");
+assert.ok(manifest.includes("android.permission.health.READ_HEART_RATE"), "Health Connect heart-rate permission must stay declared");
+assert.ok(manifest.includes("android.permission.health.READ_STEPS"), "Health Connect step/cadence permission must stay declared");
+assert.ok(manifest.includes("android.intent.action.VIEW_PERMISSION_USAGE"), "Health Connect must expose a permission-usage rationale destination");
+assert.ok(manifest.includes("android.intent.category.HEALTH_PERMISSIONS"), "Health Connect rationale activity needs the health-permissions category");
+assert.ok(manifest.includes("android.permission.START_VIEW_PERMISSION_USAGE"), "Health Connect rationale activity should only be launched by the permission system");
+assert.ok(manifest.includes("HealthPermissionsRationaleActivity"), "Health Connect rationale activity must stay registered");
+
+const healthPlugin = source("android/app/src/main/java/com/zenchad/minddojo/RunningHealthPlugin.java");
+assert.ok(healthPlugin.includes("aggregateLong("), "post-run steps should use Health Connect aggregation");
+assert.ok(healthPlugin.includes('"STEPS_COUNT_TOTAL"'), "post-run step aggregation must use StepsRecord.STEPS_COUNT_TOTAL");
+assert.ok(healthPlugin.includes('awaitHealthCall(request, "aggregate")'), "step totals must be obtained from HealthConnectManager.aggregate");
+assert.ok(!healthPlugin.includes("List<?> stepRecords = readRecords"), "raw step records must not be manually summed across overlapping data sources");
+
+const rationale = source("android/app/src/main/java/com/zenchad/minddojo/HealthPermissionsRationaleActivity.java");
+assert.match(rationale, /Health Connect is optional/i);
+assert.match(rationale, /local app storage/i);
+assert.match(rationale, /not required to track a run|never required to track a run/i);
+
+const workflow = source(".github/workflows/build.yml");
+assert.match(workflow, /cancel-in-progress:\s*true/, "superseded Running build checks should be cancelled instead of queueing stale commits");
+
+console.log("Running native integration tests passed.");
