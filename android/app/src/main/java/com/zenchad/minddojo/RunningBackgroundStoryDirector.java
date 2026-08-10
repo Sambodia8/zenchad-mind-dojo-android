@@ -34,6 +34,8 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
     public static final String KEY_PHASE = "phase";
     public static final String KEY_RADIO_TITLE = "radioTitle";
     public static final String KEY_RADIO_DETAIL = "radioDetail";
+    public static final String KEY_MISSION_ID = "missionId";
+    public static final String KEY_MISSION_TITLE = "missionTitle";
     public static final String KEY_CHASE_COUNT = "chaseCount";
     public static final String KEY_ACTIVE_CHASE = "activeChase";
     public static final String KEY_CHASE_STARTED_AT = "chaseStartedAt";
@@ -63,6 +65,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
     private long routeModifiedAt = -1L;
     private String routeMode = "";
     private int plannedMinutes = 30;
+    private StoryMission mission = StoryMission.defaultMission();
 
     public RunningBackgroundStoryDirector(Context context) {
         this.context = context.getApplicationContext();
@@ -85,6 +88,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
         sessionId = safe;
         routeModifiedAt = -1L;
         routeMode = "";
+        mission = StoryMission.defaultMission();
         storyAnchors.clear();
         speedSamples.clear();
         chaseHistory.clear();
@@ -99,7 +103,6 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
         if (!ttsReady || tts == null) return;
         tts.setLanguage(Locale.UK);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // No AudioManager focus request here: Story dialogue is intentionally allowed to mix with music.
             AudioAttributes attributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
@@ -124,8 +127,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
     ) {
         if (location == null || sessionId.isEmpty() || runStartedAt <= 0L) return;
         reloadRouteIfNeeded();
-        boolean storyMode = "story".equals(routeMode);
-        if (!storyMode) {
+        if (!"story".equals(routeMode)) {
             if (prefs.getBoolean(KEY_ENABLED, false)) prefs.edit().putBoolean(KEY_ENABLED, false).apply();
             return;
         }
@@ -138,15 +140,15 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
         double completionRatio = elapsedSeconds / plannedSeconds;
 
         if (!prefs.getBoolean(KEY_OPENING_ONE, false) && elapsedSeconds >= 8d && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
-            if (speak("Runner. Comms check. You're carrying a relay key the city grid thinks was destroyed. Keep moving. I'll handle the route.")) {
-                updateRadio("GHOST SIGNAL · COMMS ONLINE", "Relay key secured. Keep moving.");
+            if (speak(mission.openingLine)) {
+                updateRadio(mission.title.toUpperCase(Locale.UK) + " · COMMS ONLINE", mission.objective);
                 prefs.edit().putBoolean(KEY_OPENING_ONE, true).putString(KEY_PHASE, "opening").apply();
             }
         }
 
         if (!prefs.getBoolean(KEY_OPENING_TWO, false) && elapsedSeconds >= 75d && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
-            if (speak("We've got a watcher behind you. Not a problem yet. Keep your rhythm.")) {
-                updateRadio("WATCHER ON THE LINE", "Not a problem yet. Keep your rhythm.");
+            if (speak(mission.watcherLine)) {
+                updateRadio("WATCHER ON THE LINE", "Keep your rhythm. The Director is watching the route.");
                 prefs.edit()
                     .putBoolean(KEY_OPENING_TWO, true)
                     .putString(KEY_PHASE, "cruise")
@@ -201,14 +203,14 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
                     .apply();
                 int remaining = Math.max(0, (int) Math.round(cover.distanceMeters - routeProgressMeters));
                 updateRadio("AIR UNIT HAS VISUAL", "Keep running · cover " + remaining + " m ahead");
-                speak("Runner. Air unit above us. They've got visual. Keep running. Cover ahead — get under it.");
+                speak(mission.helicopterLine);
                 return;
             }
         }
 
         if (completionRatio >= 0.84d && !prefs.getBoolean(KEY_HOME_LINE, false) && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
-            if (speak("You're almost clear, Runner. Bring the relay key home.")) {
-                updateRadio("EXTRACTION WINDOW", "Almost clear. Bring the relay key home.");
+            if (speak(mission.homeLine)) {
+                updateRadio("EXTRACTION WINDOW", "Almost clear. Finish the route.");
                 prefs.edit().putBoolean(KEY_HOME_LINE, true).putString(KEY_PHASE, "home").apply();
             }
         }
@@ -232,6 +234,8 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             .putString(KEY_PHASE, "opening")
             .putString(KEY_RADIO_TITLE, "COMMS ONLINE")
             .putString(KEY_RADIO_DETAIL, "Mission channel connected. Keep moving.")
+            .putString(KEY_MISSION_ID, "ghost-signal-001")
+            .putString(KEY_MISSION_TITLE, "Ghost Signal")
             .putString(KEY_LAST_OUTCOME, "")
             .putLong(KEY_NEXT_EVENT_AT, 0L)
             .putLong(KEY_UPDATED_AT, System.currentTimeMillis())
@@ -286,7 +290,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             .putString(KEY_RADIO_DETAIL, "Adaptive chase · " + duration + " seconds")
             .putLong(KEY_UPDATED_AT, now)
             .apply();
-        speak("Runner, you've got company. Another runner is closing fast. Move.");
+        speak(mission.chaseLine);
     }
 
     private void updateActiveChase(long now, double totalDistanceMeters) {
@@ -433,6 +437,12 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             }
             routeMode = route.optString("mode", "");
             plannedMinutes = Math.max(8, route.optInt("plannedMinutes", 30));
+            mission = StoryMission.fromJson(route.optJSONObject("storyMission"));
+            prefs.edit()
+                .putString(KEY_MISSION_ID, mission.id)
+                .putString(KEY_MISSION_TITLE, mission.title)
+                .apply();
+
             storyAnchors.clear();
             JSONArray anchors = route.optJSONArray("storyAnchors");
             if (anchors != null) {
@@ -451,6 +461,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
         } catch (IOException | JSONException error) {
             routeMode = "";
             storyAnchors.clear();
+            mission = StoryMission.defaultMission();
         }
     }
 
@@ -496,6 +507,65 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             this.distanceMeters = distanceMeters;
             this.confidence = confidence;
             this.blocksAcceleration = blocksAcceleration;
+        }
+    }
+
+    private static class StoryMission {
+        final String id;
+        final String title;
+        final String objective;
+        final String openingLine;
+        final String watcherLine;
+        final String chaseLine;
+        final String helicopterLine;
+        final String homeLine;
+
+        StoryMission(
+            String id,
+            String title,
+            String objective,
+            String openingLine,
+            String watcherLine,
+            String chaseLine,
+            String helicopterLine,
+            String homeLine
+        ) {
+            this.id = id;
+            this.title = title;
+            this.objective = objective;
+            this.openingLine = openingLine;
+            this.watcherLine = watcherLine;
+            this.chaseLine = chaseLine;
+            this.helicopterLine = helicopterLine;
+            this.homeLine = homeLine;
+        }
+
+        static StoryMission fromJson(JSONObject json) {
+            StoryMission fallback = defaultMission();
+            if (json == null) return fallback;
+            return new StoryMission(
+                json.optString("id", fallback.id),
+                json.optString("title", fallback.title),
+                json.optString("objective", fallback.objective),
+                json.optString("openingLine", fallback.openingLine),
+                json.optString("watcherLine", fallback.watcherLine),
+                json.optString("chaseLine", fallback.chaseLine),
+                json.optString("helicopterLine", fallback.helicopterLine),
+                json.optString("homeLine", fallback.homeLine)
+            );
+        }
+
+        static StoryMission defaultMission() {
+            return new StoryMission(
+                "ghost-signal-001",
+                "Ghost Signal",
+                "Move the relay key off-grid.",
+                "Runner. Comms check. You're carrying a relay key the city grid thinks was destroyed. Keep moving. I'll handle the route.",
+                "We've got a watcher behind you. Not a problem yet. Keep your rhythm.",
+                "Runner, you've got company. Another runner is closing fast. Move.",
+                "Air unit above us. They've got visual. Keep running. Cover ahead — get under it.",
+                "You're almost clear, Runner. Bring the relay key home."
+            );
         }
     }
 }
