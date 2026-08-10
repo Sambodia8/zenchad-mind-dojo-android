@@ -50,6 +50,9 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
     private double[] cumulative = new double[0];
     private int nearestIndex = 0;
     private boolean speaking = false;
+    private double lastRouteProgressMeters = 0d;
+    private double lastOffRouteMeters = Double.POSITIVE_INFINITY;
+    private double lastDistanceToManeuverMeters = Double.POSITIVE_INFINITY;
 
     public RunningBackgroundNavigator(Context context) {
         this.context = context.getApplicationContext();
@@ -65,8 +68,11 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
         nearestIndex = 0;
         routeModifiedAt = -1L;
         spoken.clear();
-        String storedSession = prefs.getString(KEY_SESSION_ID, "");
-        if (safe.equals(storedSession)) {
+        lastRouteProgressMeters = 0d;
+        lastOffRouteMeters = Double.POSITIVE_INFINITY;
+        lastDistanceToManeuverMeters = Double.POSITIVE_INFINITY;
+        String storedSessionId = prefs.getString(KEY_SESSION_ID, "");
+        if (safe.equals(storedSessionId)) {
             Set<String> saved = prefs.getStringSet(KEY_SPOKEN, null);
             if (saved != null) spoken.addAll(saved);
         } else {
@@ -109,7 +115,7 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
     public void onLocation(Location location) {
         if (location == null || sessionId.isEmpty()) return;
         reloadRouteIfNeeded();
-        if (lats.length < 2 || cumulative.length != lats.length || maneuvers.isEmpty()) return;
+        if (lats.length < 2 || cumulative.length != lats.length) return;
 
         double bestDistance = Double.POSITIVE_INFINITY;
         int searchStart = Math.max(0, nearestIndex - 25);
@@ -132,18 +138,21 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
             }
         }
         nearestIndex = bestIndex;
-        if (bestDistance > 80d) return;
+        lastOffRouteMeters = bestDistance;
+        lastRouteProgressMeters = cumulative[bestIndex];
+        lastDistanceToManeuverMeters = Double.POSITIVE_INFINITY;
+        if (bestDistance > 80d || maneuvers.isEmpty()) return;
 
-        double progress = cumulative[bestIndex];
         Maneuver next = null;
         for (Maneuver maneuver : maneuvers) {
-            if (maneuver.routeDistanceMeters > progress + 8d) {
+            if (maneuver.routeDistanceMeters > lastRouteProgressMeters + 8d) {
                 next = maneuver;
                 break;
             }
         }
         if (next == null) return;
-        double distanceToTurn = Math.max(0d, next.routeDistanceMeters - progress);
+        double distanceToTurn = Math.max(0d, next.routeDistanceMeters - lastRouteProgressMeters);
+        lastDistanceToManeuverMeters = distanceToTurn;
 
         String nowKey = next.id + ":now";
         String previewKey = next.id + ":preview";
@@ -154,6 +163,22 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
             markSpoken(previewKey);
             speak(next.verbalInstruction.isEmpty() ? next.instruction : next.verbalInstruction);
         }
+    }
+
+    public boolean isSpeaking() {
+        return speaking;
+    }
+
+    public double getLastRouteProgressMeters() {
+        return lastRouteProgressMeters;
+    }
+
+    public double getLastOffRouteMeters() {
+        return lastOffRouteMeters;
+    }
+
+    public double getLastDistanceToManeuverMeters() {
+        return lastDistanceToManeuverMeters;
     }
 
     public void shutdown() {
@@ -190,7 +215,7 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
             JSONArray geometry = route.optJSONArray("geometry");
             JSONArray distances = route.optJSONArray("cumulativeMeters");
             JSONArray routeManeuvers = route.optJSONArray("maneuvers");
-            if (geometry == null || distances == null || routeManeuvers == null || geometry.length() != distances.length()) {
+            if (geometry == null || distances == null || geometry.length() != distances.length()) {
                 clearRoute();
                 return;
             }
@@ -206,15 +231,17 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
             }
 
             maneuvers.clear();
-            for (int index = 0; index < routeManeuvers.length(); index += 1) {
-                JSONObject json = routeManeuvers.getJSONObject(index);
-                maneuvers.add(new Maneuver(
-                    json.optString("id", "m-" + index),
-                    json.optString("instruction", "Continue on the route"),
-                    json.optString("verbalAlert", ""),
-                    json.optString("verbalInstruction", ""),
-                    json.optDouble("routeDistanceMeters", 0d)
-                ));
+            if (routeManeuvers != null) {
+                for (int index = 0; index < routeManeuvers.length(); index += 1) {
+                    JSONObject json = routeManeuvers.getJSONObject(index);
+                    maneuvers.add(new Maneuver(
+                        json.optString("id", "m-" + index),
+                        json.optString("instruction", "Continue on the route"),
+                        json.optString("verbalAlert", ""),
+                        json.optString("verbalInstruction", ""),
+                        json.optDouble("routeDistanceMeters", 0d)
+                    ));
+                }
             }
             nearestIndex = 0;
         } catch (IOException | JSONException error) {
@@ -228,6 +255,9 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
         cumulative = new double[0];
         maneuvers.clear();
         nearestIndex = 0;
+        lastRouteProgressMeters = 0d;
+        lastOffRouteMeters = Double.POSITIVE_INFINITY;
+        lastDistanceToManeuverMeters = Double.POSITIVE_INFINITY;
     }
 
     private String readFile(File file) throws IOException {
