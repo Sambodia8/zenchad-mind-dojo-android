@@ -5,6 +5,7 @@ import { startBikeQuestRuntime } from "./bikeQuestRuntime";
 import { startRunningNativeGeolocationBridge } from "./runningNativeGeolocationBridge";
 import { startRunningRuntime } from "./runningRuntime";
 import { startRunningRouteRuntime } from "./runningRouteRuntime";
+import { startRunningStoryRuntime } from "./runningStoryRuntime";
 import { loadData } from "./storage";
 import { startAppearanceController } from "./theme";
 import "./styles.css";
@@ -15,12 +16,14 @@ import "./bikeQuestRuntime.css";
 import "./runningMode.css";
 import "./runningInsights.css";
 import "./runningNavigation.css";
+import "./runningStoryRuntime.css";
 import "./theme.css";
 
 startBikeQuestRuntime();
 startRunningNativeGeolocationBridge();
 startRunningRuntime();
 startRunningRouteRuntime();
+startRunningStoryRuntime();
 startAppearanceController(loadData().preferences.appearanceMode);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
