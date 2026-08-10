@@ -12,14 +12,17 @@ public class RunningStorySfxController {
     private boolean helicopterWasActive = false;
     private String lastOutcome = "";
     private String sessionId = "";
+    private boolean previousSfxEnabled = true;
 
     public RunningStorySfxController(Context context) {
         this.context = context.getApplicationContext();
         prefs = RunningBackgroundStoryDirector.getStore(this.context);
         trackerPrefs = RunningTrackerService.getStore(this.context);
+        syncAudioSettings();
     }
 
     public void sync() {
+        syncAudioSettings();
         String currentSession = prefs.getString(RunningBackgroundStoryDirector.KEY_SESSION_ID, "");
         if (!currentSession.equals(sessionId)) {
             sessionId = currentSession;
@@ -31,10 +34,12 @@ public class RunningStorySfxController {
         }
 
         boolean enabled = prefs.getBoolean(RunningBackgroundStoryDirector.KEY_ENABLED, false);
-        if (!enabled) {
+        boolean sfxEnabled = RunningStoryAudioSettings.isSfxEnabled(context);
+        if (!enabled || !sfxEnabled) {
             engine.stopHelicopter();
             chaseWasActive = false;
             helicopterWasActive = false;
+            previousSfxEnabled = sfxEnabled;
             return;
         }
 
@@ -53,9 +58,11 @@ public class RunningStorySfxController {
         chaseWasActive = chaseActive;
 
         boolean helicopterActive = "helicopter".equals(prefs.getString(RunningBackgroundStoryDirector.KEY_PHASE, ""));
-        if (helicopterActive && !helicopterWasActive) {
+        if (helicopterActive && (!helicopterWasActive || !previousSfxEnabled)) {
             engine.startHelicopter();
-            RunningStoryEventLog.append(context, sessionId, "helicopter-start", now, runDistance, "Air unit acquired visual");
+            if (!helicopterWasActive) {
+                RunningStoryEventLog.append(context, sessionId, "helicopter-start", now, runDistance, "Air unit acquired visual");
+            }
         } else if (!helicopterActive && helicopterWasActive) {
             engine.stopHelicopter();
             RunningStoryEventLog.append(context, sessionId, "helicopter-cover", now, runDistance, "Air unit visual broken");
@@ -67,10 +74,15 @@ public class RunningStorySfxController {
             else if ("caught-branch".equals(outcome)) engine.playInterceptionStinger();
             lastOutcome = outcome;
         }
+        previousSfxEnabled = sfxEnabled;
     }
 
     public void shutdown() {
         engine.shutdown();
+    }
+
+    private void syncAudioSettings() {
+        engine.setVolume(RunningStoryAudioSettings.getSfxVolume(context));
     }
 
     private double currentDistanceMeters() {
