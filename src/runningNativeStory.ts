@@ -27,12 +27,20 @@ export interface NativeStorySnapshot {
   helicopterTriggered: boolean;
   helicopterTargetDistanceMeters: number;
   eventsJson: string;
+  sfxEnabled: boolean;
+  sfxVolume: number;
+  voiceVolume: number;
   updatedAt: number;
 }
 
 interface RunningStoryDirectorPlugin {
   getSnapshot(): Promise<NativeStorySnapshot>;
   setDifficulty(options: { difficulty: ChaseDifficulty }): Promise<NativeStorySnapshot>;
+  setAudioSettings(options: {
+    sfxEnabled?: boolean;
+    sfxVolume?: number;
+    voiceVolume?: number;
+  }): Promise<NativeStorySnapshot>;
   clear(): Promise<NativeStorySnapshot>;
 }
 
@@ -68,6 +76,14 @@ export function parseNativeStoryEvents(snapshot: Pick<NativeStorySnapshot, "even
 
 export function setNativeStoryDifficulty(difficulty: ChaseDifficulty) {
   return RunningStoryDirector.setDifficulty({ difficulty });
+}
+
+export function setNativeStoryAudioSettings(settings: {
+  sfxEnabled?: boolean;
+  sfxVolume?: number;
+  voiceVolume?: number;
+}) {
+  return RunningStoryDirector.setAudioSettings(settings);
 }
 
 export function clearNativeStoryDirector() {
