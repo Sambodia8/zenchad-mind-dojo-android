@@ -7,6 +7,7 @@ import { startRunningRuntime } from "./runningRuntime";
 import { startRunningRouteRuntime } from "./runningRouteRuntime";
 import { startRunningStoryRuntime } from "./runningStoryRuntime";
 import { startRunningProgressionRuntime } from "./runningProgressionRuntime";
+import { startRunningElevationRuntime } from "./runningElevationRuntime";
 import { loadData } from "./storage";
 import { startAppearanceController } from "./theme";
 import "./styles.css";
@@ -19,6 +20,7 @@ import "./runningInsights.css";
 import "./runningNavigation.css";
 import "./runningStoryRuntime.css";
 import "./runningProgression.css";
+import "./runningElevation.css";
 import "./theme.css";
 
 startBikeQuestRuntime();
@@ -27,6 +29,7 @@ startRunningRuntime();
 startRunningRouteRuntime();
 startRunningStoryRuntime();
 startRunningProgressionRuntime();
+startRunningElevationRuntime();
 startAppearanceController(loadData().preferences.appearanceMode);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
