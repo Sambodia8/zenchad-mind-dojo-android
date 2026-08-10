@@ -29,14 +29,12 @@ assert.ok(trackerService.includes("if (reset) resetNativeDirectors();"), "a new 
 assert.ok(trackerService.includes("shutdownNativeDirectors();\n        createNativeDirectors();"), "session reset must recreate fresh native directors after shutdown");
 
 const navigator = source("android/app/src/main/java/com/zenchad/minddojo/RunningBackgroundNavigator.java");
-assert.match(
-  navigator,
-  /if \(speak\([^)]*\)\) \{\s*markSpoken\(nowKey\);/s,
+assert.ok(
+  navigator.includes("if (speak(next.verbalAlert.isEmpty() ? next.instruction : next.verbalAlert)) {\n                markSpoken(nowKey);"),
   "turn-now cues should be marked delivered only after TTS accepts them"
 );
-assert.match(
-  navigator,
-  /if \(speak\([^)]*\)\) \{\s*markSpoken\(previewKey\);/s,
+assert.ok(
+  navigator.includes("if (speak(next.verbalInstruction.isEmpty() ? next.instruction : next.verbalInstruction)) {\n                markSpoken(previewKey);"),
   "preview cues should be marked delivered only after TTS accepts them"
 );
 assert.match(navigator, /private boolean speak\(String text\)/, "background navigation speech must report whether the cue was accepted");
