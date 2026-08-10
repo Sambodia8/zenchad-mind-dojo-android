@@ -271,6 +271,7 @@ export async function buildValhallaRunningRoute(
     version: 1,
     sessionId: "",
     mode: request.mode,
+    plannedMinutes: request.plannedMinutes,
     provider: candidate.provider,
     createdAt: Date.now(),
     start: request.start,
