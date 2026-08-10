@@ -29,6 +29,17 @@ public class RunningStoryDirectorPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void setAudioSettings(PluginCall call) {
+        Boolean enabled = call.getBoolean("sfxEnabled");
+        Double sfxVolume = call.getDouble("sfxVolume");
+        Double voiceVolume = call.getDouble("voiceVolume");
+        if (enabled != null) RunningStoryAudioSettings.setSfxEnabled(getContext(), enabled);
+        if (sfxVolume != null) RunningStoryAudioSettings.setSfxVolume(getContext(), sfxVolume);
+        if (voiceVolume != null) RunningStoryAudioSettings.setVoiceVolume(getContext(), voiceVolume);
+        call.resolve(snapshot());
+    }
+
+    @PluginMethod
     public void clear(PluginCall call) {
         RunningBackgroundStoryDirector.clearStore(getContext());
         call.resolve(snapshot());
@@ -37,6 +48,7 @@ public class RunningStoryDirectorPlugin extends Plugin {
     private JSObject snapshot() {
         SharedPreferences prefs = RunningBackgroundStoryDirector.getStore(getContext());
         String sessionId = prefs.getString(RunningBackgroundStoryDirector.KEY_SESSION_ID, "");
+        RunningStoryAudioSettings.Snapshot audio = RunningStoryAudioSettings.snapshot(getContext());
         JSObject result = new JSObject();
         result.put("sessionId", sessionId);
         result.put("enabled", prefs.getBoolean(RunningBackgroundStoryDirector.KEY_ENABLED, false));
@@ -56,6 +68,9 @@ public class RunningStoryDirectorPlugin extends Plugin {
         result.put("helicopterTriggered", prefs.getBoolean(RunningBackgroundStoryDirector.KEY_HELICOPTER_TRIGGERED, false));
         result.put("helicopterTargetDistanceMeters", readDouble(prefs, RunningBackgroundStoryDirector.KEY_HELICOPTER_TARGET_BITS, -1d));
         result.put("eventsJson", RunningStoryEventLog.json(getContext(), sessionId));
+        result.put("sfxEnabled", audio.sfxEnabled);
+        result.put("sfxVolume", audio.sfxVolume);
+        result.put("voiceVolume", audio.voiceVolume);
         result.put("updatedAt", prefs.getLong(RunningBackgroundStoryDirector.KEY_UPDATED_AT, 0L));
         return result;
     }
