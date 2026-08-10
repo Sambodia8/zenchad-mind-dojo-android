@@ -18,6 +18,7 @@ import { startRunningRewardBonusRuntime } from "./runningRewardBonusRuntime";
 import { startRunningElevationRuntime } from "./runningElevationRuntime";
 import { startRunningHistoryEnrichmentRuntime } from "./runningHistoryEnrichmentRuntime";
 import { startRunningHealthRuntime } from "./runningHealthRuntime";
+import { startRunningDiagnosticsRuntime } from "./runningDiagnosticsRuntime";
 import { loadData } from "./storage";
 import { startAppearanceController } from "./theme";
 import "./styles.css";
@@ -38,6 +39,7 @@ import "./runningRewardBonus.css";
 import "./runningElevation.css";
 import "./runningHistoryEnrichment.css";
 import "./runningHealth.css";
+import "./runningDiagnostics.css";
 import "./theme.css";
 
 startBikeQuestRuntime();
@@ -59,6 +61,7 @@ startRunningRewardBonusRuntime();
 startRunningElevationRuntime();
 startRunningHistoryEnrichmentRuntime();
 startRunningHealthRuntime();
+startRunningDiagnosticsRuntime();
 startAppearanceController(loadData().preferences.appearanceMode);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
