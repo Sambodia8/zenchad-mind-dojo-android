@@ -4,6 +4,7 @@ import type { ChaseDifficulty } from "./runningStory";
 export interface NativeStorySnapshot {
   sessionId: string;
   enabled: boolean;
+  missionId: string;
   missionTitle: string;
   difficulty: ChaseDifficulty;
   phase: string;
