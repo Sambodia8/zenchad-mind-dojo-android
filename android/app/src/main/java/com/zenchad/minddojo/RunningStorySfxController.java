@@ -30,7 +30,9 @@ public class RunningStorySfxController {
             helicopterWasActive = false;
             lastOutcome = "";
             engine.stopHelicopter();
-            RunningStoryEventLog.reset(context, sessionId);
+            // Do not clear the persisted event log here. A process restart recreates this
+            // controller even though the same run is still active. RunningStoryEventLog.append
+            // already resets itself when (and only when) the actual run session ID changes.
         }
 
         boolean enabled = prefs.getBoolean(RunningBackgroundStoryDirector.KEY_ENABLED, false);
