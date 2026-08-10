@@ -13,6 +13,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(RunningAudioPlugin.class);
         registerPlugin(RunningSpeechPlugin.class);
         registerPlugin(RunningBackgroundNavigationPlugin.class);
+        registerPlugin(RunningStorySpeechPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }
