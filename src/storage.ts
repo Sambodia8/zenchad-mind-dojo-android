@@ -8,10 +8,12 @@ import type {
   JournalEntry as JournalEntryType,
   MoodEntry,
   MysteryChallengeState,
+  ProgressionData,
   Stats
 } from "./types";
 import { LEVEL_THRESHOLDS } from "./data";
 import { createMysteryChallengeState } from "./mysteryChallenge";
+import { createDefaultProgression, awardMeditationProgress } from "./progression";
 
 const STORAGE_KEY = "zenchad_app_data_v1";
 export const JOURNAL_XP = 20;
@@ -171,7 +173,8 @@ export const defaultData: AppData = {
   moodScaleVersion: 2,
   customYogaClasses: [],
   downloadedSoundscapes: [],
-  mysteryChallenge: createMysteryChallengeState()
+  mysteryChallenge: createMysteryChallengeState(),
+  progression: createDefaultProgression()
 };
 
 export function loadData(): AppData {
@@ -222,11 +225,60 @@ export function loadData(): AppData {
       moodScaleVersion: 2,
       customYogaClasses: Array.isArray(parsed.customYogaClasses) ? parsed.customYogaClasses : [],
       downloadedSoundscapes: Array.isArray(parsed.downloadedSoundscapes) ? parsed.downloadedSoundscapes : [],
-      mysteryChallenge: migrateMysteryChallenge(parsed.mysteryChallenge)
+      mysteryChallenge: migrateMysteryChallenge(parsed.mysteryChallenge),
+      progression: migrateProgression(parsed.progression)
     };
   } catch {
     return defaultData;
   }
+}
+
+function migrateProgression(value: unknown): ProgressionData {
+  const fallback = createDefaultProgression();
+  if (!value || typeof value !== "object") return fallback;
+  const saved = value as Partial<ProgressionData>;
+  const savedSkillXp = saved.skillXp && typeof saved.skillXp === "object" ? saved.skillXp : {};
+  const savedSkillLevels = saved.skillLevels && typeof saved.skillLevels === "object" ? saved.skillLevels : {};
+  const skillXp = { ...fallback.skillXp };
+  const skillLevels = { ...fallback.skillLevels };
+  for (const statId of Object.keys(skillXp) as Array<keyof typeof skillXp>) {
+    const xp = Number((savedSkillXp as Record<string, unknown>)[statId]);
+    const level = Number((savedSkillLevels as Record<string, unknown>)[statId]);
+    if (Number.isFinite(xp)) skillXp[statId] = Math.max(0, xp);
+    if (Number.isFinite(level)) skillLevels[statId] = Math.max(1, Math.floor(level));
+  }
+  const savedGear = saved.equippedCosmetics && typeof saved.equippedCosmetics === "object"
+    ? saved.equippedCosmetics
+    : {};
+  const savedFlowForm = saved.flowForm && typeof saved.flowForm === "object" ? saved.flowForm : {};
+  const savedFlowFormIds = (savedFlowForm as Record<string, unknown>).unlockedFormIds;
+  return {
+    ...fallback,
+    flowLevel: Number.isFinite(saved.flowLevel) ? Math.max(1, Math.floor(saved.flowLevel as number)) : fallback.flowLevel,
+    flowXp: Number.isFinite(saved.flowXp) ? Math.max(0, saved.flowXp as number) : fallback.flowXp,
+    flowTotalXp: Number.isFinite(saved.flowTotalXp) ? Math.max(0, saved.flowTotalXp as number) : fallback.flowTotalXp,
+    flowLastPracticeDate: typeof saved.flowLastPracticeDate === "string" ? saved.flowLastPracticeDate : null,
+    flowConsecutiveDays: Number.isFinite(saved.flowConsecutiveDays) ? Math.max(0, Math.floor(saved.flowConsecutiveDays as number)) : 0,
+    skillXp,
+    skillLevels,
+    equippedCosmetics: {
+      ...fallback.equippedCosmetics,
+      ...Object.fromEntries(Object.entries(fallback.equippedCosmetics).map(([slot, fallbackId]) => [
+        slot,
+        typeof (savedGear as Record<string, unknown>)[slot] === "string"
+          ? (savedGear as Record<string, string>)[slot]
+          : fallbackId
+      ]))
+    },
+    flowForm: {
+      activeFormId: typeof (savedFlowForm as Record<string, unknown>).activeFormId === "string"
+        ? (savedFlowForm as Record<string, string>).activeFormId
+        : null,
+      unlockedFormIds: Array.isArray(savedFlowFormIds)
+        ? savedFlowFormIds.filter((id: unknown): id is string => typeof id === "string")
+        : []
+    }
+  };
 }
 
 function migrateMysteryChallenge(value: unknown): MysteryChallengeState {
@@ -311,6 +363,19 @@ export function addCompletedSessionAt(stats: Stats, seconds: number, sessionDate
 
 export function addCompletedSession(stats: Stats, seconds: number): Stats {
   return addCompletedSessionAt(stats, seconds, new Date());
+}
+
+export function recordMeditationCompletion(
+  data: AppData,
+  meditationId: string,
+  seconds: number,
+  sessionDate = new Date()
+): AppData {
+  return {
+    ...data,
+    stats: addCompletedSessionAt(data.stats, seconds, sessionDate),
+    progression: awardMeditationProgress(data.progression, meditationId, seconds, sessionDate)
+  };
 }
 
 export function makeMood(stage: "before" | "after", value: number, note: string): MoodEntry {

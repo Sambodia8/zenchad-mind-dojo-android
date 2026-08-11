@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
+    "test:progression": "node --experimental-strip-types --experimental-loader ./scripts/ts-loader.mjs scripts/test-progression.mjs",
     "test:theme": "node scripts/test-theme.mjs",
     "preview": "vite preview",
     "audio:preview": "node scripts/generate-elevenlabs-preview.mjs",

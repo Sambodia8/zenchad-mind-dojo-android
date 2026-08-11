@@ -10,12 +10,10 @@ import {
   type SetStateAction
 } from "react";
 import {
-  BarChart3,
-  Flame,
+  CircleDot,
   Grid2X2,
   Home,
   Library,
-  MoreVertical,
   PersonStanding
 } from "lucide-react";
 import { App as CapacitorApp } from "@capacitor/app";
@@ -43,6 +41,7 @@ import MysteryChallengeScreen from "./screens/MysteryChallengeScreen";
 import LevelUpModal from "./components/LevelUpModal";
 import { getYogaClass } from "./data";
 import { playUiSfx, preloadUiSfx, type UiSfxName } from "./uiSfx";
+import { getLevelProgress } from "./xp";
 
 const titleFor = (route: Route) => {
   switch (route.name) {
@@ -68,13 +67,21 @@ const titleFor = (route: Route) => {
   }
 };
 
+const logoVariants = ["logo-needleteeth", "logo-crowen", "logo-fort", "logo-ghostbum"] as const;
+
 export default function App() {
   const [route, setRoute] = useState<Route>({ name: "home" });
   const [data, setData] = useState<AppData>(() => loadData());
+  const [logoVariant] = useState<(typeof logoVariants)[number]>(() =>
+    logoVariants[Math.floor(Math.random() * logoVariants.length)]
+  );
   const routeRef = useRef<Route>(route);
   const routeHistoryRef = useRef<Route[]>([]);
-  const [topMenuOpen, setTopMenuOpen] = useState(false);
-  const topMenuRef = useRef<HTMLDivElement>(null);
+  const previousXpRef = useRef(data.stats.xp);
+  const animationFrameRef = useRef<number | null>(null);
+  const [displayedXp, setDisplayedXp] = useState(data.stats.xp);
+  const levelProgress = getLevelProgress(data.stats.xp, data.stats.level);
+  const isStatusRoute = route.name === "progress";
   const showBackButton = [
     "timer", "yoga-pose", "yoga-class", "yoga-builder", "bike-quest", "running",
     "mystery-challenge", "journal", "guide", "soundscapes", "rewards", "themes", "settings"
@@ -196,23 +203,38 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: data.preferences.reducedMotion ? "auto" : "smooth" });
   }, [data.preferences.reducedMotion, route]);
 
-  useEffect(() => { setTopMenuOpen(false); }, [route]);
-
   useEffect(() => {
-    if (!topMenuOpen) return;
-    const closeOnOutsidePress = (event: globalThis.PointerEvent) => {
-      if (!topMenuRef.current?.contains(event.target as Node)) setTopMenuOpen(false);
+    const targetXp = data.stats.xp;
+    const startXp = previousXpRef.current;
+    previousXpRef.current = targetXp;
+    if (animationFrameRef.current !== null) cancelAnimationFrame(animationFrameRef.current);
+    animationFrameRef.current = null;
+
+    if (data.preferences.reducedMotion || startXp === targetXp) {
+      setDisplayedXp(targetXp);
+      return;
+    }
+
+    let startedAt: number | null = null;
+    const duration = 1900;
+    const animate = (timestamp: number) => {
+      startedAt ??= timestamp;
+      const progress = Math.min(1, (timestamp - startedAt) / duration);
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+      setDisplayedXp(Math.round(startXp + (targetXp - startXp) * easedProgress));
+      if (progress < 1) {
+        animationFrameRef.current = requestAnimationFrame(animate);
+      } else {
+        animationFrameRef.current = null;
+      }
     };
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setTopMenuOpen(false);
-    };
-    document.addEventListener("pointerdown", closeOnOutsidePress);
-    document.addEventListener("keydown", closeOnEscape);
+
+    animationFrameRef.current = requestAnimationFrame(animate);
     return () => {
-      document.removeEventListener("pointerdown", closeOnOutsidePress);
-      document.removeEventListener("keydown", closeOnEscape);
+      if (animationFrameRef.current !== null) cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
     };
-  }, [topMenuOpen]);
+  }, [data.preferences.reducedMotion, data.stats.xp]);
 
   const screen = useMemo(() => {
     switch (route.name) {
@@ -236,7 +258,16 @@ export default function App() {
           }
           navigate(resolved);
         };
-        return <YogaClassScreen key={route.classId} classId={route.classId} data={data} setData={setData} navigate={yogaNavigate} />;
+        return (
+          <YogaClassScreen
+            key={route.classId}
+            classId={route.classId}
+            data={data}
+            setData={setData}
+            navigate={yogaNavigate}
+            returnToBikeQuest={route.returnToBikeQuest}
+          />
+        );
       }
       case "yoga-builder": return <YogaRoutineBuilderScreen editClassId={route.editClassId} data={data} setData={setData} navigate={navigate} />;
       case "bike-quest": return <BikeQuestScreen data={data} setData={setData} navigate={navigate} resume={route.resume} />;
@@ -255,7 +286,9 @@ export default function App() {
   const nav = [
     { route: { name: "home" } as Route, label: "Home", icon: Home },
     { route: { name: "library" } as Route, label: "Library", icon: Library },
-    { route: { name: "roulette" } as Route, label: "Roulette", icon: null },
+    isStatusRoute
+      ? { route: { name: "progress" } as Route, label: "Status", icon: CircleDot }
+      : { route: { name: "roulette" } as Route, label: "Roulette", icon: null },
     { route: { name: "yoga" } as Route, label: "Yoga", icon: PersonStanding },
     { route: { name: "toolkit" } as Route, label: "Toolkit", icon: Grid2X2 }
   ];
@@ -273,30 +306,47 @@ export default function App() {
   }, []);
 
   return (
-    <div className={`app-shell ${data.preferences.reducedMotion ? "reduce-motion" : ""}`} data-theme={data.preferences.selectedTheme} onClickCapture={handleUiClick} onChangeCapture={handleUiChange}>
+    <div className={`app-shell ${data.preferences.reducedMotion ? "reduce-motion" : ""} ${isStatusRoute ? "status-route" : ""} ${route.name === "home" ? "home-route" : ""}`} data-theme={data.preferences.selectedTheme} onClickCapture={handleUiClick} onChangeCapture={handleUiChange}>
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
-      <header className="topbar">
-        <button className="brand" onClick={() => navigate({ name: "home" })} aria-label="Go to Home">
-          <span className="brand-mark"><img src="assets/branding/eye-of-horus.png" alt="" /></span>
-          <span><strong>Zen Chad</strong><small>{titleFor(route)}</small></span>
-        </button>
-        <div className="topbar-actions">
+      <header className={`topbar ${isStatusRoute ? "topbar-status" : ""}`}>
+        {isStatusRoute ? (
+          <>
+            <button className="status-topbar-brand" onClick={() => navigate({ name: "home" })} aria-label="Go to Home">Zen Chad</button>
+            <span className="status-topbar-title">Status</span>
+          </>
+        ) : (
+          <>
+            <button className="brand" onClick={() => navigate({ name: "home" })} aria-label="Go to Home">
+              <span className="brand-mark"><img src="assets/branding/eye-of-horus.png" alt="" /></span>
+              <span><strong className={`brand-wordmark ${logoVariant}`}>Zen Chad</strong><small>{titleFor(route)}</small></span>
+            </button>
+            <div className="topbar-actions">
           <div className="hud">
-            <span aria-label={`${data.stats.streak} day rhythm`}><Flame size={15} /> {data.stats.streak}</span>
-            <span aria-label={`${data.stats.xp} XP`}><b className="xp-glyph">XP</b> {data.stats.xp}</span>
+            <button
+              type="button"
+              className="hud-level"
+              onClick={() => navigate({ name: "progress" })}
+              aria-label={`Level ${levelProgress.level}. ${levelProgress.isMaxLevel ? "Maximum level" : `${levelProgress.xpToNext} XP to next level`}. Open Progress`}
+            >
+              <span className="hud-level-label">Level {levelProgress.level}</span>
+              <span className="hud-level-track" aria-hidden="true">
+                <span style={{ width: `${levelProgress.progressPercent}%` }} />
+              </span>
+            </button>
+            <button
+              type="button"
+              className="hud-xp"
+              data-xp-target
+              onClick={() => navigate({ name: "progress" })}
+              aria-label={`${displayedXp} XP. Open Progress`}
+            >
+              <b className="xp-glyph">XP</b> {displayedXp}
+            </button>
           </div>
-          <div className="topbar-menu" ref={topMenuRef}>
-            <button className="topbar-menu-trigger" onClick={() => setTopMenuOpen((open) => !open)} aria-label="Open app menu" aria-haspopup="menu" aria-expanded={topMenuOpen}><MoreVertical size={20} /></button>
-            {topMenuOpen ? (
-              <div className="topbar-menu-popover" role="menu">
-                <button role="menuitem" onClick={() => { setTopMenuOpen(false); navigate({ name: "progress" }); }}>
-                  <BarChart3 size={18} /><span><strong>Progress</strong><small>Sessions, streaks and activity</small></span>
-                </button>
-              </div>
-            ) : null}
-          </div>
-        </div>
+            </div>
+          </>
+        )}
       </header>
 
       <main className="main-content">

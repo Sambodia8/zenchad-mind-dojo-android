@@ -31,7 +31,9 @@ import {
 import { allowScreenSleep, keepScreenAwake } from "../native";
 import { addCompletedSession } from "../storage";
 import type { AppData, Route } from "../types";
+import type { BikeQuestResume } from "../bikeQuest";
 import MovementVisual from "../components/MovementVisual";
+import XpCollectionAnimation from "../components/XpCollectionAnimation";
 import { playUiSfx } from "../uiSfx";
 
 interface Props {
@@ -39,6 +41,7 @@ interface Props {
   data: AppData;
   setData: Dispatch<SetStateAction<AppData>>;
   navigate: Dispatch<SetStateAction<Route>>;
+  returnToBikeQuest?: BikeQuestResume;
 }
 
 type PlayerPhase = "ready" | "pose" | "transition" | "finished";
@@ -82,7 +85,7 @@ const formatDuration = (seconds: number) => {
   return `${minutes}:${String(remainder).padStart(2, "0")}`;
 };
 
-export default function YogaClassScreen({ classId, data, setData, navigate }: Props) {
+export default function YogaClassScreen({ classId, data, setData, navigate, returnToBikeQuest }: Props) {
   const yogaClass = useMemo(() => {
     if (classId.startsWith("custom-")) {
       const custom = data.customYogaClasses.find(c => c.id === classId);
@@ -207,7 +210,6 @@ export default function YogaClassScreen({ classId, data, setData, navigate }: Pr
     navigator.vibrate?.([60, 50, 100]);
     if (data.preferences.uiSoundsEnabled) {
       playUiSfx("victory");
-      window.setTimeout(() => playUiSfx("xpGain"), 600);
     }
   }, [data.preferences.uiSoundsEnabled, setData]);
 
@@ -332,15 +334,6 @@ export default function YogaClassScreen({ classId, data, setData, navigate }: Pr
     completed.current = false;
     startedAt.current = Date.now();
     void ensureAudio();
-    startSlide(0);
-    window.scrollTo({ top: 0, behavior: "auto" });
-  };
-
-  const restart = () => {
-    completed.current = false;
-    startedAt.current = Date.now();
-    setEarnedXp(0);
-    setMode("timed");
     startSlide(0);
     window.scrollTo({ top: 0, behavior: "auto" });
   };
@@ -542,15 +535,43 @@ export default function YogaClassScreen({ classId, data, setData, navigate }: Pr
         <span className="completion-mark"><Check /></span>
         <span className="eyebrow">Yoga class complete</span>
         <h1>{yogaClass.name} logged.</h1>
-        <p>{slides.length} guided poses added to your progress. That&apos;s the class—no meditation added.</p>
-        <div className="completion-reward-burst">
+        <p>{slides.length} guided poses added to your progress. Keep the calm going with a meditation, or return home when you&apos;re ready.</p>
+        <div className="completion-reward-burst" data-xp-source="yoga-completion-reward">
           <Award />
           <span><strong>+{earnedXp} XP</strong><small>Quest progress updated</small></span>
         </div>
-        <button className="button primary full" onClick={() => navigate({ name: "yoga" })}>
-          Browse Yoga with Mark
-        </button>
-        <button className="button ghost full" onClick={restart}>Do this class again</button>
+        <XpCollectionAnimation
+          amount={earnedXp}
+          active={earnedXp > 0}
+          reducedMotion={data.preferences.reducedMotion}
+          soundsEnabled={data.preferences.uiSoundsEnabled}
+        />
+        <div className="completion-next-actions">
+          <button
+            className="button primary full"
+            onClick={() => navigate({ name: "timer", meditationId: "nsdr" })}
+          >
+            Yes please — try NSDR
+          </button>
+          <button
+            className="button secondary full"
+            onClick={() => navigate({ name: "roulette", autoSpin: true, spinKey: Date.now() })}
+          >
+            Spin the meditation wheel
+          </button>
+          <button
+            className="button ghost full"
+            onClick={() =>
+              navigate(
+                returnToBikeQuest
+                  ? { name: "bike-quest", resume: returnToBikeQuest }
+                  : { name: "home" }
+              )
+            }
+          >
+            {returnToBikeQuest ? "Continue Bike Quest" : "No thanks"}
+          </button>
+        </div>
       </section>
     );
   }

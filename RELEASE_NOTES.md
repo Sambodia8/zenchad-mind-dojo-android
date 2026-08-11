@@ -1,3 +1,12 @@
+# Zen Chad 1.5 — current rebuild (2026-08-10)
+
+- Pulled the latest `main` from GitHub at commit `ab285cd`, including automatic run route scoring.
+- Version code 6; shareable debug APK for side-loading.
+- Artifact: `Zen-Chad-1.5-debug.apk`, 300,515,475 bytes.
+- SHA-256: `412A8837C7016D4C448082EA1463D70C812ADFE365E045558AD8868A255A80E1`.
+- Verified with TypeScript/Vite build, Capacitor sync, Android lint, JDK 21 debug APK assembly, package/version inspection, signature validation, and packaged-asset/native-library inspection.
+- Drive copy: `D:\My Drive\ZenChad\Zen-Chad-1.5-debug.apk`.
+
 # Zen Chad 1.4 — current rebuild (2026-08-04)
 
 - Rebuilt the current Capacitor Android app from the latest workspace bundle, including the current Yoga library, pose assets, and offline AI journaling additions.

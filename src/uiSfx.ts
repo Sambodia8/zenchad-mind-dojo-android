@@ -63,8 +63,16 @@ export function preloadUiSfx() {
   });
 }
 
-export function playUiSfx(name: UiSfxName) {
+export function playUiSfx(name: UiSfxName, options?: { overlap?: boolean }) {
   try {
+    if (options?.overlap) {
+      const player = new Audio(sourceUrl(name));
+      player.volume = Math.min(1, VOLUMES[name] * 0.55);
+      void player.play().catch(() => {
+        // Visual state always remains the source of truth if audio is unavailable.
+      });
+      return;
+    }
     const player = playerFor(name);
     player.pause();
     player.currentTime = 0;
