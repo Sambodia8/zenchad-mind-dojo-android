@@ -19,6 +19,12 @@ import {
 import { App as CapacitorApp } from "@capacitor/app";
 import type { AppData, Route } from "./types";
 import { addJournalXp, loadData, makeJournal, saveData } from "./storage";
+import { addRunningXp } from "./running";
+import {
+  RUNNING_BONUS_QUEUED_EVENT,
+  markRunningRewardBonusesApplied,
+  pendingRunningRewardBonuses
+} from "./runningRewardBonus";
 import HomeScreen from "./screens/HomeScreen";
 import ToolkitScreen from "./screens/ToolkitScreen";
 import RouletteScreen from "./screens/RouletteScreen";
@@ -75,6 +81,7 @@ export default function App() {
   const [logoVariant] = useState<(typeof logoVariants)[number]>(() =>
     logoVariants[Math.floor(Math.random() * logoVariants.length)]
   );
+  const dataRef = useRef<AppData>(data);
   const routeRef = useRef<Route>(route);
   const routeHistoryRef = useRef<Route[]>([]);
   const previousXpRef = useRef(data.stats.xp);
@@ -87,7 +94,31 @@ export default function App() {
     "mystery-challenge", "journal", "guide", "soundscapes", "rewards", "themes", "settings"
   ].includes(route.name);
 
-  useEffect(() => saveData(data), [data]);
+  useEffect(() => {
+    dataRef.current = data;
+    saveData(data);
+  }, [data]);
+
+  useEffect(() => {
+    const applyRunningBonuses = () => {
+      const pending = pendingRunningRewardBonuses();
+      if (!pending.length) return;
+      const total = pending.reduce((sum, bonus) => sum + bonus.bonusXp, 0);
+      if (total <= 0) {
+        markRunningRewardBonusesApplied(pending.map((bonus) => bonus.runId));
+        return;
+      }
+      const current = dataRef.current;
+      const next: AppData = { ...current, stats: addRunningXp(current.stats, total) };
+      saveData(next);
+      markRunningRewardBonusesApplied(pending.map((bonus) => bonus.runId));
+      dataRef.current = next;
+      setData(next);
+    };
+    applyRunningBonuses();
+    window.addEventListener(RUNNING_BONUS_QUEUED_EVENT, applyRunningBonuses);
+    return () => window.removeEventListener(RUNNING_BONUS_QUEUED_EVENT, applyRunningBonuses);
+  }, []);
 
   useEffect(() => {
     const historyKey = "zenchad_historical_journal_v1";

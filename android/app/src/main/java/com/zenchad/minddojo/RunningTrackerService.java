@@ -51,12 +51,16 @@ public class RunningTrackerService extends Service implements LocationListener {
 
     private LocationManager locationManager;
     private SharedPreferences prefs;
+    private RunningBackgroundNavigator backgroundNavigator;
+    private RunningBackgroundStoryDirector backgroundStoryDirector;
+    private RunningStorySfxController storySfxController;
 
     @Override
     public void onCreate() {
         super.onCreate();
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        createNativeDirectors();
         ensureNotificationChannel();
     }
 
@@ -79,12 +83,16 @@ public class RunningTrackerService extends Service implements LocationListener {
         boolean reset = intent != null && intent.getBooleanExtra(EXTRA_RESET, false);
         if (!incomingSessionId.isEmpty() && !incomingSessionId.equals(storedSessionId)) reset = true;
 
+        if (reset) resetNativeDirectors();
         if (reset || prefs.getLong(KEY_STARTED_AT, 0L) <= 0L) {
             resetStoredRun(incomingSessionId);
         } else if (!incomingSessionId.isEmpty()) {
             prefs.edit().putString(KEY_SESSION_ID, incomingSessionId).apply();
         }
 
+        String activeSessionId = prefs.getString(KEY_SESSION_ID, incomingSessionId);
+        if (backgroundNavigator != null) backgroundNavigator.setSessionId(activeSessionId);
+        if (backgroundStoryDirector != null) backgroundStoryDirector.setSessionId(activeSessionId);
         prefs.edit().putBoolean(KEY_RUNNING, true).apply();
         startAsForeground();
         requestLocationUpdates();
@@ -94,6 +102,7 @@ public class RunningTrackerService extends Service implements LocationListener {
     @Override
     public void onDestroy() {
         removeLocationUpdates();
+        shutdownNativeDirectors();
         stopForeground(true);
         super.onDestroy();
     }
@@ -126,12 +135,16 @@ public class RunningTrackerService extends Service implements LocationListener {
             if (segment >= 2f) {
                 extraDistance = segment;
             } else if (at - previousAt < 10_000L) {
+                updateNativeDirectors(location, distance);
                 return;
             }
         }
 
         distance += extraDistance;
-        if (!appendPoint(location, at, distance)) return;
+        if (!appendPoint(location, at, distance)) {
+            updateNativeDirectors(location, distance);
+            return;
+        }
         prefs.edit()
             .putLong(KEY_DISTANCE_BITS, Double.doubleToRawLongBits(distance))
             .putLong(KEY_LAST_LAT_BITS, Double.doubleToRawLongBits(location.getLatitude()))
@@ -141,6 +154,53 @@ public class RunningTrackerService extends Service implements LocationListener {
             .putInt(KEY_POINT_COUNT, prefs.getInt(KEY_POINT_COUNT, 0) + 1)
             .apply();
         updateNotification(distance);
+        updateNativeDirectors(location, distance);
+    }
+
+    private void createNativeDirectors() {
+        backgroundNavigator = new RunningBackgroundNavigator(this);
+        backgroundStoryDirector = new RunningBackgroundStoryDirector(this);
+        storySfxController = new RunningStorySfxController(this);
+    }
+
+    private void shutdownNativeDirectors() {
+        if (backgroundNavigator != null) {
+            backgroundNavigator.shutdown();
+            backgroundNavigator = null;
+        }
+        if (backgroundStoryDirector != null) {
+            backgroundStoryDirector.shutdown();
+            backgroundStoryDirector = null;
+        }
+        if (storySfxController != null) {
+            storySfxController.shutdown();
+            storySfxController = null;
+        }
+    }
+
+    private void resetNativeDirectors() {
+        shutdownNativeDirectors();
+        createNativeDirectors();
+    }
+
+    private void updateNativeDirectors(Location location, double distanceMeters) {
+        if (backgroundNavigator != null) backgroundNavigator.onLocation(location);
+        if (backgroundStoryDirector != null) {
+            double routeProgress = backgroundNavigator == null ? distanceMeters : backgroundNavigator.getLastRouteProgressMeters();
+            double offRoute = backgroundNavigator == null ? Double.POSITIVE_INFINITY : backgroundNavigator.getLastOffRouteMeters();
+            double distanceToManeuver = backgroundNavigator == null ? Double.POSITIVE_INFINITY : backgroundNavigator.getLastDistanceToManeuverMeters();
+            boolean navigationSpeaking = backgroundNavigator != null && backgroundNavigator.isSpeaking();
+            backgroundStoryDirector.onLocation(
+                location,
+                distanceMeters,
+                prefs.getLong(KEY_STARTED_AT, 0L),
+                routeProgress,
+                offRoute,
+                distanceToManeuver,
+                navigationSpeaking
+            );
+        }
+        if (storySfxController != null) storySfxController.sync();
     }
 
     @Override
@@ -165,6 +225,7 @@ public class RunningTrackerService extends Service implements LocationListener {
     public static void clearStore(Context context) {
         getStore(context).edit().clear().apply();
         context.deleteFile(POINTS_FILE);
+        RunningBackgroundStoryDirector.clearStore(context);
     }
 
     private void resetStoredRun(String sessionId) {

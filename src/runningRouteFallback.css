@@ -1,0 +1,16 @@
+.running-route-fallback-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: -4px;
+}
+
+.running-route-note[data-route-status="error"] {
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+@media (max-width: 390px) {
+  .running-route-fallback-actions {
+    grid-template-columns: 1fr;
+  }
+}

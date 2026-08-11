@@ -147,3 +147,9 @@
 - Decision/change: Pass the Bike Quest resume token into YogaClassScreen and render a direct `Continue Bike Quest` action that resumes the next quest step.
 - Verification: Reproduced the full pre-bike class in the local app, confirmed the explicit button appears, and confirmed it resumes at `Get water and towel`; `npm run build` passed.
 - Key files: src/App.tsx, src/screens/YogaClassScreen.tsx.
+
+2026-08-10 - Running real-phone baseline started
+- Decision/change: Installed current GitHub main as an isolated `com.zenchad.minddojo.fieldtest` build on the Pixel 6a so the newer installed 1.5/code 6 app and its data remained untouched. Added a durable field-test record and made the native integration source assertions portable across Windows and Linux line endings.
+- Device result: App launch, Running Hub, Quick/Story cards, time-only Quick Run selection, and Android precise-location grant were physically verified. Outdoor route, GPS, audio, lifecycle, Story, route-failure, Health Connect, and diagnostics tests remain unverified.
+- Preserve/avoid: Do not claim route generation or active-run behavior passed from this baseline. Continue from `RUNNING_FIELD_TEST_LOG.md`, use Java 21 for Gradle, and keep raw logcat/GPS evidence out of Git.
+- Key files: RUNNING_FIELD_TEST_LOG.md, scripts/test-running-native-integration.mjs.
