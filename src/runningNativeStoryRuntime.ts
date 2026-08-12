@@ -182,8 +182,6 @@ async function poll() {
 export function startRunningNativeStoryRuntime() {
   if (started || typeof document === "undefined") return;
   started = true;
-  const observer = new MutationObserver(() => { if (lastSnapshot) render(lastSnapshot); });
-  observer.observe(document.documentElement, { childList: true, subtree: true });
   document.addEventListener("visibilitychange", poll);
   window.addEventListener("pageshow", poll);
   window.setInterval(poll, 1000);

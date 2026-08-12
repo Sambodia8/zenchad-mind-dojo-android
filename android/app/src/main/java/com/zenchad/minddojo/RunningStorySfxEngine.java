@@ -1,9 +1,18 @@
 package com.zenchad.minddojo;
 
+import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioFormat;
 import android.media.AudioTrack;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,50 +21,90 @@ import java.util.concurrent.TimeUnit;
 public class RunningStorySfxEngine {
     private static final int SAMPLE_RATE = 22050;
     private static final double MASTER_GAIN = 0.17d;
+    private static final String ASSET_ROOT = "public/assets/audio/running-story/";
 
+    private final Context context;
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private final Random random = new Random();
-    private AudioTrack helicopterTrack;
+    private final SoundPool soundPool;
+    private final Map<String, Integer> soundIds = new HashMap<>();
+    private final Map<String, Boolean> loadedSounds = new HashMap<>();
+    private AudioTrack fallbackHelicopterTrack;
+    private MediaPlayer helicopterPlayer;
     private boolean helicopterActive = false;
     private volatile double volumeMultiplier = 0.72d;
 
+    public RunningStorySfxEngine(Context context) {
+        this.context = context.getApplicationContext();
+        AudioAttributes attributes = new AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_MEDIA)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build();
+        soundPool = new SoundPool.Builder()
+            .setMaxStreams(8)
+            .setAudioAttributes(attributes)
+            .build();
+        soundPool.setOnLoadCompleteListener((pool, sampleId, status) -> {
+            if (status != 0) return;
+            synchronized (loadedSounds) {
+                for (Map.Entry<String, Integer> entry : soundIds.entrySet()) {
+                    if (entry.getValue() == sampleId) loadedSounds.put(entry.getKey(), true);
+                }
+            }
+        });
+        loadSound("helicopter-overhead-pass");
+        loadSound("machine-gun-burst-right");
+        loadSound("machine-gun-burst-left");
+        loadSound("bullet-pass-right-left");
+        loadSound("bullet-pass-left-right");
+        loadSound("bullet-impact-left");
+        loadSound("bullet-impact-right");
+    }
+
     public void setVolume(double volume) {
         volumeMultiplier = Math.max(0d, Math.min(1d, Double.isFinite(volume) ? volume : 1d));
-        AudioTrack active = helicopterTrack;
-        if (active != null) {
-            try {
-                active.setVolume((float) volumeMultiplier);
-            } catch (RuntimeException ignored) {
-                // The next effect will use the new setting even if this track cannot update live.
-            }
+        AudioTrack activeFallback = fallbackHelicopterTrack;
+        if (activeFallback != null) {
+            try { activeFallback.setVolume((float) volumeMultiplier); } catch (RuntimeException ignored) {}
+        }
+        MediaPlayer activeHelicopter = helicopterPlayer;
+        if (activeHelicopter != null) {
+            try { activeHelicopter.setVolume((float) volumeMultiplier, (float) volumeMultiplier); } catch (RuntimeException ignored) {}
         }
     }
 
     public synchronized void startHelicopter() {
         if (helicopterActive || volumeMultiplier <= 0d) return;
         helicopterActive = true;
-        short[] pcm = makeHelicopterLoop(2.4d);
-        helicopterTrack = createStaticTrack(pcm);
-        if (helicopterTrack != null) {
-            int frames = pcm.length / 2;
+        String loopPath = cachedAsset("helicopter-loop.mp3");
+        if (loopPath != null) {
             try {
-                helicopterTrack.setLoopPoints(0, Math.max(1, frames - 1), -1);
-                helicopterTrack.play();
-            } catch (RuntimeException ignored) {
-                safeRelease(helicopterTrack);
-                helicopterTrack = null;
-                helicopterActive = false;
+                helicopterPlayer = new MediaPlayer();
+                helicopterPlayer.setDataSource(loopPath);
+                helicopterPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build());
+                helicopterPlayer.setLooping(true);
+                helicopterPlayer.setVolume((float) volumeMultiplier, (float) volumeMultiplier);
+                helicopterPlayer.prepare();
+                helicopterPlayer.start();
+                playAsset("helicopter-overhead-pass", 0f);
+            } catch (IOException | RuntimeException error) {
+                releaseHelicopterPlayer();
             }
         }
+        if (helicopterPlayer == null) startFallbackHelicopter();
         scheduleGunfireCluster(900);
     }
 
     public synchronized void stopHelicopter() {
         helicopterActive = false;
-        if (helicopterTrack != null) {
-            try { helicopterTrack.stop(); } catch (RuntimeException ignored) {}
-            safeRelease(helicopterTrack);
-            helicopterTrack = null;
+        releaseHelicopterPlayer();
+        if (fallbackHelicopterTrack != null) {
+            try { fallbackHelicopterTrack.stop(); } catch (RuntimeException ignored) {}
+            safeRelease(fallbackHelicopterTrack);
+            fallbackHelicopterTrack = null;
         }
     }
 
@@ -73,6 +122,7 @@ public class RunningStorySfxEngine {
 
     public void shutdown() {
         stopHelicopter();
+        soundPool.release();
         executor.shutdownNow();
     }
 
@@ -84,18 +134,80 @@ public class RunningStorySfxEngine {
                 final int shot = index;
                 executor.schedule(() -> {
                     if (!helicopterActive || volumeMultiplier <= 0d) return;
-                    double pan = random.nextDouble() * 1.6d - 0.8d;
-                    playOneShot(makeGunshot(0.18d + random.nextDouble() * 0.08d, pan));
+                    boolean fromRight = random.nextBoolean();
+                    playAsset(fromRight ? "machine-gun-burst-right" : "machine-gun-burst-left", fromRight ? 0.8f : -0.8f);
                     if (shot == bursts - 1 && random.nextBoolean()) {
                         executor.schedule(() -> {
-                            if (helicopterActive && volumeMultiplier > 0d) playOneShot(makeBulletPass(0.42d, -pan));
-                        }, 130, TimeUnit.MILLISECONDS);
+                            if (!helicopterActive || volumeMultiplier <= 0d) return;
+                            boolean rightToLeft = random.nextBoolean();
+                            playAsset(rightToLeft ? "bullet-pass-right-left" : "bullet-pass-left-right", 0f);
+                            playAsset(rightToLeft ? "bullet-impact-left" : "bullet-impact-right", rightToLeft ? -0.9f : 0.9f);
+                        }, 160, TimeUnit.MILLISECONDS);
                     }
-                }, index * (110L + random.nextInt(90)), TimeUnit.MILLISECONDS);
+                }, index * (150L + random.nextInt(160)), TimeUnit.MILLISECONDS);
             }
-            long next = 2600L + random.nextInt(3600);
-            scheduleGunfireCluster(next);
+            scheduleGunfireCluster(3200L + random.nextInt(3600));
         }, delayMs, TimeUnit.MILLISECONDS);
+    }
+
+    private void loadSound(String name) {
+        String path = cachedAsset(name + ".mp3");
+        if (path == null) return;
+        int soundId = soundPool.load(path, 1);
+        soundIds.put(name, soundId);
+        loadedSounds.put(name, false);
+    }
+
+    private void playAsset(String name, float pan) {
+        if (volumeMultiplier <= 0d) return;
+        Integer soundId = soundIds.get(name);
+        boolean loaded;
+        synchronized (loadedSounds) { loaded = Boolean.TRUE.equals(loadedSounds.get(name)); }
+        if (soundId == null || !loaded) return;
+        float left = 1f;
+        float right = 1f;
+        if (pan < 0f) right = 0.38f;
+        else if (pan > 0f) left = 0.38f;
+        soundPool.play(soundId, left * (float) volumeMultiplier, right * (float) volumeMultiplier, 1, 0, 1f);
+    }
+
+    private String cachedAsset(String fileName) {
+        File directory = new File(context.getCacheDir(), "running-story-audio");
+        File destination = new File(directory, fileName);
+        try {
+            if (!directory.exists() && !directory.mkdirs()) return null;
+            try (InputStream input = context.getAssets().open(ASSET_ROOT + fileName);
+                 FileOutputStream output = new FileOutputStream(destination)) {
+                byte[] buffer = new byte[8192];
+                int read;
+                while ((read = input.read(buffer)) >= 0) output.write(buffer, 0, read);
+            }
+            return destination.getAbsolutePath();
+        } catch (IOException error) {
+            return null;
+        }
+    }
+
+    private void releaseHelicopterPlayer() {
+        if (helicopterPlayer == null) return;
+        try { helicopterPlayer.stop(); } catch (RuntimeException ignored) {}
+        try { helicopterPlayer.release(); } catch (RuntimeException ignored) {}
+        helicopterPlayer = null;
+    }
+
+    private void startFallbackHelicopter() {
+        short[] pcm = makeHelicopterLoop(2.4d);
+        fallbackHelicopterTrack = createStaticTrack(pcm);
+        if (fallbackHelicopterTrack != null) {
+            int frames = pcm.length / 2;
+            try {
+                fallbackHelicopterTrack.setLoopPoints(0, Math.max(1, frames - 1), -1);
+                fallbackHelicopterTrack.play();
+            } catch (RuntimeException ignored) {
+                safeRelease(fallbackHelicopterTrack);
+                fallbackHelicopterTrack = null;
+            }
+        }
     }
 
     private AudioTrack createStaticTrack(short[] pcm) {
@@ -163,36 +275,6 @@ public class RunningStorySfxEngine {
         return pcm;
     }
 
-    private short[] makeGunshot(double seconds, double pan) {
-        int frames = Math.max(1, (int) Math.round(seconds * SAMPLE_RATE));
-        short[] pcm = new short[frames * 2];
-        double phase = 0d;
-        for (int frame = 0; frame < frames; frame += 1) {
-            double t = frame / (double) SAMPLE_RATE;
-            double envelope = Math.exp(-t * 19d);
-            phase += 2d * Math.PI * (92d + 190d * Math.exp(-t * 12d)) / SAMPLE_RATE;
-            double noise = random.nextDouble() * 2d - 1d;
-            double crack = Math.sin(phase) * 0.38d + noise * 0.72d;
-            putStereo(pcm, frame, crack * envelope * MASTER_GAIN * 1.25d, pan);
-        }
-        return pcm;
-    }
-
-    private short[] makeBulletPass(double seconds, double pan) {
-        int frames = Math.max(1, (int) Math.round(seconds * SAMPLE_RATE));
-        short[] pcm = new short[frames * 2];
-        double phase = 0d;
-        for (int frame = 0; frame < frames; frame += 1) {
-            double fraction = frame / (double) Math.max(1, frames - 1);
-            double hz = 1750d - fraction * 1200d;
-            phase += 2d * Math.PI * hz / SAMPLE_RATE;
-            double envelope = Math.sin(Math.PI * fraction);
-            double sample = (Math.sin(phase) * 0.5d + (random.nextDouble() * 2d - 1d) * 0.28d) * envelope * MASTER_GAIN;
-            putStereo(pcm, frame, sample, pan * (1d - fraction) - pan * fraction);
-        }
-        return pcm;
-    }
-
     private short[] makePursuitStinger(double seconds) {
         return makeTonalStinger(seconds, 118d, 176d, 0.6d);
     }
@@ -214,8 +296,7 @@ public class RunningStorySfxEngine {
             double hz = startHz + (endHz - startHz) * fraction;
             phase += 2d * Math.PI * hz / SAMPLE_RATE;
             double envelope = Math.sin(Math.PI * fraction);
-            double sample = Math.sin(phase) * envelope * amplitude * MASTER_GAIN;
-            putStereo(pcm, frame, sample, 0d);
+            putStereo(pcm, frame, Math.sin(phase) * envelope * amplitude * MASTER_GAIN, 0d);
         }
         return pcm;
     }

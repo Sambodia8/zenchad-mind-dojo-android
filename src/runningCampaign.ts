@@ -11,6 +11,7 @@ export interface StoryMissionDefinition {
   openingLine: string;
   watcherLine: string;
   chaseLine: string;
+  pursuerLine: string;
   helicopterLine: string;
   homeLine: string;
   extractionLine: string;
@@ -29,6 +30,7 @@ export const STORY_CAMPAIGN: StoryMissionDefinition[] = [
     openingLine: "Runner. Mara here. You're carrying a relay key the city grid thinks was destroyed. Keep moving. I'll handle the route.",
     watcherLine: "We've got a watcher behind you. Not a problem yet. Keep your rhythm.",
     chaseLine: "Runner, you've got company. Another runner is closing fast. Move.",
+    pursuerLine: "Keep running. I can see you. You won't keep the gap.",
     helicopterLine: "Air unit above us. They've got visual. Keep running. Cover ahead — get under it.",
     homeLine: "You're almost clear, Runner. Bring the relay key home.",
     extractionLine: "Key received. Nobody should have known that relay existed.",
@@ -45,6 +47,7 @@ export const STORY_CAMPAIGN: StoryMissionDefinition[] = [
     openingLine: "Runner. Same channel. The packet on that key predicts things before the grid sees them. We're taking it analogue.",
     watcherLine: "Someone just mirrored your direction change. Assume you're being tailed and keep your rhythm.",
     chaseLine: "Tail confirmed. They're accelerating. Open a gap if you've got it.",
+    pursuerLine: "I saw you change direction. It won't save you. Keep moving.",
     helicopterLine: "Rotor noise inbound. Air unit is searching your corridor. Keep moving to cover.",
     homeLine: "Dead-drop is close. Don't slow down for the handoff.",
     extractionLine: "Packet dropped. Mara's reader found a map hidden inside the timestamps.",
@@ -61,6 +64,7 @@ export const STORY_CAMPAIGN: StoryMissionDefinition[] = [
     openingLine: "Runner, the map is live. There's another signal moving through the same streets as you. We don't know who is carrying it.",
     watcherLine: "Second signal is matching your pace. Too clean to be coincidence.",
     chaseLine: "They're closing now. Move. I want to know whether they can actually keep up with you.",
+    pursuerLine: "You want to know if I can keep up? Turn around and find out.",
     helicopterLine: "Police air unit just joined the search. Use the route — cover is ahead.",
     homeLine: "Signal is breaking away. Finish the route and I'll triangulate it.",
     extractionLine: "Triangulation complete. The other signal used your Runner identifier.",
@@ -77,6 +81,7 @@ export const STORY_CAMPAIGN: StoryMissionDefinition[] = [
     openingLine: "The bait is live. Whoever borrowed your name accepted the job twelve seconds ago. Keep moving and let them think you're following their route.",
     watcherLine: "They're reacting to us in real time. That means our channel isn't as private as I thought.",
     chaseLine: "Contact moving fast. Don't chase the person — chase the signal. Give me the pace change I need to separate you.",
+    pursuerLine: "Don't chase the signal. Chase me. I'm already ahead of you.",
     helicopterLine: "Police helicopter just lit up the corridor. Both Runner IDs are exposed. Get under cover.",
     homeLine: "I've got enough. Bring yourself out clean and I'll burn this channel.",
     extractionLine: "Channel burned. The copied identifier wasn't forged externally — it was issued by our own network.",
@@ -95,6 +100,7 @@ const SIDE_MISSIONS: Omit<StoryMissionDefinition, "id">[] = [
     openingLine: "Runner, quick courier job. Package is live and the clock is already moving. Keep your route clean.",
     watcherLine: "Passive tail behind you. Keep your rhythm and make them work for the read.",
     chaseLine: "Tail just committed. Move.",
+    pursuerLine: "Your package is mine if you slow down. Keep moving.",
     helicopterLine: "Air unit scanning. Stay moving and use cover ahead.",
     homeLine: "Package window is nearly closed. Bring it in.",
     extractionLine: "Courier package delivered clean.",
@@ -110,6 +116,7 @@ const SIDE_MISSIONS: Omit<StoryMissionDefinition, "id">[] = [
     openingLine: "We've got a blind spot in the grid. You're going through it before somebody patches it.",
     watcherLine: "Cameras behind you just came back online. Keep moving.",
     chaseLine: "Ground unit is trying to close the blind spot with you inside it. Move.",
+    pursuerLine: "The blind spot closes around you. Run while it lasts.",
     helicopterLine: "Air unit filling the gap from above. Cover ahead.",
     homeLine: "You're nearly out of the mesh. Keep the same line.",
     extractionLine: "Blind spot crossed. It wasn't an accident.",
@@ -125,6 +132,7 @@ const SIDE_MISSIONS: Omit<StoryMissionDefinition, "id">[] = [
     openingLine: "Today you're the noise, Runner. Make the grid look at you while somebody else vanishes.",
     watcherLine: "Good. They're tracking the decoy. Keep feeding them a believable line.",
     chaseLine: "They've decided the decoy is real. Time to sell it. Move.",
+    pursuerLine: "They think you're the courier. Let them. I know which way you're going.",
     helicopterLine: "Air unit bought the signal too. Get under cover and make them overshoot.",
     homeLine: "Decoy job is done. Bring yourself back clean.",
     extractionLine: "The real courier disappeared exactly where we needed them to.",

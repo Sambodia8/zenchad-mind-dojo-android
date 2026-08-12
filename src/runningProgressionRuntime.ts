@@ -96,8 +96,6 @@ function tick() {
 export function startRunningProgressionRuntime() {
   if (started || typeof document === "undefined") return;
   started = true;
-  const observer = new MutationObserver(tick);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
   window.addEventListener("storage", tick);
   window.setInterval(tick, 2500);
   queueMicrotask(tick);

@@ -289,8 +289,6 @@ function tick() {
 export function startRunningRouteRuntime() {
   if (runtimeStarted || typeof window === "undefined") return;
   runtimeStarted = true;
-  const observer = new MutationObserver(tick);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
   window.addEventListener("storage", tick);
   window.setInterval(tick, 1000);
   queueMicrotask(tick);

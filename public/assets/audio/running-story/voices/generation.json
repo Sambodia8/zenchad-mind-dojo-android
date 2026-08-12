@@ -1,0 +1,955 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-12T10:38:00.676Z",
+  "manifest": "audio-production/running-story-voices.json",
+  "requestCount": 63,
+  "automaticRetries": 0,
+  "normalization": "loudnorm -18 LUFS, -2 dB true peak",
+  "results": [
+    {
+      "id": "ghost-signal-001-opening",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "X9L7owLHeXVzAcpfghmk",
+      "characterCost": "118",
+      "final": {
+        "durationSeconds": 11.546122,
+        "bytes": 185332,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128411
+      }
+    },
+    {
+      "id": "ghost-signal-001-watcher",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "rBTc7DPAdgmuIdHmbYzF",
+      "characterCost": "68",
+      "final": {
+        "durationSeconds": 6.922449,
+        "bytes": 111354,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128687
+      }
+    },
+    {
+      "id": "ghost-signal-001-chase",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "eRZfD0LppQjj8ShRaX7s",
+      "characterCost": "65",
+      "final": {
+        "durationSeconds": 8.045714,
+        "bytes": 129324,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128589
+      }
+    },
+    {
+      "id": "ghost-signal-001-pursuer",
+      "voice": "pursuer",
+      "voiceId": "7squ7rvxEIZ2rYy7KYPP",
+      "requestId": "V0ItQSVttiePKg8NVNuJ",
+      "characterCost": "52",
+      "final": {
+        "durationSeconds": 3.63102,
+        "bytes": 58698,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129325
+      }
+    },
+    {
+      "id": "ghost-signal-001-helicopter",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "KePLmvOinrUDXM315lRS",
+      "characterCost": "79",
+      "final": {
+        "durationSeconds": 6.347755,
+        "bytes": 102162,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128753
+      }
+    },
+    {
+      "id": "ghost-signal-001-home",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "E98NWBi2xSUvjNxGbn5T",
+      "characterCost": "54",
+      "final": {
+        "durationSeconds": 4.754286,
+        "bytes": 76660,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128995
+      }
+    },
+    {
+      "id": "ghost-signal-001-extraction",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "HoUQPFmxYBGSWfHYc9P6",
+      "characterCost": "58",
+      "final": {
+        "durationSeconds": 4.989388,
+        "bytes": 80428,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128958
+      }
+    },
+    {
+      "id": "ghost-signal-001-cliffhanger",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "e339OXX5oekYDvH5KOvf",
+      "characterCost": "53",
+      "final": {
+        "durationSeconds": 5.067755,
+        "bytes": 81683,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128945
+      }
+    },
+    {
+      "id": "paper-city-002-opening",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "fOVBxElxbFObWoJBxhkH",
+      "characterCost": "113",
+      "final": {
+        "durationSeconds": 9.717551,
+        "bytes": 156073,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128487
+      }
+    },
+    {
+      "id": "paper-city-002-watcher",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "87E87w20sOAgqIvyFShY",
+      "characterCost": "93",
+      "final": {
+        "durationSeconds": 6.60898,
+        "bytes": 106336,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128716
+      }
+    },
+    {
+      "id": "paper-city-002-chase",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "8lzhNaJTeaBDpP493rC1",
+      "characterCost": "66",
+      "final": {
+        "durationSeconds": 4.832653,
+        "bytes": 77913,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128977
+      }
+    },
+    {
+      "id": "paper-city-002-pursuer",
+      "voice": "pursuer",
+      "voiceId": "7squ7rvxEIZ2rYy7KYPP",
+      "requestId": "8G3mff2SSABfY4wkeM5Q",
+      "characterCost": "59",
+      "final": {
+        "durationSeconds": 4.04898,
+        "bytes": 65383,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129184
+      }
+    },
+    {
+      "id": "paper-city-002-helicopter",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "OZ8benDzvMacNbP8Rpto",
+      "characterCost": "79",
+      "final": {
+        "durationSeconds": 6.922449,
+        "bytes": 111355,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128688
+      }
+    },
+    {
+      "id": "paper-city-002-home",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "Q5g4GbpXLIqDLqbHnC4M",
+      "characterCost": "52",
+      "final": {
+        "durationSeconds": 4.127347,
+        "bytes": 66627,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129142
+      }
+    },
+    {
+      "id": "paper-city-002-extraction",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "gKPA4T6LgObJk6mGtimj",
+      "characterCost": "71",
+      "final": {
+        "durationSeconds": 6.269388,
+        "bytes": 100906,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128760
+      }
+    },
+    {
+      "id": "paper-city-002-cliffhanger",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "DXAQcPfLWRXX3KxRCZwq",
+      "characterCost": "53",
+      "final": {
+        "durationSeconds": 3.970612,
+        "bytes": 64126,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129201
+      }
+    },
+    {
+      "id": "echo-runner-003-opening",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "fKP0FCjJwEUtI4c95acb",
+      "characterCost": "121",
+      "final": {
+        "durationSeconds": 8.359184,
+        "bytes": 134340,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128567
+      }
+    },
+    {
+      "id": "echo-runner-003-watcher",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "wc0Ji8bAOzeMP2Ar0Ebw",
+      "characterCost": "65",
+      "final": {
+        "durationSeconds": 5.485714,
+        "bytes": 88365,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128865
+      }
+    },
+    {
+      "id": "echo-runner-003-chase",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "vZTz0TIc9CS78l8dkiJk",
+      "characterCost": "85",
+      "final": {
+        "durationSeconds": 7.88898,
+        "bytes": 126815,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128599
+      }
+    },
+    {
+      "id": "echo-runner-003-pursuer",
+      "voice": "pursuer",
+      "voiceId": "7squ7rvxEIZ2rYy7KYPP",
+      "requestId": "RQdXTDWi0PaacNjBPGIF",
+      "characterCost": "60",
+      "final": {
+        "durationSeconds": 4.519184,
+        "bytes": 72907,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129062
+      }
+    },
+    {
+      "id": "echo-runner-003-helicopter",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "LmgnZCGS173TCnRRa1Dm",
+      "characterCost": "70",
+      "final": {
+        "durationSeconds": 5.485714,
+        "bytes": 88368,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128870
+      }
+    },
+    {
+      "id": "echo-runner-003-home",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "AJEXY2oz7YKDTVnHkIuj",
+      "characterCost": "66",
+      "final": {
+        "durationSeconds": 4.91102,
+        "bytes": 79167,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128962
+      }
+    },
+    {
+      "id": "echo-runner-003-extraction",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "eqESq0LzetAQHodz2AM0",
+      "characterCost": "69",
+      "final": {
+        "durationSeconds": 6.034286,
+        "bytes": 97145,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128790
+      }
+    },
+    {
+      "id": "echo-runner-003-cliffhanger",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "xKhHOqg4mto4eY6XqS9x",
+      "characterCost": "49",
+      "final": {
+        "durationSeconds": 3.395918,
+        "bytes": 54932,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129407
+      }
+    },
+    {
+      "id": "borrowed-name-004-opening",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "OFF0cjRQqzaCODQT32U7",
+      "characterCost": "142",
+      "final": {
+        "durationSeconds": 10.266122,
+        "bytes": 164853,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128463
+      }
+    },
+    {
+      "id": "borrowed-name-004-watcher",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "n0lBjvKzBmhDS1PxW7BZ",
+      "characterCost": "90",
+      "final": {
+        "durationSeconds": 7.810612,
+        "bytes": 125565,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128609
+      }
+    },
+    {
+      "id": "borrowed-name-004-chase",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "ZWdyfplEVC0Oc8bgEPMu",
+      "characterCost": "110",
+      "final": {
+        "durationSeconds": 9.404082,
+        "bytes": 151059,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128505
+      }
+    },
+    {
+      "id": "borrowed-name-004-pursuer",
+      "voice": "pursuer",
+      "voiceId": "7squ7rvxEIZ2rYy7KYPP",
+      "requestId": "U5mLycs82gEClya4bXxh",
+      "characterCost": "59",
+      "final": {
+        "durationSeconds": 4.989388,
+        "bytes": 80433,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128966
+      }
+    },
+    {
+      "id": "borrowed-name-004-helicopter",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "6Pudk5R0szrC4704dMHB",
+      "characterCost": "89",
+      "final": {
+        "durationSeconds": 6.922449,
+        "bytes": 111358,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128692
+      }
+    },
+    {
+      "id": "borrowed-name-004-home",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "q5bbrMX2cmfi2E7YIUbx",
+      "characterCost": "69",
+      "final": {
+        "durationSeconds": 5.799184,
+        "bytes": 93379,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128816
+      }
+    },
+    {
+      "id": "borrowed-name-004-extraction",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "Lm5L0wGVOapM1986rX7R",
+      "characterCost": "97",
+      "final": {
+        "durationSeconds": 8.907755,
+        "bytes": 143123,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128537
+      }
+    },
+    {
+      "id": "borrowed-name-004-cliffhanger",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "KrAep4aUDVVc712tjBtr",
+      "characterCost": "50",
+      "final": {
+        "durationSeconds": 3.787755,
+        "bytes": 61204,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129267
+      }
+    },
+    {
+      "id": "cold-courier-opening",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "K0ileNyo89xYDYZNadmg",
+      "characterCost": "98",
+      "final": {
+        "durationSeconds": 8.280816,
+        "bytes": 133084,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128570
+      }
+    },
+    {
+      "id": "cold-courier-watcher",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "q7ARzA7ktPAdljLe1s2F",
+      "characterCost": "74",
+      "final": {
+        "durationSeconds": 6.034286,
+        "bytes": 97139,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128782
+      }
+    },
+    {
+      "id": "cold-courier-chase",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "lY3Wud2eYF3qpqkuQJzO",
+      "characterCost": "26",
+      "final": {
+        "durationSeconds": 2.507755,
+        "bytes": 40713,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129878
+      }
+    },
+    {
+      "id": "cold-courier-pursuer",
+      "voice": "pursuer",
+      "voiceId": "7squ7rvxEIZ2rYy7KYPP",
+      "requestId": "is87YXLi9U8bGkbwvNnD",
+      "characterCost": "51",
+      "final": {
+        "durationSeconds": 4.754286,
+        "bytes": 76666,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129005
+      }
+    },
+    {
+      "id": "cold-courier-helicopter",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "Y6oyB8gpL5v40Qx5u16d",
+      "characterCost": "51",
+      "final": {
+        "durationSeconds": 4.205714,
+        "bytes": 67885,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129129
+      }
+    },
+    {
+      "id": "cold-courier-home",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "KME7ZSbwWtKxUulbqCqD",
+      "characterCost": "45",
+      "final": {
+        "durationSeconds": 3.317551,
+        "bytes": 53668,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129415
+      }
+    },
+    {
+      "id": "cold-courier-extraction",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "PxYCIUSYzQEag3kgTpRQ",
+      "characterCost": "32",
+      "final": {
+        "durationSeconds": 2.429388,
+        "bytes": 39464,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129955
+      }
+    },
+    {
+      "id": "cold-courier-cliffhanger",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "8MKGHh9hzZqDuEX9gwE3",
+      "characterCost": "31",
+      "final": {
+        "durationSeconds": 2.429388,
+        "bytes": 39465,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129958
+      }
+    },
+    {
+      "id": "blind-spot-opening",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "Ku40DpUUYhLrkEVjRepo",
+      "characterCost": "87",
+      "final": {
+        "durationSeconds": 5.642449,
+        "bytes": 90868,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128834
+      }
+    },
+    {
+      "id": "blind-spot-watcher",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "A9uB7pTHh3MeMhltbEU7",
+      "characterCost": "54",
+      "final": {
+        "durationSeconds": 3.787755,
+        "bytes": 61193,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129243
+      }
+    },
+    {
+      "id": "blind-spot-chase",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "wlKRQ7kTvPzuREMMzmbb",
+      "characterCost": "71",
+      "final": {
+        "durationSeconds": 6.687347,
+        "bytes": 107584,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128701
+      }
+    },
+    {
+      "id": "blind-spot-pursuer",
+      "voice": "pursuer",
+      "voiceId": "7squ7rvxEIZ2rYy7KYPP",
+      "requestId": "Y1MFijWe6WyH4QblRXY2",
+      "characterCost": "53",
+      "final": {
+        "durationSeconds": 4.832653,
+        "bytes": 77918,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128985
+      }
+    },
+    {
+      "id": "blind-spot-helicopter",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "pZFl14VOeSUMLWNkzHP9",
+      "characterCost": "49",
+      "final": {
+        "durationSeconds": 4.597551,
+        "bytes": 74152,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129028
+      }
+    },
+    {
+      "id": "blind-spot-home",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "X2YmR6wJZvU82jtOp7Hx",
+      "characterCost": "50",
+      "final": {
+        "durationSeconds": 3.317551,
+        "bytes": 53666,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129411
+      }
+    },
+    {
+      "id": "blind-spot-extraction",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "D5fIuWb532YEq9ILP31W",
+      "characterCost": "42",
+      "final": {
+        "durationSeconds": 4.519184,
+        "bytes": 72898,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129046
+      }
+    },
+    {
+      "id": "blind-spot-cliffhanger",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "lg9mDH7SLV7W0ADYtIQ5",
+      "characterCost": "27",
+      "final": {
+        "durationSeconds": 2.115918,
+        "bytes": 34447,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 130239
+      }
+    },
+    {
+      "id": "noise-floor-opening",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "yTKHgPQJHnPT5ogPZGVb",
+      "characterCost": "87",
+      "final": {
+        "durationSeconds": 9.16898,
+        "bytes": 147293,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128514
+      }
+    },
+    {
+      "id": "noise-floor-watcher",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "zC1npw2WyseSLGWrJCHu",
+      "characterCost": "70",
+      "final": {
+        "durationSeconds": 5.067755,
+        "bytes": 81674,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128931
+      }
+    },
+    {
+      "id": "noise-floor-chase",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "2ZnPRi01vDJL9bLmc4dm",
+      "characterCost": "57",
+      "final": {
+        "durationSeconds": 5.564082,
+        "bytes": 89613,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128844
+      }
+    },
+    {
+      "id": "noise-floor-pursuer",
+      "voice": "pursuer",
+      "voiceId": "7squ7rvxEIZ2rYy7KYPP",
+      "requestId": "hBxpRgrEfaVuXKx0svgz",
+      "characterCost": "71",
+      "final": {
+        "durationSeconds": 4.205714,
+        "bytes": 67888,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129134
+      }
+    },
+    {
+      "id": "noise-floor-helicopter",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "PBp7lWzZhUSsj6FFJWmL",
+      "characterCost": "72",
+      "final": {
+        "durationSeconds": 5.799184,
+        "bytes": 93379,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128816
+      }
+    },
+    {
+      "id": "noise-floor-home",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "0vGFK1Wl6EMwUiZS8x7B",
+      "characterCost": "45",
+      "final": {
+        "durationSeconds": 4.127347,
+        "bytes": 66624,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129136
+      }
+    },
+    {
+      "id": "noise-floor-extraction",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "8ErkcmGa1DQi3ZRGNP4Z",
+      "characterCost": "61",
+      "final": {
+        "durationSeconds": 4.127347,
+        "bytes": 66630,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129148
+      }
+    },
+    {
+      "id": "noise-floor-cliffhanger",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "7hCZF88SmOUVl9UoShcp",
+      "characterCost": "52",
+      "final": {
+        "durationSeconds": 3.004082,
+        "bytes": 48659,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129581
+      }
+    },
+    {
+      "id": "global-chase-escaped",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "DBtT7T7FimCCSS5SDzbx",
+      "characterCost": "75",
+      "final": {
+        "durationSeconds": 6.269388,
+        "bytes": 100901,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128753
+      }
+    },
+    {
+      "id": "global-chase-pressure",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "jDUNV2Z9J7K1MYdj0FvY",
+      "characterCost": "77",
+      "final": {
+        "durationSeconds": 6.922449,
+        "bytes": 111351,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128683
+      }
+    },
+    {
+      "id": "global-chase-caught",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "Q1ATIPvnm3QJVB6Qzkji",
+      "characterCost": "66",
+      "final": {
+        "durationSeconds": 6.844082,
+        "bytes": 110095,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 128689
+      }
+    },
+    {
+      "id": "global-pursuit-escaped",
+      "voice": "pursuer",
+      "voiceId": "7squ7rvxEIZ2rYy7KYPP",
+      "requestId": "rxJbCglJI43WSpJWo6ZF",
+      "characterCost": "28",
+      "final": {
+        "durationSeconds": 2.272653,
+        "bytes": 36962,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 130110
+      }
+    },
+    {
+      "id": "global-pursuit-pressure",
+      "voice": "pursuer",
+      "voiceId": "7squ7rvxEIZ2rYy7KYPP",
+      "requestId": "5VdjVUzYDUV6jqYC4zZ6",
+      "characterCost": "53",
+      "final": {
+        "durationSeconds": 3.866122,
+        "bytes": 62458,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129241
+      }
+    },
+    {
+      "id": "global-pursuit-caught",
+      "voice": "pursuer",
+      "voiceId": "7squ7rvxEIZ2rYy7KYPP",
+      "requestId": "olSVJm7jSv0dn49y6bVu",
+      "characterCost": "47",
+      "final": {
+        "durationSeconds": 3.787755,
+        "bytes": 61203,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129264
+      }
+    },
+    {
+      "id": "global-helicopter-cover",
+      "voice": "mara",
+      "voiceId": "HBDoL4wkcalemIO0nUAu",
+      "requestId": "a8GaixF5UwxefbJsyD5n",
+      "characterCost": "59",
+      "final": {
+        "durationSeconds": 4.284082,
+        "bytes": 69139,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "bitRate": 129108
+      }
+    }
+  ]
+}

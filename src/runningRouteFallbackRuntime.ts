@@ -84,8 +84,6 @@ function tick() {
 export function startRunningRouteFallbackRuntime() {
   if (started || typeof document === "undefined") return;
   started = true;
-  const observer = new MutationObserver(tick);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
   window.setInterval(tick, 1100);
   queueMicrotask(tick);
 }

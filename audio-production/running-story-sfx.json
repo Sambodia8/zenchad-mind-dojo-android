@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "title": "ZenChad Running Story cinematic effects",
+  "outputDirectory": "public/assets/audio/running-story",
+  "outputFormat": "mp3_44100_128",
+  "modelId": "eleven_text_to_sound_v2",
+  "promptInfluence": 0.72,
+  "maxGenerations": 8,
+  "maxApprovedSeconds": 32,
+  "sounds": [
+    {
+      "id": "helicopter-loop",
+      "fileName": "helicopter-loop.mp3",
+      "durationSeconds": 10,
+      "loop": true,
+      "prompt": "A realistic cinematic police helicopter rotor loop at night, heard from a running person's position on an urban street. Distant-to-medium rotor thump, subtle engine rumble and air movement, tense but believable, designed as a seamless loop. No siren, no speech, no gunfire, no music, no dramatic sting."
+    },
+    {
+      "id": "helicopter-overhead-pass",
+      "fileName": "helicopter-overhead-pass.mp3",
+      "durationSeconds": 6,
+      "loop": false,
+      "prompt": "A realistic police helicopter approaches from the listener's right, passes close overhead, then recedes toward the left. Strong rotor wash, believable Doppler movement and stereo perspective for headphones, cinematic urban night atmosphere. No siren, no speech, no music."
+    },
+    {
+      "id": "machine-gun-burst-right",
+      "fileName": "machine-gun-burst-right.mp3",
+      "durationSeconds": 2.5,
+      "loop": false,
+      "prompt": "A short realistic burst of automatic machine-gun fire from the listener's right side, around ten sharp rounds with slight irregular timing, outdoor urban reverberation, tense pursuit scene. Keep the gunfire distinct and believable. No voices, no music, no explosions."
+    },
+    {
+      "id": "machine-gun-burst-left",
+      "fileName": "machine-gun-burst-left.mp3",
+      "durationSeconds": 2.5,
+      "loop": false,
+      "prompt": "A short realistic burst of automatic machine-gun fire from the listener's left side, around ten sharp rounds with slight irregular timing, outdoor urban reverberation, tense pursuit scene. Keep the gunfire distinct and believable. No voices, no music, no explosions."
+    },
+    {
+      "id": "bullet-pass-right-left",
+      "fileName": "bullet-pass-right-left.mp3",
+      "durationSeconds": 1.2,
+      "loop": false,
+      "prompt": "A single bullet passes extremely close to the listener from right to left, with a fast sharp supersonic whip and realistic air crack. Clear stereo movement across headphones, no gunshot, no voice, no music."
+    },
+    {
+      "id": "bullet-pass-left-right",
+      "fileName": "bullet-pass-left-right.mp3",
+      "durationSeconds": 1.2,
+      "loop": false,
+      "prompt": "A single bullet passes extremely close to the listener from left to right, with a fast sharp supersonic whip and realistic air crack. Clear stereo movement across headphones, no gunshot, no voice, no music."
+    },
+    {
+      "id": "bullet-impact-left",
+      "fileName": "bullet-impact-left.mp3",
+      "durationSeconds": 1.2,
+      "loop": false,
+      "prompt": "A bullet strikes a concrete wall immediately to the listener's left: sharp impact, tiny concrete chips, short metallic ricochet, close urban alley perspective. No gunshot, no voice, no music."
+    },
+    {
+      "id": "bullet-impact-right",
+      "fileName": "bullet-impact-right.mp3",
+      "durationSeconds": 1.2,
+      "loop": false,
+      "prompt": "A bullet strikes a concrete wall immediately to the listener's right: sharp impact, tiny concrete chips, short metallic ricochet, close urban alley perspective. No gunshot, no voice, no music."
+    }
+  ]
+}

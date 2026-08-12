@@ -68,8 +68,6 @@ function render() {
 export function startRunningHistoryEnrichmentRuntime() {
   if (started || typeof document === "undefined") return;
   started = true;
-  const observer = new MutationObserver(render);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
   window.addEventListener("storage", render);
   window.setInterval(render, 2500);
   queueMicrotask(render);
