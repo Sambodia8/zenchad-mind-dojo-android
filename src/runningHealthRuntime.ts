@@ -187,8 +187,6 @@ export function startRunningHealthRuntime() {
   started = true;
   if (!runningHealthNativeAvailable()) return;
   void ensureStatus().then(render);
-  const observer = new MutationObserver(render);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
   window.addEventListener("pageshow", () => { void ensureStatus().then(render); });
   window.addEventListener("zenchad:running-health-updated", render);
   window.setInterval(render, 2200);

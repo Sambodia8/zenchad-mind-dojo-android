@@ -98,6 +98,36 @@ export interface Stats {
   yogaSessions: number;
 }
 
+export type ZenStatId =
+  | "focus"
+  | "calm"
+  | "presence"
+  | "intuition"
+  | "equanimity"
+  | "compassion"
+  | "discipline";
+
+export interface ProgressionData {
+  flowLevel: number;
+  flowXp: number;
+  flowTotalXp: number;
+  flowLastPracticeDate: string | null;
+  flowConsecutiveDays: number;
+  skillXp: Record<ZenStatId, number>;
+  skillLevels: Record<ZenStatId, number>;
+  equippedCosmetics: EquippedCosmetics;
+  flowForm: FlowFormState;
+}
+
+export interface FlowFormState {
+  activeFormId: string | null;
+  unlockedFormIds: string[];
+}
+
+export type CosmeticSlot = "head" | "top" | "wrist" | "legs" | "shoes" | "aura";
+
+export type EquippedCosmetics = Record<CosmeticSlot, string>;
+
 export interface MoodEntry {
   id: string;
   createdAt: string;
@@ -213,6 +243,7 @@ export interface AppData {
   customYogaClasses: YogaClass[];
   downloadedSoundscapes: string[];
   mysteryChallenge: MysteryChallengeState;
+  progression: ProgressionData;
 }
 
 export type Route =

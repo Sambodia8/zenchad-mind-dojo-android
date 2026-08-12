@@ -54,8 +54,6 @@ function render() {
 export function startRunningCampaignRuntime() {
   if (started || typeof document === "undefined") return;
   started = true;
-  const observer = new MutationObserver(render);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
   window.addEventListener("storage", render);
   window.setInterval(render, 1500);
   queueMicrotask(render);

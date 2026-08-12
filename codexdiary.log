@@ -135,8 +135,35 @@
 - Verification: TypeScript/Vite build, Capacitor asset copy, Android lint, debug APK build, package/version inspection, packaged-asset counts, and matching SHA-256 checksums for local and Drive copies all passed.
 - Artifact: `Zen-Chad-1.4-debug.apk`, 298,387,915 bytes, SHA-256 `99FD966FF332F6D0A137CB64AFF534BB3FDACCB7F083592765361D183597D8FD`.
 
+2026-08-10 - Zen Chad 1.5 APK rebuilt and delivered
+- Decision/change: Fast-forwarded the Android checkout to GitHub `main` commit `ab285cd`, bumped Android to versionCode 6/versionName 1.5, synced the current web bundle, and rebuilt the shareable debug APK with JDK 21.
+- Preserve/avoid: Keep prior 1.1/1.2/1.3/1.4 APKs; deliver one current artifact to `D:\My Drive\ZenChad`.
+- Verification: TypeScript/Vite build, Capacitor sync, Android lint, debug APK build, package/version inspection, signature validation, packaged-asset/native-library inspection, and matching SHA-256 checksums for local and Drive copies all passed; no device installation test was run.
+- Artifact: `Zen-Chad-1.5-debug.apk`, 300,515,475 bytes, SHA-256 `412A8837C7016D4C448082EA1463D70C812ADFE365E045558AD8868A255A80E1`.
+- Key files: android/app/build.gradle, releases/Zen-Chad-1.5-debug.apk, D:\My Drive\ZenChad\Zen-Chad-1.5-debug.apk, RELEASE_NOTES.md.
+
+2026-08-10 - Bike Quest stretch handoff made explicit
+- Symptom: Completing the Bike Quest pre-bike Yoga with Mark class left the user on a generic completion screen with no obvious way back to the quest.
+- Decision/change: Pass the Bike Quest resume token into YogaClassScreen and render a direct `Continue Bike Quest` action that resumes the next quest step.
+- Verification: Reproduced the full pre-bike class in the local app, confirmed the explicit button appears, and confirmed it resumes at `Get water and towel`; `npm run build` passed.
+- Key files: src/App.tsx, src/screens/YogaClassScreen.tsx.
+
 2026-08-10 - Running real-phone baseline started
 - Decision/change: Installed current GitHub main as an isolated `com.zenchad.minddojo.fieldtest` build on the Pixel 6a so the newer installed 1.5/code 6 app and its data remained untouched. Added a durable field-test record and made the native integration source assertions portable across Windows and Linux line endings.
 - Device result: App launch, Running Hub, Quick/Story cards, time-only Quick Run selection, and Android precise-location grant were physically verified. Outdoor route, GPS, audio, lifecycle, Story, route-failure, Health Connect, and diagnostics tests remain unverified.
 - Preserve/avoid: Do not claim route generation or active-run behavior passed from this baseline. Continue from `RUNNING_FIELD_TEST_LOG.md`, use Java 21 for Gradle, and keep raw logcat/GPS evidence out of Git.
 - Key files: RUNNING_FIELD_TEST_LOG.md, scripts/test-running-native-integration.mjs.
+
+2026-08-11 - Running Pixel 6a preflight: device fixes and evidence
+- Decision/change: Removed self-triggering DOM observers from Running enhancement runtimes; they were rewriting panels while observing the whole DOM and could freeze the route/briefing UI. Added a just-in-time Android notification permission request at the final prep action and made the native navigator provide the required audio-focus listener on Android 17.
+- Device result: Pixel 6a showed a real route preview, active GPS/navigation HUD, a posted ongoing foreground-service notification after grant, notification-denial staying safely in prep, route-unavailable fallback, summary/history, and native navigation surviving after the audio-focus repair. An Android 17 crash was reproduced before the repair: `AudioFocusRequest` rejected pause/duck configuration without a listener.
+- Preserve/avoid: The field-test package is isolated; production data was not touched. Do not publish raw GPS/maps/logcat. The completed stationary run is lifecycle evidence only, not GPS-distance validation. Outdoor Pixel 6 Quick/Story runs, human audio listening, Health Connect, and deliberate route-retry remain required.
+- Verification: `npm run test:theme`, `npm run test:running`, production web build, Capacitor sync, and Android Java/debug APK build all passed after the fixes.
+- Key files: src/runningRouteRuntime.ts, src/running*Runtime.ts, src/screens/RunningModeScreen.tsx, android/app/src/main/AndroidManifest.xml, android/app/src/main/java/com/zenchad/minddojo/RunningBackgroundNavigator.java, scripts/test-running-native-integration.mjs, tmp/running-fieldtest/2026-08-11/FIELD_TEST_EVIDENCE.md.
+
+2026-08-12 - Zen Chad 1.6 status, Running Mode, and Bike Quest update delivered
+- Decision/change: Consolidated the JRPG-style Status screen/progression work, Bike Quest updates, Running Mode notification/audio-focus lifecycle fixes, and Running Story voice/SFX assets into the active Android checkout. Bumped Android to versionCode 7/versionName 1.6 and rebuilt the shareable debug APK with JDK 21.
+- Verification: Progression checks, Running logic checks, native Running integration checks, TypeScript/Vite build, Capacitor sync, Android debug assembly, package/version inspection, and APK signature validation all passed. No new device installation test was run.
+- Artifact: `Zen-Chad-1.6-debug.apk`, 344,059,225 bytes, SHA-256 `C04532F76EFD40044A92B1D9B900F9F89CFBD24E19FCF4ACD4F66895208DD5E9`.
+- Drive copy: `D:\My Drive\ZenChad\Zen-Chad-1.6-debug.apk`; the Google Drive desktop sync service is running. The direct connector upload timed out on the 344 MB transfer, so cloud listing should be rechecked after sync completes.
+- Key files: android/app/build.gradle, src/screens/RunningModeScreen.tsx, src/styles.css, src/runningCampaign.ts, android/app/src/main/java/com/zenchad/minddojo/RunningBackgroundStoryDirector.java, android/app/src/main/java/com/zenchad/minddojo/RunningStorySfxEngine.java, public/assets/audio/running-story/.

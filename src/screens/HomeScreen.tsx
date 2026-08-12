@@ -13,10 +13,11 @@ import {
   Sparkles,
   Target
 } from "lucide-react";
-import { LEVEL_THRESHOLDS, MEDITATIONS } from "../data";
+import { MEDITATIONS } from "../data";
 import { cancelGentleReminder, scheduleGentleReminder } from "../native";
 import { makeMood } from "../storage";
 import type { AppData, Route } from "../types";
+import { getLevelProgress } from "../xp";
 
 interface Props {
   data: AppData;
@@ -58,12 +59,7 @@ export default function HomeScreen({ data, setData, navigate }: Props) {
   const [savedMood, setSavedMood] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
   const recommendation = MEDITATIONS.find((item) => item.id === recommendationIds[moodValue])!;
-  const nextLevel = LEVEL_THRESHOLDS[data.stats.level] ?? LEVEL_THRESHOLDS.at(-1)!;
-  const previousLevel = LEVEL_THRESHOLDS[Math.max(0, data.stats.level - 1)] ?? 0;
-  const levelProgress = Math.min(
-    100,
-    ((data.stats.xp - previousLevel) / Math.max(1, nextLevel - previousLevel)) * 100
-  );
+  const levelProgress = getLevelProgress(data.stats.xp, data.stats.level);
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Morning" : hour < 18 ? "Afternoon" : "Evening";
@@ -120,39 +116,47 @@ export default function HomeScreen({ data, setData, navigate }: Props) {
   };
 
   return (
-    <div className="screen-stack">
-      <section className="hero">
+    <div className="screen-stack home-reimagined">
+      <section className="hero home-abyss-hero">
+        <div className="home-abyss-art" aria-hidden="true">
+          <img
+            src="assets/home/zen-chad-embodied-eyes-hero.png"
+            alt=""
+          />
+        </div>
+        <div className="home-orbit-eyes" aria-hidden="true">
+          <span className="embodied-eye eye-one"><i /></span>
+          <span className="embodied-eye eye-two"><i /></span>
+          <span className="embodied-eye eye-three"><i /></span>
+          <span className="embodied-eye eye-four"><i /></span>
+        </div>
         <div className="hero-copy">
-          <span className="eyebrow">{greeting}, Atlas</span>
-          <h1>Meet yourself<br />where you are.</h1>
-          <p>One gentle practice is plenty for today.</p>
+          <span className="eyebrow">{greeting}, Atlas // inner signal</span>
+          <h1>Sit with what<br />looks back.</h1>
+          <p>The strange parts can come too. One practice is enough.</p>
           <button
             className="button primary hero-action"
             onClick={() => navigate({ name: "guide" })}
           >
-            <MessageCircleHeart size={19} /> Find my practice
+            <MessageCircleHeart size={19} /> Enter the practice
           </button>
         </div>
-        <div className="mascot-frame">
-          <img
-            src="assets/vision2/zen-chad-mascot.png"
-            alt="Zen Chad meditating on a lavender lotus"
-          />
-          <div className="level-orb" aria-label={`Growth level ${data.stats.level}`}>
-            <small>LEVEL</small>
-            <strong>{data.stats.level}</strong>
-          </div>
+        <div className="home-hero-sigil" aria-label={`Growth level ${data.stats.level}`}>
+          <small>LEVEL</small>
+          <strong>{data.stats.level}</strong>
         </div>
       </section>
 
-      <section className="card level-card">
+      <section className="card level-card home-level-card">
         <div className="section-row">
           <span><b className="xp-glyph">XP</b> {data.stats.xp}</span>
           <span><Flame size={18} /> {data.stats.streak} day rhythm</span>
         </div>
-        <div className="progress-track"><span style={{ width: `${levelProgress}%` }} /></div>
+        <div className="progress-track"><span style={{ width: `${levelProgress.progressPercent}%` }} /></div>
         <small>
-          {Math.max(0, nextLevel - data.stats.xp)} growth points to the next chapter. Nothing to catch up.
+          {levelProgress.isMaxLevel
+            ? "Highest chapter reached. Your practice still counts."
+            : `${levelProgress.xpToNext} growth points to the next chapter. Nothing to catch up.`}
         </small>
       </section>
 

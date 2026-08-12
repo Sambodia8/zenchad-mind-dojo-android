@@ -1,4 +1,4 @@
-import type { BodyArea, Meditation, Movement, YogaClass, YogaClassSlide } from "./types";
+import type { BodyArea, Meditation, Movement, YogaClass, YogaClassSlide, ZenStatId } from "./types";
 
 const phase = (
   name: string,
@@ -306,6 +306,26 @@ export const MEDITATIONS: Meditation[] = [
     ]
   }
 ];
+
+export const MEDITATION_SKILL_MAPPING: Record<string, { primary: ZenStatId; secondary: ZenStatId }> = {
+  metta: { primary: "compassion", secondary: "equanimity" },
+  binaural: { primary: "focus", secondary: "calm" },
+  pratyahara: { primary: "intuition", secondary: "calm" },
+  nsdr: { primary: "calm", secondary: "presence" },
+  "yoga-nidra": { primary: "calm", secondary: "presence" },
+  "diaphragmatic-breathing": { primary: "calm", secondary: "presence" },
+  frisson: { primary: "presence", secondary: "equanimity" },
+  "sound-awareness": { primary: "presence", secondary: "focus" },
+  "focused-attention": { primary: "focus", secondary: "discipline" },
+  ego: { primary: "intuition", secondary: "presence" },
+  "tripp-vr": { primary: "presence", secondary: "calm" },
+  ajna: { primary: "intuition", secondary: "focus" },
+  "urge-surfing": { primary: "equanimity", secondary: "discipline" },
+  grounding: { primary: "presence", secondary: "calm" },
+  acceptance: { primary: "equanimity", secondary: "calm" },
+  trataka: { primary: "focus", secondary: "discipline" },
+  "maloka-vr": { primary: "presence", secondary: "calm" }
+};
 
 const area = (x: number, y: number, rx: number, ry: number, rotate = 0): BodyArea => ({
   x,

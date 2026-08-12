@@ -7,6 +7,7 @@ const source = (relativePath) =>
   fs.readFileSync(path.join(root, relativePath), "utf8").replace(/\r\n/g, "\n");
 
 const manifest = source("android/app/src/main/AndroidManifest.xml");
+assert.ok(manifest.includes("android.permission.POST_NOTIFICATIONS"), "running must declare Android notification permission for its foreground-service card");
 assert.ok(manifest.includes("android.permission.health.READ_HEART_RATE"), "Health Connect heart-rate permission must stay declared");
 assert.ok(manifest.includes("android.permission.health.READ_STEPS"), "Health Connect step/cadence permission must stay declared");
 assert.ok(manifest.includes("android.intent.action.VIEW_PERMISSION_USAGE"), "Health Connect must expose a permission-usage rationale destination");
@@ -39,6 +40,7 @@ assert.ok(
   "preview cues should be marked delivered only after TTS accepts them"
 );
 assert.match(navigator, /private boolean speak\(String text\)/, "background navigation speech must report whether the cue was accepted");
+assert.ok(navigator.includes(".setOnAudioFocusChangeListener(audioFocusChangeListener)"), "Android navigation audio focus must supply a listener when it requests duck/pause behaviour");
 
 const storySfxController = source("android/app/src/main/java/com/zenchad/minddojo/RunningStorySfxController.java");
 assert.ok(!storySfxController.includes("RunningStoryEventLog.reset(context, sessionId)"), "Android process restart must not erase earlier Story event markers for the same run");

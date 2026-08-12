@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
+    "test:progression": "node --experimental-strip-types --experimental-loader ./scripts/ts-loader.mjs scripts/test-progression.mjs",
     "test:theme": "node scripts/test-theme.mjs",
     "test:running": "node scripts/test-running.mjs && node scripts/test-running-native-integration.mjs",
     "preview": "vite preview",
@@ -21,6 +22,8 @@
     "audio:fourth-variants": "node scripts/generate-meditation-catalogue.mjs --index audio-production/fourth-variants/catalogue-index.json",
     "audio:soundscape-pilot": "node scripts/generate-soundscape-pilot.mjs --manifest audio-production/soundscape-pilot.json",
     "audio:ui-sfx": "node scripts/generate-ui-sfx.mjs --manifest audio-production/ui-sfx.json",
+    "audio:running-story-sfx": "node scripts/generate-running-story-sfx.mjs --manifest audio-production/running-story-sfx.json",
+    "audio:running-story-voices": "node scripts/generate-running-story-voices.mjs --manifest audio-production/running-story-voices.json",
     "audio:treblo-sample": "node scripts/generate-treblo-sample.mjs --manifest audio-production/treblo-metta-sample.json",
     "audio:soundscapes:treblo": "node scripts/generate-soundscape-production.mjs --manifest audio-production/treblo-soundscape-production.json",
     "audio:soundscapes:elevenlabs": "node scripts/generate-soundscape-production.mjs --manifest audio-production/elevenlabs-music-a-production.json",

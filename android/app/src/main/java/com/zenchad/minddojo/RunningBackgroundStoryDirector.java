@@ -59,6 +59,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
     private final List<ChaseResult> chaseHistory = new ArrayList<>();
 
     private TextToSpeech tts;
+    private final RunningStoryVoiceEngine voiceEngine;
     private boolean ttsReady = false;
     private boolean speaking = false;
     private String sessionId = "";
@@ -70,6 +71,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
     public RunningBackgroundStoryDirector(Context context) {
         this.context = context.getApplicationContext();
         this.prefs = this.context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        this.voiceEngine = new RunningStoryVoiceEngine(this.context);
         this.tts = new TextToSpeech(this.context, this);
     }
 
@@ -140,14 +142,14 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
         double completionRatio = elapsedSeconds / plannedSeconds;
 
         if (!prefs.getBoolean(KEY_OPENING_ONE, false) && elapsedSeconds >= 8d && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
-            if (speak(mission.openingLine)) {
+            if (speak("opening", mission.openingLine)) {
                 updateRadio(mission.title.toUpperCase(Locale.UK) + " · COMMS ONLINE", mission.objective);
                 prefs.edit().putBoolean(KEY_OPENING_ONE, true).putString(KEY_PHASE, "opening").apply();
             }
         }
 
         if (!prefs.getBoolean(KEY_OPENING_TWO, false) && elapsedSeconds >= 75d && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
-            if (speak(mission.watcherLine)) {
+            if (speak("watcher", mission.watcherLine)) {
                 updateRadio("WATCHER ON THE LINE", "Keep your rhythm. The Director is watching the route.");
                 prefs.edit()
                     .putBoolean(KEY_OPENING_TWO, true)
@@ -203,13 +205,13 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
                     .apply();
                 int remaining = Math.max(0, (int) Math.round(cover.distanceMeters - routeProgressMeters));
                 updateRadio("AIR UNIT HAS VISUAL", "Keep running · cover " + remaining + " m ahead");
-                speak(mission.helicopterLine);
+                speak("helicopter", mission.helicopterLine);
                 return;
             }
         }
 
         if (completionRatio >= 0.84d && !prefs.getBoolean(KEY_HOME_LINE, false) && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
-            if (speak(mission.homeLine)) {
+            if (speak("home", mission.homeLine)) {
                 updateRadio("EXTRACTION WINDOW", "Almost clear. Finish the route.");
                 prefs.edit().putBoolean(KEY_HOME_LINE, true).putString(KEY_PHASE, "home").apply();
             }
@@ -217,6 +219,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
     }
 
     public void shutdown() {
+        voiceEngine.shutdown();
         if (tts != null) {
             tts.stop();
             tts.shutdown();
@@ -290,7 +293,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             .putString(KEY_RADIO_DETAIL, "Adaptive chase · " + duration + " seconds")
             .putLong(KEY_UPDATED_AT, now)
             .apply();
-        speak(mission.chaseLine);
+        speak("pursuer", mission.pursuerLine.isEmpty() ? mission.chaseLine : mission.pursuerLine);
     }
 
     private void updateActiveChase(long now, double totalDistanceMeters) {
@@ -321,17 +324,17 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             outcome = "escaped";
             title = "PURSUIT BROKEN";
             detail = "Nice. They lost the line.";
-            line = "Nice. You opened the gap. They lost the line. Settle back into your rhythm.";
+            line = "You got lucky. Keep running.";
         } else if (ratio >= 0.78d) {
             outcome = "pressure";
             title = "THEY'RE STILL WITH YOU";
             detail = "Pressure stays in the story. No XP lost.";
-            line = "They're still with you. Don't force it. Keep moving and I'll change the plan.";
+            line = "You opened a gap, but not enough. I'm still with you.";
         } else {
             outcome = "caught-branch";
             title = "INTERCEPTED · NEW PLAN";
             detail = "The mission branches. Your run is still fully banked.";
-            line = "They've cut you off. Change of plan. Keep moving. This isn't over.";
+            line = "You hit the wall. Keep moving. This isn't over.";
         }
 
         chaseHistory.add(new ChaseResult(targetSpeed, achievedSpeed));
@@ -346,7 +349,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             .putLong(KEY_NEXT_EVENT_AT, now + 90_000L)
             .putLong(KEY_UPDATED_AT, now)
             .apply();
-        speak(line);
+        speak(outcome.equals("escaped") ? "global-pursuit-escaped" : outcome.equals("pressure") ? "global-pursuit-pressure" : "global-pursuit-caught", line);
     }
 
     private double chaseHistoryAdjustment() {
@@ -398,7 +401,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             .putLong(KEY_NEXT_EVENT_AT, System.currentTimeMillis() + 120_000L)
             .apply();
         updateRadio("VISUAL BROKEN", "Cover reached. Keep the line moving.");
-        if (canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) speak("Cover reached. They've lost visual. Nice work. Keep moving.");
+        if (canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) speak("global-helicopter-cover", "Cover reached. They've lost visual. Nice work. Keep moving.");
         return false;
     }
 
@@ -410,13 +413,41 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             .apply();
     }
 
-    private boolean speak(String text) {
+    private boolean speak(String lineKey, String text) {
+        if (text == null || text.trim().isEmpty() || speaking) return false;
+        String assetName = voiceAssetName(lineKey);
+        if (assetName != null && voiceEngine.play(assetName, (float) RunningStoryAudioSettings.getVoiceVolume(context), () -> speaking = false)) {
+            speaking = true;
+            return true;
+        }
+        return speakWithTextToSpeech(text);
+    }
+
+    private boolean speakWithTextToSpeech(String text) {
         if (!ttsReady || tts == null || speaking || text == null || text.trim().isEmpty()) return false;
         String utteranceId = "zenchad-native-story-" + UUID.randomUUID();
         Bundle params = new Bundle();
         params.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, (float) RunningStoryAudioSettings.getVoiceVolume(context));
         int result = tts.speak(text.trim(), TextToSpeech.QUEUE_ADD, params, utteranceId);
         return result != TextToSpeech.ERROR;
+    }
+
+    private String voiceAssetName(String lineKey) {
+        if (lineKey == null || lineKey.trim().isEmpty()) return null;
+        if (lineKey.startsWith("global-")) return lineKey + ".mp3";
+        String missionKey = missionVoiceKey();
+        return missionKey == null ? null : missionKey + "-" + lineKey + ".mp3";
+    }
+
+    private String missionVoiceKey() {
+        if (mission.id.startsWith("ghost-signal-001")) return "ghost-signal-001";
+        if (mission.id.startsWith("paper-city-002")) return "paper-city-002";
+        if (mission.id.startsWith("echo-runner-003")) return "echo-runner-003";
+        if (mission.id.startsWith("borrowed-name-004")) return "borrowed-name-004";
+        if (mission.id.startsWith("side-1-") || "Cold Courier".equals(mission.title)) return "cold-courier";
+        if (mission.id.startsWith("side-2-") || "Blind Spot".equals(mission.title)) return "blind-spot";
+        if (mission.id.startsWith("side-3-") || "Noise Floor".equals(mission.title)) return "noise-floor";
+        return null;
     }
 
     private void reloadRouteIfNeeded() {
@@ -519,6 +550,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
         final String openingLine;
         final String watcherLine;
         final String chaseLine;
+        final String pursuerLine;
         final String helicopterLine;
         final String homeLine;
 
@@ -529,6 +561,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             String openingLine,
             String watcherLine,
             String chaseLine,
+            String pursuerLine,
             String helicopterLine,
             String homeLine
         ) {
@@ -538,6 +571,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             this.openingLine = openingLine;
             this.watcherLine = watcherLine;
             this.chaseLine = chaseLine;
+            this.pursuerLine = pursuerLine;
             this.helicopterLine = helicopterLine;
             this.homeLine = homeLine;
         }
@@ -552,6 +586,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
                 json.optString("openingLine", fallback.openingLine),
                 json.optString("watcherLine", fallback.watcherLine),
                 json.optString("chaseLine", fallback.chaseLine),
+                json.optString("pursuerLine", fallback.pursuerLine),
                 json.optString("helicopterLine", fallback.helicopterLine),
                 json.optString("homeLine", fallback.homeLine)
             );
@@ -565,6 +600,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
                 "Runner. Comms check. You're carrying a relay key the city grid thinks was destroyed. Keep moving. I'll handle the route.",
                 "We've got a watcher behind you. Not a problem yet. Keep your rhythm.",
                 "Runner, you've got company. Another runner is closing fast. Move.",
+                "Keep running. I can see you. You won't keep the gap.",
                 "Air unit above us. They've got visual. Keep running. Cover ahead — get under it.",
                 "You're almost clear, Runner. Bring the relay key home."
             );

@@ -42,6 +42,9 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
     private TextToSpeech tts;
     private AudioFocusRequest audioFocusRequest;
     private boolean audioFocusHeld = false;
+    private final AudioManager.OnAudioFocusChangeListener audioFocusChangeListener = focusChange -> {
+        if (focusChange == AudioManager.AUDIOFOCUS_LOSS) audioFocusHeld = false;
+    };
     private boolean ttsReady = false;
     private String sessionId = "";
     private long routeModifiedAt = -1L;
@@ -296,10 +299,15 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
                 .setAudioAttributes(attributes)
                 .setAcceptsDelayedFocusGain(false)
                 .setWillPauseWhenDucked(true)
+                .setOnAudioFocusChangeListener(audioFocusChangeListener)
                 .build();
             result = audioManager.requestAudioFocus(audioFocusRequest);
         } else {
-            result = audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+            result = audioManager.requestAudioFocus(
+                audioFocusChangeListener,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN_TRANSIENT
+            );
         }
         audioFocusHeld = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
     }
@@ -310,7 +318,7 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
             audioManager.abandonAudioFocusRequest(audioFocusRequest);
             audioFocusRequest = null;
         } else {
-            audioManager.abandonAudioFocus(null);
+            audioManager.abandonAudioFocus(audioFocusChangeListener);
         }
         audioFocusHeld = false;
     }
