@@ -4,6 +4,7 @@ import { loadPlannedRunningRoute, type PlannedRunningRoute } from "./runningRout
 import { badAccelerationAnchorNear, nextStoryCoverAnchor } from "./runningRouteSemantics";
 import { chaseTarget, evaluateChase } from "./runningStory";
 import { speakStoryLine } from "./runningStorySpeech";
+import type { StoryMissionDefinition } from "./runningCampaign";
 import {
   createStoryRunRuntimeState,
   loadStoryRunRuntimeState,
@@ -124,7 +125,7 @@ function updateChaseDock(state: StoryRunRuntimeState, session: RunSession) {
   if (bar) bar.style.width = `${progress * 100}%`;
 }
 
-function startChase(state: StoryRunRuntimeState, session: RunSession) {
+function startChase(state: StoryRunRuntimeState, session: RunSession, mission?: StoryMissionDefinition) {
   const recentSpeed = recentSpeedMps(session.points);
   if (recentSpeed < 1.2) return state;
   const elapsed = elapsedRunSeconds(session);
@@ -156,7 +157,7 @@ function startChase(state: StoryRunRuntimeState, session: RunSession) {
   setRadio(next.lastRadioTitle, next.lastRadioDetail);
   if (!speaking) {
     speaking = true;
-    void speakStoryLine("Runner, you've got company. Another runner is closing fast. Move.")
+    void speakStoryLine(mission?.pursuerLine ?? "Keep running. I can see you. You won't keep the gap.")
       .finally(() => { speaking = false; });
   }
   saveStoryRunRuntimeState(next);
@@ -330,7 +331,7 @@ function tickStoryRun() {
   if (chaseWindowOpen && route.semanticsStatus === "ready") {
     const blocked = badAccelerationAnchorNear(route.storyAnchors ?? [], progress.routeProgressMeters);
     if (!blocked && progress.offRouteMeters <= 55) {
-      state = startChase(state, session);
+      state = startChase(state, session, route.storyMission);
       if (state.phase === "chase") return;
     }
   }
@@ -353,8 +354,6 @@ function tickStoryRun() {
 export function startRunningStoryRuntime() {
   if (started || typeof document === "undefined") return;
   started = true;
-  const observer = new MutationObserver(tickStoryRun);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
   window.addEventListener("storage", tickStoryRun);
   window.setInterval(tickStoryRun, 1000);
   queueMicrotask(tickStoryRun);

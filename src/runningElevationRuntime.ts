@@ -52,8 +52,6 @@ function renderCurrentRun() {
 export function startRunningElevationRuntime() {
   if (started || typeof document === "undefined") return;
   started = true;
-  const observer = new MutationObserver(renderCurrentRun);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
   window.addEventListener("storage", renderCurrentRun);
   window.setInterval(renderCurrentRun, 3000);
   queueMicrotask(renderCurrentRun);

@@ -44,9 +44,10 @@ import {
   scheduleTimerNotifications
 } from "../native";
 import { recordMysteryMeditation } from "../mysteryChallenge";
-import { addCompletedSession, makeMood } from "../storage";
+import { makeMood, recordMeditationCompletion } from "../storage";
 import type { AppData, Meditation, MysteryMeditationCategory, Route } from "../types";
 import { playUiSfx } from "../uiSfx";
+import XpCollectionAnimation from "../components/XpCollectionAnimation";
 
 interface Props {
   meditationId: string;
@@ -188,6 +189,7 @@ export default function TimerScreen({
   const [audioUnavailable, setAudioUnavailable] = useState(false);
   const [musicUnavailable, setMusicUnavailable] = useState(false);
   const [musicReady, setMusicReady] = useState(false);
+  const [completionDestination, setCompletionDestination] = useState<"progress" | "journal" | null>(null);
   const elapsedRef = useRef(restored.elapsedSeconds);
   const deadlineRef = useRef<number | null>(restored.deadline);
   const lastClockReadRef = useRef(Date.now());
@@ -403,7 +405,6 @@ export default function TimerScreen({
     else playCue(sound);
     if (data.preferences.uiSoundsEnabled) {
       playUiSfx("victory");
-      window.setTimeout(() => playUiSfx("xpGain"), 600);
     }
     navigator.vibrate?.([80, 60, 120]);
     localStorage.removeItem(ACTIVE_TIMER_KEY);
@@ -596,8 +597,7 @@ export default function TimerScreen({
     const creditedSeconds = Math.max(60, Math.round(elapsedRef.current));
     setData((current) => {
       const next = {
-        ...current,
-        stats: addCompletedSession(current.stats, creditedSeconds),
+        ...recordMeditationCompletion(current, meditation.id, creditedSeconds),
         moods: [makeMood("after", afterMood, `After ${meditation.name}`), ...current.moods]
       };
       if (mysteryCategory && mysteryRunId) {
@@ -609,6 +609,11 @@ export default function TimerScreen({
       }
       return next;
     });
+    setCompletionDestination(destination);
+  };
+
+  const finishCompletionNavigation = () => {
+    const destination = completionDestination ?? "progress";
     navigate(
       mysteryMode
         ? { name: "mystery-challenge" }
@@ -627,10 +632,17 @@ export default function TimerScreen({
         <span className="eyebrow">Session complete</span>
         <h1>Mind reps logged.</h1>
         <p>{meditation.name} · {Math.ceil(totalDuration / 60)} minutes</p>
-        <div className="completion-reward-burst">
+        <div className="completion-reward-burst" data-xp-source>
           <Award />
           <span><strong>+{completionXp} XP</strong><small>Ready to collect</small></span>
         </div>
+        <XpCollectionAnimation
+          amount={completionXp}
+          active={completionDestination !== null}
+          reducedMotion={data.preferences.reducedMotion}
+          soundsEnabled={data.preferences.uiSoundsEnabled}
+          onComplete={finishCompletionNavigation}
+        />
         <div className="card after-mood">
           <h3>How do you feel now?</h3>
           <div className="mood-labels">
@@ -647,13 +659,13 @@ export default function TimerScreen({
           />
           <strong className="current-mood">{afterMood}/10</strong>
         </div>
-        <button className="button primary full" onClick={() => saveCompletion("progress")}>
+        <button className="button primary full" onClick={() => saveCompletion("progress")} disabled={completionDestination !== null}>
           {mysteryMode ? "Mark meditation complete" : "Save session & view progress"}
         </button>
-        <button className="button secondary full" onClick={() => saveCompletion("journal")}>
+        <button className="button secondary full" onClick={() => saveCompletion("journal")} disabled={completionDestination !== null}>
           <BookOpen size={17} /> {mysteryMode ? "Return to the sequence" : "Save session & journal it"}
         </button>
-        <button className="button ghost full" onClick={reset}><RotateCcw size={17} /> Do it again</button>
+        <button className="button ghost full" onClick={reset} disabled={completionDestination !== null}><RotateCcw size={17} /> Do it again</button>
       </section>
     );
   }

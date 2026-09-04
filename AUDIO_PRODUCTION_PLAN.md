@@ -25,6 +25,15 @@ including four twenty-minute Yoga Nidra journeys.
 Both are private generated/remixed voices in Sam's ElevenLabs account. Never assume a public-library
 substitute is acceptable.
 
+### Running Story voices
+
+Running Story uses a separate two-character voice cast, generated offline during authoring and bundled
+with the Android app. Mara uses ElevenLabs voice `HBDoL4wkcalemIO0nUAu`; the Pursuer uses
+`7squ7rvxEIZ2rYy7KYPP`. The authored catalogue contains 63 lines: 53 Mara lines and 10 Pursuer lines.
+The manifest is `audio-production/running-story-voices.json`, generated files live under
+`public/assets/audio/running-story/voices/`, and the app never carries an ElevenLabs API key or makes
+runtime generation requests.
+
 ## Security and spending rules
 
 - The API key remains outside the project in `D:\My Drive\ZenChad\api key.txt`.

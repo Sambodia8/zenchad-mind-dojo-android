@@ -18,8 +18,9 @@ import {
   transcribeWhisperJournalRecording,
   isNativeAndroid
 } from "../native";
-import { addCompletedSessionAt, addJournalXp, importJournalText, makeJournal } from "../storage";
+import { addJournalXp, importJournalText, makeJournal, recordMeditationCompletion } from "../storage";
 import type { AppData, JournalEntry } from "../types";
+import { meditationIdForName } from "../progression";
 
 interface Props {
   data: AppData;
@@ -209,12 +210,12 @@ export default function JournalScreen({ data, setData, draftMeditation, mysteryR
 
     const sessionDate = new Date(`${practiceDate}T12:00:00`);
     const cleanBody = body.trim();
-    setData((current) => ({
-      ...current,
-      stats: addJournalXp(
-        addCompletedSessionAt(current.stats, Math.round(minutes * 60), sessionDate),
-        cleanBody ? 1 : 0
-      ),
+    const meditationId = meditationIdForName(practiceName);
+    setData((current) => {
+      const completed = recordMeditationCompletion(current, meditationId ?? "", Math.round(minutes * 60), sessionDate);
+      return {
+      ...completed,
+      stats: addJournalXp(completed.stats, cleanBody ? 1 : 0),
       journal: cleanBody
         ? [
             makeJournal(
@@ -227,7 +228,8 @@ export default function JournalScreen({ data, setData, draftMeditation, mysteryR
             ...current.journal
           ]
         : current.journal
-    }));
+      };
+    });
     setImportMessage(
       `Meditation logged. +${50 + Math.max(1, Math.floor((minutes * 60) / 6))} XP${cleanBody ? " · journal +20 XP" : ""}`
     );

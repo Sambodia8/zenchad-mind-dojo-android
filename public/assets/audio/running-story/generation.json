@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-12T02:57:47.900Z",
+  "manifest": "audio-production/running-story-sfx.json",
+  "requestCount": 8,
+  "automaticRetries": 0,
+  "normalization": "loudnorm -18 LUFS, -2 dB true peak",
+  "results": [
+    {
+      "id": "helicopter-loop",
+      "fileName": "helicopter-loop.mp3",
+      "requestedDurationSeconds": 10,
+      "requestId": null,
+      "characterCost": "100",
+      "final": {
+        "durationSeconds": 10.03102,
+        "bytes": 161106,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 2,
+        "bitRate": 128486
+      }
+    },
+    {
+      "id": "helicopter-overhead-pass",
+      "fileName": "helicopter-overhead-pass.mp3",
+      "requestedDurationSeconds": 6,
+      "requestId": null,
+      "characterCost": "60",
+      "final": {
+        "durationSeconds": 6.034286,
+        "bytes": 97166,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 2,
+        "bitRate": 128818
+      }
+    },
+    {
+      "id": "machine-gun-burst-right",
+      "fileName": "machine-gun-burst-right.mp3",
+      "requestedDurationSeconds": 2.5,
+      "requestId": null,
+      "characterCost": "25",
+      "final": {
+        "durationSeconds": 2.507755,
+        "bytes": 40743,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 2,
+        "bitRate": 129974
+      }
+    },
+    {
+      "id": "machine-gun-burst-left",
+      "fileName": "machine-gun-burst-left.mp3",
+      "requestedDurationSeconds": 2.5,
+      "requestId": null,
+      "characterCost": "25",
+      "final": {
+        "durationSeconds": 2.507755,
+        "bytes": 40742,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 2,
+        "bitRate": 129971
+      }
+    },
+    {
+      "id": "bullet-pass-right-left",
+      "fileName": "bullet-pass-right-left.mp3",
+      "requestedDurationSeconds": 1.2,
+      "requestId": null,
+      "characterCost": "12",
+      "final": {
+        "durationSeconds": 1.227755,
+        "bytes": 20262,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 2,
+        "bitRate": 132026
+      }
+    },
+    {
+      "id": "bullet-pass-left-right",
+      "fileName": "bullet-pass-left-right.mp3",
+      "requestedDurationSeconds": 1.2,
+      "requestId": null,
+      "characterCost": "12",
+      "final": {
+        "durationSeconds": 1.227755,
+        "bytes": 20262,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 2,
+        "bitRate": 132026
+      }
+    },
+    {
+      "id": "bullet-impact-left",
+      "fileName": "bullet-impact-left.mp3",
+      "requestedDurationSeconds": 1.2,
+      "requestId": null,
+      "characterCost": "12",
+      "final": {
+        "durationSeconds": 1.227755,
+        "bytes": 20258,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 2,
+        "bitRate": 132000
+      }
+    },
+    {
+      "id": "bullet-impact-right",
+      "fileName": "bullet-impact-right.mp3",
+      "requestedDurationSeconds": 1.2,
+      "requestId": null,
+      "characterCost": "12",
+      "final": {
+        "durationSeconds": 1.227755,
+        "bytes": 20259,
+        "codec": "mp3",
+        "sampleRate": 44100,
+        "channels": 2,
+        "bitRate": 132006
+      }
+    }
+  ]
+}

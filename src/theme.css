@@ -87,6 +87,23 @@
 :root[data-appearance] .topbar { background: var(--topbar-bg); }
 :root[data-appearance] .bottom-nav { background: var(--bottom-nav-bg); }
 
+/* Vision 2 still contains a few deliberately hard-coded paper colours. Keep
+   those for its light presentation surfaces, but restore contrast anywhere
+   the shared dark theme replaces the paper with a dark surface. */
+:root[data-appearance="dark"] .app-shell:not(.status-route) {
+  background:
+    linear-gradient(to bottom, rgba(8, 13, 27, 0.96) 0 58%, rgba(8, 13, 27, 0.82)),
+    url("/assets/vision2/watercolour-landscape.png") center bottom / min(1200px, 150vw) auto fixed no-repeat;
+}
+
+:root[data-appearance="dark"] .brand strong {
+  color: var(--ink);
+}
+
+:root[data-appearance="dark"] .brand small {
+  color: var(--muted);
+}
+
 :root[data-appearance] .card,
 :root[data-appearance] .meditation-card {
   border-color: var(--border);
@@ -94,8 +111,45 @@
   box-shadow: var(--card-shadow);
 }
 
-:root[data-appearance] .hud span,
+:root[data-appearance="dark"] .card h1,
+:root[data-appearance="dark"] .card h2,
+:root[data-appearance="dark"] .card h3,
+:root[data-appearance="dark"] .page-intro h1,
+:root[data-appearance="dark"] .yoga-section-heading h2 {
+  color: var(--ink);
+}
+
+:root[data-appearance="dark"] .yoga-class-meta,
+:root[data-appearance="dark"] .yoga-ready-meta {
+  color: var(--muted);
+}
+
+/* These illustrated yoga surfaces intentionally stay paper-light in dark
+   mode, so give their descendants the matching light-surface tokens. */
+:root[data-appearance="dark"] .player-topline,
+:root[data-appearance="dark"] .pose-stage,
+:root[data-appearance="dark"] .stretch-now-playing,
+:root[data-appearance="dark"] .completion-screen {
+  --ink: #38362f;
+  --muted: #6f6a61;
+  --accent-text: #6652b8;
+  --secondary-text: #5d49ad;
+  --secondary-bg: rgba(124, 58, 237, 0.08);
+  --ghost-text: #526078;
+  --ghost-bg: rgba(255, 255, 255, 0.62);
+  --segmented-bg: rgba(29, 39, 56, 0.055);
+  --segmented-text: #69758c;
+  --segmented-active-text: #fffdf7;
+  --segmented-active-bg: var(--green);
+}
+
+:root[data-appearance] .hud > span,
 :root[data-appearance] .section-row > span {
+  color: var(--hud-text);
+  background: var(--surface-soft);
+}
+
+:root[data-appearance] .hud > button {
   color: var(--hud-text);
   background: var(--surface-soft);
 }
@@ -142,6 +196,22 @@
 
 :root[data-appearance="light"] .mood-labels { color: #6f7a90; }
 
+/* The Status screen intentionally keeps its JRPG palette in every appearance mode. */
+:root[data-appearance] .status-route .topbar-status {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+:root[data-appearance] .status-route .bottom-nav {
+  border-top-color: #626c7b;
+  background: linear-gradient(180deg, #09182f, #030a18);
+}
+
+:root[data-appearance] .status-route .bottom-nav button { color: #9ca6b9; }
+:root[data-appearance] .status-route .bottom-nav button.active { color: #f1ca75; }
+
 /* Running Mode already consumes these shared aliases; dark mode only needs
    overrides for its intentionally light presentation cards. */
 :root[data-appearance="dark"] .running-hero,
@@ -171,3 +241,122 @@
 
 .appearance-segmented button { gap: 0.3rem; }
 .appearance-summary { margin: 0.7rem 0 0; font-size: 0.8rem; }
+
+/* Home has its own dark-fantasy identity in both appearance modes. */
+:root[data-appearance] .app-shell.home-route {
+  color: #f5f0ff;
+  background:
+    radial-gradient(circle at 76% 12%, rgba(91, 38, 191, 0.3), transparent 31rem),
+    radial-gradient(circle at 8% 48%, rgba(118, 12, 52, 0.18), transparent 27rem),
+    linear-gradient(180deg, #050711, #080916 58%, #03050c);
+}
+
+:root[data-appearance] .app-shell.home-route::before {
+  opacity: 0.42;
+  background-image:
+    repeating-radial-gradient(circle at 30% 20%, rgba(169, 117, 255, 0.05) 0 0.7px, transparent 0.8px 5px);
+}
+
+:root[data-appearance] .home-route .topbar {
+  border-bottom-color: rgba(147, 91, 235, 0.2);
+  background: rgba(3, 5, 13, 0.88);
+  box-shadow: 0 0.55rem 2rem rgba(0, 0, 0, 0.32);
+}
+
+:root[data-appearance] .home-route .brand-mark {
+  border-color: rgba(203, 159, 255, 0.46);
+  background: radial-gradient(circle, rgba(73, 30, 106, 0.92), rgba(8, 7, 16, 0.98));
+  box-shadow: 0 0 1rem rgba(149, 74, 231, 0.36);
+}
+
+:root[data-appearance] .home-route .brand-mark img {
+  filter: grayscale(1) invert(1) sepia(0.2) hue-rotate(225deg) saturate(4) drop-shadow(0 0 0.35rem rgba(205, 148, 255, 0.8));
+}
+
+:root[data-appearance] .home-route .brand strong {
+  color: #fff5ff;
+  text-shadow:
+    0 0 0.75rem rgba(182, 102, 255, 0.64),
+    0.08rem 0.08rem 0 rgba(109, 12, 51, 0.82);
+}
+
+:root[data-appearance] .home-route .brand small {
+  color: #a9a0c2;
+}
+
+:root[data-appearance] .home-route .hud > button {
+  border-color: rgba(150, 104, 224, 0.25);
+  color: #ddd5ed;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+:root[data-appearance] .home-route .bottom-nav {
+  border-top-color: rgba(130, 81, 211, 0.24);
+  background: rgba(3, 5, 13, 0.94);
+  box-shadow: 0 -0.7rem 2rem rgba(0, 0, 0, 0.32);
+}
+
+:root[data-appearance] .home-route .bottom-nav button { color: #77718d; }
+:root[data-appearance] .home-route .bottom-nav button.active { color: #c8a7ff; }
+
+:root[data-appearance] .home-reimagined > .card {
+  border-color: rgba(150, 102, 241, 0.27);
+  color: #f5f0ff;
+  background:
+    radial-gradient(circle at 96% 4%, rgba(109, 53, 207, 0.18), transparent 12rem),
+    linear-gradient(145deg, rgba(14, 16, 35, 0.97), rgba(7, 9, 20, 0.96));
+  box-shadow:
+    0 1rem 2.8rem rgba(0, 0, 0, 0.28),
+    inset 0 1px rgba(255, 255, 255, 0.035);
+}
+
+:root[data-appearance] .home-reimagined h2,
+:root[data-appearance] .home-reimagined h3,
+:root[data-appearance] .home-reimagined strong {
+  color: #f5f0ff;
+}
+
+:root[data-appearance] .home-reimagined p,
+:root[data-appearance] .home-reimagined small {
+  color: #aaa3bd;
+}
+
+:root[data-appearance] .home-reimagined .section-row > span {
+  color: #d8cee9;
+  background: rgba(139, 91, 224, 0.1);
+}
+
+:root[data-appearance] .home-reimagined .progress-track {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-appearance] .home-reimagined .progress-track > span {
+  background: linear-gradient(90deg, #8a3ffc, #d654a3, #ff765c);
+  box-shadow: 0 0 0.8rem rgba(164, 69, 236, 0.48);
+}
+
+:root[data-appearance] .home-reimagined input,
+:root[data-appearance] .home-reimagined textarea,
+:root[data-appearance] .home-reimagined select {
+  border-color: rgba(147, 101, 219, 0.26);
+  color: #f2ecff;
+  background: rgba(3, 5, 14, 0.72);
+}
+
+:root[data-appearance] .home-reimagined .recommendation,
+:root[data-appearance] .home-reimagined .action-card {
+  color: #f5f0ff;
+  background: rgba(86, 43, 151, 0.15);
+}
+
+:root[data-appearance] .home-reimagined .button.secondary {
+  border-color: rgba(185, 133, 255, 0.34);
+  color: #e9d8ff;
+  background: rgba(107, 55, 176, 0.2);
+}
+
+:root[data-appearance] .home-reimagined .button.ghost {
+  border-color: rgba(255, 255, 255, 0.11);
+  color: #c5bdd7;
+  background: rgba(255, 255, 255, 0.035);
+}

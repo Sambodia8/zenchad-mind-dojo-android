@@ -7,7 +7,7 @@ public class RunningStorySfxController {
     private final Context context;
     private final SharedPreferences prefs;
     private final SharedPreferences trackerPrefs;
-    private final RunningStorySfxEngine engine = new RunningStorySfxEngine();
+    private final RunningStorySfxEngine engine;
     private boolean chaseWasActive = false;
     private boolean helicopterWasActive = false;
     private String lastOutcome = "";
@@ -18,6 +18,7 @@ public class RunningStorySfxController {
         this.context = context.getApplicationContext();
         prefs = RunningBackgroundStoryDirector.getStore(this.context);
         trackerPrefs = RunningTrackerService.getStore(this.context);
+        engine = new RunningStorySfxEngine(this.context);
         syncAudioSettings();
     }
 

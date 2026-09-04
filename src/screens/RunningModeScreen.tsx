@@ -51,6 +51,7 @@ import {
   type RunSession,
   type RunningProfile
 } from "../running";
+import { isNativeAndroid, requestNotificationPermission } from "../native";
 import type { AppData } from "../types";
 
 interface Props {
@@ -319,7 +320,7 @@ export default function RunningModeScreen({ data, setData }: Props) {
     setView("prep");
   };
 
-  const completePrepStep = () => {
+  const completePrepStep = async () => {
     const current = loadRunSession();
     if (!current || current.stage !== "prep") return;
     const step = RUN_PREP_STEPS[current.prepStepIndex];
@@ -328,6 +329,13 @@ export default function RunningModeScreen({ data, setData }: Props) {
     const elapsed = Math.max(0, (Date.now() - current.stepStartedAt) / 1000);
     const xp = prepStepXp(step, elapsed);
     const isLast = current.prepStepIndex === RUN_PREP_STEPS.length - 1;
+    if (isLast && isNativeAndroid()) {
+      const notification = await requestNotificationPermission();
+      if (!notification.ok) {
+        showToast(notification.reason ?? "Allow notifications to keep your active run visible while the screen is off.");
+        return;
+      }
+    }
     const startBonus = isLast ? 25 : 0;
     const next: RunSession = {
       ...current,
