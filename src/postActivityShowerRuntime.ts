@@ -124,7 +124,7 @@ function cleanupAppliedBridgeBonuses() {
     remaining.push(bonus);
   }
 
-  // Persist proof that XP was applied before deleting the bridge record.
+  // Persist proof that XP was applied before deleting the temporary bridge record.
   if (showerChanged) saveShowerStore(showerStore);
   if (bonusChanged) {
     writeJson(RUNNING_BONUS_KEY, {
@@ -153,7 +153,10 @@ function ensureGlobalXp(contextKey: string) {
       createdAt: record.createdAt,
       appliedToGlobalXp: false
     });
-    writeJson(RUNNING_BONUS_KEY, { version: bonusStore.version ?? 1, bonuses: bonuses.slice(-300) });
+    writeJson(RUNNING_BONUS_KEY, {
+      version: bonusStore.version ?? 1,
+      bonuses: bonuses.slice(-300)
+    });
   }
 
   // App.tsx already owns the authoritative React-side XP update path for this event.
@@ -257,6 +260,34 @@ function inferLegacyBikeRecord(contextKey: string, quest: BikeQuestSnapshot) {
   return null;
 }
 
+function selectBikeShower(contextKey: string, choice: ShowerChoice) {
+  const quest = readJson<BikeQuestSnapshot>(BIKE_QUEST_KEY);
+  if (!quest || quest.step !== "recovery") return;
+
+  if (choice === "skip") {
+    quest.showerSkipped = true;
+    quest.showerLogged = false;
+    writeJson(BIKE_QUEST_KEY, quest);
+    saveChoice(contextKey, makeRecord("skip", 0, 0));
+    return;
+  }
+
+  const target = showerXp(choice);
+  const previousAward = Math.max(0, Number(quest.awards?.shower ?? 0));
+  const finalXp = Math.max(target, previousAward);
+  const delta = Math.max(0, finalXp - previousAward);
+
+  quest.awards = { ...(quest.awards ?? {}), shower: finalXp };
+  quest.totalQuestXp = Math.max(0, Number(quest.totalQuestXp ?? 0)) + delta;
+  quest.showerLogged = true;
+  quest.showerSkipped = false;
+  writeJson(BIKE_QUEST_KEY, quest);
+
+  saveChoice(contextKey, makeRecord(choice, finalXp, delta));
+  patchBikeQuestHud(quest);
+  if (delta > 0) ensureGlobalXp(contextKey);
+}
+
 function renderBikeShower() {
   const recovery = document.querySelector<HTMLElement>(".bike-quest.recovery");
   if (!recovery) return;
@@ -286,44 +317,7 @@ function renderBikeShower() {
   ) as HTMLElement | undefined;
 
   if (!panel) {
-    const sourceButtons = Array.from(card.querySelectorAll<HTMLButtonElement>("button"));
-    const sourcePrimary = sourceButtons.find((button) =>
-      button.classList.contains("primary") || /showered|actually/i.test(button.textContent ?? "")
-    );
-    const sourceSkip = sourceButtons.find((button) =>
-      /not needed|skip/i.test(button.textContent ?? "")
-    );
-
-    if (!record && (!sourcePrimary || !sourceSkip)) return;
-
-    panel = createChooser(contextKey, record, (choice) => {
-      if (choice === "skip") {
-        sourceSkip?.click();
-        saveChoice(contextKey, makeRecord("skip", 0, 0));
-        return;
-      }
-
-      sourcePrimary?.click();
-      const after = readJson<BikeQuestSnapshot>(BIKE_QUEST_KEY);
-      if (!after) return;
-
-      const target = showerXp(choice);
-      const issued = Math.max(0, Number(after.awards?.shower ?? 20));
-      const finalXp = Math.max(target, issued);
-      const delta = Math.max(0, finalXp - issued);
-
-      if (delta > 0) {
-        after.awards = { ...(after.awards ?? {}), shower: finalXp };
-        after.totalQuestXp = Math.max(0, Number(after.totalQuestXp ?? 0)) + delta;
-        after.showerLogged = true;
-        after.showerSkipped = false;
-        writeJson(BIKE_QUEST_KEY, after);
-      }
-
-      saveChoice(contextKey, makeRecord(choice, finalXp, delta));
-      patchBikeQuestHud(after);
-      ensureGlobalXp(contextKey);
-    });
+    panel = createChooser(contextKey, record, (choice) => selectBikeShower(contextKey, choice));
     card.appendChild(panel);
   }
 
