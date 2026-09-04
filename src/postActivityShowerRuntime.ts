@@ -93,7 +93,7 @@ function saveChoice(contextKey: string, record: ShowerRecord) {
   saveShowerStore(store);
 }
 
-function recordFor(contextKey: string) {
+function recordFor(contextKey: string): ShowerRecord | null {
   return loadShowerStore().choices[contextKey] ?? null;
 }
 
@@ -307,7 +307,7 @@ function renderBikeShower() {
   card.classList.add("post-activity-shower-host");
   card.dataset.postActivityShower = "bike";
 
-  let record = recordFor(contextKey);
+  let record: ShowerRecord | null = recordFor(contextKey);
   if (!record && (quest.showerLogged || quest.showerSkipped)) {
     record = inferLegacyBikeRecord(contextKey, quest);
   }
