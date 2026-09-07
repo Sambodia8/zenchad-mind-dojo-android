@@ -5,6 +5,14 @@ import { stopNativeRunningTracker } from "./runningNative";
 let started = false;
 let banking = false;
 const allowNextClick = new WeakSet<HTMLButtonElement>();
+const FINAL_GPS_TIMEOUT_MS = 1800;
+
+async function snapshotWithinDeadline() {
+  return Promise.race([
+    stopNativeRunningTracker().catch(() => null),
+    new Promise<null>((resolve) => window.setTimeout(() => resolve(null), FINAL_GPS_TIMEOUT_MS))
+  ]);
+}
 
 function usableNativePoints(points: RunPoint[] | undefined) {
   if (!Array.isArray(points)) return [];
@@ -29,9 +37,9 @@ async function bankNativeFinish(button: HTMLButtonElement) {
   button.textContent = "BANKING FINAL GPS…";
 
   try {
-    const snapshot = await stopNativeRunningTracker();
+    const snapshot = await snapshotWithinDeadline();
     const current = loadRunSession();
-    if (!current || current.stage !== "active" || snapshot.sessionId !== current.id) return;
+    if (!snapshot || !current || current.stage !== "active" || snapshot.sessionId !== current.id) return;
     const points = usableNativePoints(snapshot.points);
     if (points.length >= 2 && Number.isFinite(snapshot.distanceMeters) && snapshot.distanceMeters >= 0) {
       saveRunSession({

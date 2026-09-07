@@ -167,3 +167,37 @@
 - Artifact: `Zen-Chad-1.6-debug.apk`, 344,059,225 bytes, SHA-256 `C04532F76EFD40044A92B1D9B900F9F89CFBD24E19FCF4ACD4F66895208DD5E9`.
 - Drive copy: `D:\My Drive\ZenChad\Zen-Chad-1.6-debug.apk`; the Google Drive desktop sync service is running. The direct connector upload timed out on the 344 MB transfer, so cloud listing should be rechecked after sync completes.
 - Key files: android/app/build.gradle, src/screens/RunningModeScreen.tsx, src/styles.css, src/runningCampaign.ts, android/app/src/main/java/com/zenchad/minddojo/RunningBackgroundStoryDirector.java, android/app/src/main/java/com/zenchad/minddojo/RunningStorySfxEngine.java, public/assets/audio/running-story/.
+
+2026-08-19 - Yoga with Mark visual redesign installed and verified
+- Decision/change: Rebuilt the complete Yoga flow around the selected cosmic-dark split hero with a much larger, recognisable Mark; added four image-first class-cover families, shared light/dark Yoga tokens, richer class details, an immersive class player, and a two-column 45-pose builder. The main Home character and Yoga data schema were left unchanged.
+- Device result: Built the current versionCode 7/versionName 1.6 app and repeatedly installed it in place on the connected Pixel 6a with `adb install -r`; the original 2026-07-30 first-install timestamp remained unchanged. Final landing, browser, detail, active-class, and builder screenshots were captured at standard text size, and a temporary 1.3 Android font-scale check passed before restoring 1.0.
+- Preserve/avoid: Keep Mark separate from the pink-haired Zen Chad character, retain the 45 existing pose illustrations, and keep the compact <=420 px Yoga landing rules so Android system bars do not cover the paired actions.
+- Key files: src/screens/YogaScreen.tsx, src/screens/YogaClassScreen.tsx, src/screens/YogaRoutineBuilderScreen.tsx, src/styles.css, src/theme.css, public/assets/yoga/, design-qa.md, test-screenshots/yoga-redesign-device/.
+
+2026-08-19 - Zen Chad 1.7 APK rebuilt and copied to Drive
+- Decision/change: Bumped the shareable Android artifact to versionCode 8/versionName 1.7 and rebuilt the current Yoga redesign bundle.
+- Verification: TypeScript/Vite build, Capacitor sync, JDK 21 Gradle debug assembly, package/version metadata, APK v1/v2 signature verification, theme tests, and matching source/Drive-copy SHA-256 checks passed.
+- Artifact: `Zen-Chad-1.7-debug.apk`, 350,390,970 bytes, SHA-256 `1E281EAC5BDB7DC1B728750B8C46A40ADCEFA260884BF92631B2C5C2B9D96C7B`.
+- Drive copy: `D:\My Drive\ZenChad\Zen-Chad-1.7-debug.apk`; the Drive desktop sync may take a little time before connector search lists the new file. The direct connector upload timed out on the 350 MB transfer, so the Drive desktop sync remains the delivery path. Older APKs were retained.
+
+2026-08-21 - Running Mode completion installed and indoor-tested
+- Decision/change: Completed the native run-photo lifecycle, offline-first shared Running TTS policy, MapLibre/OpenFreeMap street context with schematic fallback, route-revision maneuver IDs, actual-travel naming/editing, saved-trace direction context, metric/reward fixtures, and dark accessible post-run/history styling.
+- Device result: Two preserve-data replacement installs succeeded on the Pixel 6a. Indoor QA covered Android prompt/denied/limited/full photo access, Camera resume import, nearest capture-time GPS matching, deleted-original thumbnail survival, captioning, atomic reassignment and removal; offline `en-GB` sample/persistence; street-map rendering; preparation through confirmed early finish; name edit, history and relaunch. The controlled stationary run is lifecycle evidence, not outdoor metric evidence.
+- Preserve/avoid: Keep Java 21 for Android builds, never treat Android selected-photo access as full, retain the local schematic as a map-service failure fallback, prefer offline English speech, and do not claim Sandbach navigation or real-track metrics passed until the field checklist is completed.
+- Verification: Running/native, photo and TTS tests, TypeScript, production build, Capacitor sync, Java 21 APK assembly, package/version/signature checks, and final on-device visual inspection passed. Outdoor, screen-off/airplane speech fallback, live 360×700 active-run, and complete TalkBack checks remain unverified in `RUNNING_FIELD_TEST_LOG.md`.
+- Key files: `src/screens/RunningModeScreen.tsx`, `src/runningPhotos.ts`, `src/runningPhotoRuntime.ts`, `src/runningSpeech.ts`, `src/runningStreetMap.ts`, `src/runningMode.css`, `src/runningHealth.css`, `android/app/src/main/java/com/zenchad/minddojo/RunningPhotosPlugin.java`, `android/app/src/main/java/com/zenchad/minddojo/RunningSpeechPlugin.java`, `android/app/src/main/java/com/zenchad/minddojo/RunningVoicePolicy.java`, `RUNNING_FIELD_TEST_LOG.md`.
+
+2026-08-21 - Running Mode APK packaged for installation
+- Decision/change: Rebuilt and packaged one clearly named version 1.7/code 8 Running Mode debug APK without replacing the earlier Yoga-labelled 1.7 Drive artifact.
+- Artifact: `releases/Zen-Chad-1.7-Running-Mode-debug.apk` and `D:\My Drive\ZenChad\Zen-Chad-1.7-Running-Mode-debug.apk`, 368,538,911 bytes, SHA-256 `3CB56AD5CC10304D09330CA74B915237FC7986AA0A598F5001A736BCE6AA464A`.
+2026-09-03 - Zen Chad 1.9 clean paper-doll and cosmetic rebuild
+- Decision/change: Rebuilt the Status character from scratch to eliminate accumulated image-to-image noise, matched the original medium-long pink hair, regenerated the starter and shop cosmetic paper-doll layers against the clean 1024x1536 base, and kept Hair as its own category.
+- Verification: Progression and shop tests, Running logic/native integration tests, TypeScript/Vite build, Capacitor sync, Java 21 debug APK assembly, package/version/signature/SHA-256 checks, packaged clean-asset inspection, and 412x915 browser QA passed. No APK was installed on a device in this build turn because adb is unavailable in this environment.
+- Artifact: `Zen-Chad-1.9-debug.apk`, 461,363,116 bytes, SHA-256 `D767CEF7280CC73777781DF4F3E3830C4AF0DBE9A695D7A49D55955CF7FCFC0B`.
+- Release copies: `S:\zENcHAD\ZenChadAndroid\releases\Zen-Chad-1.9-debug.apk` and `D:\My Drive\ZenChad\Zen-Chad-1.9-debug.apk`.
+- Preserve/avoid: Existing item IDs, prices, starter ownership, saved equipment, old source assets, and legacy head-to-hair migration remain intact. Do not use the retired noisy base for future item generation.
+
+2026-09-07 - Zen Chad Next Generation APK rebuilt and delivered
+- Decision/change: Bumped the shareable Android package to versionCode 11/versionName 2.0 and rebuilt the complete current working tree as `Zen Chad Next Generation.apk`, preserving the existing application ID and user-data upgrade path.
+- Verification: Sync, progression, Yoga, theme, ZenPoints, shop, Streak Freeze, Running logic/native integration, TTS and photo tests; TypeScript/Vite build; Capacitor sync; Java 21 debug assembly; package/version metadata; v1/v2 signature; and matching source/release/Drive hashes passed. No device installation test was run.
+- Artifact: `S:\zENcHAD\ZenChadAndroid\releases\Zen Chad Next Generation.apk` and `D:\My Drive\ZenChad\Zen Chad Next Generation.apk`, 467,547,411 bytes, SHA-256 `795A1E2D690D4EF26549AE3D7EF2DA34158C95B379BBB11B7F193594C942BF05`.

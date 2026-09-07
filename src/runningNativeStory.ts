@@ -30,6 +30,11 @@ export interface NativeStorySnapshot {
   sfxEnabled: boolean;
   sfxVolume: number;
   voiceVolume: number;
+  audioState: "idle" | "pending" | "playing" | "failed";
+  audioLabel: string;
+  audioError: string;
+  audioTranscript: string;
+  heardLineKeysJson: string;
   updatedAt: number;
 }
 
@@ -41,6 +46,7 @@ interface RunningStoryDirectorPlugin {
     sfxVolume?: number;
     voiceVolume?: number;
   }): Promise<NativeStorySnapshot>;
+  replayLast(): Promise<NativeStorySnapshot>;
   clear(): Promise<NativeStorySnapshot>;
 }
 
@@ -74,6 +80,15 @@ export function parseNativeStoryEvents(snapshot: Pick<NativeStorySnapshot, "even
   }
 }
 
+export function parseNativeStoryHeardLineKeys(snapshot: Pick<NativeStorySnapshot, "heardLineKeysJson">) {
+  try {
+    const parsed = JSON.parse(snapshot.heardLineKeysJson || "[]");
+    return Array.isArray(parsed) ? parsed.filter((value): value is string => typeof value === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
 export function setNativeStoryDifficulty(difficulty: ChaseDifficulty) {
   return RunningStoryDirector.setDifficulty({ difficulty });
 }
@@ -88,4 +103,8 @@ export function setNativeStoryAudioSettings(settings: {
 
 export function clearNativeStoryDirector() {
   return RunningStoryDirector.clear();
+}
+
+export function replayNativeStoryLast() {
+  return RunningStoryDirector.replayLast();
 }

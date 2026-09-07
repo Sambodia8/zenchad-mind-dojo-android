@@ -5,6 +5,7 @@ import { KeepAwake } from "@capacitor-community/keep-awake";
 const GENTLE_REMINDER_ID = 4101;
 const TIMER_NOTIFICATION_IDS = Array.from({ length: 20 }, (_, index) => 5200 + index);
 const BIKE_RIDE_NOTIFICATION_ID = 6101;
+const RUNNING_REMINDER_NOTIFICATION_ID = 6201;
 
 export interface TimerNotificationBoundary {
   at: Date;
@@ -169,6 +170,18 @@ async function ensureBikeQuestChannel() {
   });
 }
 
+async function ensureRunningReminderChannel() {
+  if (!isNativeAndroid()) return;
+  await LocalNotifications.createChannel({
+    id: "running-reminders",
+    name: "Run reminders",
+    description: "A single reminder when an active run may need banking.",
+    importance: 3,
+    vibration: false,
+    lights: false
+  });
+}
+
 export async function requestNotificationPermission(): Promise<NativeActionResult> {
   if (!Capacitor.isNativePlatform()) {
     return { ok: false, reason: "Notifications are available in the installed Android app." };
@@ -252,6 +265,38 @@ export async function cancelTimerNotifications() {
   await LocalNotifications.cancel({
     notifications: TIMER_NOTIFICATION_IDS.map((id) => ({ id }))
   });
+}
+
+export async function scheduleRunningReminder(startedAt: number, plannedMinutes: number): Promise<NativeActionResult> {
+  if (!Capacitor.isNativePlatform()) return { ok: true };
+  const permission = await requestNotificationPermission();
+  if (!permission.ok) return permission;
+
+  const reminderAt = new Date(startedAt + (Math.max(1, plannedMinutes) + 15) * 60_000);
+  try {
+    await ensureRunningReminderChannel();
+    await LocalNotifications.cancel({ notifications: [{ id: RUNNING_REMINDER_NOTIFICATION_ID }] });
+    await LocalNotifications.schedule({
+      notifications: [
+        {
+          id: RUNNING_REMINDER_NOTIFICATION_ID,
+          title: "Is your run finished?",
+          body: "Your run is still active. Open ZenChad to finish and bank it when you are ready.",
+          channelId: "running-reminders",
+          schedule: { at: reminderAt, allowWhileIdle: true },
+          extra: { kind: "running-reminder" }
+        }
+      ]
+    });
+    return { ok: true };
+  } catch {
+    return { ok: false, reason: "Android could not schedule the run reminder." };
+  }
+}
+
+export async function cancelRunningReminder() {
+  if (!Capacitor.isNativePlatform()) return;
+  await LocalNotifications.cancel({ notifications: [{ id: RUNNING_REMINDER_NOTIFICATION_ID }] });
 }
 
 export async function showBikeRideRunningNotification(): Promise<NativeActionResult> {

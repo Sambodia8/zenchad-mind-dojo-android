@@ -126,6 +126,9 @@ public class RunningTrackerPlugin extends Plugin {
                     point.put("lat", sourcePoint.optDouble("lat"));
                     point.put("lng", sourcePoint.optDouble("lng"));
                     point.put("accuracy", sourcePoint.optDouble("accuracy", -1d));
+                    if (sourcePoint.has("heading") && !sourcePoint.isNull("heading")) {
+                        point.put("heading", sourcePoint.optDouble("heading"));
+                    }
                     point.put("at", sourcePoint.optLong("at"));
                     point.put("distanceFromStart", sourcePoint.optDouble("distanceFromStart", 0d));
                     points.put(point);

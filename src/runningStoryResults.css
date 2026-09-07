@@ -82,3 +82,10 @@ html:not(.dark) .running-campaign-latest {
     grid-column: 1 / -1;
   }
 }
+.running-story-result-chapters { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: .35rem; }
+.running-story-result-chapters span { display: grid; justify-items: center; gap: .3rem; color: var(--text-muted); font-size: .62rem; text-align: center; }
+.running-story-result-chapters i { width: 100%; height: .32rem; border-radius: 999px; background: rgba(100,116,139,.18); }
+.running-story-result-chapters span.heard { color: var(--run-green); font-weight: 850; }
+.running-story-result-chapters span.heard i { background: var(--run-green); }
+.running-story-playback-ok { color: var(--run-green); font-weight: 750; }
+.running-story-playback-warning { padding: .75rem; border-radius: .75rem; background: rgba(245,158,11,.11); color: var(--text); }

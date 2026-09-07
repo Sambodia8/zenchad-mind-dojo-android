@@ -1,321 +1,119 @@
 import { useState, type Dispatch, type SetStateAction } from "react";
 import {
-  ArrowRight,
-  Bell,
-  BellOff,
-  BookOpen,
-  Check,
-  Dumbbell,
-  Flame,
-  Gift,
-  Music2,
-  MessageCircleHeart,
-  Sparkles,
-  Target
+  ArrowLeft,
+  Bike,
+  Footprints,
+  MoonStar,
+  NotebookPen,
+  PersonStanding,
+  type LucideIcon
 } from "lucide-react";
-import { MEDITATIONS } from "../data";
-import { cancelGentleReminder, scheduleGentleReminder } from "../native";
-import { makeMood } from "../storage";
-import type { AppData, Route } from "../types";
-import { getLevelProgress } from "../xp";
+import type { Route } from "../types";
 
 interface Props {
-  data: AppData;
-  setData: Dispatch<SetStateAction<AppData>>;
   navigate: Dispatch<SetStateAction<Route>>;
 }
 
-const moods = [
-  { label: "Overwhelmed", color: "#c86259" },
-  { label: "Very rough", color: "#ca6d5d" },
-  { label: "Struggling", color: "#d47a5f" },
-  { label: "Tense", color: "#d98964" },
-  { label: "Unsettled", color: "#dca36a" },
-  { label: "Neutral", color: "#deb96c" },
-  { label: "Steady", color: "#b8b775" },
-  { label: "Okay", color: "#9caf82" },
-  { label: "Calm", color: "#86aa8d" },
-  { label: "Good", color: "#74a59b" },
-  { label: "Grounded", color: "#6b9fa7" }
+interface HomePath {
+  label: string;
+  detail: string;
+  className: string;
+  icon: LucideIcon;
+  route?: Route;
+  action?: "movement-choice";
+}
+
+const homePaths: HomePath[] = [
+  {
+    label: "Move",
+    detail: "Run or ride",
+    className: "move",
+    icon: PersonStanding,
+    action: "movement-choice"
+  },
+  {
+    label: "Stretch",
+    detail: "Yoga & mobility",
+    className: "stretch",
+    icon: PersonStanding,
+    route: { name: "yoga" }
+  },
+  {
+    label: "Meditate",
+    detail: "Guided practices",
+    className: "meditate",
+    icon: MoonStar,
+    route: { name: "library", tab: "meditations" }
+  },
+  {
+    label: "Reflect",
+    detail: "Journal & plan",
+    className: "reflect",
+    icon: NotebookPen,
+    route: { name: "journal" }
+  },
 ];
 
-const recommendationIds = [
-  "nsdr",
-  "nsdr",
-  "acceptance",
-  "acceptance",
-  "grounding",
-  "sound-awareness",
-  "focused-attention",
-  "metta",
-  "pratyahara",
-  "trataka",
-  "frisson"
-];
-
-export default function HomeScreen({ data, setData, navigate }: Props) {
-  const [moodValue, setMoodValue] = useState(5);
-  const [moodNote, setMoodNote] = useState("");
-  const [savedMood, setSavedMood] = useState(false);
-  const [notificationMessage, setNotificationMessage] = useState("");
-  const recommendation = MEDITATIONS.find((item) => item.id === recommendationIds[moodValue])!;
-  const levelProgress = getLevelProgress(data.stats.xp, data.stats.level);
-
+export default function HomeScreen({ navigate }: Props) {
+  const [movementChoiceOpen, setMovementChoiceOpen] = useState(false);
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? "Morning" : hour < 18 ? "Afternoon" : "Evening";
-  const today = new Date();
-  const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-  const tinyQuestComplete = data.stats.lastSessionDate === todayKey;
-
-  const saveMood = () => {
-    setData((current) => ({
-      ...current,
-      moods: [makeMood("before", moodValue, moodNote.trim()), ...current.moods]
-    }));
-    setSavedMood(true);
-  };
-
-  const updateReminderTime = (time: string) => {
-    setData((current) => ({
-      ...current,
-      preferences: { ...current.preferences, gentleReminderTime: time }
-    }));
-    setNotificationMessage(
-      data.preferences.gentleReminderEnabled ? "Tap “Update reminder” to use the new time." : ""
-    );
-  };
-
-  const toggleReminder = async () => {
-    if (data.preferences.gentleReminderEnabled) {
-      await cancelGentleReminder();
-      setData((current) => ({
-        ...current,
-        preferences: { ...current.preferences, gentleReminderEnabled: false }
-      }));
-      setNotificationMessage("Gentle reminder turned off.");
-      return;
-    }
-
-    const result = await scheduleGentleReminder(data.preferences.gentleReminderTime);
-    if (result.ok) {
-      setData((current) => ({
-        ...current,
-        preferences: { ...current.preferences, gentleReminderEnabled: true }
-      }));
-      setNotificationMessage("Gentle reminder scheduled. You can turn it off here at any time.");
-    } else {
-      setNotificationMessage(result.reason ?? "The reminder could not be enabled.");
-    }
-  };
-
-  const rescheduleReminder = async () => {
-    const result = await scheduleGentleReminder(data.preferences.gentleReminderTime);
-    setNotificationMessage(
-      result.ok ? "Reminder time updated." : result.reason ?? "The reminder could not be updated."
-    );
-  };
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
   return (
-    <div className="screen-stack home-reimagined">
-      <section className="hero home-abyss-hero">
-        <div className="home-abyss-art" aria-hidden="true">
-          <img
-            src="assets/home/zen-chad-embodied-eyes-hero.png"
-            alt=""
-          />
-        </div>
-        <div className="home-orbit-eyes" aria-hidden="true">
-          <span className="embodied-eye eye-one"><i /></span>
-          <span className="embodied-eye eye-two"><i /></span>
-          <span className="embodied-eye eye-three"><i /></span>
-          <span className="embodied-eye eye-four"><i /></span>
-        </div>
-        <div className="hero-copy">
-          <span className="eyebrow">{greeting}, Atlas // inner signal</span>
-          <h1>Sit with what<br />looks back.</h1>
-          <p>The strange parts can come too. One practice is enough.</p>
-          <button
-            className="button primary hero-action"
-            onClick={() => navigate({ name: "guide" })}
-          >
-            <MessageCircleHeart size={19} /> Enter the practice
-          </button>
-        </div>
-        <div className="home-hero-sigil" aria-label={`Growth level ${data.stats.level}`}>
-          <small>LEVEL</small>
-          <strong>{data.stats.level}</strong>
+    <div className="home-dojo-screen">
+      <section className="home-dojo-hero" aria-labelledby="home-dojo-title">
+        <img src="assets/home/zen-chad-embodied-eyes-hero.png" alt="" />
+        <p className="home-dojo-greeting">{greeting}, Sam</p>
+        <div className="home-dojo-title-lockup">
+          <span>Today in the</span>
+          <h1 id="home-dojo-title">Dojo</h1>
         </div>
       </section>
 
-      <section className="card level-card home-level-card">
-        <div className="section-row">
-          <span><b className="xp-glyph">XP</b> {data.stats.xp}</span>
-          <span><Flame size={18} /> {data.stats.streak} day rhythm</span>
+      <section className="home-paths" aria-labelledby="home-paths-title">
+        <div className="home-paths-heading">
+          <span aria-hidden="true" />
+          <h2 id="home-paths-title">What would help right now?</h2>
         </div>
-        <div className="progress-track"><span style={{ width: `${levelProgress.progressPercent}%` }} /></div>
-        <small>
-          {levelProgress.isMaxLevel
-            ? "Highest chapter reached. Your practice still counts."
-            : `${levelProgress.xpToNext} growth points to the next chapter. Nothing to catch up.`}
-        </small>
-      </section>
 
-      <section className={`card home-quest-card ${tinyQuestComplete ? "complete" : ""}`}>
-        <span className="home-quest-seal">
-          {tinyQuestComplete ? <Check /> : <Gift />}
-        </span>
-        <div>
-          <span className="eyebrow">Today&apos;s tiny quest</span>
-          <h3>{tinyQuestComplete ? "Quest complete. Nice." : "Let the brass oracle choose"}</h3>
-          <p>
-            {tinyQuestComplete
-              ? "You collected today’s stamp. Nothing else is required."
-              : "Turn the dial and try whatever it points to — even for one minute."}
-          </p>
-        </div>
-        <button
-          className="button secondary"
-          onClick={() =>
-            navigate(
-              tinyQuestComplete
-                ? { name: "rewards" }
-                : { name: "roulette", autoSpin: true, spinKey: Date.now() }
-            )
-          }
-        >
-          {tinyQuestComplete ? "See rewards" : "Ask the dial"} <ArrowRight size={17} />
-        </button>
-      </section>
-
-      <section className="card mood-card">
-        <div className="section-heading">
-          <div>
-            <span className="eyebrow">Quick check-in</span>
-            <h2>How are you arriving?</h2>
-          </div>
-          <span className="mood-dot" style={{ background: moods[moodValue].color }} />
-        </div>
-        <p className="mood-guidance">Pick the closest number. It is a snapshot, not a test.</p>
-        <div className="mood-labels">
-          <span>0 · hardest</span><span>5 · neutral</span><span>10 · best</span>
-        </div>
-        <input
-          className="mood-slider"
-          type="range"
-          min="0"
-          max="10"
-          step="1"
-          value={moodValue}
-          aria-label="Current mood"
-          onChange={(event) => {
-            setMoodValue(Number(event.target.value));
-            setSavedMood(false);
-          }}
-        />
-        <strong className="current-mood">
-          <span>{moodValue}/10</span> {moods[moodValue].label}
-        </strong>
-        <textarea
-          rows={2}
-          value={moodNote}
-          onChange={(event) => setMoodNote(event.target.value)}
-          placeholder="Optional: what is taking up space in your head?"
-        />
-        <div className="recommendation">
-          <span className="recommendation-icon"><Sparkles size={20} /></span>
-          <div>
-            <small>Suggested right now</small>
-            <strong>{recommendation.name}</strong>
-            <p>{recommendation.benefit}</p>
-          </div>
-          <button
-            className="icon-button"
-            onClick={() => navigate({ name: "timer", meditationId: recommendation.id })}
-            aria-label={`Start ${recommendation.name}`}
-          >
-            <ArrowRight size={20} />
-          </button>
-        </div>
-        <button className="button secondary full" onClick={saveMood}>
-          {savedMood ? "Check-in saved" : "Save check-in"}
-        </button>
-      </section>
-
-      <section>
-        <div className="section-heading">
-          <div><span className="eyebrow">Fast routes</span><h2>Do something now</h2></div>
-        </div>
-        <div className="action-grid">
-          <button className="action-card violet" onClick={() => navigate({ name: "roulette" })}>
-            <Target />
-            <span><strong>Spin the wheel</strong><small>Let chance choose</small></span>
-            <ArrowRight size={18} />
-          </button>
-          <button
-            className="action-card teal"
-            onClick={() => navigate({ name: "yoga" })}
-          >
-            <Dumbbell />
-            <span><strong>Yoga with Mark</strong><small>Choose a class for right now</small></span>
-            <ArrowRight size={18} />
-          </button>
-          <button
-            className="action-card orange"
-            onClick={() => navigate({ name: "timer", meditationId: "trataka" })}
-          >
-            <Flame />
-            <span><strong>Candle gaze</strong><small>Trataka focus mode</small></span>
-            <ArrowRight size={18} />
-          </button>
-          <button className="action-card blue" onClick={() => navigate({ name: "journal" })}>
-            <BookOpen />
-            <span><strong>Journal</strong><small>Capture the after-effect</small></span>
-            <ArrowRight size={18} />
-          </button>
-        </div>
-      </section>
-
-      <section className="card reminder-card">
-        <span className="feature-icon">
-          {data.preferences.gentleReminderEnabled ? <Bell /> : <BellOff />}
-        </span>
-        <div>
-          <span className="eyebrow">Entirely optional</span>
-          <h3>One gentle daily reminder</h3>
-          <p>
-            A quiet invitation at a time you choose. No streak warnings, guilt, urgency, or repeated nudges.
-          </p>
-          <div className="reminder-controls">
-            <input
-              type="time"
-              value={data.preferences.gentleReminderTime}
-              onChange={(event) => updateReminderTime(event.target.value)}
-              aria-label="Gentle reminder time"
-            />
-            <button className="button secondary" onClick={toggleReminder}>
-              {data.preferences.gentleReminderEnabled ? "Turn off" : "Enable"}
+        {movementChoiceOpen ? (
+          <section className="home-movement-choice" aria-labelledby="movement-choice-title">
+            <button type="button" className="home-movement-back" onClick={() => setMovementChoiceOpen(false)}>
+              <ArrowLeft /> Back
             </button>
-            {data.preferences.gentleReminderEnabled && (
-              <button className="button ghost" onClick={rescheduleReminder}>Update reminder</button>
-            )}
+            <div>
+              <h2 id="movement-choice-title">How do you want to move?</h2>
+              <p>Choose a run or a ride. Stretching has its own space on Home.</p>
+            </div>
+            <div className="home-movement-choice-grid">
+              <button type="button" onClick={() => navigate({ name: "running" })}>
+                <Footprints />
+                <span><strong>Run</strong><small>Quick, Story, or Just Run</small></span>
+              </button>
+              <button type="button" onClick={() => navigate({ name: "bike-quest" })}>
+                <Bike />
+                <span><strong>Ride</strong><small>Bike Quest</small></span>
+              </button>
+            </div>
+          </section>
+        ) : (
+          <div className="home-path-grid">
+          {homePaths.map(({ label, detail, className, icon: Icon, route, action }) => (
+            <button
+              key={label}
+              type="button"
+              className={`home-path-card ${className}`}
+              onClick={() => action === "movement-choice" ? setMovementChoiceOpen(true) : route && navigate(route)}
+            >
+              <span className="home-path-icon" aria-hidden="true"><Icon /></span>
+              <span className="home-path-copy">
+                <strong>{label}</strong>
+                <small>{detail}</small>
+              </span>
+            </button>
+          ))}
           </div>
-          {notificationMessage && <small className="status-message">{notificationMessage}</small>}
-        </div>
-      </section>
-
-      <section className="card coming-soon playlist-callout">
-        <span className="feature-icon"><Music2 /></span>
-        <div>
-          <span className="eyebrow">Your saved listening</span>
-          <h3>Guided favourites and sound playlists</h3>
-          <p>The list and durations stay available offline; YouTube playback needs a connection.</p>
-          <button
-            className="button secondary"
-            onClick={() => navigate({ name: "library", tab: "guided" })}
-          >
-            Open your playlists <ArrowRight size={17} />
-          </button>
-        </div>
+        )}
       </section>
     </div>
   );

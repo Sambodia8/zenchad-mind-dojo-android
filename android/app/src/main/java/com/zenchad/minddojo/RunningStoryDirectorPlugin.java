@@ -8,6 +8,8 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
+import org.json.JSONArray;
+
 @CapacitorPlugin(name = "RunningStoryDirector")
 public class RunningStoryDirectorPlugin extends Plugin {
     @PluginMethod
@@ -45,6 +47,21 @@ public class RunningStoryDirectorPlugin extends Plugin {
         call.resolve(snapshot());
     }
 
+    @PluginMethod
+    public void replayLast(PluginCall call) {
+        SharedPreferences prefs = RunningBackgroundStoryDirector.getStore(getContext());
+        if (prefs.getString(RunningBackgroundStoryDirector.KEY_AUDIO_TRANSCRIPT, "").isEmpty()) {
+            call.reject("No story transmission is available to replay yet.");
+            return;
+        }
+        prefs.edit()
+            .putBoolean(RunningBackgroundStoryDirector.KEY_REPLAY_REQUESTED, true)
+            .putString(RunningBackgroundStoryDirector.KEY_AUDIO_STATE, "pending")
+            .putString(RunningBackgroundStoryDirector.KEY_AUDIO_LABEL, "Replay queued")
+            .apply();
+        call.resolve(snapshot());
+    }
+
     private JSObject snapshot() {
         SharedPreferences prefs = RunningBackgroundStoryDirector.getStore(getContext());
         String sessionId = prefs.getString(RunningBackgroundStoryDirector.KEY_SESSION_ID, "");
@@ -71,6 +88,11 @@ public class RunningStoryDirectorPlugin extends Plugin {
         result.put("sfxEnabled", audio.sfxEnabled);
         result.put("sfxVolume", audio.sfxVolume);
         result.put("voiceVolume", audio.voiceVolume);
+        result.put("audioState", prefs.getString(RunningBackgroundStoryDirector.KEY_AUDIO_STATE, "pending"));
+        result.put("audioLabel", prefs.getString(RunningBackgroundStoryDirector.KEY_AUDIO_LABEL, "Opening comms queued"));
+        result.put("audioError", prefs.getString(RunningBackgroundStoryDirector.KEY_AUDIO_ERROR, ""));
+        result.put("audioTranscript", prefs.getString(RunningBackgroundStoryDirector.KEY_AUDIO_TRANSCRIPT, ""));
+        result.put("heardLineKeysJson", new JSONArray(prefs.getStringSet(RunningBackgroundStoryDirector.KEY_HEARD_LINE_KEYS, java.util.Collections.emptySet())).toString());
         result.put("updatedAt", prefs.getLong(RunningBackgroundStoryDirector.KEY_UPDATED_AT, 0L));
         return result;
     }

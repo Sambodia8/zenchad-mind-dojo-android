@@ -1,57 +1,51 @@
-# ZenChad engagement redesign — final design QA
+# Yoga with Mark redesign QA
 
 ## Evidence
 
-- Source visual truth: `S:\zENcHAD\ZenChadAndroid\design-reference\alethiometer-option-1.png`
-- Final Oracle screenshot: `C:\Users\Sam\.codex\visualizations\2026\07\30\019fb412-ca4b-7c81-943d-4647fdda016c\zenchad-audit\oracle-final-installed.png`
-- Final stretch-player screenshot: `C:\Users\Sam\.codex\visualizations\2026\07\30\019fb412-ca4b-7c81-943d-4647fdda016c\zenchad-audit\stretch-controls-qa-pass.png`
-- Full-view comparison: `C:\Users\Sam\.codex\visualizations\2026\07\30\019fb412-ca4b-7c81-943d-4647fdda016c\zenchad-audit\oracle-final-comparison.png`
-- Device and state: Google Pixel 6a, Android app, Oracle result state and active Daily Reset class.
-- Source pixels: 853 × 1844.
-- Implementation pixels: 1080 × 2400 device capture, approximately 412 × 915 CSS pixels at the Pixel density.
-- Normalization: both full-view images were scaled proportionally to 1200 pixels high and placed side by side. The comparison preserves each image's aspect ratio; Android-owned status and system-navigation areas remain visible.
+- Source visual truth: `design-reference/yoga-landing-selected-option-1.png`
+- Rendered implementation: `test-screenshots/yoga-landing-redesign-browser-412x915.png`
+- Side-by-side comparison: `tmp/yoga-design-qa-comparison.png`
+- Viewport: 412 × 915 CSS pixels, device scale factor 1
+- Source pixels: 842 × 1872, normalized to 412 × 915 for comparison
+- Implementation pixels: 412 × 915
+- State: Yoga landing, dark appearance, standard text size
+- Real-device evidence: `test-screenshots/yoga-redesign-device/01-yoga-landing.png` through `05-yoga-builder.png`
+
+## Full-view comparison evidence
+
+The implementation preserves the selected mockup's hierarchy: compact app chrome, large display heading on the left, a dominant seated Mark on the right, cosmic-dark teal/indigo atmosphere, two paired actions, and persistent app navigation. Mark's scale and vertical placement were increased after the first comparison so his face and seated body now carry the hero rather than reading as a small strip image.
+
+## Focused-region evidence
+
+No separate crop was needed because the equal-size 412 × 915 comparison keeps the heading, hero face, paragraph, action labels, icons, and navigation legible in one view. The browser and class-detail screens were also inspected directly at 412 × 915 to verify cover crops and text contrast.
 
 ## Required fidelity surfaces
 
-- Fonts and typography: passed. The serif Oracle display hierarchy, compact supporting copy, bold result label, and small navigation text remain legible without truncation.
-- Spacing and layout rhythm: passed. The dial, result card and navigation form the same vertical sequence as the selected target. The result actions remain above navigation. The stretch pose title and cue are now visible above the persistent controls.
-- Colors and visual tokens: passed. Warm parchment, aged brass, muted enamel sectors, green actions and restrained plum/peach artwork match the selected direction and the existing app palette.
-- Image quality and asset fidelity: passed. The dial and lotus are production raster assets with clean transparency, correct crop and no broken images or visible chroma halo. Wheel symbols use the app's icon library without tiles or backgrounds.
-- Copy and content: passed. The screen uses “Ask the dial,” explains the symbol-led choice, clearly identifies the result, and exposes “Begin practice” and “Turn again.”
+- Fonts and typography: passed. A restrained Georgia display face recreates the editorial heading while the existing app sans-serif remains readable for controls. Heading wrapping and optical weight match the selected direction closely.
+- Spacing and layout rhythm: passed. Hero, Mark, and paired actions fit above the bottom navigation without horizontal overflow. The implementation keeps slightly more breathing room around the action dock for reliable tap targets.
+- Colors and visual tokens: passed. Yoga now uses shared light/dark appearance tokens. Dark mode joins the main app with near-black navy, teal, sage and restrained violet; Light and Auto resolve correctly.
+- Image quality and asset fidelity: passed. The final Mark hero and four class-cover families use production raster assets. Mark's current longer hair, rectangular glasses and beard remain recognisable. All assets are sized for the rendered slots and no placeholders remain.
+- Copy and content: passed. The required landing labels are present and the class cards use concise timing, duration, title, benefit and action copy. Evidence and muscle detail are on the class-detail screen.
 
-## Findings
+## Interaction and responsive checks
 
-No actionable P0, P1 or P2 findings remain.
-
-The final implementation intentionally keeps Android system chrome and the app's larger persistent top bar, which makes the dial slightly smaller than the concept image. The simpler pointer treatment and multi-colour symbol strokes are acceptable P3 differences that preserve readability and the existing icon language.
-
-## Focused region evidence
-
-- Oracle result: the generated lotus, result title, benefit and both actions are sharp, readable and unobstructed in `oracle-final-installed.png`.
-- Stretch player: the soundtrack state, shortened movement image, pose title, cue and floating previous/pause/next controls are simultaneously visible in `stretch-controls-qa-pass.png`.
-- No further crop was required because both focused areas are readable at the original 1080 × 2400 capture size.
+- Landing actions, class browser, class detail, class start, exit, Tap/Timed selector, sound toggle, recovery safety gate, and routine-builder pose selection passed.
+- Immersive class mode hides the global top bar and bottom navigation, restores them on exit, and keeps its own exit, title, progress, sound and advance controls visible.
+- Builder renders a two-column 45-pose grid at phone width, supports two-line names, and uses a larger focused-pose preview.
+- Light, Dark and Auto appearance modes passed at 412 × 915.
+- No browser console errors were present.
 
 ## Comparison history
 
-1. Initial audit found unreadable text compressed into the roulette sectors and result actions pushed toward the fixed navigation.
-   - Fix: replaced sector labels and icon tiles with 17 standalone symbols on a generated brass dial, shortened the spin, and rebuilt the result card.
-   - Post-fix evidence: `oracle-final-comparison.png`.
-2. First stretch pass retained the ready screen's scroll position and left transport controls below the fold.
-   - Fix: reset scroll on class start and made transport controls persistent above navigation.
-3. First persistent-control pass placed controls too close to the raised Roulette tab and obscured part of the pose title.
-   - Fix: raised the control dock and reduced the mobile pose image from 11.5rem to 8.5rem.
-   - Post-fix evidence: `stretch-controls-qa-pass.png`.
-
-## Interaction and runtime checks
-
-- Roulette navigation, spin, haptic/audio resolution, result reveal, “Begin practice” and “Turn again” were exercised on the Pixel.
-- Stretch soundtrack selection, volume/mute controls, class start, timed player and persistent transport controls were exercised.
-- Android audio diagnostics show ZenChad holding media focus with active playback.
-- Final TypeScript/Vite production build, Capacitor copy, Android debug assembly and streamed installation passed.
-- Final Android log check found no matching WebView fatal, uncaught, asset-loading or network errors.
+1. Initial pass: P2 — Mark was too small/low, body copy crossed into the artwork, and the generated hero contained a checkerboard edge. Fixed by producing a true-alpha asset, narrowing the paragraph, and increasing/lifting Mark.
+2. Active-class pass: P2 — fixed controls overlapped the sensation panel. Fixed by making the player a viewport grid with a scrollable pose stage and a dedicated control row above the safe area.
+3. Android pass: P2 — Android's system bars reduced the usable landing height and initially obscured the action labels. Fixed with a compact phone-height composition that preserves Mark's scale and keeps both actions above the app navigation.
+4. Dark-mode pass: P3 — the inherited pale back control was replaced with the shared Yoga surface and border tokens.
+5. Final pass: no actionable P0/P1/P2 differences remain.
 
 ## Follow-up polish
 
-- P3: an engraved monochrome symbol set and a more ornamental pointer could move even closer to the concept art in a future visual-only pass.
+- P3: the coded hero uses a simpler orbital motif than the generated mockup so it can adapt cleanly between Light and Dark appearances.
+- P3: the action tiles include short subtitles for clarity; the selected mockup showed a slightly more minimal treatment.
 
 final result: passed

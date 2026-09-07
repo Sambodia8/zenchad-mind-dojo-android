@@ -1,9 +1,15 @@
 .running-health-card {
   margin: 14px 0;
   padding: 16px;
-  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  border: 1px solid var(--border);
   border-radius: 18px;
-  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  background: var(--card-bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.running-health-card * {
+  font-family: inherit;
 }
 
 .running-health-card.compact {
@@ -22,13 +28,14 @@
 .running-health-heading strong {
   display: block;
   margin-top: 2px;
+  color: var(--ink);
 }
 
 .running-health-heading button {
   border: 0;
   border-radius: 999px;
   padding: 7px 10px;
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  background: color-mix(in srgb, var(--run-green) 12%, transparent);
   color: var(--ink);
   font: inherit;
   font-size: .72rem;
@@ -37,7 +44,7 @@
 
 .running-health-card > p {
   margin: 8px 0 12px;
-  color: var(--muted);
+  color: var(--text-muted);
   line-height: 1.45;
 }
 
@@ -61,7 +68,7 @@
 
 .running-health-grid small {
   margin-bottom: 4px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: .65rem;
   font-weight: 800;
   letter-spacing: .05em;
@@ -91,7 +98,7 @@
 .running-health-empty {
   display: block;
   margin-top: 9px;
-  color: var(--muted);
+  color: var(--text-muted);
   line-height: 1.4;
 }
 

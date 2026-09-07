@@ -1,5 +1,4 @@
 import type {
-  AppearanceMode,
   AppData,
   AppPreferences,
   EmotionalTool,
@@ -13,7 +12,20 @@ import type {
 } from "./types";
 import { LEVEL_THRESHOLDS } from "./data";
 import { createMysteryChallengeState } from "./mysteryChallenge";
-import { createDefaultProgression, awardMeditationProgress } from "./progression";
+import {
+  STAT_PROGRESSION_VERSION,
+  awardMeditationProgress,
+  createDefaultProgression,
+  migrateLegacyStatXp,
+  statLevelForXp
+} from "./progression";
+import { awardZenPoints, zenPointsForMeditation } from "./zenPoints";
+import {
+  decideStreakFreeze,
+  localCalendarDayDistance,
+  localDateKey,
+  STREAK_FREEZE_ITEM_ID
+} from "./streakFreeze";
 
 const STORAGE_KEY = "zenchad_app_data_v1";
 export const JOURNAL_XP = 20;
@@ -37,35 +49,31 @@ const defaultPreferences: AppPreferences = {
   uiSoundsEnabled: true,
   timerAlertsEnabled: false,
   voiceVolume: 50,
+  runningSpeechVoiceId: null,
   meditationMusicEnabled: true,
   meditationMusicVolume: 20,
   stretchMusicEnabled: true,
   stretchMusicTrack: "grounding",
   stretchMusicVolume: 24,
   selectedTheme: "dawn",
-  appearanceMode: "auto",
+  appearanceMode: "dark",
   reducedMotion: false
 };
 
-function isAppearanceMode(value: unknown): value is AppearanceMode {
-  return value === "light" || value === "dark" || value === "auto";
-}
-
 function migratePreferences(value: unknown): AppPreferences {
   const saved = value && typeof value === "object"
-    ? value as Partial<AppPreferences> & { themeMode?: AppearanceMode }
+    ? value as Partial<AppPreferences>
     : {};
-  const { themeMode: legacyThemeMode, ...current } = saved;
-  const appearanceMode = isAppearanceMode(current.appearanceMode)
-    ? current.appearanceMode
-    : isAppearanceMode(legacyThemeMode)
-      ? legacyThemeMode
-      : defaultPreferences.appearanceMode;
+  const { appearanceMode: _legacyAppearanceMode, themeMode: _legacyThemeMode, ...current } = saved as Partial<AppPreferences> & { themeMode?: unknown };
 
+  const runningSpeechVoiceId = typeof saved.runningSpeechVoiceId === "string" && saved.runningSpeechVoiceId.trim()
+    ? saved.runningSpeechVoiceId
+    : null;
   return {
     ...defaultPreferences,
     ...current,
-    appearanceMode
+    runningSpeechVoiceId,
+    appearanceMode: "dark"
   };
 }
 
@@ -165,6 +173,11 @@ export const starterEmotionalTools: EmotionalTool[] = [
 
 export const defaultData: AppData = {
   stats: emptyStats,
+  zenPoints: 0,
+  lifetimeZenPoints: 0,
+  shopInventory: {},
+  shopPurchaseHistory: [],
+  pendingStreakFreezeNotice: null,
   moods: [],
   journal: [],
   emotionalTools: starterEmotionalTools,
@@ -211,12 +224,22 @@ export function loadData(): AppData {
             ...mood,
             value: Math.max(0, Math.min(10, mood.value * 2.5))
           }));
+    const migratedXp = migratedBalance(parsed.stats?.xp);
     return {
       stats: {
         ...emptyStats,
         ...parsed.stats,
+        // Level is derived state. Recalculate it when the curve changes so an
+        // existing player does not remain stuck on a stale saved level.
+        xp: migratedXp,
+        level: levelForXp(migratedXp),
         lastSeenLevel: parsed.stats?.lastSeenLevel ?? 1
       },
+      zenPoints: migratedBalance(parsed.zenPoints),
+      lifetimeZenPoints: migratedBalance(parsed.lifetimeZenPoints ?? parsed.zenPoints),
+      shopInventory: migrateShopInventory(parsed.shopInventory),
+      shopPurchaseHistory: migratePurchaseHistory(parsed.shopPurchaseHistory),
+      pendingStreakFreezeNotice: migrateStreakFreezeNotice(parsed.pendingStreakFreezeNotice),
       moods: migratedMoods,
       journal: Array.isArray(parsed.journal) ? parsed.journal : [],
       emotionalTools: [...starterEmotionalTools, ...historicalStarterTools, ...customTools],
@@ -226,17 +249,47 @@ export function loadData(): AppData {
       customYogaClasses: Array.isArray(parsed.customYogaClasses) ? parsed.customYogaClasses : [],
       downloadedSoundscapes: Array.isArray(parsed.downloadedSoundscapes) ? parsed.downloadedSoundscapes : [],
       mysteryChallenge: migrateMysteryChallenge(parsed.mysteryChallenge),
-      progression: migrateProgression(parsed.progression)
+      progression: migrateProgressionData(parsed.progression)
     };
   } catch {
     return defaultData;
   }
 }
 
-function migrateProgression(value: unknown): ProgressionData {
+function migratedBalance(value: unknown) {
+  return typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0;
+}
+
+function migrateShopInventory(value: unknown): Record<string, number> {
+  if (!value || typeof value !== "object") return {};
+  return Object.fromEntries(Object.entries(value).filter(([, count]) => typeof count === "number" && Number.isFinite(count) && count > 0).map(([id, count]) => [id, Math.floor(count as number)]));
+}
+
+function migratePurchaseHistory(value: unknown): AppData["shopPurchaseHistory"] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((purchase): purchase is AppData["shopPurchaseHistory"][number] =>
+    purchase && typeof purchase === "object" && typeof purchase.itemId === "string" && typeof purchase.purchasedAt === "string" && typeof purchase.price === "number"
+  ).map((purchase) => ({ ...purchase, quantity: Math.max(1, Math.floor(purchase.quantity ?? 1)), price: Math.max(0, Math.floor(purchase.price)) }));
+}
+
+function migrateStreakFreezeNotice(value: unknown): AppData["pendingStreakFreezeNotice"] {
+  if (!value || typeof value !== "object") return null;
+  const notice = value as Partial<NonNullable<AppData["pendingStreakFreezeNotice"]>>;
+  if (
+    typeof notice.consumedAt !== "string" ||
+    typeof notice.missedDate !== "string" ||
+    typeof notice.sessionDate !== "string" ||
+    typeof notice.remaining !== "number" ||
+    !Number.isFinite(notice.remaining)
+  ) return null;
+  return { ...notice, remaining: Math.max(0, Math.floor(notice.remaining)) } as NonNullable<AppData["pendingStreakFreezeNotice"]>;
+}
+
+export function migrateProgressionData(value: unknown): ProgressionData {
   const fallback = createDefaultProgression();
   if (!value || typeof value !== "object") return fallback;
   const saved = value as Partial<ProgressionData>;
+  const isCurrentCurve = saved.version === STAT_PROGRESSION_VERSION;
   const savedSkillXp = saved.skillXp && typeof saved.skillXp === "object" ? saved.skillXp : {};
   const savedSkillLevels = saved.skillLevels && typeof saved.skillLevels === "object" ? saved.skillLevels : {};
   const skillXp = { ...fallback.skillXp };
@@ -244,8 +297,11 @@ function migrateProgression(value: unknown): ProgressionData {
   for (const statId of Object.keys(skillXp) as Array<keyof typeof skillXp>) {
     const xp = Number((savedSkillXp as Record<string, unknown>)[statId]);
     const level = Number((savedSkillLevels as Record<string, unknown>)[statId]);
-    if (Number.isFinite(xp)) skillXp[statId] = Math.max(0, xp);
-    if (Number.isFinite(level)) skillLevels[statId] = Math.max(1, Math.floor(level));
+    if (!Number.isFinite(xp)) continue;
+    skillXp[statId] = isCurrentCurve
+      ? Math.max(0, xp)
+      : migrateLegacyStatXp(statId, xp, Number.isFinite(level) ? level : 1);
+    skillLevels[statId] = statLevelForXp(statId, skillXp[statId]);
   }
   const savedGear = saved.equippedCosmetics && typeof saved.equippedCosmetics === "object"
     ? saved.equippedCosmetics
@@ -254,6 +310,7 @@ function migrateProgression(value: unknown): ProgressionData {
   const savedFlowFormIds = (savedFlowForm as Record<string, unknown>).unlockedFormIds;
   return {
     ...fallback,
+    version: STAT_PROGRESSION_VERSION,
     flowLevel: Number.isFinite(saved.flowLevel) ? Math.max(1, Math.floor(saved.flowLevel as number)) : fallback.flowLevel,
     flowXp: Number.isFinite(saved.flowXp) ? Math.max(0, saved.flowXp as number) : fallback.flowXp,
     flowTotalXp: Number.isFinite(saved.flowTotalXp) ? Math.max(0, saved.flowTotalXp as number) : fallback.flowTotalXp,
@@ -263,12 +320,12 @@ function migrateProgression(value: unknown): ProgressionData {
     skillLevels,
     equippedCosmetics: {
       ...fallback.equippedCosmetics,
-      ...Object.fromEntries(Object.entries(fallback.equippedCosmetics).map(([slot, fallbackId]) => [
-        slot,
-        typeof (savedGear as Record<string, unknown>)[slot] === "string"
-          ? (savedGear as Record<string, string>)[slot]
-          : fallbackId
-      ]))
+      ...Object.fromEntries(Object.entries(fallback.equippedCosmetics).map(([slot, fallbackId]) => {
+        const savedValue = slot === "hair"
+          ? (savedGear as Record<string, unknown>).hair ?? (savedGear as Record<string, unknown>).head
+          : (savedGear as Record<string, unknown>)[slot];
+        return [slot, typeof savedValue === "string" ? savedValue : fallbackId];
+      }))
     },
     flowForm: {
       activeFormId: typeof (savedFlowForm as Record<string, unknown>).activeFormId === "string"
@@ -318,8 +375,7 @@ export function saveData(data: AppData) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-export const dateKey = (date = new Date()) =>
-  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+export const dateKey = localDateKey;
 
 function levelForXp(xp: number) {
   const nextThreshold = LEVEL_THRESHOLDS.findIndex((threshold) => xp < threshold);
@@ -335,15 +391,24 @@ export function addJournalXp(stats: Stats, entries = 1): Stats {
   return addXp(stats, JOURNAL_XP * Math.max(0, entries));
 }
 
-export function addCompletedSessionAt(stats: Stats, seconds: number, sessionDate = new Date()): Stats {
+export function addCompletedSessionAt(
+  stats: Stats,
+  seconds: number,
+  sessionDate = new Date(),
+  preserveOneMissedDay = false
+): Stats {
   const day = dateKey(sessionDate);
-  const yesterday = new Date(sessionDate);
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayKey = dateKey(yesterday);
-  const isAtOrAfterLatest = !stats.lastSessionDate || day >= stats.lastSessionDate;
-  const isNewDay = stats.lastSessionDate !== day;
-  const streak = isAtOrAfterLatest && isNewDay
-    ? stats.lastSessionDate === yesterdayKey ? stats.streak + 1 : 1
+  const dayDistance = stats.lastSessionDate
+    ? localCalendarDayDistance(stats.lastSessionDate, day)
+    : null;
+  const isFirstSession = !stats.lastSessionDate;
+  const isNewLatestDay = isFirstSession || (dayDistance !== null && dayDistance > 0);
+  const streak = isNewLatestDay
+    ? isFirstSession
+      ? 1
+      : dayDistance === 1 || (dayDistance === 2 && preserveOneMissedDay)
+        ? stats.streak + 1
+        : 1
     : stats.streak;
   const gainedXp = 50 + Math.max(1, Math.floor(seconds / 6));
   const withXp = addXp(stats, gainedXp);
@@ -353,7 +418,7 @@ export function addCompletedSessionAt(stats: Stats, seconds: number, sessionDate
     streak,
     totalSeconds: stats.totalSeconds + seconds,
     sessionsCompleted: stats.sessionsCompleted + 1,
-    lastSessionDate: isAtOrAfterLatest ? day : stats.lastSessionDate,
+    lastSessionDate: isNewLatestDay ? day : stats.lastSessionDate,
     weeklySeconds: {
       ...stats.weeklySeconds,
       [day]: (stats.weeklySeconds[day] ?? 0) + seconds
@@ -371,11 +436,35 @@ export function recordMeditationCompletion(
   seconds: number,
   sessionDate = new Date()
 ): AppData {
-  return {
-    ...data,
-    stats: addCompletedSessionAt(data.stats, seconds, sessionDate),
-    progression: awardMeditationProgress(data.progression, meditationId, seconds, sessionDate)
+  return recordMeditationCompletionWithResult(data, meditationId, seconds, sessionDate).data;
+}
+
+export function recordMeditationCompletionWithResult(
+  data: AppData,
+  meditationId: string,
+  seconds: number,
+  sessionDate = new Date()
+) {
+  const ownedFreezes = Math.max(0, Math.floor(data.shopInventory[STREAK_FREEZE_ITEM_ID] ?? 0));
+  const freezeDecision = decideStreakFreeze(data.stats.lastSessionDate, sessionDate, ownedFreezes);
+  const nextData = awardZenPoints(data, zenPointsForMeditation(seconds));
+  const shopInventory = freezeDecision.consumed
+    ? { ...data.shopInventory, [STREAK_FREEZE_ITEM_ID]: ownedFreezes - 1 }
+    : data.shopInventory;
+  const completedData: AppData = {
+    ...nextData,
+    shopInventory,
+    pendingStreakFreezeNotice: freezeDecision.notice ?? data.pendingStreakFreezeNotice,
+    stats: addCompletedSessionAt(data.stats, seconds, sessionDate, freezeDecision.consumed),
+    progression: awardMeditationProgress(
+      data.progression,
+      meditationId,
+      seconds,
+      sessionDate,
+      freezeDecision.consumed
+    )
   };
+  return { data: completedData, streakFreezeUse: freezeDecision.notice };
 }
 
 export function makeMood(stage: "before" | "after", value: number, note: string): MoodEntry {

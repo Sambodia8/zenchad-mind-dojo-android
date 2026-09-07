@@ -56,7 +56,7 @@ function render() {
       elevationMarkup = `
         <section class="running-history-elevation-block">
           <div><span class="eyebrow">Elevation</span><strong>+${Math.round(elevation.gainMeters)} m</strong><small>${Math.round(elevation.minMeters)}–${Math.round(elevation.maxMeters)} m</small></div>
-          <svg viewBox="0 0 100 100" role="img" aria-label="Elevation profile"><polyline points="${elevationProfilePoints(elevation.samples)}"></polyline></svg>
+          <div class="running-history-chart-copy"><small>Elevation across route distance</small><svg viewBox="0 0 100 100" role="img" aria-label="Elevation profile in metres across the recorded route distance"><polyline points="${elevationProfilePoints(elevation.samples)}"></polyline></svg><small>metres · distance along route</small></div>
         </section>
       `;
     }

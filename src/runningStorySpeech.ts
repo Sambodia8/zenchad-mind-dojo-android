@@ -8,25 +8,24 @@ interface RunningStorySpeechPlugin {
 const RunningStorySpeech = registerPlugin<RunningStorySpeechPlugin>("RunningStorySpeech");
 
 function browserSpeak(text: string) {
-  if (!("speechSynthesis" in window)) return Promise.resolve();
-  return new Promise<void>((resolve) => {
+  if (!("speechSynthesis" in window)) return Promise.resolve(false);
+  return new Promise<boolean>((resolve) => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-GB";
     utterance.rate = 1;
-    utterance.onend = () => resolve();
-    utterance.onerror = () => resolve();
+    utterance.onend = () => resolve(true);
+    utterance.onerror = () => resolve(false);
     window.speechSynthesis.speak(utterance);
   });
 }
 
 export async function speakStoryLine(text: string) {
   const clean = text.trim();
-  if (!clean) return;
+  if (!clean) return false;
   if (Capacitor.getPlatform() === "android") {
-    await RunningStorySpeech.speak({ text: clean }).catch(() => {});
-    return;
+    return RunningStorySpeech.speak({ text: clean }).then(() => true).catch(() => false);
   }
-  await browserSpeak(clean);
+  return browserSpeak(clean);
 }
 
 export async function stopStorySpeech() {

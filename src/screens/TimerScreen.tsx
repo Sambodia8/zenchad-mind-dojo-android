@@ -47,7 +47,9 @@ import { recordMysteryMeditation } from "../mysteryChallenge";
 import { makeMood, recordMeditationCompletion } from "../storage";
 import type { AppData, Meditation, MysteryMeditationCategory, Route } from "../types";
 import { playUiSfx } from "../uiSfx";
-import XpCollectionAnimation from "../components/XpCollectionAnimation";
+import { XP_COLLECTION_DURATION } from "../components/XpCollectionAnimation";
+import ZenPointsRewardFeedback from "../components/ZenPointsRewardFeedback";
+import { zenPointsForMeditation } from "../zenPoints";
 
 interface Props {
   meditationId: string;
@@ -198,6 +200,7 @@ export default function TimerScreen({
   const meditationMusicRef = useRef<GaplessAudioLoop | null>(null);
   const namasteAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionSavedRef = useRef(false);
+  const completionNavigationTimerRef = useRef<number | null>(null);
   const mysteryMode = Boolean(mysteryCategory && mysteryRunId);
   const currentPhase = meditation.phases[phaseIndex];
   const totalDuration = meditation.phases.reduce((sum, item) => sum + item.duration, 0);
@@ -610,10 +613,13 @@ export default function TimerScreen({
       return next;
     });
     setCompletionDestination(destination);
+    completionNavigationTimerRef.current = window.setTimeout(
+      () => finishCompletionNavigation(destination),
+      data.preferences.reducedMotion ? 300 : XP_COLLECTION_DURATION
+    );
   };
 
-  const finishCompletionNavigation = () => {
-    const destination = completionDestination ?? "progress";
+  const finishCompletionNavigation = (destination = completionDestination ?? "progress") => {
     navigate(
       mysteryMode
         ? { name: "mystery-challenge" }
@@ -623,26 +629,32 @@ export default function TimerScreen({
     );
   };
 
+  useEffect(() => () => {
+    if (completionNavigationTimerRef.current !== null) {
+      window.clearTimeout(completionNavigationTimerRef.current);
+    }
+  }, []);
+
   if (completed) {
     const creditedSeconds = Math.max(60, Math.round(elapsedRef.current));
     const completionXp = 50 + Math.max(1, Math.floor(creditedSeconds / 6));
+    const completionZenPoints = zenPointsForMeditation(creditedSeconds);
     return (
       <section className="completion-screen">
         <span className="completion-mark"><Check /></span>
         <span className="eyebrow">Session complete</span>
         <h1>Mind reps logged.</h1>
         <p>{meditation.name} · {Math.ceil(totalDuration / 60)} minutes</p>
-        <div className="completion-reward-burst" data-xp-source>
+        <div className="completion-reward-burst">
           <Award />
           <span><strong>+{completionXp} XP</strong><small>Ready to collect</small></span>
         </div>
-        <XpCollectionAnimation
-          amount={completionXp}
-          active={completionDestination !== null}
-          reducedMotion={data.preferences.reducedMotion}
-          soundsEnabled={data.preferences.uiSoundsEnabled}
-          onComplete={finishCompletionNavigation}
-        />
+        {completionDestination !== null && (
+          <ZenPointsRewardFeedback
+            amount={completionZenPoints}
+            reducedMotion={data.preferences.reducedMotion}
+          />
+        )}
         <div className="card after-mood">
           <h3>How do you feel now?</h3>
           <div className="mood-labels">

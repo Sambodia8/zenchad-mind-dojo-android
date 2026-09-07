@@ -43,6 +43,7 @@ import {
 import { addCompletedSession } from "../storage";
 import type { AppData, Route, Stats } from "../types";
 import { playUiSfx } from "../uiSfx";
+import { awardStrengthProgress } from "../progression";
 
 interface Props {
   data: AppData;
@@ -463,7 +464,8 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
     persistQuest(next);
     setData((currentData) => ({
       ...currentData,
-      stats: addCompletedSession(currentData.stats, seconds)
+      stats: addCompletedSession(currentData.stats, seconds),
+      progression: awardStrengthProgress(currentData.progression, seconds)
     }));
     void cancelBikeRideNotification();
     celebrate("Ride complete", rideXp, true, "LEGEND");

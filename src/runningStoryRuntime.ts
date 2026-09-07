@@ -5,6 +5,7 @@ import { badAccelerationAnchorNear, nextStoryCoverAnchor } from "./runningRouteS
 import { chaseTarget, evaluateChase } from "./runningStory";
 import { speakStoryLine } from "./runningStorySpeech";
 import type { StoryMissionDefinition } from "./runningCampaign";
+import { removeStoryLivePanel, renderStoryLivePanel } from "./runningStoryLiveUi";
 import {
   createStoryRunRuntimeState,
   loadStoryRunRuntimeState,
@@ -18,6 +19,7 @@ const CHASE_DOCK_ID = "zenchad-story-chase-dock";
 let started = false;
 let speaking = false;
 let nearestShapeIndex = 0;
+const queuedLineKeys = new Set<string>();
 
 function hashString(value: string) {
   let hash = 2166136261;
@@ -69,15 +71,52 @@ function setRadio(title: string, detail: string) {
 }
 
 function speakLine(state: StoryRunRuntimeState, id: string, title: string, detail: string, speech: string) {
-  if (storyLineWasPlayed(state, id)) return state;
-  const next = markStoryLinePlayed({ ...state, lastRadioTitle: title, lastRadioDetail: detail }, id);
+  if (storyLineWasPlayed(state, id) || state.failedLineKeys.includes(id) || queuedLineKeys.has(id)) return state;
+  const next: StoryRunRuntimeState = {
+    ...state,
+    lastRadioTitle: title,
+    lastRadioDetail: detail,
+    lastTranscript: speech,
+    audioState: speaking ? "pending" : "playing"
+  };
   saveStoryRunRuntimeState(next);
   setRadio(title, detail);
-  if (!speaking) {
-    speaking = true;
-    void speakStoryLine(speech).finally(() => { speaking = false; });
-  }
+  if (speaking) return next;
+  speaking = true;
+  queuedLineKeys.add(id);
+  void speakStoryLine(speech).then((played) => {
+    const current = loadStoryRunRuntimeState(state.sessionId);
+    if (!current) return;
+    if (played) {
+      saveStoryRunRuntimeState(markStoryLinePlayed(current, id));
+    } else {
+      saveStoryRunRuntimeState({
+        ...current,
+        failedLineKeys: current.failedLineKeys.includes(id) ? current.failedLineKeys : [...current.failedLineKeys, id],
+        audioState: "failed"
+      });
+    }
+  }).finally(() => {
+    speaking = false;
+    queuedLineKeys.delete(id);
+  });
   return next;
+}
+
+function replayLastTransmission(sessionId: string) {
+  const current = loadStoryRunRuntimeState(sessionId);
+  if (!current?.lastTranscript || current.audioState === "playing" || current.audioState === "pending") return;
+  const lineKey = current.failedLineKeys.at(-1) ?? current.linesPlayed.at(-1) ?? "replay";
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  speaking = true;
+  saveStoryRunRuntimeState({ ...current, audioState: "playing" });
+  void speakStoryLine(current.lastTranscript).then((played) => {
+    const latest = loadStoryRunRuntimeState(sessionId);
+    if (!latest) return;
+    saveStoryRunRuntimeState(played
+      ? markStoryLinePlayed(latest, lineKey)
+      : { ...latest, audioState: "failed", failedLineKeys: latest.failedLineKeys.includes(lineKey) ? latest.failedLineKeys : [...latest.failedLineKeys, lineKey] });
+  }).finally(() => { speaking = false; });
 }
 
 function ensureChaseDock() {
@@ -155,13 +194,15 @@ function startChase(state: StoryRunRuntimeState, session: RunSession, mission?: 
   };
   navigator.vibrate?.([45, 35, 80, 35, 120]);
   setRadio(next.lastRadioTitle, next.lastRadioDetail);
-  if (!speaking) {
-    speaking = true;
-    void speakStoryLine(mission?.pursuerLine ?? "Keep running. I can see you. You won't keep the gap.")
-      .finally(() => { speaking = false; });
-  }
-  saveStoryRunRuntimeState(next);
-  return next;
+  const spoken = speakLine(
+    next,
+    `pursuer-${state.chases.length + 1}`,
+    next.lastRadioTitle,
+    next.lastRadioDetail,
+    mission?.pursuerLine ?? "Keep running. I can see you. You won't keep the gap."
+  );
+  saveStoryRunRuntimeState(spoken);
+  return spoken;
 }
 
 function finishChase(state: StoryRunRuntimeState, session: RunSession) {
@@ -203,12 +244,9 @@ function finishChase(state: StoryRunRuntimeState, session: RunSession) {
   removeChaseDock();
   setRadio(title, detail);
   navigator.vibrate?.([30, 35, 75]);
-  if (!speaking) {
-    speaking = true;
-    void speakStoryLine(speech).finally(() => { speaking = false; });
-  }
-  saveStoryRunRuntimeState(next);
-  return next;
+  const spoken = speakLine(next, `chase-outcome-${state.chases.length}`, title, detail, speech);
+  saveStoryRunRuntimeState(spoken);
+  return spoken;
 }
 
 function maybeStartHelicopter(
@@ -231,13 +269,15 @@ function maybeStartHelicopter(
   };
   setRadio(next.lastRadioTitle, next.lastRadioDetail);
   navigator.vibrate?.([60, 60, 60]);
-  if (!speaking) {
-    speaking = true;
-    void speakStoryLine("Runner. Air unit above us. They've got visual. Keep running. Cover ahead — get under it.")
-      .finally(() => { speaking = false; });
-  }
-  saveStoryRunRuntimeState(next);
-  return next;
+  const spoken = speakLine(
+    next,
+    "helicopter",
+    next.lastRadioTitle,
+    next.lastRadioDetail,
+    route.storyMission?.helicopterLine ?? "Runner. Air unit above us. They've got visual. Keep running. Cover ahead — get under it."
+  );
+  saveStoryRunRuntimeState(spoken);
+  return spoken;
 }
 
 function maybeResolveHelicopter(state: StoryRunRuntimeState, progressMeters: number) {
@@ -263,29 +303,44 @@ function maybeResolveHelicopter(state: StoryRunRuntimeState, progressMeters: num
     lastRadioDetail: "Cover reached. Keep the line moving."
   };
   setRadio(next.lastRadioTitle, next.lastRadioDetail);
-  if (!speaking) {
-    speaking = true;
-    void speakStoryLine("Cover reached. They've lost visual. Nice work. Keep moving.")
-      .finally(() => { speaking = false; });
-  }
-  saveStoryRunRuntimeState(next);
-  return next;
+  const spoken = speakLine(next, "helicopter-cover", next.lastRadioTitle, next.lastRadioDetail, "Cover reached. They've lost visual. Nice work. Keep moving.");
+  saveStoryRunRuntimeState(spoken);
+  return spoken;
 }
 
 function tickStoryRun() {
   const session = loadRunSession();
   if (!session || session.mode !== "story" || session.stage !== "active" || !session.runStartedAt) {
     removeChaseDock();
+    removeStoryLivePanel();
     return;
   }
 
-  let state = loadStoryRunRuntimeState(session.id) ?? createStoryRunRuntimeState(session.id);
+  const route = loadPlannedRunningRoute(session.id);
+  let state = loadStoryRunRuntimeState(session.id) ?? createStoryRunRuntimeState(
+    session.id,
+    route?.storyMission?.id ?? session.storyMissionId ?? undefined,
+    route?.storyMission?.title ?? undefined,
+    session.storyHeardChapterIds
+  );
   if (!loadStoryRunRuntimeState(session.id)) saveStoryRunRuntimeState(state);
   const elapsed = elapsedRunSeconds(session);
   const completionRatio = elapsed / Math.max(60, session.plannedMinutes * 60);
-  const route = loadPlannedRunningRoute(session.id);
 
   setRadio(state.lastRadioTitle, state.lastRadioDetail);
+  renderStoryLivePanel({
+    episode: route?.storyMission?.episode ?? 1,
+    missionTitle: route?.storyMission?.title ?? state.missionTitle,
+    phase: state.phase,
+    heardChapterIds: state.heardChapterIds,
+    audioState: state.audioState,
+    audioLabel: state.audioState === "playing" ? state.lastRadioTitle : "Next story segment pending",
+    audioError: state.failedLineKeys.length ? "The last transmission did not finish playing." : "",
+    transcript: state.lastTranscript,
+    chaseCount: state.chases.length,
+    helicopterTriggered: state.helicopterTriggered,
+    onReplay: state.lastTranscript ? () => replayLastTransmission(session.id) : undefined
+  });
 
   if (elapsed >= 8 && !storyLineWasPlayed(state, "opening-1")) {
     state = speakLine(
@@ -304,6 +359,26 @@ function tickStoryRun() {
       "WATCHER ON THE LINE",
       "Not a problem yet. Keep your rhythm.",
       "We've got a watcher behind you. Not a problem yet. Keep your rhythm."
+    );
+  }
+
+  if (completionRatio >= 0.33 && !state.heardChapterIds.includes("pursuit")) {
+    state = speakLine(
+      state,
+      "pursuit-bridge",
+      "THE NET IS MOVING",
+      "Stay loose. The pressure is building.",
+      route?.storyMission?.chaseLine ?? "The network is moving around you. Stay loose and keep your rhythm."
+    );
+  }
+
+  if (completionRatio >= 0.64 && !state.heardChapterIds.includes("complication") && state.phase !== "chase") {
+    state = speakLine(
+      state,
+      "complication-bridge",
+      "SIGNAL SHIFT",
+      "The mission has changed. Keep moving.",
+      route?.storyMission?.helicopterLine ?? "Signal shift. The mission has changed. Keep moving and stay alert."
     );
   }
 
@@ -326,6 +401,7 @@ function tickStoryRun() {
     elapsed >= Math.max(150, session.plannedMinutes * 60 * 0.14) &&
     completionRatio < 0.76 &&
     state.chases.length < 2 &&
+    !speaking &&
     Date.now() >= state.nextEventAfter;
 
   if (chaseWindowOpen && route.semanticsStatus === "ready") {

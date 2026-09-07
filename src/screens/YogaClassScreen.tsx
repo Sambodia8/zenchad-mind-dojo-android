@@ -9,18 +9,24 @@ import {
   type SetStateAction
 } from "react";
 import {
+  ArrowLeft,
   Award,
   Check,
   ChevronLeft,
   ChevronRight,
   Clock3,
+  EllipsisVertical,
+  ExternalLink,
+  Footprints,
+  Info,
   Music2,
   Pause,
   Play,
   Timer,
   Touchpad,
   Volume2,
-  VolumeX
+  VolumeX,
+  X
 } from "lucide-react";
 import {
   expandYogaClassSlides,
@@ -33,8 +39,14 @@ import { addCompletedSession } from "../storage";
 import type { AppData, Route } from "../types";
 import type { BikeQuestResume } from "../bikeQuest";
 import MovementVisual from "../components/MovementVisual";
-import XpCollectionAnimation from "../components/XpCollectionAnimation";
 import { playUiSfx } from "../uiSfx";
+import {
+  addRunningXp,
+  completeRunPrepStep,
+  loadRunSession,
+  saveRunSession,
+  skipRunPrepStep
+} from "../running";
 
 interface Props {
   classId: string;
@@ -42,6 +54,9 @@ interface Props {
   setData: Dispatch<SetStateAction<AppData>>;
   navigate: Dispatch<SetStateAction<Route>>;
   returnToBikeQuest?: BikeQuestResume;
+  returnToRunningPreparation?: boolean;
+  autoStart?: boolean;
+  onImmersiveStateChange?: (isImmersive: boolean) => void;
 }
 
 type PlayerPhase = "ready" | "pose" | "transition" | "finished";
@@ -68,6 +83,8 @@ const STRETCH_MUSIC = [
   }
 ] as const;
 
+const POSE_XP = 5;
+
 interface PointerStart {
   id: number;
   x: number;
@@ -85,7 +102,16 @@ const formatDuration = (seconds: number) => {
   return `${minutes}:${String(remainder).padStart(2, "0")}`;
 };
 
-export default function YogaClassScreen({ classId, data, setData, navigate, returnToBikeQuest }: Props) {
+export default function YogaClassScreen({
+  classId,
+  data,
+  setData,
+  navigate,
+  returnToBikeQuest,
+  returnToRunningPreparation,
+  autoStart,
+  onImmersiveStateChange
+}: Props) {
   const yogaClass = useMemo(() => {
     if (classId.startsWith("custom-")) {
       const custom = data.customYogaClasses.find(c => c.id === classId);
@@ -100,24 +126,50 @@ export default function YogaClassScreen({ classId, data, setData, navigate, retu
   const [running, setRunning] = useState(false);
   const [mode, setMode] = useState<AdvanceMode>("timed");
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [guidanceOpen, setGuidanceOpen] = useState(false);
   const [earnedXp, setEarnedXp] = useState(0);
+  const [poseReward, setPoseReward] = useState<{ amount: number; key: number } | null>(null);
   const [recoveryConfirmed, setRecoveryConfirmed] = useState(false);
   const pointerStart = useRef<PointerStart | null>(null);
   const lastTapAdvance = useRef(0);
   const startedAt = useRef<number | null>(null);
   const completed = useRef(false);
+  const awardedSlides = useRef<Set<number>>(new Set());
+  const poseRewardTimer = useRef<number | null>(null);
+  const autoStarted = useRef(false);
   const audioContext = useRef<AudioContext | null>(null);
   const musicAudio = useRef<HTMLAudioElement | null>(null);
+  const settingsMenu = useRef<HTMLDetailsElement | null>(null);
   const selectedMusic =
     STRETCH_MUSIC.find((track) => track.id === data.preferences.stretchMusicTrack) ??
     STRETCH_MUSIC[0];
   const current = slides[index];
   const next = slides[index + 1];
+  const isBeforeRunning = yogaClass.id === "before-run";
   const changingSides =
     phase === "transition" &&
     current.side === 1 &&
     next?.side === 2 &&
     current.movement.id === next.movement.id;
+  const guidanceSlide = phase === "transition" && next ? next : current;
+
+  useEffect(() => {
+    onImmersiveStateChange?.(phase === "pose" || phase === "transition");
+    return () => onImmersiveStateChange?.(false);
+  }, [onImmersiveStateChange, phase]);
+
+  useEffect(() => {
+    setGuidanceOpen(false);
+  }, [index, phase]);
+
+  useEffect(() => {
+    if (!guidanceOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setGuidanceOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [guidanceOpen]);
 
   const ensureAudio = useCallback(async () => {
     if (!audioContext.current || audioContext.current.state === "closed") {
@@ -187,6 +239,19 @@ export default function YogaClassScreen({ classId, data, setData, navigate, retu
     [playChime, slides]
   );
 
+  const awardPoseXp = useCallback((slideIndex: number) => {
+    if (awardedSlides.current.has(slideIndex)) return;
+    awardedSlides.current.add(slideIndex);
+    setData((currentData) => ({
+      ...currentData,
+      stats: addRunningXp(currentData.stats, POSE_XP)
+    }));
+    setPoseReward({ amount: POSE_XP, key: slideIndex });
+    if (poseRewardTimer.current) window.clearTimeout(poseRewardTimer.current);
+    poseRewardTimer.current = window.setTimeout(() => setPoseReward(null), 1300);
+    if (data.preferences.uiSoundsEnabled && soundEnabled) playUiSfx("xpGain");
+  }, [data.preferences.uiSoundsEnabled, setData, soundEnabled]);
+
   const finish = useCallback(() => {
     if (completed.current) return;
     completed.current = true;
@@ -194,16 +259,29 @@ export default function YogaClassScreen({ classId, data, setData, navigate, retu
       1,
       Math.round((Date.now() - (startedAt.current ?? Date.now())) / 1000)
     );
-    setEarnedXp(50 + Math.max(1, Math.floor(elapsed / 6)));
+    const completionXp = 10 + Math.max(0, Math.floor(elapsed / 60));
+    setEarnedXp(slides.length * POSE_XP + completionXp);
     setRunning(false);
     setPhase("finished");
+    let runningPrepXp = 0;
+    if (returnToRunningPreparation) {
+      const runSession = loadRunSession();
+      if (runSession?.stage === "prep") {
+        const completion = completeRunPrepStep(runSession);
+        if (completion?.step.id === "stretches") {
+          saveRunSession(completion.next);
+          runningPrepXp = completion.xp;
+        }
+      }
+    }
     setData((currentData) => {
       const completedStats = addCompletedSession(currentData.stats, elapsed);
+      const statsWithRunningPrep = addRunningXp(completedStats, runningPrepXp + completionXp);
       return {
         ...currentData,
         stats: {
-          ...completedStats,
-          yogaSessions: completedStats.yogaSessions + 1
+          ...statsWithRunningPrep,
+          yogaSessions: statsWithRunningPrep.yogaSessions + 1
         }
       };
     });
@@ -211,10 +289,11 @@ export default function YogaClassScreen({ classId, data, setData, navigate, retu
     if (data.preferences.uiSoundsEnabled) {
       playUiSfx("victory");
     }
-  }, [data.preferences.uiSoundsEnabled, setData]);
+  }, [data.preferences.uiSoundsEnabled, returnToRunningPreparation, setData, slides.length]);
 
   const beginTransition = useCallback(() => {
     if (phase !== "pose") return;
+    awardPoseXp(index);
     if (index >= slides.length - 1) {
       finish();
       return;
@@ -229,7 +308,7 @@ export default function YogaClassScreen({ classId, data, setData, navigate, retu
     setRunning(true);
     navigator.vibrate?.(isSideChange ? [45, 40, 90] : 30);
     void playTick();
-  }, [current, finish, index, phase, playTick, slides]);
+  }, [awardPoseXp, current, finish, index, phase, playTick, slides]);
 
   const goPrevious = useCallback(() => {
     if (phase === "ready" || phase === "finished") return;
@@ -329,14 +408,40 @@ export default function YogaClassScreen({ classId, data, setData, navigate, retu
     selectedMusic.src
   ]);
 
-  const startClass = () => {
+  const startClass = useCallback(() => {
     if (yogaClass.safetyGate && !recoveryConfirmed) return;
     completed.current = false;
+    awardedSlides.current.clear();
+    setPoseReward(null);
     startedAt.current = Date.now();
     void ensureAudio();
     startSlide(0);
     window.scrollTo({ top: 0, behavior: "auto" });
-  };
+  }, [ensureAudio, recoveryConfirmed, startSlide, yogaClass.safetyGate]);
+
+  const skipBeforeRunWarmup = useCallback(() => {
+    if (!isBeforeRunning) return;
+    if (returnToRunningPreparation) {
+      const runSession = loadRunSession();
+      if (runSession?.stage === "prep") {
+        const skipped = skipRunPrepStep(runSession);
+        if (skipped?.step.id === "stretches") saveRunSession(skipped.next);
+      }
+      navigate({ name: "running" });
+      return;
+    }
+    navigate({ name: "running", startMode: "just" });
+  }, [isBeforeRunning, navigate, returnToRunningPreparation]);
+
+  useEffect(() => () => {
+    if (poseRewardTimer.current) window.clearTimeout(poseRewardTimer.current);
+  }, []);
+
+  useEffect(() => {
+    if (!autoStart || autoStarted.current) return;
+    autoStarted.current = true;
+    startClass();
+  }, [autoStart, startClass]);
 
   const chooseMode = (nextMode: AdvanceMode) => {
     setMode(nextMode);
@@ -368,6 +473,11 @@ export default function YogaClassScreen({ classId, data, setData, navigate, retu
         stretchMusicEnabled: !currentData.preferences.stretchMusicEnabled
       }
     }));
+  };
+
+  const openGuidance = () => {
+    settingsMenu.current?.removeAttribute("open");
+    setGuidanceOpen(true);
   };
 
   const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
@@ -414,9 +524,9 @@ export default function YogaClassScreen({ classId, data, setData, navigate, retu
   if (phase === "ready") {
     return (
       <div className="screen-stack yoga-ready">
-        <section className="yoga-ready-portrait">
+        <section className="yoga-ready-portrait yoga-class-cover">
           <img src={yogaClass.image} alt={`Mark ready to teach ${yogaClass.name}`} />
-          <span>Mark is your instructor</span>
+          <span>With Mark · {yogaClass.timing}</span>
         </section>
         <section className="card yoga-ready-copy">
           <span className="eyebrow">{yogaClass.timing}</span>
@@ -431,6 +541,15 @@ export default function YogaClassScreen({ classId, data, setData, navigate, retu
               <span key={muscle}>{muscle}</span>
             ))}
           </div>
+          <details className="routine-evidence yoga-detail-evidence">
+            <summary>Why this class?</summary>
+            <p>{yogaClass.evidence}</p>
+            {yogaClass.sourceUrl ? (
+              <a href={yogaClass.sourceUrl} target="_blank" rel="noreferrer">
+                Read the guidance <ExternalLink size={13} />
+              </a>
+            ) : null}
+          </details>
           <p className="yoga-audio-note">
             A chime starts every pose. Five quiet clock ticks give you time to move into the
             next position.
@@ -525,6 +644,11 @@ export default function YogaClassScreen({ classId, data, setData, navigate, retu
         >
           <Play size={18} fill="currentColor" /> Start class with Mark
         </button>
+        {isBeforeRunning ? (
+          <button className="button secondary full yoga-skip-before-run" onClick={skipBeforeRunWarmup}>
+            Skip warm-up {returnToRunningPreparation ? "and continue prep" : "and start Just Run"}
+          </button>
+        ) : null}
       </div>
     );
   }
@@ -535,42 +659,64 @@ export default function YogaClassScreen({ classId, data, setData, navigate, retu
         <span className="completion-mark"><Check /></span>
         <span className="eyebrow">Yoga class complete</span>
         <h1>{yogaClass.name} logged.</h1>
-        <p>{slides.length} guided poses added to your progress. Keep the calm going with a meditation, or return home when you&apos;re ready.</p>
-        <div className="completion-reward-burst" data-xp-source="yoga-completion-reward">
+        <p>
+          {returnToRunningPreparation
+            ? `${slides.length} guided poses added to your progress. Your warm-up is banked and the next preparation step is ready.`
+            : isBeforeRunning
+              ? `${slides.length} guided poses added to your progress. Your legs are warm. Choose a run, or browse another running class.`
+            : `${slides.length} guided poses added to your progress. Your session is logged — choose what you want to do next.`}
+        </p>
+        <div className="completion-reward-burst">
           <Award />
           <span><strong>+{earnedXp} XP</strong><small>Quest progress updated</small></span>
         </div>
-        <XpCollectionAnimation
-          amount={earnedXp}
-          active={earnedXp > 0}
-          reducedMotion={data.preferences.reducedMotion}
-          soundsEnabled={data.preferences.uiSoundsEnabled}
-        />
         <div className="completion-next-actions">
-          <button
-            className="button primary full"
-            onClick={() => navigate({ name: "timer", meditationId: "nsdr" })}
-          >
-            Yes please — try NSDR
-          </button>
-          <button
-            className="button secondary full"
-            onClick={() => navigate({ name: "roulette", autoSpin: true, spinKey: Date.now() })}
-          >
-            Spin the meditation wheel
-          </button>
-          <button
-            className="button ghost full"
-            onClick={() =>
-              navigate(
-                returnToBikeQuest
-                  ? { name: "bike-quest", resume: returnToBikeQuest }
-                  : { name: "home" }
-              )
-            }
-          >
-            {returnToBikeQuest ? "Continue Bike Quest" : "No thanks"}
-          </button>
+          {returnToRunningPreparation ? (
+            <button
+              className="button primary full"
+              onClick={() => navigate({ name: "running" })}
+            >
+              Continue run preparation
+            </button>
+          ) : null}
+          {isBeforeRunning ? (
+            <>
+              <button
+                className={`button ${returnToRunningPreparation ? "secondary" : "primary"} full`}
+                onClick={() => navigate({ name: "running", startMode: "just" })}
+              >
+                <Footprints size={18} /> Start Just Run
+              </button>
+              <button
+                className="button ghost full"
+                onClick={() => navigate({ name: "yoga", mode: "classes" })}
+              >
+                Browse running classes
+              </button>
+            </>
+          ) : null}
+          {!returnToRunningPreparation && !isBeforeRunning ? (
+            <>
+              <button
+                className="button primary full"
+                onClick={() => navigate({ name: "yoga", mode: "classes" })}
+              >
+                Browse yoga classes
+              </button>
+              <button
+                className="button ghost full"
+                onClick={() =>
+                  navigate(
+                    returnToBikeQuest
+                      ? { name: "bike-quest", resume: returnToBikeQuest }
+                      : { name: "home" }
+                  )
+                }
+              >
+                {returnToBikeQuest ? "Continue Bike Quest" : "Done for now"}
+              </button>
+            </>
+          ) : null}
         </div>
       </section>
     );
@@ -586,113 +732,153 @@ export default function YogaClassScreen({ classId, data, setData, navigate, retu
       }}
     >
       <div className="player-topline" data-no-advance>
-        <div>
-          <span className="eyebrow">With Mark · {yogaClass.timing}</span>
-          <strong>{yogaClass.name}</strong>
-        </div>
-        <div className="segmented two mode-picker" aria-label="Advance mode">
-          <button
-            className={mode === "timed" ? "active" : ""}
-            onClick={() => chooseMode("timed")}
-          >
-            <Timer size={16} /> Timed
-          </button>
-          <button className={mode === "tap" ? "active" : ""} onClick={() => chooseMode("tap")}>
-            <Touchpad size={16} /> Tap
-          </button>
-        </div>
         <button
-          className="sound-toggle"
-          onClick={toggleSound}
-          aria-label={soundEnabled ? "Mute yoga sounds" : "Turn on yoga sounds"}
-          aria-pressed={soundEnabled}
+          className="yoga-player-exit"
+          onClick={() => navigate({ name: "yoga" })}
+          aria-label="Exit class"
         >
-          {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
+          <ArrowLeft size={18} /> Exit
         </button>
-      </div>
-
-      <div className="stretch-now-playing" data-no-advance>
-        <Music2 size={17} />
-        <span>
-          <small>Soundtrack</small>
-          <strong>
-            {data.preferences.stretchMusicEnabled ? selectedMusic.name : "Music off"}
-          </strong>
-        </span>
-        <button onClick={toggleMusic} aria-label="Toggle stretching music">
-          {data.preferences.stretchMusicEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
-        </button>
+        {isBeforeRunning ? (
+          <button className="yoga-player-skip" onClick={skipBeforeRunWarmup}>
+            Skip warm-up
+          </button>
+        ) : null}
+        <div
+          className="player-progress-rail"
+          role="progressbar"
+          aria-label={`Pose ${current.stepNumber} of ${current.totalSteps}`}
+          aria-valuemin={1}
+          aria-valuemax={current.totalSteps}
+          aria-valuenow={current.stepNumber}
+        >
+          <span style={{ width: `${(current.stepNumber / current.totalSteps) * 100}%` }} />
+        </div>
+        <details className="player-settings" ref={settingsMenu}>
+          <summary aria-label="Open class controls">
+            <EllipsisVertical size={20} />
+          </summary>
+          <div className="player-settings-panel">
+            <div className="player-class-info">
+              <span>With Mark · {yogaClass.timing}</span>
+              <strong>{yogaClass.name}</strong>
+              <small>{current.stepNumber} of {current.totalSteps}</small>
+            </div>
+            <button className="player-guidance-action" type="button" onClick={openGuidance}>
+              <Info size={17} />
+              <span><strong>Pose guidance</strong><small>Setup, sensation and target muscles</small></span>
+            </button>
+            <span className="player-settings-label">Class controls</span>
+            <div className="segmented two mode-picker" aria-label="Advance mode">
+              <button
+                className={mode === "timed" ? "active" : ""}
+                onClick={() => chooseMode("timed")}
+              >
+                <Timer size={16} /> Timed
+              </button>
+              <button className={mode === "tap" ? "active" : ""} onClick={() => chooseMode("tap")}>
+                <Touchpad size={16} /> Tap
+              </button>
+            </div>
+            <div className="player-setting-row">
+              <span><Volume2 size={16} /> Class sounds</span>
+              <button
+                className="player-setting-action"
+                onClick={toggleSound}
+                aria-label={soundEnabled ? "Mute yoga sounds" : "Turn on yoga sounds"}
+                aria-pressed={soundEnabled}
+              >
+                {soundEnabled ? "On" : "Off"}
+              </button>
+            </div>
+            <div className="player-setting-section">
+              <span className="player-settings-label">Soundtrack</span>
+              <div className="player-track-picker">
+                {STRETCH_MUSIC.map((track) => (
+                  <button
+                    key={track.id}
+                    className={
+                      data.preferences.stretchMusicEnabled && selectedMusic.id === track.id
+                        ? "active"
+                        : ""
+                    }
+                    onClick={() => chooseMusic(track.id)}
+                  >
+                    <Music2 size={15} /> {track.name}
+                  </button>
+                ))}
+              </div>
+              <div className="player-setting-row player-volume-row">
+                <label htmlFor="active-stretch-volume">Volume</label>
+                <input
+                  id="active-stretch-volume"
+                  type="range"
+                  min="0"
+                  max="70"
+                  value={data.preferences.stretchMusicVolume}
+                  onChange={(event) =>
+                    setData((currentData) => ({
+                      ...currentData,
+                      preferences: {
+                        ...currentData.preferences,
+                        stretchMusicVolume: Number(event.target.value)
+                      }
+                    }))
+                  }
+                  aria-label="Stretching music volume"
+                />
+                <button className="player-setting-action" onClick={toggleMusic}>
+                  {data.preferences.stretchMusicEnabled ? "On" : "Off"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </details>
       </div>
 
       <section className={`pose-stage ${phase === "transition" ? "transition-stage" : ""}`}>
-        <div className="pose-progress">
-          <span>{current.stepNumber} / {current.totalSteps}</span>
-          <div className="progress-track">
-            <span style={{ width: `${(current.stepNumber / current.totalSteps) * 100}%` }} />
-          </div>
-        </div>
-
         {phase === "transition" && next ? (
           <div className="yoga-transition" role="status" aria-live="polite">
-            <MovementVisual movement={next.movement} mirrored={next.side === 2} compact />
-            <span className="eyebrow">{changingSides ? "Side 2 is next" : "Coming up"}</span>
-            <h1>{changingSides ? "Switch sides" : next.movement.name}</h1>
-            <strong className="transition-countdown">{secondsLeft}</strong>
-            <p>
-              {changingSides
-                ? `Set up the other side for ${next.movement.name}.`
-                : `Move into ${next.movement.name} at a comfortable pace.`}
-            </p>
+            <div className="pose-artwork">
+              <MovementVisual movement={next.movement} mirrored={next.side === 2} />
+            </div>
+            <div className="pose-primary-meta">
+              <div className="pose-name-line">
+                <h1>{next.movement.name}</h1>
+                <span>{changingSides ? "Switch sides" : next.side ? `Side ${next.side} of 2` : "Coming up"}</span>
+              </div>
+              <strong className="transition-countdown" aria-label={`${secondsLeft} seconds until the next pose`}>
+                {secondsLeft}
+              </strong>
+            </div>
           </div>
         ) : (
           <>
-            <MovementVisual movement={current.movement} mirrored={current.side === 2} />
-            <span className="eyebrow">
-              {current.label ?? (current.side ? `Side ${current.side} of 2` : "Now")}
-            </span>
-            <h1>{current.movement.name}</h1>
-            <p>{current.cue}</p>
-            <div className={`routine-sensation ${current.movement.sensationKind}`}>
-              <span className="sensation-dot" />
-              <div>
-                <small>
-                  {current.movement.sensationKind === "stretch"
-                    ? "Where you should feel it"
-                    : "What should be working"}
-                </small>
-                <strong>{current.movement.sensationCue}</strong>
-                <div className="muscle-chips">
-                  {current.movement.muscleGroups.map((muscle) => (
-                    <span key={muscle}>{muscle}</span>
-                  ))}
-                </div>
-              </div>
+            <div className="pose-artwork">
+              <MovementVisual movement={current.movement} mirrored={current.side === 2} />
             </div>
-            <strong className="pose-clock" aria-label={`${secondsLeft} seconds remaining`}>
-              {secondsLeft}s
-            </strong>
-            {mode === "tap" ? (
-              <span className="tap-callout">
-                <Touchpad /> {secondsLeft === 0 ? "Tap anywhere for next" : "Tap when you want to move on"}
-              </span>
-            ) : null}
+            <div className="pose-primary-meta">
+              <div className="pose-name-line">
+                <h1>{current.movement.name}</h1>
+                {current.label || current.side ? (
+                  <span>{current.label ?? `Side ${current.side} of 2`}</span>
+                ) : null}
+              </div>
+              <strong className="pose-clock" aria-label={`${secondsLeft} seconds remaining`}>
+                {secondsLeft}s
+              </strong>
+            </div>
           </>
         )}
       </section>
 
-      <div className="player-message" data-no-advance aria-live="polite">
-        <span>
-          {phase === "transition"
-            ? "Use these five seconds to change position safely."
-            : mode === "timed"
-              ? running
-                ? "Timed mode advances automatically. Your music can keep playing."
-                : "Class paused."
-              : running
-                ? "A short stationary tap advances. Scrolling and swiping will not."
-                : "Class paused."}
-        </span>
-      </div>
+      {poseReward ? (
+        <div className="pose-xp-reward" role="status" aria-live="polite" key={poseReward.key}>
+          <Award size={18} />
+          <strong>+{poseReward.amount} XP</strong>
+          <span>Stretch complete</span>
+        </div>
+      ) : null}
 
       <div className="flow-controls" data-no-advance>
         <button
@@ -719,6 +905,45 @@ export default function YogaClassScreen({ classId, data, setData, navigate, retu
           <ChevronRight />
         </button>
       </div>
+
+      {guidanceOpen ? (
+        <div
+          className="pose-guidance-backdrop"
+          data-no-advance
+          onClick={() => setGuidanceOpen(false)}
+        >
+          <section
+            className="pose-guidance-sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="pose-guidance-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="pose-guidance-heading">
+              <div>
+                <span>Pose guidance</span>
+                <h2 id="pose-guidance-title">{guidanceSlide.movement.name}</h2>
+              </div>
+              <button type="button" onClick={() => setGuidanceOpen(false)} aria-label="Close pose guidance">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="pose-guidance-copy">
+              <span>Setup</span>
+              <p>{guidanceSlide.cue}</p>
+            </div>
+            <div className="pose-guidance-copy">
+              <span>{guidanceSlide.movement.sensationKind === "stretch" ? "Where you should feel it" : "What should be working"}</span>
+              <p>{guidanceSlide.movement.sensationCue}</p>
+            </div>
+            <div className="muscle-chips" aria-label="Target muscles">
+              {guidanceSlide.movement.muscleGroups.map((muscle) => (
+                <span key={muscle}>{muscle}</span>
+              ))}
+            </div>
+          </section>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { loadRunSession, loadRunningProfile } from "./running";
-import { getNativeStorySnapshot, usesNativeStoryDirector } from "./runningNativeStory";
+import { getNativeStorySnapshot, parseNativeStoryHeardLineKeys, usesNativeStoryDirector } from "./runningNativeStory";
 import { loadStoryRunRuntimeState } from "./runningStoryState";
 import { loadPlannedRunningRoute } from "./runningRouteStore";
 import { runningCampaignState } from "./runningCampaign";
@@ -8,8 +8,11 @@ import {
   saveStoryRunResult,
   storyCampaignTotals,
   storyOutcomeLabel,
+  storyResultHeardChapters,
+  storyResultPlaybackVerified,
   storyResultForRun
 } from "./runningStoryResults";
+import { STORY_CHAPTERS, storyChaptersForLineKeys, storyNarrationIsVerified } from "./runningStoryChapters";
 
 const SUMMARY_ID = "zenchad-story-result-summary";
 const PROGRESS_ID = "zenchad-story-campaign-progress";
@@ -40,7 +43,9 @@ function saveBrowserResult(runId: string, completedAt: number) {
     lastOutcome: lastChase?.outcome ?? "",
     helicopterEncountered: state.helicopterTriggered,
     completedAt,
-    source: "browser"
+    source: "browser",
+    heardChapterIds: state.heardChapterIds,
+    playbackVerified: storyNarrationIsVerified(state.heardChapterIds)
   });
 }
 
@@ -71,7 +76,17 @@ async function settleCurrentStoryResult() {
         : "",
       helicopterEncountered: snapshot.helicopterTriggered,
       completedAt,
-      source: "native"
+      source: "native",
+      heardChapterIds: [...new Set([
+        ...session.storyHeardChapterIds,
+        ...storyChaptersForLineKeys(parseNativeStoryHeardLineKeys(snapshot))
+      ])],
+      playbackVerified: storyNarrationIsVerified([
+        ...new Set([
+          ...session.storyHeardChapterIds,
+          ...storyChaptersForLineKeys(parseNativeStoryHeardLineKeys(snapshot))
+        ])
+      ])
     });
   } catch {
     // The run itself is already safe. Mission metadata can be recovered on a later tick.
@@ -90,12 +105,13 @@ function renderSummary() {
   const result = storyResultForRun(session.id);
   if (!result) return;
   const mission = loadPlannedRunningRoute(session.id)?.storyMission;
+  const heardChapters = storyResultHeardChapters(result);
 
   const existing = document.getElementById(SUMMARY_ID);
   const panel = existing ?? document.createElement("section");
   panel.id = SUMMARY_ID;
   panel.className = "card running-story-result-card";
-  panel.innerHTML = `
+  const markup = `
     <div class="section-heading"><div><span class="eyebrow">Mission log</span><h2>${escapeText(result.missionTitle)}</h2></div><strong>RUNNER</strong></div>
     ${mission ? `<p class="running-mission-objective">${escapeText(mission.objective)}</p>` : ""}
     <div class="running-story-result-grid">
@@ -104,9 +120,16 @@ function renderSummary() {
       <span><small>AIR UNIT</small><strong>${result.helicopterEncountered ? "Encountered" : "Clear"}</strong></span>
       <span><small>INTENSITY</small><strong>${escapeText(result.difficulty)}</strong></span>
     </div>
+    <div class="running-story-result-chapters">
+      ${STORY_CHAPTERS.map((chapter) => `<span class="${heardChapters.includes(chapter.id) ? "heard" : "missed"}"><i></i>${escapeText(chapter.title)}</span>`).join("")}
+    </div>
+    ${storyResultPlaybackVerified(result)
+      ? `<p class="running-story-playback-ok">All five chapter transmissions were heard. The next episode is unlocked.</p>`
+      : `<p class="running-story-playback-warning"><strong>Story held here.</strong> Any chapter whose audio did not finish can be replayed from the Story archive; your run and rewards are still safely banked.</p>`}
     <p>Whatever happened in the pursuit changed the mission, not the value of the run. No chase outcome removes XP.</p>
     ${mission?.cliffhanger ? `<div class="running-story-cliffhanger"><span class="eyebrow">Intercepted after extraction</span><strong>${escapeText(mission.cliffhanger)}</strong></div>` : ""}
   `;
+  if (panel.innerHTML !== markup) panel.innerHTML = markup;
   if (!existing) resultCard.insertAdjacentElement("afterend", panel);
 }
 
@@ -124,7 +147,7 @@ function renderProgress() {
   const panel = existing ?? document.createElement("section");
   panel.id = PROGRESS_ID;
   panel.className = "card running-story-campaign-card";
-  panel.innerHTML = `
+  const markup = `
     <div class="section-heading"><div><span class="eyebrow">Story campaign</span><h2>Runner network</h2></div><strong>${totals.missions} mission${totals.missions === 1 ? "" : "s"}</strong></div>
     <div class="running-campaign-stats">
       <span><strong>${totals.chases}</strong><small>chases</small></span>
@@ -138,6 +161,7 @@ function renderProgress() {
       : `<div class="running-campaign-latest"><span class="eyebrow">Next campaign episode</span><strong>Episode ${campaign.nextEpisode ?? 1}</strong><small>${campaign.latestCliffhanger ? escapeText(campaign.latestCliffhanger) : "The network is waiting for your first run."}</small></div>`}
     ${latest ? `<div class="running-campaign-latest"><span class="eyebrow">Latest mission</span><strong>${escapeText(latest.missionTitle)}</strong><small>${escapeText(storyOutcomeLabel(latest.lastOutcome))}</small></div>` : `<p>Your first Story Run starts the campaign log.</p>`}
   `;
+  if (panel.innerHTML !== markup) panel.innerHTML = markup;
   if (!existing) progressGrid.insertAdjacentElement("afterend", panel);
 
   const stalePrinciple = progressGrid.parentElement.querySelector<HTMLElement>(".running-principle p");

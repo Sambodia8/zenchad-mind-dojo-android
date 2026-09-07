@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.speech.tts.Voice;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,7 +25,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -46,6 +46,10 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
         if (focusChange == AudioManager.AUDIOFOCUS_LOSS) audioFocusHeld = false;
     };
     private boolean ttsReady = false;
+    private Voice systemDefaultVoice;
+    private String activeSpeechText = "";
+    private String activeUtteranceId = "";
+    private int activeFallbackStage = 0;
     private String sessionId = "";
     private long routeModifiedAt = -1L;
     private double[] lats = new double[0];
@@ -87,7 +91,8 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
     public void onInit(int status) {
         ttsReady = status == TextToSpeech.SUCCESS;
         if (!ttsReady || tts == null) return;
-        tts.setLanguage(Locale.UK);
+        systemDefaultVoice = tts.getVoice();
+        RunningVoicePolicy.applyPreferred(tts, systemDefaultVoice, RunningVoicePolicy.selectedVoice(context));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes attributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
@@ -103,13 +108,30 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
 
             @Override
             public void onDone(String utteranceId) {
+                if (!utteranceId.equals(activeUtteranceId)) return;
                 speaking = false;
+                activeSpeechText = "";
+                activeUtteranceId = "";
+                activeFallbackStage = 0;
                 releaseAudioFocus();
             }
 
             @Override
             public void onError(String utteranceId) {
+                if (!utteranceId.equals(activeUtteranceId)) return;
+                if (activeFallbackStage == 0 && !activeSpeechText.isEmpty()
+                    && RunningVoicePolicy.applyLocalFallback(tts, systemDefaultVoice)) {
+                    String retryText = activeSpeechText;
+                    if (speakAttempt(retryText, 1)) return;
+                }
+                if (activeFallbackStage <= 1 && !activeSpeechText.isEmpty()
+                    && RunningVoicePolicy.applySystemDefault(tts, systemDefaultVoice)) {
+                    String retryText = activeSpeechText;
+                    if (speakAttempt(retryText, 2)) return;
+                }
                 speaking = false;
+                activeSpeechText = "";
+                activeUtteranceId = "";
                 releaseAudioFocus();
             }
         });
@@ -277,10 +299,28 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
     private boolean speak(String text) {
         if (!ttsReady || tts == null || text == null || text.trim().isEmpty() || speaking) return false;
         requestAudioFocus();
+        RunningVoicePolicy.applyPreferred(tts, systemDefaultVoice, RunningVoicePolicy.selectedVoice(context));
+        activeFallbackStage = 0;
+        return speakAttempt(text.trim(), 0);
+    }
+
+    private boolean speakAttempt(String text, int fallbackStage) {
+        if (tts == null) return false;
         Bundle params = new Bundle();
         String utteranceId = "zenchad-background-nav-" + UUID.randomUUID();
-        int result = tts.speak(text.trim(), TextToSpeech.QUEUE_FLUSH, params, utteranceId);
+        activeSpeechText = text;
+        activeUtteranceId = utteranceId;
+        activeFallbackStage = fallbackStage;
+        int result = tts.speak(text, TextToSpeech.QUEUE_FLUSH, params, utteranceId);
         if (result == TextToSpeech.ERROR) {
+            if (fallbackStage == 0 && RunningVoicePolicy.applyLocalFallback(tts, systemDefaultVoice)) {
+                return speakAttempt(text, 1);
+            }
+            if (fallbackStage <= 1 && RunningVoicePolicy.applySystemDefault(tts, systemDefaultVoice)) {
+                return speakAttempt(text, 2);
+            }
+            activeSpeechText = "";
+            activeUtteranceId = "";
             releaseAudioFocus();
             return false;
         }

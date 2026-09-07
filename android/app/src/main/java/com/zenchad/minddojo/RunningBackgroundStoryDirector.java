@@ -22,8 +22,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 
 public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListener {
@@ -51,6 +53,13 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
     public static final String KEY_OPENING_TWO = "openingTwo";
     public static final String KEY_HOME_LINE = "homeLine";
     public static final String KEY_UPDATED_AT = "updatedAt";
+    public static final String KEY_AUDIO_STATE = "audioState";
+    public static final String KEY_AUDIO_LABEL = "audioLabel";
+    public static final String KEY_AUDIO_ERROR = "audioError";
+    public static final String KEY_AUDIO_TRANSCRIPT = "audioTranscript";
+    public static final String KEY_AUDIO_LINE_KEY = "audioLineKey";
+    public static final String KEY_HEARD_LINE_KEYS = "heardLineKeys";
+    public static final String KEY_REPLAY_REQUESTED = "replayRequested";
 
     private final Context context;
     private final SharedPreferences prefs;
@@ -62,6 +71,9 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
     private final RunningStoryVoiceEngine voiceEngine;
     private boolean ttsReady = false;
     private boolean speaking = false;
+    private String activeAudioLabel = "";
+    private String activeUtteranceId = "";
+    private String activeLineKey = "";
     private String sessionId = "";
     private long routeModifiedAt = -1L;
     private String routeMode = "";
@@ -102,19 +114,38 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
     @Override
     public void onInit(int status) {
         ttsReady = status == TextToSpeech.SUCCESS;
-        if (!ttsReady || tts == null) return;
+        if (!ttsReady || tts == null) {
+            setAudioState("failed", "Narration unavailable", "Android text-to-speech could not initialise.");
+            return;
+        }
         tts.setLanguage(Locale.UK);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes attributes = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                 .build();
             tts.setAudioAttributes(attributes);
         }
         tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-            @Override public void onStart(String utteranceId) { speaking = true; }
-            @Override public void onDone(String utteranceId) { speaking = false; }
-            @Override public void onError(String utteranceId) { speaking = false; }
+            @Override public void onStart(String utteranceId) {
+                if (!utteranceId.equals(activeUtteranceId)) return;
+                speaking = true;
+                setAudioState("playing", activeAudioLabel, "");
+            }
+            @Override public void onDone(String utteranceId) {
+                if (!utteranceId.equals(activeUtteranceId)) return;
+                markLineHeard(activeLineKey);
+                speaking = false;
+                activeUtteranceId = "";
+                activeLineKey = "";
+                setAudioState("idle", "Next story segment pending", "");
+            }
+            @Override public void onError(String utteranceId) {
+                if (!utteranceId.equals(activeUtteranceId)) return;
+                speaking = false;
+                activeUtteranceId = "";
+                setAudioState("failed", activeAudioLabel, "Android narration failed to play.");
+            }
         });
     }
 
@@ -131,9 +162,19 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
         reloadRouteIfNeeded();
         if (!"story".equals(routeMode)) {
             if (prefs.getBoolean(KEY_ENABLED, false)) prefs.edit().putBoolean(KEY_ENABLED, false).apply();
+            if (speaking) voiceEngine.stop();
+            speaking = false;
+            setAudioState("idle", "Story audio inactive", "");
             return;
         }
         if (!prefs.getBoolean(KEY_ENABLED, false)) prefs.edit().putBoolean(KEY_ENABLED, true).apply();
+
+        if (prefs.getBoolean(KEY_REPLAY_REQUESTED, false) && !speaking) {
+            prefs.edit().putBoolean(KEY_REPLAY_REQUESTED, false).apply();
+            String replayText = prefs.getString(KEY_AUDIO_TRANSCRIPT, "");
+            String replayKey = prefs.getString(KEY_AUDIO_LINE_KEY, "replay");
+            if (!replayText.isEmpty()) speak(replayKey, replayText);
+        }
 
         long now = System.currentTimeMillis();
         addSpeedSample(now, totalDistanceMeters);
@@ -156,6 +197,20 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
                     .putString(KEY_PHASE, "cruise")
                     .putLong(KEY_NEXT_EVENT_AT, Math.max(prefs.getLong(KEY_NEXT_EVENT_AT, 0L), now + 50_000L))
                     .apply();
+            }
+        }
+
+        if (completionRatio >= 0.33d && !hasHeardChapter("pursuit") && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
+            if (speak("pursuit-bridge", mission.chaseLine)) {
+                updateRadio("THE NET IS MOVING", "Stay loose. The pressure is building.");
+                return;
+            }
+        }
+
+        if (completionRatio >= 0.64d && !hasHeardChapter("complication") && !prefs.getBoolean(KEY_ACTIVE_CHASE, false) && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
+            if (speak("complication-bridge", mission.helicopterLine)) {
+                updateRadio("SIGNAL SHIFT", "The mission has changed. Keep moving.");
+                return;
             }
         }
 
@@ -240,6 +295,12 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             .putString(KEY_MISSION_ID, "ghost-signal-001")
             .putString(KEY_MISSION_TITLE, "Ghost Signal")
             .putString(KEY_LAST_OUTCOME, "")
+            .putString(KEY_AUDIO_STATE, "pending")
+            .putString(KEY_AUDIO_LABEL, "Opening comms queued")
+            .putString(KEY_AUDIO_ERROR, "")
+            .putString(KEY_AUDIO_TRANSCRIPT, "")
+            .putString(KEY_AUDIO_LINE_KEY, "")
+            .putBoolean(KEY_REPLAY_REQUESTED, false)
             .putLong(KEY_NEXT_EVENT_AT, 0L)
             .putLong(KEY_UPDATED_AT, System.currentTimeMillis())
             .apply();
@@ -415,21 +476,98 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
 
     private boolean speak(String lineKey, String text) {
         if (text == null || text.trim().isEmpty() || speaking) return false;
+        activeLineKey = lineKey == null ? "story" : lineKey;
+        activeAudioLabel = audioLabelFor(lineKey);
+        prefs.edit()
+            .putString(KEY_AUDIO_TRANSCRIPT, text.trim())
+            .putString(KEY_AUDIO_LINE_KEY, activeLineKey)
+            .apply();
+        setAudioState("pending", activeAudioLabel, "");
         String assetName = voiceAssetName(lineKey);
-        if (assetName != null && voiceEngine.play(assetName, (float) RunningStoryAudioSettings.getVoiceVolume(context), () -> speaking = false)) {
+        if (assetName != null && voiceEngine.play(assetName, (float) RunningStoryAudioSettings.getVoiceVolume(context), new RunningStoryVoiceEngine.PlaybackListener() {
+            @Override public void onStarted() {
+                speaking = true;
+                setAudioState("playing", activeAudioLabel, "");
+            }
+            @Override public void onCompleted() {
+                markLineHeard(activeLineKey);
+                speaking = false;
+                activeLineKey = "";
+                setAudioState("idle", "Next story segment pending", "");
+            }
+            @Override public void onError(String reason) {
+                speaking = false;
+                // A corrupt/unsupported recording must not silently lose the story.
+                // Fall back to the device voice; that path publishes playing/failed state.
+                if (!speakWithTextToSpeech(text)) {
+                    setAudioState("failed", activeAudioLabel, reason);
+                }
+            }
+        })) {
             speaking = true;
             return true;
         }
+
         return speakWithTextToSpeech(text);
     }
 
     private boolean speakWithTextToSpeech(String text) {
-        if (!ttsReady || tts == null || speaking || text == null || text.trim().isEmpty()) return false;
+        if (!ttsReady || tts == null || speaking || text == null || text.trim().isEmpty()) {
+            setAudioState(ttsReady ? "failed" : "pending", activeAudioLabel, ttsReady ? "Narration could not start." : "Waiting for Android narration.");
+            return false;
+        }
         String utteranceId = "zenchad-native-story-" + UUID.randomUUID();
         Bundle params = new Bundle();
         params.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, (float) RunningStoryAudioSettings.getVoiceVolume(context));
+        activeUtteranceId = utteranceId;
         int result = tts.speak(text.trim(), TextToSpeech.QUEUE_ADD, params, utteranceId);
-        return result != TextToSpeech.ERROR;
+        if (result == TextToSpeech.ERROR) {
+            activeUtteranceId = "";
+            setAudioState("failed", activeAudioLabel, "Android narration rejected this segment.");
+            return false;
+        }
+        speaking = true;
+        setAudioState("playing", activeAudioLabel, "");
+        return true;
+    }
+
+    private String audioLabelFor(String lineKey) {
+        if (lineKey == null) return "Story narration";
+        if (lineKey.contains("opening")) return "Opening transmission";
+        if (lineKey.contains("watcher")) return "Watcher transmission";
+        if (lineKey.contains("pursuit") || lineKey.contains("chase") || lineKey.contains("pursuer")) return "Pursuit transmission";
+        if (lineKey.contains("helicopter")) return "Air unit transmission";
+        if (lineKey.contains("home") || lineKey.contains("extraction")) return "Extraction transmission";
+        return "Story narration";
+    }
+
+    private void markLineHeard(String lineKey) {
+        if (lineKey == null || lineKey.isEmpty()) return;
+        Set<String> heard = new HashSet<>(prefs.getStringSet(KEY_HEARD_LINE_KEYS, new HashSet<>()));
+        heard.add(lineKey);
+        prefs.edit().putStringSet(KEY_HEARD_LINE_KEYS, heard).apply();
+    }
+
+    private boolean hasHeardChapter(String chapter) {
+        Set<String> heard = prefs.getStringSet(KEY_HEARD_LINE_KEYS, new HashSet<>());
+        for (String key : heard) {
+            String lower = key == null ? "" : key.toLowerCase(Locale.UK);
+            if ("briefing".equals(chapter) && (lower.contains("opening") && !lower.contains("opening-2"))) return true;
+            if ("contact".equals(chapter) && (lower.contains("watcher") || lower.contains("opening-2"))) return true;
+            if ("pursuit".equals(chapter) && (lower.contains("pursuer") || lower.contains("pursuit") || lower.contains("chase"))) return true;
+            if ("complication".equals(chapter) && (lower.contains("complication") || lower.contains("helicopter") || lower.contains("outcome"))) return true;
+            if ("extraction".equals(chapter) && (lower.contains("home") || lower.contains("extraction"))) return true;
+        }
+        return false;
+    }
+
+    private void setAudioState(String state, String label, String error) {
+        prefs.edit()
+            .putString(KEY_AUDIO_STATE, state == null ? "idle" : state)
+            .putString(KEY_AUDIO_LABEL, label == null ? "" : label)
+            .putString(KEY_AUDIO_ERROR, error == null ? "" : error)
+            .putLong(KEY_UPDATED_AT, System.currentTimeMillis())
+            .apply();
     }
 
     private String voiceAssetName(String lineKey) {
@@ -471,10 +609,23 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             routeMode = route.optString("mode", "");
             plannedMinutes = Math.max(8, route.optInt("plannedMinutes", 30));
             mission = StoryMission.fromJson(route.optJSONObject("storyMission"));
-            prefs.edit()
+            SharedPreferences.Editor missionEditor = prefs.edit()
                 .putString(KEY_MISSION_ID, mission.id)
-                .putString(KEY_MISSION_TITLE, mission.title)
-                .apply();
+                .putString(KEY_MISSION_TITLE, mission.title);
+            JSONArray heardChapters = route.optJSONArray("storyHeardChapterIds");
+            if (heardChapters != null) {
+                Set<String> carriedHeardKeys = new HashSet<>(prefs.getStringSet(KEY_HEARD_LINE_KEYS, new HashSet<>()));
+                for (int index = 0; index < heardChapters.length(); index += 1) {
+                    String chapter = heardChapters.optString(index, "");
+                    if ("briefing".equals(chapter)) { missionEditor.putBoolean(KEY_OPENING_ONE, true); carriedHeardKeys.add("opening"); }
+                    if ("contact".equals(chapter)) { missionEditor.putBoolean(KEY_OPENING_TWO, true); carriedHeardKeys.add("watcher"); }
+                    if ("pursuit".equals(chapter)) carriedHeardKeys.add("pursuit-bridge");
+                    if ("complication".equals(chapter)) carriedHeardKeys.add("complication-bridge");
+                    if ("extraction".equals(chapter)) { missionEditor.putBoolean(KEY_HOME_LINE, true); carriedHeardKeys.add("home"); }
+                }
+                missionEditor.putStringSet(KEY_HEARD_LINE_KEYS, carriedHeardKeys);
+            }
+            missionEditor.apply();
 
             storyAnchors.clear();
             JSONArray anchors = route.optJSONArray("storyAnchors");

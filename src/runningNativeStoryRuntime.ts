@@ -1,11 +1,16 @@
 import { loadRunSession } from "./running";
 import {
   getNativeStorySnapshot,
+  parseNativeStoryHeardLineKeys,
+  replayNativeStoryLast,
   setNativeStoryAudioSettings,
   setNativeStoryDifficulty,
   type NativeStorySnapshot
 } from "./runningNativeStory";
 import type { ChaseDifficulty } from "./runningStory";
+import { storyChaptersForLineKeys } from "./runningStoryChapters";
+import { loadPlannedRunningRoute } from "./runningRouteStore";
+import { removeStoryLivePanel, renderStoryLivePanel } from "./runningStoryLiveUi";
 
 const CHASE_DOCK_ID = "zenchad-story-chase-dock";
 const SETTINGS_ID = "zenchad-story-difficulty";
@@ -20,6 +25,38 @@ function setRadio(snapshot: NativeStorySnapshot) {
   const detailNode = radio.querySelector<HTMLElement>("small");
   if (titleNode) titleNode.textContent = snapshot.radioTitle || "COMMS ONLINE";
   if (detailNode) detailNode.textContent = snapshot.radioDetail || "Mission channel connected. Keep moving.";
+
+  let audio = radio.querySelector<HTMLElement>(".running-story-audio-state");
+  if (!audio) {
+    audio = document.createElement("div");
+    audio.className = "running-story-audio-state";
+    audio.setAttribute("aria-live", "polite");
+    radio.appendChild(audio);
+  }
+  const state = snapshot.audioState || "pending";
+  audio.dataset.state = state;
+  const headline = state === "playing"
+    ? "NARRATION PLAYING"
+    : state === "failed"
+      ? "AUDIO FAILED"
+      : state === "pending"
+        ? "AUDIO PREPARING"
+        : "NEXT SEGMENT PENDING";
+  const detail = state === "failed"
+    ? snapshot.audioError || "Narration could not play. The mission will keep tracking."
+    : snapshot.audioLabel || "Story channel ready";
+  const markup = `<span aria-hidden="true"></span><div><b>RUNNER STORY ACTIVE · ${headline}</b><small>${escapeText(detail)}</small></div>`;
+  if (audio.innerHTML !== markup) audio.innerHTML = markup;
+}
+
+function escapeText(value: string) {
+  return value.replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[character] ?? character);
 }
 
 function ensureChaseDock() {
@@ -151,13 +188,29 @@ function render(snapshot: NativeStorySnapshot) {
   if (!session || session.mode !== "story") {
     document.getElementById(CHASE_DOCK_ID)?.remove();
     document.getElementById(SETTINGS_ID)?.remove();
+    removeStoryLivePanel();
     return;
   }
   if (session.stage === "active") {
     setRadio(snapshot);
+    const mission = loadPlannedRunningRoute(session.id)?.storyMission;
+    renderStoryLivePanel({
+      episode: mission?.episode ?? 1,
+      missionTitle: (mission?.title ?? snapshot.missionTitle) || "Runner Story",
+      phase: snapshot.phase,
+      heardChapterIds: [...new Set([...session.storyHeardChapterIds, ...storyChaptersForLineKeys(parseNativeStoryHeardLineKeys(snapshot))])],
+      audioState: snapshot.audioState,
+      audioLabel: snapshot.audioLabel,
+      audioError: snapshot.audioError,
+      transcript: snapshot.audioTranscript,
+      chaseCount: snapshot.chaseCount,
+      helicopterTriggered: snapshot.helicopterTriggered,
+      onReplay: () => { void replayNativeStoryLast().catch(() => {}); }
+    });
     renderChase(snapshot);
   } else {
     document.getElementById(CHASE_DOCK_ID)?.remove();
+    removeStoryLivePanel();
   }
   syncStorySettings(snapshot);
 }

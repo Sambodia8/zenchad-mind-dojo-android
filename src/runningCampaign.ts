@@ -1,4 +1,7 @@
-import { loadStoryRunResults } from "./runningStoryResults";
+import {
+  loadStoryRunResults,
+  storyResultPlaybackVerified
+} from "./runningStoryResults";
 
 export interface StoryMissionDefinition {
   id: string;
@@ -142,6 +145,8 @@ const SIDE_MISSIONS: Omit<StoryMissionDefinition, "id">[] = [
 
 export interface RunningCampaignState {
   completedCampaignIds: string[];
+  unverifiedCampaignIds: string[];
+  nextMissionId: string | null;
   latestCliffhanger: string | null;
   nextEpisode: number | null;
   campaignComplete: boolean;
@@ -151,16 +156,25 @@ export interface RunningCampaignState {
 export function runningCampaignState(): RunningCampaignState {
   const results = loadStoryRunResults();
   const completedCampaignIds = results
+    .filter((result) => storyResultPlaybackVerified(result))
+    .map((result) => result.missionId)
+    .filter((id) => STORY_CAMPAIGN.some((mission) => mission.id === id));
+  const unverifiedCampaignIds = results
+    .filter((result) => !storyResultPlaybackVerified(result))
     .map((result) => result.missionId)
     .filter((id) => STORY_CAMPAIGN.some((mission) => mission.id === id));
   const completedSet = new Set(completedCampaignIds);
   const next = STORY_CAMPAIGN.find((mission) => !completedSet.has(mission.id)) ?? null;
-  const latestCampaignResult = results.find((result) => STORY_CAMPAIGN.some((mission) => mission.id === result.missionId));
+  const latestCampaignResult = results.find((result) =>
+    storyResultPlaybackVerified(result) && STORY_CAMPAIGN.some((mission) => mission.id === result.missionId)
+  );
   const latestMission = latestCampaignResult
     ? STORY_CAMPAIGN.find((mission) => mission.id === latestCampaignResult.missionId) ?? null
     : null;
   return {
     completedCampaignIds: [...new Set(completedCampaignIds)],
+    unverifiedCampaignIds: [...new Set(unverifiedCampaignIds)],
+    nextMissionId: next?.id ?? null,
     latestCliffhanger: latestMission?.cliffhanger ?? null,
     nextEpisode: next?.episode ?? null,
     campaignComplete: !next,
@@ -177,7 +191,9 @@ function deterministicIndex(seed: string, modulo: number) {
   return Math.abs(value >>> 0) % Math.max(1, modulo);
 }
 
-export function chooseStoryMission(runSessionId: string): StoryMissionDefinition {
+export function chooseStoryMission(runSessionId: string, preferredMissionId?: string | null): StoryMissionDefinition {
+  const preferred = preferredMissionId ? missionById(preferredMissionId) : null;
+  if (preferred) return preferred;
   const state = runningCampaignState();
   const completed = new Set(state.completedCampaignIds);
   const nextCampaign = STORY_CAMPAIGN.find((mission) => !completed.has(mission.id));

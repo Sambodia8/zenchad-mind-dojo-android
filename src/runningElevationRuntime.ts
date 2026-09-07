@@ -36,7 +36,8 @@ function renderCurrentRun() {
     const trace = elevationProfilePoints(elevation.samples);
     panel.innerHTML = `
       <div class="section-heading"><div><span class="eyebrow">Terrain</span><h2>Elevation</h2></div><strong>+${Math.round(elevation.gainMeters)} m</strong></div>
-      <svg class="running-elevation-chart" viewBox="0 0 100 100" role="img" aria-label="Elevation profile"><polyline points="${trace}"></polyline></svg>
+      <div class="running-chart-legend"><span><i class="running-chart-line"></i>Elevation profile</span><small>Horizontal: route distance · Vertical: metres</small></div>
+      <svg class="running-elevation-chart" viewBox="0 0 100 100" role="img" aria-label="Elevation profile: elevation in metres across the recorded route distance"><polyline points="${trace}"></polyline></svg>
       <div class="running-elevation-stats">
         <span><small>GAIN</small><strong>${Math.round(elevation.gainMeters)} m</strong></span>
         <span><small>LOSS</small><strong>${Math.round(elevation.lossMeters)} m</strong></span>

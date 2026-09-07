@@ -36,7 +36,7 @@ function syncSummary(state: RunningProgressionState) {
   const panel = existing ?? document.createElement("section");
   panel.id = SUMMARY_ID;
   panel.className = "running-progression-summary card";
-  panel.innerHTML = `
+  const markup = `
     <span class="eyebrow">Achievement unlocked</span>
     ${unlocks.map((achievement) => `
       <div class="running-achievement-unlock">
@@ -45,6 +45,7 @@ function syncSummary(state: RunningProgressionState) {
       </div>
     `).join("")}
   `;
+  if (panel.innerHTML !== markup) panel.innerHTML = markup;
   if (!existing) hero.insertAdjacentElement("afterend", panel);
 }
 
@@ -63,7 +64,7 @@ function syncProgressPanel(state: RunningProgressionState) {
   const multiplier = runningStreakMultiplier(state.streak.currentDays);
   const achievementCards = [...state.achievements].reverse().slice(0, 6);
 
-  panel.innerHTML = `
+  const markup = `
     <section class="card running-streak-panel">
       <span class="eyebrow">Momentum bonus</span>
       <div class="running-streak-number"><strong>${state.streak.currentDays}</strong><span>day streak</span><b>×${multiplier.toFixed(2)}</b></div>
@@ -83,6 +84,7 @@ function syncProgressPanel(state: RunningProgressionState) {
       `).join("")}</div>` : `<div class="running-progression-empty">Your first run unlocks the first one.</div>`}
     </section>
   `;
+  if (panel.innerHTML !== markup) panel.innerHTML = markup;
   if (!existing) grid.insertAdjacentElement("afterend", panel);
 }
 

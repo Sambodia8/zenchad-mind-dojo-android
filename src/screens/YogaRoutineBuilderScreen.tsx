@@ -54,7 +54,7 @@ export default function YogaRoutineBuilderScreen({ editClassId, data, setData, n
     evidence: "You chose this sequence yourself. Keep every pose comfortable and stop if anything feels sharp or painful.",
     sourceUrl: "",
     focusMuscles: Array.from(new Set(steps.flatMap((step) => MOVEMENTS.find((movement) => movement.id === step.movementId)?.muscleGroups ?? []))).slice(0, 5),
-    image: "assets/stretches/sun-salutation-flow.png",
+    image: "assets/yoga/class-cover-flow-v2.png",
     steps
   });
 

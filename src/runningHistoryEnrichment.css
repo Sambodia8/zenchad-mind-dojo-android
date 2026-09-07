@@ -36,6 +36,9 @@
   height: 70px;
 }
 
+.running-history-chart-copy { display: grid; gap: 3px; color: var(--text-muted); font-size: .62rem; }
+.running-history-chart-copy svg { height: 58px; }
+
 .running-history-elevation-block polyline {
   fill: none;
   stroke: currentColor;

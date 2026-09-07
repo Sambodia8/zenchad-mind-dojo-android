@@ -11,6 +11,7 @@ interface Props {
 
 const MAX_ORBS = 18;
 const MIN_ORBS = 6;
+export const XP_COLLECTION_DURATION = 2800;
 
 const seededValue = (amount: number, index: number, salt: number) => {
   const value = Math.sin(amount * 12.9898 + index * 78.233 + salt * 37.719) * 43758.5453;
@@ -42,6 +43,7 @@ export default function XpCollectionAnimation({
 
     const timeouts: number[] = [];
     const animations: Animation[] = [];
+    let countdownFrame: number | null = null;
     let xpTarget: HTMLElement | null = null;
 
     const finishAnimation = () => {
@@ -54,12 +56,10 @@ export default function XpCollectionAnimation({
       if (playedRef.current) return;
       playedRef.current = true;
 
-      const source = document.querySelector<HTMLElement>("[data-xp-source]");
       xpTarget = document.querySelector<HTMLElement>("[data-xp-target]");
-      const sourceRect = source?.getBoundingClientRect();
       const targetRect = xpTarget?.getBoundingClientRect();
-      const startX = sourceRect ? sourceRect.left + sourceRect.width / 2 : window.innerWidth / 2;
-      const startY = sourceRect ? sourceRect.top + sourceRect.height / 2 : window.innerHeight * 0.56;
+      const startX = window.innerWidth / 2;
+      const startY = window.innerHeight / 2;
       const targetX = targetRect ? targetRect.left + targetRect.width / 2 : window.innerWidth - 74;
       const targetY = targetRect ? targetRect.top + targetRect.height / 2 : 54;
 
@@ -69,7 +69,7 @@ export default function XpCollectionAnimation({
       }
 
       if (reducedMotion) {
-        if (counterRef.current) counterRef.current.textContent = "+0 XP";
+        if (counterRef.current) counterRef.current.textContent = "0 XP";
         xpTarget?.classList.add("xp-target-collecting");
         if (soundsEnabled) playUiSfx("xpGain");
         timeouts.push(window.setTimeout(finishAnimation, 280));
@@ -77,7 +77,6 @@ export default function XpCollectionAnimation({
       }
 
       let finalArrival = 0;
-      let absorbedOrbs = 0;
       orbRefs.current.forEach((orb, index) => {
         if (!orb) return;
         const scatterX = (seededValue(amount, index, 1) - 0.5) * 116;
@@ -123,21 +122,28 @@ export default function XpCollectionAnimation({
         animations.push(animation);
 
         timeouts.push(window.setTimeout(() => {
-          absorbedOrbs += 1;
-          const remainingXp = amount - Math.round((amount * absorbedOrbs) / orbCount);
-          if (counterRef.current) counterRef.current.textContent = `+${Math.max(0, remainingXp)} XP`;
           xpTarget?.classList.add("xp-target-collecting");
           if (soundsEnabled) playUiSfx("xpGain", { overlap: true });
         }, Math.max(0, arrival - 70)));
       });
 
-      timeouts.push(window.setTimeout(finishAnimation, finalArrival + 180));
+      const countdownStartedAt = performance.now();
+      const updateCountdown = (timestamp: number) => {
+        const progress = Math.min(1, (timestamp - countdownStartedAt) / finalArrival);
+        const remainingXp = Math.max(0, amount - Math.floor(amount * progress));
+        if (counterRef.current) counterRef.current.textContent = `${remainingXp} XP`;
+        if (progress < 1) countdownFrame = requestAnimationFrame(updateCountdown);
+      };
+      countdownFrame = requestAnimationFrame(updateCountdown);
+
+      timeouts.push(window.setTimeout(finishAnimation, XP_COLLECTION_DURATION));
     }, 0);
     timeouts.push(startTimer);
 
     return () => {
       timeouts.forEach((id) => window.clearTimeout(id));
       animations.forEach((animation) => animation.cancel());
+      if (countdownFrame !== null) cancelAnimationFrame(countdownFrame);
       xpTarget?.classList.remove("xp-target-collecting");
     };
   }, [active, amount, finished, reducedMotion, soundsEnabled]);
@@ -146,7 +152,7 @@ export default function XpCollectionAnimation({
 
   return (
     <div className="xp-collection-overlay">
-      <span ref={counterRef} className="xp-collection-counter" aria-hidden="true">+{amount} XP</span>
+      <span ref={counterRef} className="xp-collection-counter" aria-hidden="true">{amount} XP</span>
       <div className="xp-collection-orbs" aria-hidden="true">
         {Array.from({ length: orbCount }, (_, index) => (
           <span

@@ -1,3 +1,5 @@
+import { cancelBikeRideNotification } from "./native";
+
 const BIKE_QUEST_STORAGE_KEY = "zenchad_bike_quest_v1";
 const RESUME_DOCK_ID = "zenchad-bike-quest-resume-dock";
 
@@ -32,6 +34,10 @@ function bikeQuestIsVisible() {
   return Boolean(document.querySelector(".bike-quest"));
 }
 
+function runningIsVisible() {
+  return Boolean(document.querySelector(".running-active"));
+}
+
 function cyclingYogaIsVisible(quest: PersistedBikeQuest | null) {
   if (!quest || !["pre-stretch", "recovery"].includes(quest.step ?? "")) return false;
   return Boolean(document.querySelector(".yoga-ready, .yoga-player, .yoga-completion"));
@@ -60,11 +66,16 @@ function openBikeQuest() {
 }
 
 function makeResumeDock() {
-  const dock = document.createElement("button");
+  const dock = document.createElement("div");
   dock.id = RESUME_DOCK_ID;
   dock.className = "bike-quest-resume-dock";
-  dock.type = "button";
-  dock.onclick = openBikeQuest;
+  dock.setAttribute("role", "group");
+  dock.setAttribute("aria-label", "Bike Quest actions");
+
+  const resume = document.createElement("button");
+  resume.className = "bike-quest-resume-action";
+  resume.type = "button";
+  resume.onclick = openBikeQuest;
 
   const icon = document.createElement("span");
   icon.textContent = "🚲";
@@ -75,13 +86,33 @@ function makeResumeDock() {
   const detail = document.createElement("small");
   detail.dataset.role = "bike-quest-resume-detail";
   copy.append(title, detail);
-  dock.append(icon, copy);
+  resume.append(icon, copy);
+
+  const cancel = document.createElement("button");
+  cancel.className = "bike-quest-resume-cancel";
+  cancel.type = "button";
+  cancel.setAttribute("aria-label", "Cancel Bike Quest");
+  cancel.title = "Cancel Bike Quest";
+  cancel.textContent = "×";
+  cancel.onclick = (event) => {
+    event.stopPropagation();
+    localStorage.removeItem(BIKE_QUEST_STORAGE_KEY);
+    void cancelBikeRideNotification();
+    activeRideAutoResumeScheduled = false;
+    autoResumedRide = false;
+    dock.remove();
+    syncBikeQuestChrome();
+  };
+
+  dock.append(resume, cancel);
   return dock;
 }
 
 function updateResumeDock(quest: PersistedBikeQuest | null, focusMode: boolean) {
-  const existing = document.getElementById(RESUME_DOCK_ID) as HTMLButtonElement | null;
-  if (!quest || focusMode) {
+  const existing = document.getElementById(RESUME_DOCK_ID);
+  // A running session has its own safety-critical navigation and finish controls. Do not
+  // let an unrelated resumable Bike Quest cover those controls.
+  if (!quest || focusMode || runningIsVisible()) {
     existing?.remove();
     return;
   }

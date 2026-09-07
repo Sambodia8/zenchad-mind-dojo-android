@@ -5,7 +5,7 @@
   bottom: calc(5.25rem + env(safe-area-inset-bottom));
   display: grid;
   width: min(calc(100% - 1.25rem), 32rem);
-  grid-template-columns: 2.4rem 1fr;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.65rem;
   align-items: center;
   padding: 0.62rem 0.78rem;
@@ -19,7 +19,20 @@
   text-align: left;
 }
 
-.bike-quest-resume-dock > span:first-child {
+.bike-quest-resume-action {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+}
+
+.bike-quest-resume-action > span:first-child {
   display: grid;
   width: 2.35rem;
   height: 2.35rem;
@@ -29,26 +42,48 @@
   font-size: 1.2rem;
 }
 
-.bike-quest-resume-dock > span:last-child {
+.bike-quest-resume-action > span:last-child {
   display: flex;
   min-width: 0;
   flex-direction: column;
   gap: 0.06rem;
 }
 
-.bike-quest-resume-dock strong {
+.bike-quest-resume-action strong {
   color: #a7f3d0;
   font-size: 0.73rem;
   letter-spacing: 0.09em;
 }
 
-.bike-quest-resume-dock small {
+.bike-quest-resume-action small {
   overflow: hidden;
   color: #dbe4f3;
   font-size: 0.76rem;
   font-weight: 750;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.bike-quest-resume-cancel {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(203, 213, 225, 0.18);
+  border-radius: 50%;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 1.45rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.bike-quest-resume-cancel:hover,
+.bike-quest-resume-cancel:focus-visible {
+  border-color: rgba(248, 113, 113, 0.55);
+  color: #fecaca;
+  background: rgba(248, 113, 113, 0.14);
 }
 
 html.bike-quest-focus-mode .bike-quest-resume-dock,
@@ -79,5 +114,15 @@ html.bike-quest-hide-resume-banner .bike-resume-banner {
     bottom: calc(4.95rem + env(safe-area-inset-bottom));
     width: calc(100% - 0.9rem);
     padding: 0.55rem 0.65rem;
+  }
+
+  .bike-quest-resume-action {
+    grid-template-columns: 2.2rem minmax(0, 1fr);
+    gap: 0.55rem;
+  }
+
+  .bike-quest-resume-action > span:first-child {
+    width: 2.2rem;
+    height: 2.2rem;
   }
 }

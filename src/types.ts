@@ -60,6 +60,7 @@ export interface YogaClassStep {
   seconds?: number;
   cue?: string;
   label?: string;
+  sideGroup?: string;
 }
 
 export interface YogaClass {
@@ -105,9 +106,11 @@ export type ZenStatId =
   | "intuition"
   | "equanimity"
   | "compassion"
-  | "discipline";
+  | "discipline"
+  | "strength";
 
 export interface ProgressionData {
+  version: 2;
   flowLevel: number;
   flowXp: number;
   flowTotalXp: number;
@@ -124,7 +127,7 @@ export interface FlowFormState {
   unlockedFormIds: string[];
 }
 
-export type CosmeticSlot = "head" | "top" | "wrist" | "legs" | "shoes" | "aura";
+export type CosmeticSlot = "hair" | "top" | "wrist" | "legs" | "shoes" | "aura";
 
 export type EquippedCosmetics = Record<CosmeticSlot, string>;
 
@@ -205,6 +208,7 @@ export interface AppPreferences {
   uiSoundsEnabled: boolean;
   timerAlertsEnabled: boolean;
   voiceVolume: number;
+  runningSpeechVoiceId: string | null;
   meditationMusicEnabled: boolean;
   meditationMusicVolume: number;
   stretchMusicEnabled: boolean;
@@ -234,6 +238,11 @@ export interface GuidedMediaCategory {
 
 export interface AppData {
   stats: Stats;
+  zenPoints: number;
+  lifetimeZenPoints: number;
+  shopInventory: Record<string, number>;
+  shopPurchaseHistory: ShopPurchase[];
+  pendingStreakFreezeNotice: StreakFreezeNotice | null;
   moods: MoodEntry[];
   journal: JournalEntry[];
   emotionalTools: EmotionalTool[];
@@ -246,14 +255,28 @@ export interface AppData {
   progression: ProgressionData;
 }
 
+export interface StreakFreezeNotice {
+  consumedAt: string;
+  missedDate: string;
+  sessionDate: string;
+  remaining: number;
+}
+
+export interface ShopPurchase {
+  itemId: string;
+  quantity: number;
+  purchasedAt: string;
+  price: number;
+}
+
 export type Route =
   | { name: "home" }
   | { name: "library"; tab?: "meditations" | "guided" | "emotional" }
   | { name: "toolkit" }
   | { name: "roulette"; autoSpin?: boolean; spinKey?: number }
-  | { name: "yoga" }
+  | { name: "yoga"; mode?: "classes" }
   | { name: "bike-quest"; resume?: "pre-stretch-complete" | "post-stretch-complete" }
-  | { name: "running" }
+  | { name: "running"; startMode?: "just" }
   | {
       name: "timer";
       meditationId: string;
@@ -265,6 +288,8 @@ export type Route =
       name: "yoga-class";
       classId: string;
       returnToBikeQuest?: "pre-stretch-complete" | "post-stretch-complete";
+      returnToRunningPreparation?: boolean;
+      autoStart?: boolean;
     }
   | { name: "mystery-challenge" }
   | { name: "journal"; draftMeditation?: string; mysteryRunId?: string }
@@ -272,6 +297,7 @@ export type Route =
   | { name: "guide" }
   | { name: "soundscapes" }
   | { name: "rewards" }
+  | { name: "shop" }
   | { name: "themes" }
   | { name: "settings" }
   | { name: "yoga-builder"; editClassId?: string };

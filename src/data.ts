@@ -1,4 +1,4 @@
-import type { BodyArea, Meditation, Movement, YogaClass, YogaClassSlide, ZenStatId } from "./types";
+import type { BodyArea, Meditation, Movement, YogaClass, YogaClassSlide, YogaClassStep, ZenStatId } from "./types";
 
 const phase = (
   name: string,
@@ -335,6 +335,11 @@ const area = (x: number, y: number, rx: number, ry: number, rotate = 0): BodyAre
   rotate
 });
 
+const displayStretchAsset = (path: string) =>
+  path.endsWith("/side-lunge.png")
+    ? path
+    : path.replace("assets/stretches/", "assets/stretches/display/");
+
 const stretch = (
   id: string,
   name: string,
@@ -352,7 +357,7 @@ const stretch = (
   seconds,
   cue,
   sides,
-  image,
+  image: displayStretchAsset(image),
   kind: sensationKind === "working" ? "dynamic-warmup" : "static-stretch",
   sensationKind,
   muscleGroups,
@@ -428,11 +433,11 @@ export const STRETCHES: Movement[] = [
   ),
   stretch(
     "figure-4-stretch-supine",
-    "Supine Figure-4",
+    "Figure Four Stretch",
     45,
-    "Keep the head relaxed and draw the legs in gently.",
+    "Cross one ankle over the opposite knee, keep that foot lifted, and hold behind the supporting thigh to draw both legs in gently.",
     ["Glutes", "Piriformis", "Outer hip"],
-    "In the buttock and outer hip of the crossed leg, not in the knee.",
+    "In the buttock and outer hip of the crossed leg, not in the knee; the crossed foot stays supported on the opposite knee rather than the floor.",
     [area(52, 57, 14, 12, -8)],
     true
   ),
@@ -575,9 +580,9 @@ export const STRETCHES: Movement[] = [
   ),
   stretch(
     "standing-quad-stretch",
-    "Standing Quad Stretch",
+    "Standing Knee Flexion Stretch",
     35,
-    "Keep the knees close and use a wall for balance.",
+    "Bend one knee, bring the heel gently toward the seat, keep the knees close, and use a wall for balance.",
     ["Quadriceps", "Hip flexors"],
     "Along the front of the lifted thigh and hip.",
     [area(63, 62, 10, 20, -10)],
@@ -815,7 +820,7 @@ const warmupMovement = (
   name,
   seconds,
   cue,
-  image: `assets/stretches/generated/${id}.png`,
+  image: displayStretchAsset(`assets/stretches/generated/${id}.png`),
   kind,
   sensationKind: "working",
   muscleGroups,
@@ -863,7 +868,7 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
   {
     id: "wall-calf-stretch",
     name: "Wall Calf Stretch",
-    image: "assets/stretches/generated/wall-calf-stretch.png",
+    image: displayStretchAsset("assets/stretches/generated/wall-calf-stretch.png"),
     seconds: 20,
     sides: true,
     cue: "Keep the back heel down and point both feet forward.",
@@ -890,6 +895,58 @@ const MOVEMENT_BY_ID = new Map(MOVEMENTS.map((movement) => [movement.id, movemen
 
 export const YOGA_TRANSITION_SECONDS = 5;
 
+export const FULL_HOUSE_EXCLUDED_IDS = ["brisk-walk-jog", "indoor-cycling"] as const;
+export const FULL_HOUSE_ELIGIBLE_IDS = MOVEMENTS
+  .filter((movement) => !FULL_HOUSE_EXCLUDED_IDS.includes(movement.id as typeof FULL_HOUSE_EXCLUDED_IDS[number]))
+  .map((movement) => movement.id);
+
+const yogaStep = (movementId: string, seconds = 20, sideGroup?: string): YogaClassStep => ({
+  movementId,
+  seconds,
+  ...(sideGroup ? { sideGroup } : {})
+});
+
+export const FULL_HOUSE_STEPS: YogaClassStep[] = [
+  yogaStep("knee-bends"),
+  yogaStep("knee-lifts"),
+  yogaStep("heel-digs"),
+  ...SUN_SALUTATION_IDS.map((movementId) => yogaStep(movementId)),
+  yogaStep("chair-pose"),
+  yogaStep("deep-squat"),
+  yogaStep("high-lunge", 20, "standing-side-block"),
+  yogaStep("warrior-i", 20, "standing-side-block"),
+  yogaStep("warrior-ii", 20, "standing-side-block"),
+  yogaStep("triangle-pose", 20, "standing-side-block"),
+  yogaStep("standing-quad-stretch", 20, "standing-side-block"),
+  yogaStep("side-lunge"),
+  yogaStep("tree-pose"),
+  yogaStep("wall-calf-stretch"),
+  yogaStep("cat-cow"),
+  yogaStep("cobra-pose"),
+  yogaStep("upward-facing-dog"),
+  yogaStep("downward-facing-dog"),
+  yogaStep("sphinx-pose"),
+  yogaStep("childs-pose"),
+  yogaStep("kneeling-side-stretch"),
+  yogaStep("butterfly-stretch"),
+  yogaStep("kneeling-lunge-twist", 20, "floor-leg-block"),
+  yogaStep("kneeling-lunge", 20, "floor-leg-block"),
+  yogaStep("low-lunge", 20, "floor-leg-block"),
+  yogaStep("half-kneeling-quad-stretch", 20, "floor-leg-block"),
+  yogaStep("half-kneeling-hamstring-stretch", 20, "floor-leg-block"),
+  yogaStep("seated-hamstring-stretch", 20, "floor-leg-block"),
+  yogaStep("lizard-stretch", 20, "floor-leg-block"),
+  yogaStep("pigeon-stretch", 20, "floor-leg-block"),
+  yogaStep("figure-4-forward-fold", 20, "floor-figure-block"),
+  yogaStep("seated-spinal-twist", 20, "floor-figure-block"),
+  yogaStep("figure-4-stretch-supine", 20, "supine-block"),
+  yogaStep("supine-twist", 20, "supine-block"),
+  yogaStep("bridge-pose"),
+  yogaStep("reverse-plank"),
+  yogaStep("boat-pose"),
+  yogaStep("corpse-pose")
+];
+
 export const YOGA_CLASSES: YogaClass[] = [
   {
     id: "sun-salutation",
@@ -900,8 +957,121 @@ export const YOGA_CLASSES: YogaClass[] = [
       "A progressive movement sequence. Keep the range comfortable, use knees-down options when needed, and treat the flow as a warm-up rather than a test of depth.",
     sourceUrl: "https://orthoinfo.aaos.org/en/staying-healthy/warm-up-cool-down-and-be-flexible/",
     focusMuscles: ["Shoulders", "Core", "Hips", "Hamstrings", "Whole body"],
-    image: "assets/stretches/sun-salutation-flow.png",
+    image: "assets/yoga/class-cover-flow-v2.png",
     steps: SUN_SALUTATION_IDS.map((movementId) => ({ movementId, seconds: 20 }))
+  },
+  {
+    id: "full-house",
+    name: "Full House",
+    timing: "Whole-body practice",
+    description: "The complete stationary Yoga with Mark library, arranged as one long, flowing class.",
+    evidence:
+      "A broad mobility and flexibility sequence. Move within a comfortable range, use easier variations whenever needed, and stop if anything feels sharp or painful.",
+    sourceUrl: "https://orthoinfo.aaos.org/en/staying-healthy/warm-up-cool-down-and-be-flexible/",
+    focusMuscles: ["Whole body", "Hips", "Hamstrings", "Back", "Shoulders"],
+    image: "assets/yoga/class-cover-flow-v2.png",
+    steps: FULL_HOUSE_STEPS
+  },
+  {
+    id: "the-ogs",
+    name: "The OGs",
+    timing: "The original flow",
+    description: "The original Mark stretch sequence, kept familiar and easy to return to.",
+    evidence:
+      "A gentle whole-body sequence. Keep the range comfortable and treat the flow as a steady practice rather than a test of depth.",
+    sourceUrl: "https://orthoinfo.aaos.org/en/staying-healthy/warm-up-cool-down-and-be-flexible/",
+    focusMuscles: ["Hips", "Hamstrings", "Back", "Glutes"],
+    image: "assets/yoga/class-cover-flow-v2.png",
+    steps: [
+      yogaStep("childs-pose", 30),
+      yogaStep("downward-facing-dog", 30),
+      yogaStep("low-lunge", 30, "og-leg-block"),
+      yogaStep("half-kneeling-hamstring-stretch", 30, "og-leg-block"),
+      yogaStep("high-lunge", 30, "og-leg-block"),
+      yogaStep("forward-fold", 30),
+      yogaStep("deep-squat", 30),
+      yogaStep("butterfly-stretch", 30),
+      yogaStep("seated-spinal-twist", 30, "og-floor-block"),
+      yogaStep("supine-twist", 30, "og-floor-block")
+    ]
+  },
+  {
+    id: "standing-and-balance",
+    name: "Standing & Balance",
+    timing: "Standing practice",
+    description: "A standing sequence for balance, leg strength, and full-body mobility.",
+    evidence:
+      "Use a wall or reduce the range whenever balance or depth feels uncertain. Stay steady and stop if anything feels sharp.",
+    sourceUrl: "https://orthoinfo.aaos.org/en/staying-healthy/warm-up-cool-down-and-be-flexible/",
+    focusMuscles: ["Quadriceps", "Glutes", "Hips", "Hamstrings", "Core"],
+    image: "assets/yoga/class-cover-warmup-v2.png",
+    steps: [
+      yogaStep("mountain-pose", 25),
+      yogaStep("upward-salute", 25),
+      yogaStep("chair-pose", 25),
+      yogaStep("high-lunge", 25, "standing-group"),
+      yogaStep("warrior-i", 25, "standing-group"),
+      yogaStep("warrior-ii", 25, "standing-group"),
+      yogaStep("triangle-pose", 25, "standing-group"),
+      yogaStep("standing-quad-stretch", 25, "standing-group"),
+      yogaStep("side-lunge", 25),
+      yogaStep("tree-pose", 25),
+      yogaStep("deep-squat", 25),
+      yogaStep("forward-fold", 25),
+      yogaStep("wall-calf-stretch", 25)
+    ]
+  },
+  {
+    id: "hips-and-hamstrings",
+    name: "Hips & Hamstrings",
+    timing: "Hip and leg release",
+    description: "A low-to-the-floor sequence for the hips, hamstrings, inner thighs, and glutes.",
+    evidence:
+      "Move slowly into each position and support the hips or knees when useful. Stretching should feel steady, never sharp.",
+    sourceUrl: "https://www.nhs.uk/live-well/exercise/how-to-stretch-after-exercising/",
+    focusMuscles: ["Hips", "Hamstrings", "Glutes", "Inner thighs", "Hip flexors"],
+    image: "assets/yoga/class-cover-cooldown-v2.png",
+    steps: [
+      yogaStep("downward-facing-dog", 25),
+      yogaStep("kneeling-lunge", 25, "hip-side-block"),
+      yogaStep("kneeling-lunge-twist", 25, "hip-side-block"),
+      yogaStep("low-lunge", 25, "hip-side-block"),
+      yogaStep("half-kneeling-quad-stretch", 25, "hip-side-block"),
+      yogaStep("half-kneeling-hamstring-stretch", 25, "hip-side-block"),
+      yogaStep("seated-hamstring-stretch", 25, "hip-side-block"),
+      yogaStep("lizard-stretch", 25, "hip-side-block"),
+      yogaStep("pigeon-stretch", 25, "hip-side-block"),
+      yogaStep("butterfly-stretch", 25),
+      yogaStep("figure-4-forward-fold", 25, "hip-floor-block"),
+      yogaStep("seated-spinal-twist", 25, "hip-floor-block")
+    ]
+  },
+  {
+    id: "floor-and-restore",
+    name: "Floor & Restore",
+    timing: "Floor-based practice",
+    description: "A floor-based class that moves from spinal mobility into gentle back, core, and rest work.",
+    evidence:
+      "Keep the spine and lower back comfortable throughout. Choose a smaller range or pause whenever the position does not feel right.",
+    sourceUrl: "https://orthoinfo.aaos.org/en/staying-healthy/warm-up-cool-down-and-be-flexible/",
+    focusMuscles: ["Back", "Core", "Chest", "Glutes", "Whole body"],
+    image: "assets/yoga/class-cover-restore-v2.png",
+    steps: [
+      yogaStep("cat-cow", 25),
+      yogaStep("plank-pose", 20),
+      yogaStep("chaturanga", 20),
+      yogaStep("cobra-pose", 25),
+      yogaStep("upward-facing-dog", 25),
+      yogaStep("downward-facing-dog", 25),
+      yogaStep("sphinx-pose", 25),
+      yogaStep("childs-pose", 25),
+      yogaStep("reverse-plank", 20),
+      yogaStep("bridge-pose", 25),
+      yogaStep("boat-pose", 20),
+      yogaStep("figure-4-stretch-supine", 25, "restore-side-block"),
+      yogaStep("supine-twist", 25, "restore-side-block"),
+      yogaStep("corpse-pose", 30)
+    ]
   },
   {
     id: "daily-reset",
@@ -912,7 +1082,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "A gentle flexibility and mobility sequence. Move within a comfortable range; stretching should feel steady, never sharp.",
     sourceUrl: "https://orthoinfo.aaos.org/en/staying-healthy/warm-up-cool-down-and-be-flexible/",
     focusMuscles: ["Hips", "Hamstrings", "Back", "Shoulders"],
-    image: "assets/stretches/sun-salutation-flow.png",
+    image: "assets/yoga/class-cover-flow-v2.png",
     steps: MARKS_FLOW_IDS.map((movementId) => ({ movementId, seconds: 30 }))
   },
   {
@@ -924,11 +1094,13 @@ export const YOGA_CLASSES: YogaClass[] = [
       "Based on NHS guidance to warm up with controlled knee bends, knee lifts and heel digs before more vigorous exercise.",
     sourceUrl: "https://www.nhs.uk/live-well/exercise/how-to-warm-up-before-exercising/",
     focusMuscles: ["Calves", "Quadriceps", "Hamstrings", "Glutes", "Hip flexors"],
-    image: "assets/stretches/generated/knee-lifts.png",
+    image: "assets/yoga/class-cover-warmup-v2.png",
     steps: [
       { movementId: "knee-bends", seconds: 30 },
       { movementId: "knee-lifts", seconds: 30 },
       { movementId: "heel-digs", seconds: 30 },
+      { movementId: "wall-calf-stretch", seconds: 20 },
+      { movementId: "standing-quad-stretch", seconds: 20 },
       { movementId: "high-lunge", seconds: 30 },
       { movementId: "side-lunge", seconds: 30 }
     ]
@@ -942,7 +1114,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "British Cycling recommends building intensity progressively on the bike. Use this class before, not instead of, an easy progressive on-bike warm-up.",
     sourceUrl: "https://www.britishcycling.org.uk/knowledge/article/izn20140115-Intermediate-Warming-Up-and-Cooling-Down-0",
     focusMuscles: ["Quadriceps", "Hip flexors", "Glutes", "Calves"],
-    image: "assets/stretches/generated/indoor-cycling.png",
+    image: "assets/yoga/class-cover-warmup-v2.png",
     steps: [
       { movementId: "knee-bends", seconds: 30 },
       { movementId: "standing-quad-stretch", seconds: 20 },
@@ -960,7 +1132,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "Based on NHS post-exercise guidance for the calves, quadriceps, hamstrings, inner thighs and buttocks.",
     sourceUrl: "https://www.nhs.uk/live-well/exercise/how-to-stretch-after-exercising/",
     focusMuscles: ["Calves", "Quadriceps", "Hamstrings", "Inner thighs", "Glutes"],
-    image: "assets/stretches/generated/wall-calf-stretch.png",
+    image: "assets/yoga/class-cover-cooldown-v2.png",
     steps: [
       { movementId: "wall-calf-stretch", seconds: 25 },
       { movementId: "standing-quad-stretch", seconds: 25 },
@@ -978,7 +1150,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "Based on British Cycling guidance to cool down progressively and restore movement around the hamstrings, hip flexors, glutes and back.",
     sourceUrl: "https://www.britishcycling.org.uk/knowledge/bike-kit/set-up/article/20251022-Set-up-Why-a-bike-fit-is-essential-for-indoor-training-0",
     focusMuscles: ["Quadriceps", "Hip flexors", "Hamstrings", "Glutes", "Back"],
-    image: "assets/stretches/kneeling-lunge.png",
+    image: "assets/yoga/class-cover-cooldown-v2.png",
     steps: [
       { movementId: "standing-quad-stretch", seconds: 30 },
       { movementId: "kneeling-lunge", seconds: 30 },
@@ -998,7 +1170,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "Gentle movement can help ordinary stiffness. Keep the range comfortable and stop if symptoms worsen or pain travels, tingles or feels sharp.",
     sourceUrl: "https://www.nhs.uk/conditions/back-pain/",
     focusMuscles: ["Latissimus dorsi", "Obliques", "Shoulders", "Thoracic spine", "Lower back"],
-    image: "assets/stretches/childs-pose.png",
+    image: "assets/yoga/class-cover-restore-v2.png",
     steps: [
       { movementId: "kneeling-side-stretch", seconds: 30 },
       { movementId: "childs-pose", seconds: 30 },
@@ -1017,7 +1189,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "NHS guidance recommends protecting and resting a new sprain or strain initially, then resuming movement only when pain does not stop you. This is not for an acute injury.",
     sourceUrl: "https://www.nhs.uk/conditions/sprains-and-strains/",
     focusMuscles: ["Calves", "Hamstrings", "Inner thighs", "Glutes"],
-    image: "assets/stretches/figure-4-stretch-supine.png",
+    image: "assets/yoga/class-cover-restore-v2.png",
     safetyGate: true,
     steps: [
       { movementId: "wall-calf-stretch", seconds: 20 },
@@ -1032,20 +1204,53 @@ export const getYogaClass = (classId: string) =>
   YOGA_CLASSES.find((yogaClass) => yogaClass.id === classId) ?? YOGA_CLASSES[0];
 
 export const expandYogaClassSlides = (yogaClass: YogaClass): YogaClassSlide[] => {
-  const rawSlides: Array<Omit<YogaClassSlide, "stepNumber" | "totalSteps">> =
-    yogaClass.steps.flatMap((step) => {
-      const movement = MOVEMENT_BY_ID.get(step.movementId);
-      if (!movement) throw new Error(`Unknown yoga movement: ${step.movementId}`);
-      const base = {
-        movement,
-        seconds: step.seconds ?? movement.seconds,
-        cue: step.cue ?? movement.cue,
-        label: step.label
-      };
-      return movement.sides
-        ? [{ ...base, side: 1 as const }, { ...base, side: 2 as const }]
-        : [base];
+  const rawSlides: Array<Omit<YogaClassSlide, "stepNumber" | "totalSteps">> = [];
+  const makeBase = (step: YogaClassStep, movement: Movement) => ({
+    movement,
+    seconds: step.seconds ?? movement.seconds,
+    cue: step.cue ?? movement.cue,
+    label: step.label
+  });
+
+  const appendStep = (step: YogaClassStep, side?: 1 | 2) => {
+    const movement = MOVEMENT_BY_ID.get(step.movementId);
+    if (!movement) throw new Error(`Unknown yoga movement: ${step.movementId}`);
+    const base = makeBase(step, movement);
+    if (!movement.sides) {
+      if (side) throw new Error(`${step.movementId} cannot be part of a side group`);
+      rawSlides.push(base);
+      return;
+    }
+    if (!side) {
+      rawSlides.push({ ...base, side: 1 as const }, { ...base, side: 2 as const });
+      return;
+    }
+    rawSlides.push({ ...base, side });
+  };
+
+  let index = 0;
+  while (index < yogaClass.steps.length) {
+    const step = yogaClass.steps[index];
+    if (!step.sideGroup) {
+      appendStep(step);
+      index += 1;
+      continue;
+    }
+
+    const group = step.sideGroup;
+    const groupSteps: YogaClassStep[] = [];
+    while (index < yogaClass.steps.length && yogaClass.steps[index].sideGroup === group) {
+      groupSteps.push(yogaClass.steps[index]);
+      index += 1;
+    }
+    groupSteps.forEach((groupStep) => {
+      const movement = MOVEMENT_BY_ID.get(groupStep.movementId);
+      if (!movement) throw new Error(`Unknown yoga movement: ${groupStep.movementId}`);
+      if (!movement.sides) throw new Error(`${groupStep.movementId} cannot be part of side group ${group}`);
     });
+    ([1, 2] as const).forEach((side) => groupSteps.forEach((groupStep) => appendStep(groupStep, side)));
+  }
+
   return rawSlides.map((slide, index) => ({
     ...slide,
     stepNumber: index + 1,
@@ -1063,6 +1268,18 @@ export const getYogaClassDuration = (yogaClass: YogaClass) => {
 
 export const validateYogaClasses = () => {
   const errors: string[] = [];
+  const fullHouse = YOGA_CLASSES.find((yogaClass) => yogaClass.id === "full-house");
+  if (!fullHouse) {
+    errors.push("full-house class is missing");
+  } else {
+    const fullHouseIds = new Set(fullHouse.steps.map((step) => step.movementId));
+    FULL_HOUSE_ELIGIBLE_IDS.forEach((movementId) => {
+      if (!fullHouseIds.has(movementId)) errors.push(`full-house is missing ${movementId}`);
+    });
+    FULL_HOUSE_EXCLUDED_IDS.forEach((movementId) => {
+      if (fullHouseIds.has(movementId)) errors.push(`full-house includes excluded movement ${movementId}`);
+    });
+  }
   for (const yogaClass of YOGA_CLASSES) {
     let slides: YogaClassSlide[] = [];
     try {
@@ -1099,4 +1316,6 @@ export const validateYogaClasses = () => {
   return errors;
 };
 
-export const LEVEL_THRESHOLDS = [0, 100, 300, 600, 1000, 1500, 2500, 5000, 10000];
+// The opening levels are deliberately close enough for an ordinary 20–30 minute
+// run to create visible momentum. Costs widen after level 5 so progression lasts.
+export const LEVEL_THRESHOLDS = [0, 60, 140, 235, 345, 520, 800, 1200, 1800];

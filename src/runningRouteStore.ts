@@ -2,6 +2,7 @@ import type { RunMode } from "./running";
 import type { RunningRoutePoint } from "./runningRouteDirector";
 import type { StoryRouteAnchor } from "./runningStory";
 import type { StoryMissionDefinition } from "./runningCampaign";
+import type { StoryChapterId } from "./runningStoryChapters";
 
 export interface RunningNavigationManeuver {
   id: string;
@@ -34,6 +35,7 @@ export interface PlannedRunningRoute {
   reasons: string[];
   rerouteCount: number;
   storyMission?: StoryMissionDefinition;
+  storyHeardChapterIds?: StoryChapterId[];
   storyAnchors?: StoryRouteAnchor[];
   semanticsStatus?: "pending" | "ready" | "unavailable";
   semanticsUpdatedAt?: number;

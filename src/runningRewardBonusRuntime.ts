@@ -67,7 +67,8 @@ function renderProgressTotal() {
     card.className = "running-progress-card running-bonus-progress-card";
     grid.appendChild(card);
   }
-  card.innerHTML = `<span>⚡</span><strong>${total}</strong><small>BONUS XP BANKED</small>`;
+  const markup = `<span>⚡</span><strong>${total}</strong><small>BONUS XP BANKED</small>`;
+  if (card.innerHTML !== markup) card.innerHTML = markup;
 }
 
 function tick() {

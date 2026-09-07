@@ -1,9 +1,28 @@
 import { LEVEL_THRESHOLDS } from "./data";
 import type { Stats } from "./types";
+import { STORY_CHAPTER_IDS, type StoryChapterId } from "./runningStoryChapters";
 
-export type RunMode = "quick" | "story";
-export type RunStage = "briefing" | "prep" | "active" | "complete";
+export type RunMode = "quick" | "story" | "just";
+export type RunStage = "briefing" | "prep" | "warmup" | "active" | "complete";
+export type RunCompanionId = "katie" | "hana" | "rtr" | "yuna";
+
+export interface RunCompanionDefinition {
+  id: RunCompanionId;
+  tag: string;
+  name: string;
+  detail: string;
+}
+
+export const RUN_COMPANIONS: readonly RunCompanionDefinition[] = [
+  { id: "katie", tag: "@Katie", name: "Katie", detail: "Running buddy" },
+  { id: "hana", tag: "@Hana", name: "Hana", detail: "Running buddy" },
+  { id: "rtr", tag: "@RTR", name: "Run Talk Run", detail: "Running group" },
+  { id: "yuna", tag: "@Yuna", name: "Yuna", detail: "Pet dog" }
+] as const;
+
+const RUN_COMPANION_IDS = new Set<RunCompanionId>(RUN_COMPANIONS.map((companion) => companion.id));
 export type RunPrepStepId =
+  | "phone"
   | "headphones"
   | "clothes"
   | "water"
@@ -18,6 +37,10 @@ export interface RunPoint {
   accuracy: number;
   at: number;
   distanceFromStart?: number;
+  /** Degrees clockwise from true north when supplied by Android/GPS. */
+  heading?: number | null;
+  /** Provider road name matched from the route active when this point was accepted. */
+  roadName?: string;
 }
 
 export interface RunSplit {
@@ -37,7 +60,7 @@ export interface RunBestEffort {
 }
 
 export interface RunSession {
-  version: 2;
+  version: 5;
   id: string;
   mode: RunMode;
   plannedMinutes: number;
@@ -48,10 +71,39 @@ export interface RunSession {
   prepAwards: Record<string, number>;
   prepXp: number;
   runStartedAt: number | null;
+  warmupStartedAt: number | null;
   runEndedAt: number | null;
   distanceMeters: number;
   points: RunPoint[];
+  companionIds: RunCompanionId[];
+  storyMissionId: string | null;
+  storyHeardChapterIds: StoryChapterId[];
   runXp: number;
+  checkpointAwards: Record<string, RunCheckpointReward>;
+  checkpointXp: number;
+  checkpointZenPoints: number;
+  checkpointDice: number;
+  distanceZenPointAwards: Record<string, RunDistanceZenPointReward>;
+  distanceZenPoints: number;
+  firstRunOfDayZenPoints: number;
+  playerXpAtStart: number;
+  playerLevelAtStart: number;
+  completionLevelBefore: number | null;
+  completionLevelAfter: number | null;
+}
+
+export interface RunDistanceZenPointReward {
+  id: string;
+  distanceMeters: number;
+  zenPoints: number;
+}
+
+export interface RunCheckpointReward {
+  id: "25" | "50" | "75" | "100";
+  label: string;
+  xp: number;
+  zenPoints: number;
+  dice: number;
 }
 
 export interface RunRecord {
@@ -60,23 +112,42 @@ export interface RunRecord {
   plannedMinutes: number;
   startedAt: number;
   endedAt: number;
+  /** Wall-clock time between pressing start and banking the run, pauses included. */
   durationSeconds: number;
+  /** Time represented by plausible moving GPS segments; never used to hide elapsed time. */
+  movingSeconds: number;
   distanceMeters: number;
   averagePaceSecondsPerKm: number | null;
   completionRatio: number;
   xp: number;
+  checkpointXp: number;
+  zenPoints: number;
+  dice: number;
   points: RunPoint[];
+  companionIds: RunCompanionId[];
   splits: RunSplit[];
   bestEfforts: RunBestEffort[];
   personalBestKeys: RunBestEffortKey[];
+  /** A completed run can be saved as a favourite route. Generated, unrun routes never enter history. */
+  isFavorite: boolean;
+  routeName: string;
+  routeRoadNames: string[];
+  routeNameSource?: "generated" | "user";
+}
+
+export interface RunRouteManeuver {
+  routeDistanceMeters: number;
+  streetNames?: string[];
+  instruction?: string;
 }
 
 export interface RunningProfile {
-  version: 2;
+  version: 5;
   credits: number;
   unlockedStoreIds: string[];
   history: RunRecord[];
   routePrivacyMeters: number;
+  dice: number;
 }
 
 export interface RunPrepStep {
@@ -107,26 +178,57 @@ const BEST_EFFORT_TARGETS: Array<{
   { key: "5k", label: "5K", distanceMeters: 5000 }
 ];
 
+const RUN_CHECKPOINT_REWARDS: RunCheckpointReward[] = [
+  { id: "25", label: "25%", xp: 2, zenPoints: 0, dice: 0 },
+  { id: "50", label: "50%", xp: 3, zenPoints: 0, dice: 1 },
+  { id: "75", label: "75%", xp: 4, zenPoints: 0, dice: 0 },
+  { id: "100", label: "Plan complete", xp: 6, zenPoints: 0, dice: 1 }
+];
+
+export const RUN_DISTANCE_ZEN_POINT_REWARDS: RunDistanceZenPointReward[] = [
+  { id: "100m", distanceMeters: 100, zenPoints: 1 },
+  { id: "300m", distanceMeters: 300, zenPoints: 1 },
+  { id: "750m", distanceMeters: 750, zenPoints: 1 },
+  { id: "1.25km", distanceMeters: 1250, zenPoints: 1 },
+  { id: "2km", distanceMeters: 2000, zenPoints: 1 },
+  { id: "2.75km", distanceMeters: 2750, zenPoints: 1 },
+  { id: "3.75km", distanceMeters: 3750, zenPoints: 1 },
+  { id: "5km", distanceMeters: 5000, zenPoints: 1 }
+];
+
+export const FIRST_RUN_OF_DAY_ZEN_POINTS = 3;
+
 export const RUN_PREP_STEPS: RunPrepStep[] = [
   {
+    id: "phone",
+    title: "Charge / plug in phone",
+    instruction: "Plug in the phone now so it has enough charge for the run.",
+    targetSeconds: 60,
+    graceSeconds: 60,
+    baseXp: 2,
+    bonusXp: 2,
+    buttonLabel: "Phone charging",
+    speedBonus: true
+  },
+  {
     id: "headphones",
-    title: "Headphones first",
+    title: "Headphones",
     instruction: "Check your headphones have enough charge for the whole run. Story Mode depends on them.",
     targetSeconds: 60,
     graceSeconds: 60,
-    baseXp: 20,
-    bonusXp: 15,
+    baseXp: 2,
+    bonusXp: 2,
     buttonLabel: "Headphones charged",
     speedBonus: true
   },
   {
     id: "clothes",
-    title: "Running clothes",
-    instruction: "Get changed into the outfit you actually want to run in.",
+    title: "Getting Dressed",
+    instruction: "Get changed into the outfit you actually want to run in. Don't forget socks.",
     targetSeconds: 4 * 60,
     graceSeconds: 4 * 60,
-    baseXp: 20,
-    bonusXp: 30,
+    baseXp: 4,
+    bonusXp: 2,
     buttonLabel: "Dressed",
     speedBonus: true
   },
@@ -136,8 +238,8 @@ export const RUN_PREP_STEPS: RunPrepStep[] = [
     instruction: "Get water sorted before the stretches so there is one less thing to remember afterwards.",
     targetSeconds: 2 * 60,
     graceSeconds: 2 * 60,
-    baseXp: 20,
-    bonusXp: 20,
+    baseXp: 3,
+    bonusXp: 2,
     buttonLabel: "Water ready",
     speedBonus: true
   },
@@ -147,7 +249,7 @@ export const RUN_PREP_STEPS: RunPrepStep[] = [
     instruction: "Do the running warm-up. There is no speed bonus here: the goal is to warm up, not rush.",
     targetSeconds: 0,
     graceSeconds: 0,
-    baseXp: 25,
+    baseXp: 3,
     bonusXp: 0,
     buttonLabel: "Warm-up done",
     speedBonus: false
@@ -158,35 +260,42 @@ export const RUN_PREP_STEPS: RunPrepStep[] = [
     instruction: "Shoes on. You are almost out of the door.",
     targetSeconds: 90,
     graceSeconds: 90,
-    baseXp: 20,
-    bonusXp: 20,
+    baseXp: 3,
+    bonusXp: 1,
     buttonLabel: "Shoes on",
     speedBonus: true
   },
   {
     id: "outside",
     title: "Get outside",
-    instruction: "Head outside. Press the button when you are ready to start moving; the run timer starts immediately.",
+    instruction: "Head outside. You will get a short warm-up walk before the run timer starts.",
     targetSeconds: 3 * 60,
     graceSeconds: 3 * 60,
-    baseXp: 20,
-    bonusXp: 30,
-    buttonLabel: "Start run",
+    baseXp: 3,
+    bonusXp: 2,
+    buttonLabel: "Outside",
     speedBonus: true
   }
 ];
 
 const emptyProfile = (): RunningProfile => ({
-  version: 2,
+  version: 5,
   credits: 0,
   unlockedStoreIds: [],
   history: [],
-  routePrivacyMeters: 200
+  routePrivacyMeters: 200,
+  dice: 0
 });
 
-export function createRunSession(mode: RunMode, plannedMinutes: number, now = Date.now()): RunSession {
+export function createRunSession(
+  mode: RunMode,
+  plannedMinutes: number,
+  now = Date.now(),
+  playerXpAtStart = 0,
+  playerLevelAtStart = levelForXp(playerXpAtStart)
+): RunSession {
   return {
-    version: 2,
+    version: 5,
     id: `${now}-${Math.random().toString(36).slice(2, 8)}`,
     mode,
     plannedMinutes,
@@ -197,10 +306,44 @@ export function createRunSession(mode: RunMode, plannedMinutes: number, now = Da
     prepAwards: {},
     prepXp: 0,
     runStartedAt: null,
+    warmupStartedAt: null,
     runEndedAt: null,
     distanceMeters: 0,
     points: [],
-    runXp: 0
+    companionIds: [],
+    storyMissionId: null,
+    storyHeardChapterIds: [],
+    runXp: 0,
+    checkpointAwards: {},
+    checkpointXp: 0,
+    checkpointZenPoints: 0,
+    checkpointDice: 0,
+    distanceZenPointAwards: {},
+    distanceZenPoints: 0,
+    firstRunOfDayZenPoints: 0,
+    playerXpAtStart: Math.max(0, Number.isFinite(playerXpAtStart) ? playerXpAtStart : 0),
+    playerLevelAtStart: Math.max(1, Number.isFinite(playerLevelAtStart) ? Math.floor(playerLevelAtStart) : 1),
+    completionLevelBefore: null,
+    completionLevelAfter: null
+  };
+}
+
+export function isDarkRunPreparationTime(at: Date | number = Date.now()) {
+  const hour = (at instanceof Date ? at : new Date(at)).getHours();
+  return hour < 7 || hour >= 19;
+}
+
+export function prepStepInstruction(step: RunPrepStep, at: Date | number = Date.now()) {
+  if (step.id !== "phone" || !isDarkRunPreparationTime(at)) return step.instruction;
+  return `${step.instruction} It is dark or getting dark, so charge and check the torch too.`;
+}
+
+export function restartRunPreparation(session: RunSession, now = Date.now()) {
+  return {
+    ...createRunSession(session.mode, session.plannedMinutes, now, session.playerXpAtStart, session.playerLevelAtStart),
+    storyMissionId: session.storyMissionId,
+    storyHeardChapterIds: session.storyHeardChapterIds,
+    stage: "prep" as const
   };
 }
 
@@ -209,17 +352,90 @@ export function loadRunSession(): RunSession | null {
     const raw = localStorage.getItem(SESSION_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<RunSession> & { version?: number };
-    if (!parsed.id || !parsed.mode || !parsed.stage) return null;
+    if (
+      typeof parsed.id !== "string" ||
+      !["quick", "story", "just"].includes(parsed.mode ?? "") ||
+      !["briefing", "prep", "warmup", "active", "complete"].includes(parsed.stage ?? "")
+    ) return null;
+    const finiteNonNegative = (value: unknown, fallback = 0) =>
+      typeof value === "number" && Number.isFinite(value) ? Math.max(0, value) : fallback;
+    const points = normaliseRunPoints(parsed.points);
+    const defaults = createRunSession(
+      parsed.mode as RunMode,
+      finiteNonNegative(parsed.plannedMinutes, 30),
+      finiteNonNegative(parsed.createdAt, Date.now()),
+      finiteNonNegative(parsed.playerXpAtStart, 0),
+      finiteNonNegative(parsed.playerLevelAtStart, 1)
+    );
     return {
-      ...createRunSession(parsed.mode, parsed.plannedMinutes ?? 30, parsed.createdAt ?? Date.now()),
+      ...defaults,
       ...parsed,
-      version: 2,
-      prepAwards: parsed.prepAwards ?? {},
-      points: parsed.points ?? []
+      version: 5,
+      plannedMinutes: Math.max(1, finiteNonNegative(parsed.plannedMinutes, 30)),
+      createdAt: finiteNonNegative(parsed.createdAt, defaults.createdAt),
+      stepStartedAt: finiteNonNegative(parsed.stepStartedAt, defaults.stepStartedAt),
+      prepStepIndex: Math.min(RUN_PREP_STEPS.length - 1, Math.floor(finiteNonNegative(parsed.prepStepIndex))),
+      prepAwards: parsed.prepAwards && typeof parsed.prepAwards === "object" ? parsed.prepAwards : {},
+      prepXp: finiteNonNegative(parsed.prepXp),
+      runStartedAt: finiteNonNegative(parsed.runStartedAt) || null,
+      warmupStartedAt: finiteNonNegative(parsed.warmupStartedAt) || null,
+      runEndedAt: finiteNonNegative(parsed.runEndedAt) || null,
+      distanceMeters: finiteNonNegative(parsed.distanceMeters),
+      points,
+      companionIds: normaliseRunCompanionIds(parsed.companionIds),
+      storyMissionId: typeof parsed.storyMissionId === "string" ? parsed.storyMissionId : null,
+      storyHeardChapterIds: Array.isArray(parsed.storyHeardChapterIds)
+        ? STORY_CHAPTER_IDS.filter((chapterId) => parsed.storyHeardChapterIds?.includes(chapterId))
+        : [],
+      runXp: finiteNonNegative(parsed.runXp),
+      checkpointAwards: parsed.checkpointAwards && typeof parsed.checkpointAwards === "object" ? parsed.checkpointAwards : {},
+      checkpointXp: finiteNonNegative(parsed.checkpointXp),
+      checkpointZenPoints: finiteNonNegative(parsed.checkpointZenPoints),
+      checkpointDice: finiteNonNegative(parsed.checkpointDice),
+      distanceZenPointAwards: parsed.distanceZenPointAwards && typeof parsed.distanceZenPointAwards === "object" ? parsed.distanceZenPointAwards : {},
+      distanceZenPoints: finiteNonNegative(parsed.distanceZenPoints),
+      firstRunOfDayZenPoints: finiteNonNegative(parsed.firstRunOfDayZenPoints),
+      playerXpAtStart: finiteNonNegative(parsed.playerXpAtStart),
+      playerLevelAtStart: Math.max(1, Math.floor(finiteNonNegative(parsed.playerLevelAtStart, 1))),
+      completionLevelBefore: finiteNonNegative(parsed.completionLevelBefore) || null,
+      completionLevelAfter: finiteNonNegative(parsed.completionLevelAfter) || null
     };
   } catch {
     return null;
   }
+}
+
+function normaliseRunPoints(value: unknown): RunPoint[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((candidate) => {
+    if (!candidate || typeof candidate !== "object") return [];
+    const point = candidate as Partial<RunPoint>;
+    if (
+      !Number.isFinite(point.lat) || !Number.isFinite(point.lng) ||
+      !Number.isFinite(point.at) || !Number.isFinite(point.accuracy) ||
+      Math.abs(point.lat as number) > 90 || Math.abs(point.lng as number) > 180 ||
+      (point.accuracy as number) < 0
+    ) return [];
+    return [{
+      lat: point.lat as number,
+      lng: point.lng as number,
+      at: point.at as number,
+      accuracy: point.accuracy as number,
+      ...(Number.isFinite(point.distanceFromStart) ? { distanceFromStart: Math.max(0, point.distanceFromStart as number) } : {}),
+      ...(Number.isFinite(point.heading) ? { heading: point.heading as number } : {}),
+      ...(typeof point.roadName === "string" ? { roadName: point.roadName.slice(0, 120) } : {})
+    }];
+  }).sort((a, b) => a.at - b.at).slice(-4000);
+}
+
+export function normaliseRunCompanionIds(value: unknown): RunCompanionId[] {
+  if (!Array.isArray(value)) return [];
+  const selected = new Set(
+    value.filter((candidate): candidate is RunCompanionId =>
+      typeof candidate === "string" && RUN_COMPANION_IDS.has(candidate as RunCompanionId)
+    )
+  );
+  return RUN_COMPANIONS.filter((companion) => selected.has(companion.id)).map((companion) => companion.id);
 }
 
 export function saveRunSession(session: RunSession | null) {
@@ -232,9 +448,11 @@ export function saveRunSession(session: RunSession | null) {
 
 function normaliseRecord(record: Partial<RunRecord>): RunRecord | null {
   if (!record.id || !record.mode || !record.startedAt || !record.endedAt) return null;
-  const points = Array.isArray(record.points) ? record.points : [];
-  const durationSeconds = record.durationSeconds ?? Math.max(1, Math.floor((record.endedAt - record.startedAt) / 1000));
-  const distance = record.distanceMeters ?? 0;
+  const points = normaliseRunPoints(record.points);
+  const durationSeconds = Number.isFinite(record.durationSeconds)
+    ? Math.max(1, record.durationSeconds as number)
+    : Math.max(1, Math.floor((record.endedAt - record.startedAt) / 1000));
+  const distance = Number.isFinite(record.distanceMeters) ? Math.max(0, record.distanceMeters as number) : 0;
   return {
     id: record.id,
     mode: record.mode,
@@ -242,15 +460,24 @@ function normaliseRecord(record: Partial<RunRecord>): RunRecord | null {
     startedAt: record.startedAt,
     endedAt: record.endedAt,
     durationSeconds,
+    movingSeconds: record.movingSeconds ?? calculateMovingSeconds(points),
     distanceMeters: distance,
     averagePaceSecondsPerKm:
       record.averagePaceSecondsPerKm ?? (distance >= 100 ? durationSeconds / (distance / 1000) : null),
     completionRatio: record.completionRatio ?? durationSeconds / Math.max(60, (record.plannedMinutes ?? 30) * 60),
     xp: record.xp ?? 0,
+    checkpointXp: record.checkpointXp ?? 0,
+    zenPoints: record.zenPoints ?? 0,
+    dice: record.dice ?? 0,
     points,
+    companionIds: normaliseRunCompanionIds(record.companionIds),
     splits: record.splits ?? calculateKilometreSplits(points),
     bestEfforts: record.bestEfforts ?? calculateBestEfforts(points),
-    personalBestKeys: record.personalBestKeys ?? []
+    personalBestKeys: record.personalBestKeys ?? [],
+    isFavorite: record.isFavorite ?? false,
+    routeName: record.routeName?.trim() || "Recorded route",
+    routeRoadNames: Array.isArray(record.routeRoadNames) ? record.routeRoadNames.filter((name): name is string => typeof name === "string") : [],
+    routeNameSource: record.routeNameSource === "user" ? "user" : "generated"
   };
 }
 
@@ -263,11 +490,12 @@ export function loadRunningProfile(): RunningProfile {
       ? parsed.history.map((record) => normaliseRecord(record)).filter((record): record is RunRecord => Boolean(record))
       : [];
     return {
-      version: 2,
-      credits: parsed.credits ?? 0,
-      unlockedStoreIds: parsed.unlockedStoreIds ?? [],
+      version: 5,
+      credits: Number.isFinite(parsed.credits) ? Math.max(0, parsed.credits as number) : 0,
+      unlockedStoreIds: Array.isArray(parsed.unlockedStoreIds) ? parsed.unlockedStoreIds.filter((id): id is string => typeof id === "string") : [],
       history,
-      routePrivacyMeters: parsed.routePrivacyMeters ?? 200
+      routePrivacyMeters: parsed.routePrivacyMeters ?? 200,
+      dice: Number.isFinite(parsed.dice) ? Math.max(0, parsed.dice as number) : 0
     };
   } catch {
     return emptyProfile();
@@ -288,6 +516,62 @@ export function prepStepXp(step: RunPrepStep, elapsedSeconds: number) {
   return step.baseXp + Math.max(0, Math.ceil(step.bonusXp * remainingFraction));
 }
 
+export function completeRunPrepStep(session: RunSession, now = Date.now()) {
+  if (session.stage !== "prep") return null;
+  const step = RUN_PREP_STEPS[session.prepStepIndex];
+  if (!step || session.prepAwards[step.id] !== undefined) return null;
+
+  const elapsed = Math.max(0, (now - session.stepStartedAt) / 1000);
+  const xp = prepStepXp(step, elapsed);
+  const isLast = session.prepStepIndex === RUN_PREP_STEPS.length - 1;
+  const startBonus = isLast ? 3 : 0;
+  const next: RunSession = {
+    ...session,
+    prepAwards: {
+      ...session.prepAwards,
+      [step.id]: xp,
+      ...(isLast ? { "run-start": startBonus } : {})
+    },
+    prepXp: session.prepXp + xp + startBonus,
+    prepStepIndex: isLast ? session.prepStepIndex : session.prepStepIndex + 1,
+    stepStartedAt: now,
+    stage: isLast ? "warmup" : "prep",
+    warmupStartedAt: isLast ? now : session.warmupStartedAt
+  };
+  return { next, step, xp, startBonus, isLast };
+}
+
+export function skipRunPrepStep(session: RunSession, now = Date.now()) {
+  if (session.stage !== "prep") return null;
+  const step = RUN_PREP_STEPS[session.prepStepIndex];
+  if (!step || session.prepAwards[step.id] !== undefined) return null;
+  const isLast = session.prepStepIndex === RUN_PREP_STEPS.length - 1;
+  const next: RunSession = {
+    ...session,
+    prepAwards: { ...session.prepAwards, [step.id]: 0 },
+    prepStepIndex: isLast ? session.prepStepIndex : session.prepStepIndex + 1,
+    stepStartedAt: now,
+    stage: isLast ? "warmup" : "prep",
+    warmupStartedAt: isLast ? now : session.warmupStartedAt
+  };
+  return { next, step, isLast };
+}
+
+export function skipRemainingRunPreparation(session: RunSession, now = Date.now()) {
+  if (session.stage !== "prep") return null;
+  const skippedAwards = Object.fromEntries(
+    RUN_PREP_STEPS.slice(session.prepStepIndex).map((step) => [step.id, 0])
+  );
+  return {
+    ...session,
+    prepAwards: { ...session.prepAwards, ...skippedAwards },
+    prepStepIndex: RUN_PREP_STEPS.length - 1,
+    stepStartedAt: now,
+    stage: "warmup" as const,
+    warmupStartedAt: now
+  };
+}
+
 export function distanceMeters(a: RunPoint, b: RunPoint) {
   const radius = 6_371_000;
   const toRadians = (value: number) => (value * Math.PI) / 180;
@@ -301,19 +585,96 @@ export function distanceMeters(a: RunPoint, b: RunPoint) {
   return 2 * radius * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 
+function plausibleIncrement(distance: number, elapsedSeconds: number) {
+  return Number.isFinite(distance)
+    && distance >= 0
+    && elapsedSeconds > 0
+    && distance <= Math.min(120, elapsedSeconds * 8);
+}
+
 function sampleDistances(points: RunPoint[]) {
   let distance = 0;
   return points.map((point, index) => {
-    if (typeof point.distanceFromStart === "number" && Number.isFinite(point.distanceFromStart)) {
-      distance = Math.max(distance, point.distanceFromStart);
-    } else if (index > 0) {
+    if (index > 0) {
       const previous = points[index - 1];
-      const segment = distanceMeters(previous, point);
-      const elapsed = Math.max(1, (point.at - previous.at) / 1000);
-      if (segment >= 2 && segment <= 120 && segment / elapsed <= 12) distance += segment;
+      const elapsed = (point.at - previous.at) / 1000;
+      const reported = typeof point.distanceFromStart === "number" && typeof previous.distanceFromStart === "number"
+        ? point.distanceFromStart - previous.distanceFromStart
+        : null;
+      const geometric = distanceMeters(previous, point);
+      // Prefer the persisted tracker total when it advances plausibly. Older records
+      // fall back to geometry, but neither path accepts a teleport or a backwards fix.
+      if (reported !== null && plausibleIncrement(reported, elapsed)) distance += reported;
+      else if (geometric >= 2 && plausibleIncrement(geometric, elapsed)) distance += geometric;
     }
     return { point, distance };
   });
+}
+
+export function calculateMovingSeconds(points: RunPoint[]) {
+  const samples = sampleDistances(points);
+  let movingSeconds = 0;
+  for (let index = 1; index < samples.length; index += 1) {
+    const before = samples[index - 1];
+    const after = samples[index];
+    const elapsed = (after.point.at - before.point.at) / 1000;
+    const distance = after.distance - before.distance;
+    const speed = distance / Math.max(1, elapsed);
+    // A long, slow jump after a coffee stop is not secretly moving time. We only
+    // bank intervals that are both fresh and plausible running/walking movement.
+    if (elapsed > 0 && elapsed <= 45 && distance >= 4 && speed >= 0.5 && speed <= 8) {
+      movingSeconds += elapsed;
+    }
+  }
+  return Math.round(movingSeconds);
+}
+
+function usableRoadName(value: string) {
+  const name = value.replace(/\s+/g, " ").trim();
+  return name.length >= 2 && !/^(continue|destination|the route|unnamed road|road)$/i.test(name) ? name : null;
+}
+
+function roadNameFromManeuver(maneuver: RunRouteManeuver) {
+  const namedStreet = maneuver.streetNames?.map(usableRoadName).find((name): name is string => Boolean(name));
+  if (namedStreet) return namedStreet;
+  const instruction = maneuver.instruction ?? "";
+  const match = instruction.match(/\b(?:onto|on|toward|towards)\s+(.+?)(?:[.,;]|$)/i);
+  return match ? usableRoadName(match[1].replace(/\b(?:the|a)\s+(?:route|destination)$/i, "")) : null;
+}
+
+/** Builds a human route name from real provider maneuvers closest to the route's thirds. */
+export function routeNameFromManeuvers(maneuvers: RunRouteManeuver[], routeDistanceMeters = 0) {
+  const named = maneuvers
+    .map((maneuver) => ({ distance: Math.max(0, maneuver.routeDistanceMeters || 0), name: roadNameFromManeuver(maneuver) }))
+    .filter((item): item is { distance: number; name: string } => Boolean(item.name));
+  if (!named.length) return { routeName: "Recorded route", roadNames: [] as string[] };
+  const total = Math.max(routeDistanceMeters, ...named.map((item) => item.distance), 1);
+  const selected: string[] = [];
+  for (const fraction of [0, 1 / 3, 2 / 3]) {
+    const closest = named.reduce((best, item) =>
+      Math.abs(item.distance - total * fraction) < Math.abs(best.distance - total * fraction) ? item : best
+    );
+    if (!selected.some((name) => name.localeCompare(closest.name, undefined, { sensitivity: "accent" }) === 0)) selected.push(closest.name);
+  }
+  return { routeName: selected.length ? selected.join(" · ") : "Recorded route", roadNames: selected };
+}
+
+/** Names only roads represented by accepted measured-run points, never untravelled plan legs. */
+export function routeNameFromRunPoints(points: RunPoint[]) {
+  const named = points.flatMap((point) => {
+    const name = usableRoadName(point.roadName ?? "");
+    return name ? [{ distance: Math.max(0, point.distanceFromStart ?? 0), name }] : [];
+  });
+  if (!named.length) return { routeName: "Recorded route", roadNames: [] as string[] };
+  const total = Math.max(points.at(-1)?.distanceFromStart ?? 0, ...named.map((item) => item.distance), 1);
+  const selected: string[] = [];
+  for (const fraction of [0, 1 / 3, 2 / 3]) {
+    const closest = named.reduce((best, item) =>
+      Math.abs(item.distance - total * fraction) < Math.abs(best.distance - total * fraction) ? item : best
+    );
+    if (!selected.some((name) => name.localeCompare(closest.name, undefined, { sensitivity: "accent" }) === 0)) selected.push(closest.name);
+  }
+  return { routeName: selected.join(" · ") || "Recorded route", roadNames: selected };
 }
 
 function timeAtDistance(samples: ReturnType<typeof sampleDistances>, target: number) {
@@ -425,24 +786,87 @@ export function trimRouteForPrivacy(points: RunPoint[], hideMeters: number) {
 }
 
 export function calculateRunXp(durationSeconds: number, distance: number, plannedMinutes: number) {
-  const plannedSeconds = Math.max(60, plannedMinutes * 60);
-  const ratio = Math.max(0, durationSeconds / plannedSeconds);
-  const timeXp = Math.floor(durationSeconds / 60) * 10;
-  const distanceXp = Math.floor(distance / 250) * 5;
-  const milestoneXp =
-    (ratio >= 0.5 ? 20 : 0) +
-    (ratio >= 0.75 ? 30 : 0) +
-    (ratio >= 1 ? 60 : 0);
-  return timeXp + distanceXp + milestoneXp;
+  // Genuine runs receive an early-game-friendly completion base. Very short GPS
+  // tests still receive only their small time/distance amount.
+  const safeMinutes = Math.min(Math.floor(Math.max(0, durationSeconds) / 60), Math.max(20, plannedMinutes));
+  const timeXp = safeMinutes;
+  const distanceXp = Math.min(30, Math.floor(Math.max(0, distance) / 500) * 5);
+  const completionBase = safeMinutes >= 8 ? 25 : 0;
+  return completionBase + timeXp + distanceXp;
+}
+
+export function checkpointRewardsForProgress(progress: number, awarded: Record<string, RunCheckpointReward> = {}) {
+  const safeProgress = Math.max(0, progress);
+  return RUN_CHECKPOINT_REWARDS.filter((reward) => safeProgress >= Number(reward.id) / 100 && !awarded[reward.id]);
+}
+
+export function distanceZenPointRewardsForProgress(
+  distance: number,
+  awarded: Record<string, RunDistanceZenPointReward> = {}
+) {
+  const safeDistance = Math.max(0, Number.isFinite(distance) ? distance : 0);
+  return RUN_DISTANCE_ZEN_POINT_REWARDS.filter((reward) => safeDistance >= reward.distanceMeters && !awarded[reward.id]);
+}
+
+function localRunDay(at: number) {
+  const date = new Date(at);
+  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+}
+
+export function firstRunOfDayZenPoints(history: RunRecord[], endedAt = Date.now()) {
+  const day = localRunDay(endedAt);
+  const alreadyCompletedToday = history.some((record) => localRunDay(record.endedAt) === day);
+  return alreadyCompletedToday ? 0 : FIRST_RUN_OF_DAY_ZEN_POINTS;
+}
+
+export function rollingPaceSecondsPerKm(points: RunPoint[], now = Date.now(), windowSeconds = 30) {
+  if (points.length < 2) return null;
+  const latest = points[points.length - 1];
+  if (now - latest.at > 15_000) return null;
+  const cutoff = latest.at - windowSeconds * 1000;
+  let first = points[0];
+  for (const point of points) {
+    if (point.at <= cutoff) first = point;
+    else break;
+  }
+  const startDistance = first.distanceFromStart ?? 0;
+  const endDistance = latest.distanceFromStart ?? startDistance;
+  const distance = Math.max(0, endDistance - startDistance);
+  const elapsedSeconds = Math.max(0, (latest.at - first.at) / 1000);
+  // Small movement over a full window is treated as a stop, not a wildly slow pace.
+  if (elapsedSeconds < 8 || (elapsedSeconds >= 20 && distance < 12)) return null;
+  const speed = distance / elapsedSeconds;
+  if (speed < 0.75 || speed > 7) return null;
+  return 1000 / speed;
+}
+
+export function adaptiveRunPlan(history: RunRecord[], durations = [20, 30, 45, 60]) {
+  const completed = history
+    .filter((run) => run.durationSeconds >= 8 * 60 && run.distanceMeters >= 500)
+    .slice(0, 8);
+  if (!completed.length) return { recommendedMinutes: 20, expectedDistanceMeters: null, source: "starter" as const };
+  const byDuration = [...completed].sort((a, b) => a.durationSeconds - b.durationSeconds);
+  const median = byDuration[Math.floor(byDuration.length / 2)];
+  const sustainableMinutes = Math.max(20, Math.floor((median.durationSeconds / 60) * 0.85));
+  const recommendedMinutes = durations.reduce((closest, minutes) =>
+    Math.abs(minutes - sustainableMinutes) < Math.abs(closest - sustainableMinutes) ? minutes : closest
+  );
+  const metresPerMinute = median.distanceMeters / Math.max(1, median.durationSeconds / 60);
+  return {
+    recommendedMinutes,
+    expectedDistanceMeters: Math.round(metresPerMinute * recommendedMinutes / 100) * 100,
+    source: "history" as const
+  };
 }
 
 export function levelForXp(xp: number) {
-  const nextThreshold = LEVEL_THRESHOLDS.findIndex((threshold) => xp < threshold);
+  const safeXp = Math.max(0, Number.isFinite(xp) ? xp : 0);
+  const nextThreshold = LEVEL_THRESHOLDS.findIndex((threshold) => safeXp < threshold);
   return nextThreshold === -1 ? LEVEL_THRESHOLDS.length : Math.max(1, nextThreshold);
 }
 
 export function addRunningXp(stats: Stats, amount: number): Stats {
-  const xp = stats.xp + Math.max(0, amount);
+  const xp = Math.max(0, Number.isFinite(stats.xp) ? stats.xp : 0) + Math.max(0, Number.isFinite(amount) ? amount : 0);
   return { ...stats, xp, level: levelForXp(xp) };
 }
 

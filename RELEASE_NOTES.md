@@ -1,3 +1,57 @@
+# Zen Chad Next Generation — current full rebuild (2026-09-07)
+
+- Rebuilt the complete current Android working tree, including the latest Home/Status experience, ZenPoints and shop rewards, Streak Freeze support, sync work, Yoga updates, and expanded Running Mode photo, voice, story, navigation, and native integration changes.
+- Preserved the existing `com.zenchad.minddojo` application identity so this APK can update the installed app without resetting its data.
+- Version code 11; version name 2.0; shareable debug APK for side-loading.
+- Artifact: `Zen Chad Next Generation.apk`, 467,547,411 bytes.
+- SHA-256: `795A1E2D690D4EF26549AE3D7EF2DA34158C95B379BBB11B7F193594C942BF05`.
+- Verified with sync, progression, Yoga, theme, ZenPoints, shop, Streak Freeze, Running logic/native integration, Running TTS and photo tests; TypeScript/Vite production build; Capacitor sync; JDK 21 debug assembly; package/version metadata; APK v1/v2 signature verification; and matching source/release/Drive-copy hashes.
+- Release copies: `S:\zENcHAD\ZenChadAndroid\releases\Zen Chad Next Generation.apk` and `D:\My Drive\ZenChad\Zen Chad Next Generation.apk`.
+- No device installation or physical phone test was run for this packaging pass.
+
+# Zen Chad 1.9 — Clean paper-doll character and cosmetic wardrobe (2026-09-03)
+
+- Rebuilt the Status character base from scratch to remove accumulated image-to-image faceting and noise.
+- Added a longer original pink side-swept hairstyle matching the canonical ZenChad appearance, while keeping Hair as its own category.
+- Refitted the Porter Robinson Nurture, Noodle DARE, silver-lilac, Hana Candy Bracelets, and Cream Meditation Jacket cosmetics to the clean 1024×1536 paper-doll base.
+- Preserved existing cosmetic IDs, starter ownership, shop prices, saved equipment, and legacy `head` → `hair` migration.
+- Version code 10; shareable debug APK for side-loading.
+- Artifact: `Zen-Chad-1.9-debug.apk`, 461,363,116 bytes.
+- SHA-256: `D767CEF7280CC73777781DF4F3E3830C4AF0DBE9A695D7A49D55955CF7FCFC0B`.
+- Verified with progression, shop, Running/native integration, TypeScript/Vite build, Capacitor sync, JDK 21 debug assembly, package/version metadata, APK v1/v2 signature verification, and matching local/Drive-copy hashes.
+- Release copies: `S:\zENcHAD\ZenChadAndroid\releases\Zen-Chad-1.9-debug.apk` and `D:\My Drive\ZenChad\Zen-Chad-1.9-debug.apk`.
+
+# Zen Chad 1.8 — Running, recovery prompts, and Yoga with Mark fixes (2026-08-31)
+
+- Added a Just Run choice screen so people can start a quiet route-free run immediately or opt into the Before Running stretches first; finishing that warm-up goes directly into Just Run.
+- Removed the automatic NSDR and meditation-wheel upsell from yoga/stretch completion screens while preserving intentional NSDR access through the meditation library and relevant Bike Quest return paths.
+- Replaced the Side Lunge pose illustration with a Mark-matched standing lateral-lunge asset based on the approved reference illustrations.
+- Version code 9; shareable debug APK for side-loading.
+- Artifact: `Zen-Chad-1.8-debug.apk`, 369,072,661 bytes.
+- SHA-256: `E37EABE3004F56D79E241E750BEA444F2529DA4A8A35E08CA7EFED28CFD84082`.
+- Verified with progression, Yoga, Running/native integration, TypeScript/Vite build, Capacitor sync, Java 21 debug assembly, package/version metadata, APK signature verification, and matching local/Drive-copy hashes.
+- Release copies: `S:\zENcHAD\ZenChadAndroid\releases\Zen-Chad-1.8-debug.apk` and `D:\My Drive\ZenChad\Zen-Chad-1.8-debug.apk`.
+
+# Zen Chad 1.7 — Running Mode completion (2026-08-21)
+
+- Completed the Android Running Mode photo workflow: Android limited-access handling, always-reachable permission controls, immediate resume refresh, capture-time GPS matching, friendly captions, atomic run reassignment, and clearly separated association/thumbnail removal.
+- Added an offline-first Running voice card and selector with friendly voice metadata, TTS readiness handling, shared foreground/background selection policy, and bounded local/system-default speech fallback.
+- Added a dark OpenFreeMap/MapLibre street map with an automatic schematic fallback, contrasting completed/remaining routes, heading marker, scale/north/attribution, reroute-revision maneuver IDs, and clearer saved-route traces.
+- Added actual-travel fallback names, editable run names, completed-only history behavior, broader deterministic metric/reward fixtures, and dark accessible post-run/history styling.
+- Built with Java 21 and installed on the Pixel 6a using replacement mode so existing app data remained intact. Installable artifact: `Zen-Chad-1.7-Running-Mode-debug.apk`, 368,538,911 bytes; SHA-256 `3CB56AD5CC10304D09330CA74B915237FC7986AA0A598F5001A736BCE6AA464A`.
+- Verified matching copies: `releases/Zen-Chad-1.7-Running-Mode-debug.apk` and `D:\My Drive\ZenChad\Zen-Chad-1.7-Running-Mode-debug.apk`.
+- Verified Running/native, photo and TTS tests; TypeScript and production web build; Capacitor sync; Java 21 debug assembly; package/version/signature; and the documented indoor phone flows. The Sandbach Station Road outdoor navigation/real-track checklist remains explicitly unverified in `RUNNING_FIELD_TEST_LOG.md`.
+
+# Zen Chad 1.7 — Yoga with Mark visual redesign (2026-08-19)
+
+- Rebuilt the Yoga flow around the selected cosmic-dark visual direction with a larger Mark hero, four new class-cover families, image-first class cards, richer class details, an immersive class player, and a two-column routine builder.
+- Preserved the main Home character, the existing 45 pose illustrations, Yoga class data, and user storage.
+- Version code 8; shareable debug APK for side-loading.
+- Artifact: `Zen-Chad-1.7-debug.apk`, 350,390,970 bytes.
+- SHA-256: `1E281EAC5BDB7DC1B728750B8C46A40ADCEFA260884BF92631B2C5C2B9D96C7B`.
+- Verified with TypeScript/Vite build, Capacitor sync, JDK 21 debug APK assembly, package/version metadata, APK signature verification, theme tests, and matching source/Drive-copy hashes.
+- Drive copy: `D:\My Drive\ZenChad\Zen-Chad-1.7-debug.apk` in the [ZenChad Google Drive folder](https://drive.google.com/drive/folders/1qAXaw1awLpyj96aIiu3c-E6FhybA0Vw0).
+
 # Zen Chad 1.5 — current rebuild (2026-08-10)
 
 - Pulled the latest `main` from GitHub at commit `ab285cd`, including automatic run route scoring.

@@ -4,6 +4,10 @@ ZenChad is an Android meditation and wellbeing app built with React, Capacitor, 
 extensions. The source in this repository is the Android app; the browser build is only the asset layer
 that Capacitor packages into the installed Android application.
 
+`ZenChadAndroid` is the sole canonical source tree. There is no separately maintained or released web
+edition. The optional Electron desktop packaging remains in this same source tree and should only be
+changed or built when desktop work is explicitly requested.
+
 The GitHub source repository contains the editable Android code, native extensions, app configuration,
 and non-generated assets. The large offline meditation and soundscape audio directories remain in this
 local build workspace because the current GitHub connection cannot complete a reliable upload of those
@@ -49,6 +53,11 @@ cloud database, or embedded API key.
 npm install
 npm run dev
 ```
+
+`npm run dev` is a temporary Vite server for development or browser QA, not a service that should be
+left running after a task. Any agent or automation that starts it must shut down the Vite process and
+its `npm`/shell wrappers when testing is finished, and should not leave duplicate servers on ports 5173
+or 5175.
 
 ## Build and run in Android Studio
 

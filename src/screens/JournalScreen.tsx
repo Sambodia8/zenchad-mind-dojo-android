@@ -19,6 +19,7 @@ import {
   isNativeAndroid
 } from "../native";
 import { addJournalXp, importJournalText, makeJournal, recordMeditationCompletion } from "../storage";
+import { recordSyncTombstones } from "../sync";
 import type { AppData, JournalEntry } from "../types";
 import { meditationIdForName } from "../progression";
 
@@ -626,7 +627,10 @@ export default function JournalScreen({ data, setData, draftMeditation, mysteryR
                   <span className="eyebrow">{new Date(entry.createdAt).toLocaleDateString()} · {entry.kind === "meditation" ? "Meditation" : "Journal"}</span>
                   <h3>{entry.title}</h3>
                 </div>
-                <button className="icon-button danger" aria-label={`Delete ${entry.title}`} onClick={() => setData((current) => ({ ...current, journal: current.journal.filter((item) => item.id !== entry.id) }))}>
+                <button className="icon-button danger" aria-label={`Delete ${entry.title}`} onClick={() => {
+                  recordSyncTombstones([{ collection: "journal", id: entry.id, deletedAt: new Date().toISOString() }]);
+                  setData((current) => ({ ...current, journal: current.journal.filter((item) => item.id !== entry.id) }));
+                }}>
                   <Trash2 size={18} />
                 </button>
               </div>

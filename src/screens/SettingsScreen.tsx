@@ -1,8 +1,10 @@
-import { useState, type Dispatch, type SetStateAction } from "react";
-import { Bell, BellOff, Check, Clock, Gauge, Moon, MoonStar, Sun, Volume2, VolumeX } from "lucide-react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { Bell, BellOff, Check, Download, Gauge, Moon, MoonStar, RefreshCw, Upload, Volume2, VolumeX } from "lucide-react";
 import { cancelGentleReminder, scheduleGentleReminder } from "../native";
-import { setAppearanceMode } from "../theme";
-import type { AppearanceMode, AppData } from "../types";
+import type { AppData } from "../types";
+import { exportSyncData, getDataSyncStatus, importSyncData } from "../syncBridge";
+import type { SyncStatus } from "../sync";
+import { RunningVoiceSettings } from "../components/RunningVoiceSettings";
 
 interface Props {
   data: AppData;
@@ -11,13 +13,28 @@ interface Props {
 
 export default function SettingsScreen({ data, setData }: Props) {
   const [message, setMessage] = useState("");
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>(() => ({
+    configured: false, lastAction: null, lastSuccessAt: null, lastError: null, sourceDeviceId: ""
+  }));
+  const [syncBusy, setSyncBusy] = useState(false);
 
-  const setAppearance = (appearanceMode: AppearanceMode) => {
-    setAppearanceMode(appearanceMode);
-    setData((current) => ({
-      ...current,
-      preferences: { ...current.preferences, appearanceMode }
-    }));
+  useEffect(() => { void getDataSyncStatus().then(setSyncStatus); }, []);
+
+
+  const handleExport = async () => {
+    setSyncBusy(true);
+    const result = await exportSyncData(data);
+    setSyncStatus(result.status);
+    setMessage(result.ok ? "Data exported. Tasker can now upload the fixed sync file." : result.reason ?? "Export failed.");
+    setSyncBusy(false);
+  };
+
+  const handleImport = async () => {
+    setSyncBusy(true);
+    const result = await importSyncData((next) => setData(next));
+    setSyncStatus(result.status);
+    setMessage(result.ok ? "Data imported and merged safely." : result.reason ?? "Import failed.");
+    setSyncBusy(false);
   };
 
   const toggleReminder = async () => {
@@ -42,8 +59,6 @@ export default function SettingsScreen({ data, setData }: Props) {
     }
   };
 
-  const appearanceMode = data.preferences.appearanceMode;
-
   return (
     <div className="screen-stack settings-screen">
       <section className="page-intro">
@@ -55,42 +70,27 @@ export default function SettingsScreen({ data, setData }: Props) {
       <section className="card settings-sheet">
         <div className="setting-row illustrated-setting">
           <span>
-            {appearanceMode === "light" ? <Sun /> : appearanceMode === "dark" ? <Moon /> : <Clock />}
+            <Moon />
             <span>
               <strong>Appearance</strong>
-              <small>Use a bright daytime look and a calmer dark palette at night</small>
+              <small>Always-on dark purple mode keeps the app consistent and readable</small>
             </span>
           </span>
         </div>
-        <div className="segmented three appearance-segmented" role="group" aria-label="Appearance mode">
-          <button
-            type="button"
-            className={appearanceMode === "light" ? "active" : ""}
-            onClick={() => setAppearance("light")}
-            aria-pressed={appearanceMode === "light"}
-          >
-            <Sun size={16} /> Light
-          </button>
-          <button
-            type="button"
-            className={appearanceMode === "auto" ? "active" : ""}
-            onClick={() => setAppearance("auto")}
-            aria-pressed={appearanceMode === "auto"}
-          >
-            <Clock size={16} /> Auto
-          </button>
-          <button
-            type="button"
-            className={appearanceMode === "dark" ? "active" : ""}
-            onClick={() => setAppearance("dark")}
-            aria-pressed={appearanceMode === "dark"}
-          >
-            <Moon size={16} /> Dark
-          </button>
+        <p className="setting-note appearance-summary">The pale daytime theme has been retired so every screen uses the same dark-purple visual language.</p>
+      </section>
+
+      <section className="card settings-sheet sync-sheet">
+        <div className="setting-row illustrated-setting">
+          <span><RefreshCw /><span><strong>Data sync</strong><small>One shared ZenChad file keeps Android and desktop in step.</small></span></span>
         </div>
-        <p className="setting-note appearance-summary">
-          Auto uses your device's local time: light from 07:00, dark from 19:00.
-        </p>
+        <div className="sync-actions">
+          <button type="button" className="button primary" onClick={handleExport} disabled={syncBusy}><Upload size={16} /> Export data</button>
+          <button type="button" className="button secondary" onClick={handleImport} disabled={syncBusy}><Download size={16} /> Import data</button>
+        </div>
+        <p className="setting-note">Android file: <code>/storage/emulated/0/ZenChad/zenchad-sync.json</code>. Tasker transfers it to your Google Drive ZenChad folder.</p>
+        {syncStatus.lastSuccessAt ? <small className="status-message"><Check /> Last successful sync {new Date(syncStatus.lastSuccessAt).toLocaleString()}</small> : null}
+        {syncStatus.lastError ? <small className="status-message sync-error">{syncStatus.lastError}</small> : null}
       </section>
 
       <section className="card settings-sheet">
@@ -120,6 +120,8 @@ export default function SettingsScreen({ data, setData }: Props) {
           </button>
         </div>
       </section>
+
+      <RunningVoiceSettings data={data} setData={setData} />
 
       <section className="card settings-sheet">
         <div className="setting-row illustrated-setting">

@@ -1,4 +1,9 @@
 import type { ChaseDifficulty, ChaseOutcomeKind } from "./runningStory";
+import {
+  STORY_CHAPTER_IDS,
+  storyNarrationIsVerified,
+  type StoryChapterId
+} from "./runningStoryChapters";
 
 export interface StoryRouteEvent {
   type: "chase-start" | "chase-outcome" | "helicopter-start" | "helicopter-cover" | string;
@@ -18,6 +23,11 @@ export interface StoryRunResult {
   completedAt: number;
   source: "native" | "browser";
   events?: StoryRouteEvent[];
+  /** Chapters whose narration reached a real completion callback. */
+  heardChapterIds?: StoryChapterId[];
+  /** Missing on legacy results, false after a known incomplete/failed story run. */
+  playbackVerified?: boolean;
+  legacyPlaybackAcknowledged?: boolean;
 }
 
 interface StoryResultStore {
@@ -58,6 +68,54 @@ export function saveStoryRunResult(result: StoryRunResult) {
   store.results = store.results.sort((a, b) => b.completedAt - a.completedAt).slice(0, 300);
   saveStore(store);
   return result;
+}
+
+export function storyResultHeardChapters(result: StoryRunResult) {
+  const heard = new Set(result.heardChapterIds ?? []);
+  return STORY_CHAPTER_IDS.filter((id) => heard.has(id));
+}
+
+export function storyMissionHeardChapters(missionId: string, results = loadStoryRunResults()) {
+  const heard = new Set<StoryChapterId>();
+  for (const result of results) {
+    if (result.missionId !== missionId) continue;
+    for (const chapterId of storyResultHeardChapters(result)) heard.add(chapterId);
+  }
+  return STORY_CHAPTER_IDS.filter((id) => heard.has(id));
+}
+
+export function storyResultPlaybackVerified(result: StoryRunResult) {
+  return result.playbackVerified === true || storyNarrationIsVerified(storyResultHeardChapters(result));
+}
+
+export function markStoryChapterHeard(missionId: string, chapterId: StoryChapterId) {
+  const store = loadStore();
+  const target = store.results.find((result) => result.missionId === missionId);
+  if (!target) return null;
+  const heardChapterIds = STORY_CHAPTER_IDS.filter((id) =>
+    id === chapterId || (target.heardChapterIds ?? []).includes(id)
+  );
+  target.heardChapterIds = heardChapterIds;
+  target.playbackVerified = storyNarrationIsVerified(heardChapterIds);
+  saveStore(store);
+  return target;
+}
+
+export function acknowledgeLegacyStoryPlayback() {
+  const store = loadStore();
+  let updated = 0;
+  store.results = store.results.map((result) => {
+    if (result.playbackVerified !== undefined) return result;
+    updated += 1;
+    return {
+      ...result,
+      heardChapterIds: [...STORY_CHAPTER_IDS],
+      playbackVerified: true,
+      legacyPlaybackAcknowledged: true
+    };
+  });
+  if (updated) saveStore(store);
+  return updated;
 }
 
 export function storyCampaignTotals(results = loadStoryRunResults()) {

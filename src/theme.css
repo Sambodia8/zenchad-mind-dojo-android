@@ -30,6 +30,20 @@
   --progress-track-bg: rgba(255, 255, 255, 0.07);
   --recommendation-bg: rgba(124, 58, 237, 0.09);
   --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.14);
+  --yoga-bg: #050a15;
+  --yoga-panel: rgba(10, 20, 34, 0.9);
+  --yoga-panel-strong: rgba(7, 14, 27, 0.96);
+  --yoga-surface: rgba(255, 255, 255, 0.055);
+  --yoga-surface-active: rgba(67, 184, 153, 0.14);
+  --yoga-border: rgba(123, 210, 187, 0.18);
+  --yoga-border-strong: rgba(123, 210, 187, 0.38);
+  --yoga-title: #fffaf3;
+  --yoga-copy: #aebbd0;
+  --yoga-accent: #7bd2ba;
+  --yoga-accent-2: #7dd3e8;
+  --yoga-warm: #e8bd73;
+  --yoga-danger: #f5a28d;
+  --yoga-shadow: 0 1.4rem 3.5rem rgba(0, 0, 0, 0.34);
 }
 
 :root[data-appearance="light"] {
@@ -64,6 +78,20 @@
   --progress-track-bg: rgba(29, 39, 56, 0.08);
   --recommendation-bg: rgba(124, 58, 237, 0.065);
   --card-shadow: 0 18px 45px rgba(53, 45, 34, 0.08);
+  --yoga-bg: #edf2ee;
+  --yoga-panel: rgba(255, 255, 255, 0.9);
+  --yoga-panel-strong: rgba(248, 251, 248, 0.97);
+  --yoga-surface: rgba(36, 74, 64, 0.065);
+  --yoga-surface-active: rgba(42, 128, 104, 0.12);
+  --yoga-border: rgba(43, 92, 78, 0.16);
+  --yoga-border-strong: rgba(43, 118, 96, 0.35);
+  --yoga-title: #182821;
+  --yoga-copy: #596b65;
+  --yoga-accent: #287f69;
+  --yoga-accent-2: #277e93;
+  --yoga-warm: #9a672c;
+  --yoga-danger: #9b4936;
+  --yoga-shadow: 0 1.2rem 3rem rgba(38, 65, 57, 0.12);
 }
 
 :root[data-appearance] {
@@ -242,6 +270,40 @@
 .appearance-segmented button { gap: 0.3rem; }
 .appearance-summary { margin: 0.7rem 0 0; font-size: 0.8rem; }
 
+/* Yoga uses the shared appearance mode while retaining its own calm palette. */
+:root[data-appearance] .app-shell.yoga-route {
+  color: var(--yoga-title);
+  background:
+    radial-gradient(circle at 86% 12%, color-mix(in srgb, var(--yoga-accent-2) 14%, transparent), transparent 30rem),
+    radial-gradient(circle at 12% 46%, rgba(97, 68, 171, 0.1), transparent 26rem),
+    var(--yoga-bg);
+}
+
+:root[data-appearance] .yoga-route .topbar {
+  background: color-mix(in srgb, var(--yoga-bg) 88%, transparent);
+}
+
+:root[data-appearance] .yoga-route .bottom-nav {
+  background: color-mix(in srgb, var(--yoga-bg) 92%, transparent);
+}
+
+:root[data-appearance="dark"] .yoga-route .player-topline,
+:root[data-appearance="dark"] .yoga-route .pose-stage,
+:root[data-appearance="dark"] .yoga-route .stretch-now-playing,
+:root[data-appearance="dark"] .yoga-route .completion-screen {
+  --ink: var(--yoga-title);
+  --muted: var(--yoga-copy);
+  --accent-text: var(--yoga-accent);
+  --secondary-text: var(--yoga-accent);
+  --secondary-bg: var(--yoga-surface);
+  --ghost-text: var(--yoga-copy);
+  --ghost-bg: var(--yoga-surface);
+  --segmented-bg: rgba(0, 0, 0, 0.24);
+  --segmented-text: var(--yoga-copy);
+  --segmented-active-text: #06110e;
+  --segmented-active-bg: var(--yoga-accent);
+}
+
 /* Home has its own dark-fantasy identity in both appearance modes. */
 :root[data-appearance] .app-shell.home-route {
   color: #f5f0ff;
@@ -359,4 +421,166 @@
   border-color: rgba(255, 255, 255, 0.11);
   color: #c5bdd7;
   background: rgba(255, 255, 255, 0.035);
+}
+
+/* Shared app chrome stays stable while screen content can carry its own mood.
+   This prevents route-specific palettes from recolouring or reshaping the HUD. */
+:root[data-appearance] .app-shell:not(.yoga-immersive) .topbar {
+  border-bottom-color: rgba(147, 91, 235, 0.2);
+  background: rgba(3, 5, 13, 0.9);
+  box-shadow: 0 0.55rem 2rem rgba(0, 0, 0, 0.32);
+}
+
+:root[data-appearance] .app-shell:not(.yoga-immersive) .brand-mark {
+  border-color: rgba(203, 159, 255, 0.46);
+  background: radial-gradient(circle, rgba(73, 30, 106, 0.92), rgba(8, 7, 16, 0.98));
+  box-shadow: 0 0 1rem rgba(149, 74, 231, 0.36);
+}
+
+:root[data-appearance] .app-shell:not(.yoga-immersive) .brand-mark img {
+  filter: grayscale(1) invert(1) sepia(0.2) hue-rotate(225deg) saturate(4) drop-shadow(0 0 0.35rem rgba(205, 148, 255, 0.8));
+}
+
+:root[data-appearance] .app-shell:not(.yoga-immersive) .brand strong {
+  color: #fff5ff;
+  text-shadow: 0 0 0.75rem rgba(182, 102, 255, 0.64), 0.08rem 0.08rem 0 rgba(109, 12, 51, 0.82);
+}
+
+:root[data-appearance] .app-shell:not(.yoga-immersive) .brand small {
+  color: #a9a0c2;
+}
+
+:root[data-appearance] .app-shell:not(.yoga-immersive) .persistent-settings-trigger {
+  border-color: rgba(203, 159, 255, 0.25);
+  color: #bdb1db;
+  background: rgba(255, 255, 255, 0.045);
+  opacity: 0.86;
+}
+
+:root[data-appearance] .app-shell:not(.yoga-immersive) .persistent-settings-trigger:hover,
+:root[data-appearance] .app-shell:not(.yoga-immersive) .persistent-settings-trigger:focus-visible {
+  border-color: rgba(203, 159, 255, 0.54);
+  color: #f0e8ff;
+  background: rgba(132, 77, 208, 0.18);
+  opacity: 1;
+}
+
+:root[data-appearance] .app-shell:not(.yoga-immersive) .hud > button {
+  border-color: rgba(150, 104, 224, 0.25);
+  color: #ddd5ed;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+:root[data-appearance] .app-shell:not(.yoga-immersive) .hud .hud-level-track {
+  background: rgba(255, 255, 255, 0.11);
+}
+
+:root[data-appearance] .app-shell:not(.yoga-immersive) .hud .hud-level-track > span {
+  background: linear-gradient(90deg, #8a3ffc, #d654a3, #ff765c);
+  box-shadow: 0 0 0.5rem rgba(164, 69, 236, 0.52);
+}
+
+:root[data-appearance] .app-shell:not(.yoga-immersive) .bottom-nav {
+  border-top-color: rgba(130, 81, 211, 0.24);
+  background: rgba(3, 5, 13, 0.95);
+  box-shadow: 0 -0.7rem 2rem rgba(0, 0, 0, 0.32);
+}
+
+:root[data-appearance] .app-shell:not(.yoga-immersive) .bottom-nav button {
+  color: #77718d;
+  font-family: inherit;
+  background: transparent;
+  box-shadow: none;
+}
+
+:root[data-appearance] .app-shell:not(.yoga-immersive) .bottom-nav button.active {
+  color: #c8a7ff;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Toolkit v2: use the present high-contrast Dojo system instead of the old
+   paper/watercolour cards. */
+:root[data-appearance] .toolkit-hub {
+  gap: 1rem;
+}
+
+:root[data-appearance] .toolkit-hub .illustrated-intro {
+  min-height: 10.75rem;
+  padding: 1.3rem;
+  border-color: rgba(150, 102, 241, 0.3);
+  background:
+    radial-gradient(circle at 89% 12%, rgba(110, 55, 210, 0.42), transparent 38%),
+    radial-gradient(circle at 18% 105%, rgba(16, 152, 141, 0.3), transparent 52%),
+    linear-gradient(145deg, rgba(14, 16, 35, 0.98), rgba(5, 8, 20, 0.97));
+  box-shadow: 0 1rem 2.8rem rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.05);
+}
+
+:root[data-appearance] .toolkit-hub .illustrated-intro > div {
+  max-width: 100%;
+}
+
+:root[data-appearance] .toolkit-hub .illustrated-intro img {
+  display: none;
+}
+
+:root[data-appearance] .toolkit-hub .illustrated-intro h1,
+:root[data-appearance] .toolkit-hub .tool-journey-card strong,
+:root[data-appearance] .toolkit-hub .monk-note strong {
+  color: #f5f0ff;
+}
+
+:root[data-appearance] .toolkit-hub .illustrated-intro h1 {
+  margin: 0.1rem 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 10vw, 3.15rem);
+  letter-spacing: -0.035em;
+}
+
+:root[data-appearance] .toolkit-hub .illustrated-intro p,
+:root[data-appearance] .toolkit-hub .tool-journey-card small,
+:root[data-appearance] .toolkit-hub .monk-note p {
+  color: #bcb4cd;
+}
+
+:root[data-appearance] .toolkit-hub .illustrated-intro .eyebrow {
+  color: #c8a7ff;
+}
+
+:root[data-appearance] .toolkit-hub .tool-journey-card {
+  min-height: 5.55rem;
+  border-color: rgba(150, 102, 241, 0.23);
+  color: #f5f0ff;
+  background: linear-gradient(135deg, rgba(17, 19, 43, 0.96), rgba(7, 10, 24, 0.98));
+  box-shadow: 0 0.7rem 1.7rem rgba(0, 0, 0, 0.22), inset 0 1px rgba(255, 255, 255, 0.035);
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+:root[data-appearance] .toolkit-hub .tool-journey-card:hover,
+:root[data-appearance] .toolkit-hub .tool-journey-card:focus-visible {
+  border-color: rgba(201, 167, 255, 0.58);
+  background: linear-gradient(135deg, rgba(38, 29, 70, 0.98), rgba(8, 13, 29, 0.98));
+  transform: translateY(-2px);
+}
+
+:root[data-appearance] .toolkit-hub .tool-journey-card > svg {
+  color: #b7a6d8;
+}
+
+:root[data-appearance] .toolkit-hub .tool-journey-icon {
+  border-color: rgba(177, 146, 255, 0.26);
+  color: #d4c4ff;
+  background: rgba(117, 70, 202, 0.18);
+}
+
+:root[data-appearance] .toolkit-hub .tool-journey-card.lavender .tool-journey-icon { color: #d4c4ff; background: rgba(133, 89, 210, 0.23); }
+:root[data-appearance] .toolkit-hub .tool-journey-card.gold .tool-journey-icon { color: #ffd685; background: rgba(205, 142, 43, 0.18); }
+:root[data-appearance] .toolkit-hub .tool-journey-card.blue .tool-journey-icon { color: #8ed8ff; background: rgba(38, 127, 193, 0.2); }
+:root[data-appearance] .toolkit-hub .tool-journey-card.peach .tool-journey-icon { color: #ffb89c; background: rgba(201, 83, 112, 0.19); }
+
+:root[data-appearance] .toolkit-hub .monk-note {
+  border-color: rgba(150, 102, 241, 0.25);
+  color: #f5f0ff;
+  background: linear-gradient(135deg, rgba(46, 28, 78, 0.72), rgba(10, 13, 31, 0.95));
+  box-shadow: 0 0.85rem 2rem rgba(0, 0, 0, 0.22);
 }

@@ -10,11 +10,13 @@ import {
   type SetStateAction
 } from "react";
 import {
-  CircleDot,
   Grid2X2,
   Home,
   Library,
-  PersonStanding
+  PersonStanding,
+  Settings,
+  Snowflake,
+  X
 } from "lucide-react";
 import { App as CapacitorApp } from "@capacitor/app";
 import type { AppData, Route } from "./types";
@@ -39,6 +41,7 @@ import ToolkitHubScreen from "./screens/ToolkitHubScreen";
 import GuideScreen from "./screens/GuideScreen";
 import SoundscapesScreen from "./screens/SoundscapesScreen";
 import RewardsScreen from "./screens/RewardsScreen";
+import ZenShopScreen from "./screens/ZenShopScreen";
 import ThemesScreen from "./screens/ThemesScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import BikeQuestScreen from "./screens/BikeQuestScreen";
@@ -48,6 +51,9 @@ import LevelUpModal from "./components/LevelUpModal";
 import { getYogaClass } from "./data";
 import { playUiSfx, preloadUiSfx, type UiSfxName } from "./uiSfx";
 import { getLevelProgress } from "./xp";
+import XpCollectionAnimation, { XP_COLLECTION_DURATION } from "./components/XpCollectionAnimation";
+import { setRunningSpeechVoice } from "./runningSpeech";
+import { initialiseDesktopSync, isSyncApplyingRemote, scheduleDesktopExport } from "./syncBridge";
 
 const titleFor = (route: Route) => {
   switch (route.name) {
@@ -68,6 +74,7 @@ const titleFor = (route: Route) => {
     case "guide": return "Live Zen Guide";
     case "soundscapes": return "Soundscapes";
     case "rewards": return "Badges & Quests";
+    case "shop": return "Zen Shop";
     case "themes": return "Watercolour Themes";
     case "settings": return "Settings";
   }
@@ -87,17 +94,31 @@ export default function App() {
   const previousXpRef = useRef(data.stats.xp);
   const animationFrameRef = useRef<number | null>(null);
   const [displayedXp, setDisplayedXp] = useState(data.stats.xp);
+  const observedXpRef = useRef(data.stats.xp);
+  const xpCollectionRef = useRef<{ id: number; amount: number } | null>(null);
+  const xpCollectionQueueRef = useRef<number[]>([]);
+  const xpCollectionIdRef = useRef(0);
+  const [xpCollection, setXpCollection] = useState<{ id: number; amount: number } | null>(null);
+  const [isYogaImmersive, setIsYogaImmersive] = useState(false);
   const levelProgress = getLevelProgress(data.stats.xp, data.stats.level);
   const isStatusRoute = route.name === "progress";
-  const showBackButton = [
+  const isYogaRoute = ["yoga", "yoga-pose", "yoga-class", "yoga-builder"].includes(route.name);
+  const showBackButton = !isYogaImmersive && [
     "timer", "yoga-pose", "yoga-class", "yoga-builder", "bike-quest", "running",
-    "mystery-challenge", "journal", "guide", "soundscapes", "rewards", "themes", "settings"
+    "mystery-challenge", "journal", "guide", "soundscapes", "rewards", "shop", "themes", "settings"
   ].includes(route.name);
+
+  useEffect(() => {
+    if (route.name !== "yoga-class") setIsYogaImmersive(false);
+  }, [route.name]);
 
   useEffect(() => {
     dataRef.current = data;
     saveData(data);
+    if (!isSyncApplyingRemote()) scheduleDesktopExport(data);
   }, [data]);
+
+  useEffect(() => initialiseDesktopSync((nextData) => setData(nextData)), []);
 
   useEffect(() => {
     const applyRunningBonuses = () => {
@@ -156,6 +177,10 @@ export default function App() {
   }, []);
 
   useEffect(() => preloadUiSfx(), []);
+
+  useEffect(() => {
+    setRunningSpeechVoice(data.preferences.runningSpeechVoiceId);
+  }, [data.preferences.runningSpeechVoiceId]);
 
   const handleUiClick = useCallback(
     (event: ReactMouseEvent<HTMLDivElement>) => {
@@ -247,7 +272,7 @@ export default function App() {
     }
 
     let startedAt: number | null = null;
-    const duration = 1900;
+    const duration = XP_COLLECTION_DURATION;
     const animate = (timestamp: number) => {
       startedAt ??= timestamp;
       const progress = Math.min(1, (timestamp - startedAt) / duration);
@@ -267,24 +292,54 @@ export default function App() {
     };
   }, [data.preferences.reducedMotion, data.stats.xp]);
 
+  const playNextXpCollection = useCallback(() => {
+    const amount = xpCollectionQueueRef.current.shift();
+    if (!amount) {
+      xpCollectionRef.current = null;
+      setXpCollection(null);
+      return;
+    }
+    const next = { id: ++xpCollectionIdRef.current, amount };
+    xpCollectionRef.current = next;
+    setXpCollection(next);
+  }, []);
+
+  useEffect(() => {
+    const gainedXp = data.stats.xp - observedXpRef.current;
+    observedXpRef.current = data.stats.xp;
+    if (gainedXp <= 0) return;
+
+    xpCollectionQueueRef.current.push(gainedXp);
+    if (!xpCollectionRef.current) playNextXpCollection();
+  }, [data.stats.xp, playNextXpCollection]);
+
+  const handleXpCollectionComplete = useCallback(() => {
+    xpCollectionRef.current = null;
+    playNextXpCollection();
+  }, [playNextXpCollection]);
+
   const screen = useMemo(() => {
     switch (route.name) {
-      case "home": return <HomeScreen data={data} setData={setData} navigate={navigate} />;
+      case "home": return <HomeScreen navigate={navigate} />;
       case "library": return <ToolkitScreen initialTab={route.tab} data={data} setData={setData} navigate={navigate} />;
       case "toolkit": return <ToolkitHubScreen navigate={navigate} />;
       case "roulette": return <RouletteScreen key={route.spinKey ?? "roulette"} autoSpin={route.autoSpin} uiSoundsEnabled={data.preferences.uiSoundsEnabled} setData={setData} navigate={navigate} />;
-      case "yoga": return <YogaScreen data={data} navigate={navigate} />;
+      case "yoga": return <YogaScreen data={data} navigate={navigate} initialMode={route.mode} />;
       case "timer": return <TimerScreen key={route.meditationId} meditationId={route.meditationId} data={data} setData={setData} navigate={navigate} mysteryCategory={route.mysteryCategory} mysteryRunId={route.mysteryRunId} />;
       case "yoga-pose": return <YogaPoseScreen movementId={route.movementId} navigate={navigate} />;
       case "yoga-class": {
         const yogaNavigate: Dispatch<SetStateAction<Route>> = (nextRoute) => {
-          if (!route.returnToBikeQuest) {
+          if (!route.returnToBikeQuest && !route.returnToRunningPreparation) {
             navigate(nextRoute);
             return;
           }
           const resolved = typeof nextRoute === "function" ? nextRoute(route) : nextRoute;
           if (resolved.name === "yoga") {
-            navigate({ name: "bike-quest", resume: route.returnToBikeQuest });
+            navigate(
+              route.returnToBikeQuest
+                ? { name: "bike-quest", resume: route.returnToBikeQuest }
+                : resolved
+            );
             return;
           }
           navigate(resolved);
@@ -297,18 +352,22 @@ export default function App() {
             setData={setData}
             navigate={yogaNavigate}
             returnToBikeQuest={route.returnToBikeQuest}
+            returnToRunningPreparation={route.returnToRunningPreparation}
+            autoStart={route.autoStart}
+            onImmersiveStateChange={setIsYogaImmersive}
           />
         );
       }
       case "yoga-builder": return <YogaRoutineBuilderScreen editClassId={route.editClassId} data={data} setData={setData} navigate={navigate} />;
       case "bike-quest": return <BikeQuestScreen data={data} setData={setData} navigate={navigate} resume={route.resume} />;
-      case "running": return <RunningModeScreen data={data} setData={setData} />;
+      case "running": return <RunningModeScreen data={data} setData={setData} navigate={navigate} startMode={route.startMode} />;
       case "mystery-challenge": return <MysteryChallengeScreen data={data} setData={setData} navigate={navigate} />;
       case "journal": return <JournalScreen data={data} setData={setData} draftMeditation={route.draftMeditation} mysteryRunId={route.mysteryRunId} />;
-      case "progress": return <ProgressScreen data={data} />;
+      case "progress": return <ProgressScreen data={data} setData={setData} />;
       case "guide": return <GuideScreen navigate={navigate} />;
       case "soundscapes": return <SoundscapesScreen data={data} setData={setData} />;
       case "rewards": return <RewardsScreen data={data} navigate={navigate} />;
+      case "shop": return <ZenShopScreen data={data} setData={setData} navigate={navigate} />;
       case "themes": return <ThemesScreen data={data} setData={setData} />;
       case "settings": return <SettingsScreen data={data} setData={setData} />;
     }
@@ -317,9 +376,7 @@ export default function App() {
   const nav = [
     { route: { name: "home" } as Route, label: "Home", icon: Home },
     { route: { name: "library" } as Route, label: "Library", icon: Library },
-    isStatusRoute
-      ? { route: { name: "progress" } as Route, label: "Status", icon: CircleDot }
-      : { route: { name: "roulette" } as Route, label: "Roulette", icon: null },
+    { route: { name: "roulette" } as Route, label: "Roulette", icon: null },
     { route: { name: "yoga" } as Route, label: "Yoga", icon: PersonStanding },
     { route: { name: "toolkit" } as Route, label: "Toolkit", icon: Grid2X2 }
   ];
@@ -328,7 +385,7 @@ export default function App() {
     ? "library"
     : route.name === "yoga-pose" || route.name === "yoga-class" || route.name === "yoga-builder"
       ? "yoga"
-      : ["bike-quest", "running", "mystery-challenge", "journal", "guide", "soundscapes", "rewards", "themes", "settings"].includes(route.name)
+      : ["bike-quest", "running", "mystery-challenge", "journal", "guide", "soundscapes", "rewards", "shop", "themes", "settings"].includes(route.name)
         ? "toolkit"
         : route.name;
 
@@ -336,49 +393,70 @@ export default function App() {
     setData(prev => ({ ...prev, stats: { ...prev.stats, lastSeenLevel: newLevel } }));
   }, []);
 
+  const experienceHud = (
+    <div className="hud persistent-experience-hud">
+      <button
+        type="button"
+        className="hud-level"
+        onClick={() => navigate({ name: "progress" })}
+        aria-label={`Level ${levelProgress.level}. ${levelProgress.isMaxLevel ? "Maximum level" : `${levelProgress.xpToNext} XP to next level`}. Open Progress`}
+      >
+        <span className="hud-level-label">Level {levelProgress.level}</span>
+        <span className="hud-level-track" aria-hidden="true">
+          <span style={{ width: `${levelProgress.progressPercent}%` }} />
+        </span>
+      </button>
+      <button
+        type="button"
+        className="hud-xp"
+        data-xp-target
+        onClick={() => navigate({ name: "progress" })}
+        aria-label={`${displayedXp} XP. Open Progress`}
+      >
+        <b className="xp-glyph">XP</b> {displayedXp}
+      </button>
+    </div>
+  );
+
   return (
-    <div className={`app-shell ${data.preferences.reducedMotion ? "reduce-motion" : ""} ${isStatusRoute ? "status-route" : ""} ${route.name === "home" ? "home-route" : ""}`} data-theme={data.preferences.selectedTheme} onClickCapture={handleUiClick} onChangeCapture={handleUiChange}>
+    <div className={`app-shell ${data.preferences.reducedMotion ? "reduce-motion" : ""} ${isStatusRoute ? "status-route" : ""} ${route.name === "home" ? "home-route" : ""} ${isYogaRoute ? "yoga-route" : ""} ${isYogaImmersive ? "yoga-immersive" : ""}`} data-theme={data.preferences.selectedTheme} onClickCapture={handleUiClick} onChangeCapture={handleUiChange}>
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
-      <header className={`topbar ${isStatusRoute ? "topbar-status" : ""}`}>
-        {isStatusRoute ? (
-          <>
-            <button className="status-topbar-brand" onClick={() => navigate({ name: "home" })} aria-label="Go to Home">Zen Chad</button>
-            <span className="status-topbar-title">Status</span>
-          </>
-        ) : (
-          <>
-            <button className="brand" onClick={() => navigate({ name: "home" })} aria-label="Go to Home">
-              <span className="brand-mark"><img src="assets/branding/eye-of-horus.png" alt="" /></span>
-              <span><strong className={`brand-wordmark ${logoVariant}`}>Zen Chad</strong><small>{titleFor(route)}</small></span>
-            </button>
-            <div className="topbar-actions">
-          <div className="hud">
-            <button
-              type="button"
-              className="hud-level"
-              onClick={() => navigate({ name: "progress" })}
-              aria-label={`Level ${levelProgress.level}. ${levelProgress.isMaxLevel ? "Maximum level" : `${levelProgress.xpToNext} XP to next level`}. Open Progress`}
-            >
-              <span className="hud-level-label">Level {levelProgress.level}</span>
-              <span className="hud-level-track" aria-hidden="true">
-                <span style={{ width: `${levelProgress.progressPercent}%` }} />
-              </span>
-            </button>
-            <button
-              type="button"
-              className="hud-xp"
-              data-xp-target
-              onClick={() => navigate({ name: "progress" })}
-              aria-label={`${displayedXp} XP. Open Progress`}
-            >
-              <b className="xp-glyph">XP</b> {displayedXp}
-            </button>
-          </div>
-            </div>
-          </>
-        )}
+      <header className="topbar">
+        <div className="topbar-leading">
+          <button
+            type="button"
+            className="brand-mark brand-settings-button"
+            onClick={() => navigate({ name: "home" })}
+            aria-label="Go to Home"
+            title="Home"
+          >
+            <img src="assets/branding/eye-of-horus.png" alt="" />
+          </button>
+          <button className="brand" onClick={() => navigate({ name: "home" })} aria-label="Go to Home">
+            <span><strong className={`brand-wordmark ${logoVariant}`}>Zen Chad</strong><small>{titleFor(route)}</small></span>
+          </button>
+        </div>
+        <button type="button" className="persistent-settings-trigger" onClick={() => navigate({ name: "settings" })} aria-label="Open Settings" title="Settings"><Settings aria-hidden="true" /></button>
+        <div className="topbar-actions">{experienceHud}</div>
       </header>
+
+      {data.pendingStreakFreezeNotice ? (
+        <aside className="streak-freeze-notice" role="status" aria-live="polite">
+          <Snowflake aria-hidden="true" />
+          <span>
+            <strong>Streak Freeze used automatically</strong>
+            <small>Your streak stayed intact. {data.pendingStreakFreezeNotice.remaining} remaining.</small>
+          </span>
+          <button
+            type="button"
+            aria-label="Dismiss Streak Freeze message"
+            onClick={() => setData((current) => ({ ...current, pendingStreakFreezeNotice: null }))}
+          >
+            <X aria-hidden="true" />
+          </button>
+        </aside>
+      ) : null}
 
       <main className="main-content">
         {showBackButton ? <button className="back-link" onClick={goBack}>← Back</button> : null}
@@ -397,6 +475,16 @@ export default function App() {
         })}
       </nav>
       <LevelUpModal data={data} onDismiss={handleLevelUpDismiss} />
+      {xpCollection ? (
+        <XpCollectionAnimation
+          key={xpCollection.id}
+          amount={xpCollection.amount}
+          active
+          reducedMotion={data.preferences.reducedMotion}
+          soundsEnabled={data.preferences.uiSoundsEnabled}
+          onComplete={handleXpCollectionComplete}
+        />
+      ) : null}
     </div>
   );
 }

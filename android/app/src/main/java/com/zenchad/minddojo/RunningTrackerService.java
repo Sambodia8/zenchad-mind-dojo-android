@@ -290,6 +290,7 @@ public class RunningTrackerService extends Service implements LocationListener {
             point.put("lat", location.getLatitude());
             point.put("lng", location.getLongitude());
             point.put("accuracy", location.hasAccuracy() ? location.getAccuracy() : -1d);
+            if (location.hasBearing()) point.put("heading", (double) location.getBearing());
             point.put("at", at);
             point.put("distanceFromStart", distance);
         } catch (JSONException ignored) {

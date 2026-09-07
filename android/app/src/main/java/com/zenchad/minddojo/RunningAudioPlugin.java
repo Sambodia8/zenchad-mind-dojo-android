@@ -72,7 +72,7 @@ public class RunningAudioPlugin extends Plugin {
     @PluginMethod
     public void getPolicy(PluginCall call) {
         JSObject response = new JSObject();
-        response.put("storyAudioRequestsFocus", false);
+        response.put("storyAudioRequestsFocus", true);
         response.put("navigationRequestsTransientFocus", true);
         response.put("navigationFocusHeld", navigationFocusHeld);
         call.resolve(response);

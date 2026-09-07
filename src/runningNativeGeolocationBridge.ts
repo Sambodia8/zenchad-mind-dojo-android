@@ -30,7 +30,7 @@ function toPosition(point: RunPoint): GeolocationPosition {
     accuracy: point.accuracy,
     altitude: null,
     altitudeAccuracy: null,
-    heading: null,
+    heading: typeof point.heading === "number" && Number.isFinite(point.heading) ? point.heading : null,
     speed: null,
     toJSON() {
       return {
@@ -79,6 +79,11 @@ async function syncMissedNativePoints(id: number) {
   } catch {
     // The browser GPS watcher remains active even if native background tracking is unavailable.
   }
+}
+
+/** Reconcile foreground WebView state with points recorded by the Android service. */
+export async function syncRunningNativePoints() {
+  await Promise.all([...watchers.keys()].map((id) => syncMissedNativePoints(id)));
 }
 
 export function startRunningNativeGeolocationBridge() {
@@ -138,7 +143,7 @@ export function startRunningNativeGeolocationBridge() {
 
   const syncVisibleWatchers = () => {
     if (document.visibilityState !== "visible") return;
-    for (const id of watchers.keys()) void syncMissedNativePoints(id);
+    void syncRunningNativePoints();
   };
 
   document.addEventListener("visibilitychange", syncVisibleWatchers);

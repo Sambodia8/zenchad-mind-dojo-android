@@ -1,8 +1,6 @@
 import { MEDITATIONS, MEDITATION_SKILL_MAPPING } from "./data";
 import type { CosmeticSlot, ProgressionData, ZenStatId } from "./types";
-
-const dateKey = (date: Date) =>
-  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+import { localCalendarDayDistance, localDateKey as dateKey } from "./streakFreeze";
 
 export const ZEN_STAT_ORDER: ZenStatId[] = [
   "focus",
@@ -11,7 +9,8 @@ export const ZEN_STAT_ORDER: ZenStatId[] = [
   "intuition",
   "equanimity",
   "compassion",
-  "discipline"
+  "discipline",
+  "strength"
 ];
 
 export const ZEN_STAT_LABELS: Record<ZenStatId, string> = {
@@ -21,8 +20,11 @@ export const ZEN_STAT_LABELS: Record<ZenStatId, string> = {
   intuition: "Intuition",
   equanimity: "Equanimity",
   compassion: "Compassion",
-  discipline: "Discipline"
+  discipline: "Discipline",
+  strength: "Strength"
 };
+
+export const STAT_PROGRESSION_VERSION = 2 as const;
 
 export const FLOW_TUNING = {
   firstPracticeBase: 14,
@@ -35,16 +37,20 @@ export const FLOW_TUNING = {
 } as const;
 
 export const SKILL_TUNING = {
-  primaryBaseXp: 18,
-  secondaryBaseXp: 8,
-  durationBonusPerMinute: 0.35,
-  maxDurationBonus: 12,
-  firstLevelCost: 90,
-  levelCostGrowth: 35
+  earlyPrimaryCarryXp: 5,
+  primaryXp: 25,
+  secondaryXp: 10,
+  easyThroughLevel: 5,
+  earlyLevelCost: 20,
+  laterLevelCost: 60,
+  laterLevelCostGrowth: 25,
+  strengthFirstLevelCost: 60,
+  strengthLevelCostGrowth: 30,
+  maxStrengthWorkoutXp: 120
 } as const;
 
 export const DEFAULT_EQUIPPED_COSMETICS = {
-  head: "default-pink-hair",
+  hair: "default-pink-hair",
   top: "runner-top",
   wrist: "fitness-watch",
   legs: "runner-shorts",
@@ -53,7 +59,7 @@ export const DEFAULT_EQUIPPED_COSMETICS = {
 } as const;
 
 export const COSMETIC_SLOT_DEFINITIONS: Array<{ slot: CosmeticSlot; label: string; glyph: string }> = [
-  { slot: "head", label: "Head", glyph: "✦" },
+  { slot: "hair", label: "Hair", glyph: "✦" },
   { slot: "top", label: "Top", glyph: "▰" },
   { slot: "wrist", label: "Wrist", glyph: "⌚" },
   { slot: "legs", label: "Legs", glyph: "▥" },
@@ -65,6 +71,7 @@ export function createDefaultProgression(): ProgressionData {
   const skillXp = Object.fromEntries(ZEN_STAT_ORDER.map((id) => [id, 0])) as Record<ZenStatId, number>;
   const skillLevels = Object.fromEntries(ZEN_STAT_ORDER.map((id) => [id, 1])) as Record<ZenStatId, number>;
   return {
+    version: STAT_PROGRESSION_VERSION,
     flowLevel: FLOW_TUNING.startingLevel,
     flowXp: FLOW_TUNING.startingXp,
     flowTotalXp: FLOW_TUNING.startingXp,
@@ -82,29 +89,94 @@ export function flowXpForNextLevel(level: number) {
 }
 
 export function skillXpForLevel(level: number) {
-  const steps = Math.max(0, level - 1);
-  return steps * SKILL_TUNING.firstLevelCost +
-    (SKILL_TUNING.levelCostGrowth * steps * Math.max(0, steps - 1)) / 2;
+  return statXpForLevel("focus", level);
 }
 
 export function skillLevelForXp(xp: number) {
+  return statLevelForXp("focus", xp);
+}
+
+export function statXpForLevel(statId: ZenStatId, level: number) {
+  const steps = Math.max(0, Math.floor(level) - 1);
+  if (statId === "strength") {
+    return steps * SKILL_TUNING.strengthFirstLevelCost +
+      (SKILL_TUNING.strengthLevelCostGrowth * steps * Math.max(0, steps - 1)) / 2;
+  }
+
+  const earlySteps = Math.min(steps, SKILL_TUNING.easyThroughLevel - 1);
+  const laterSteps = Math.max(0, steps - earlySteps);
+  return earlySteps * SKILL_TUNING.earlyLevelCost +
+    laterSteps * SKILL_TUNING.laterLevelCost +
+    (SKILL_TUNING.laterLevelCostGrowth * laterSteps * Math.max(0, laterSteps - 1)) / 2;
+}
+
+export function statLevelForXp(statId: ZenStatId, xp: number) {
   const safeXp = Math.max(0, Math.floor(xp));
   let level = 1;
-  while (skillXpForLevel(level + 1) <= safeXp) level += 1;
+  while (statXpForLevel(statId, level + 1) <= safeXp) level += 1;
   return level;
+}
+
+export interface StatLevelProgress {
+  level: number;
+  currentXp: number;
+  nextXp: number;
+  earnedWithinLevel: number;
+  xpForNextLevel: number;
+  xpToNext: number;
+  progressPercent: number;
+}
+
+export function getStatLevelProgress(statId: ZenStatId, xp: number): StatLevelProgress {
+  const safeXp = Math.max(0, Number.isFinite(xp) ? xp : 0);
+  const level = statLevelForXp(statId, safeXp);
+  const currentXp = statXpForLevel(statId, level);
+  const nextXp = statXpForLevel(statId, level + 1);
+  const xpForNextLevel = Math.max(1, nextXp - currentXp);
+  const earnedWithinLevel = Math.max(0, safeXp - currentXp);
+  return {
+    level,
+    currentXp,
+    nextXp,
+    earnedWithinLevel,
+    xpForNextLevel,
+    xpToNext: Math.max(0, nextXp - safeXp),
+    progressPercent: Math.min(100, (earnedWithinLevel / xpForNextLevel) * 100)
+  };
+}
+
+function legacySkillXpForLevel(level: number) {
+  const steps = Math.max(0, Math.floor(level) - 1);
+  return steps * 90 + (35 * steps * Math.max(0, steps - 1)) / 2;
+}
+
+export function migrateLegacyStatXp(statId: ZenStatId, xp: number, savedLevel: number) {
+  if (statId === "strength") return 0;
+  const level = Math.max(1, Math.floor(savedLevel));
+  const safeXp = Math.max(0, Number.isFinite(xp) ? xp : 0);
+  const legacyCurrent = legacySkillXpForLevel(level);
+  const legacyNext = legacySkillXpForLevel(level + 1);
+  const fraction = Math.min(1, Math.max(0, (safeXp - legacyCurrent) / Math.max(1, legacyNext - legacyCurrent)));
+  const current = statXpForLevel(statId, level);
+  const next = statXpForLevel(statId, level + 1);
+  return current + fraction * (next - current);
 }
 
 function flowRewardForCompletion(
   progression: ProgressionData,
-  sessionDate: Date
+  sessionDate: Date,
+  preserveOneMissedDay: boolean
 ) {
   const day = dateKey(sessionDate);
   const lastDay = progression.flowLastPracticeDate;
-  const isNewDay = day !== lastDay;
-  const previousDate = new Date(sessionDate);
-  previousDate.setDate(previousDate.getDate() - 1);
+  const distance = lastDay ? localCalendarDayDistance(lastDay, day) : null;
+  const isNewDay = !lastDay || (distance !== null && distance > 0);
   const consecutiveDays = isNewDay
-    ? lastDay === dateKey(previousDate) ? progression.flowConsecutiveDays + 1 : 1
+    ? !lastDay
+      ? 1
+      : distance === 1 || (distance === 2 && preserveOneMissedDay)
+        ? progression.flowConsecutiveDays + 1
+        : 1
     : progression.flowConsecutiveDays;
   const reward = (isNewDay ? FLOW_TUNING.firstPracticeBase + FLOW_TUNING.dailyBonus : FLOW_TUNING.additionalPracticeBase) +
     Math.min(consecutiveDays, FLOW_TUNING.streakBonusDays) * FLOW_TUNING.streakBonusPerDay;
@@ -114,13 +186,14 @@ function flowRewardForCompletion(
 export function awardMeditationProgress(
   progression: ProgressionData,
   meditationId: string,
-  durationSeconds: number,
-  sessionDate = new Date()
+  _durationSeconds: number,
+  sessionDate = new Date(),
+  preserveOneMissedDay = false
 ): ProgressionData {
   const mapping = MEDITATION_SKILL_MAPPING[meditationId];
   if (!mapping) return progression;
 
-  const flowReward = flowRewardForCompletion(progression, sessionDate);
+  const flowReward = flowRewardForCompletion(progression, sessionDate, preserveOneMissedDay);
   let flowLevel = Math.max(1, progression.flowLevel);
   let flowXp = Math.max(0, progression.flowXp) + flowReward.reward;
   let flowTotalXp = Math.max(0, progression.flowTotalXp) + flowReward.reward;
@@ -129,15 +202,15 @@ export function awardMeditationProgress(
     flowLevel += 1;
   }
 
-  const durationBonus = Math.min(
-    SKILL_TUNING.maxDurationBonus,
-    Math.max(0, durationSeconds / 60) * SKILL_TUNING.durationBonusPerMinute
-  );
   const skillXp = { ...progression.skillXp };
-  skillXp[mapping.primary] = (skillXp[mapping.primary] ?? 0) + SKILL_TUNING.primaryBaseXp + durationBonus;
-  skillXp[mapping.secondary] = (skillXp[mapping.secondary] ?? 0) + SKILL_TUNING.secondaryBaseXp + durationBonus / 2;
+  const primaryXp = skillXp[mapping.primary] ?? 0;
+  const primaryLevel = statLevelForXp(mapping.primary, primaryXp);
+  skillXp[mapping.primary] = primaryLevel < SKILL_TUNING.easyThroughLevel
+    ? statXpForLevel(mapping.primary, primaryLevel + 1) + SKILL_TUNING.earlyPrimaryCarryXp
+    : primaryXp + SKILL_TUNING.primaryXp;
+  skillXp[mapping.secondary] = (skillXp[mapping.secondary] ?? 0) + SKILL_TUNING.secondaryXp;
   const skillLevels = { ...progression.skillLevels };
-  for (const statId of ZEN_STAT_ORDER) skillLevels[statId] = skillLevelForXp(skillXp[statId] ?? 0);
+  for (const statId of ZEN_STAT_ORDER) skillLevels[statId] = statLevelForXp(statId, skillXp[statId] ?? 0);
 
   return {
     ...progression,
@@ -148,6 +221,25 @@ export function awardMeditationProgress(
     flowConsecutiveDays: flowReward.consecutiveDays,
     skillXp,
     skillLevels
+  };
+}
+
+export function strengthXpForWorkout(durationSeconds: number) {
+  const completedMinutes = Math.max(1, Math.floor(Math.max(0, durationSeconds) / 60));
+  return Math.min(SKILL_TUNING.maxStrengthWorkoutXp, completedMinutes);
+}
+
+export function awardStrengthProgress(progression: ProgressionData, durationSeconds: number): ProgressionData {
+  const skillXp = { ...progression.skillXp };
+  skillXp.strength = (skillXp.strength ?? 0) + strengthXpForWorkout(durationSeconds);
+  return {
+    ...progression,
+    version: STAT_PROGRESSION_VERSION,
+    skillXp,
+    skillLevels: {
+      ...progression.skillLevels,
+      strength: statLevelForXp("strength", skillXp.strength)
+    }
   };
 }
 

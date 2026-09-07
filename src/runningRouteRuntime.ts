@@ -1,5 +1,5 @@
 import { loadRunSession, loadRunningProfile, type RunSession } from "./running";
-import { navigationStateForLocation, cueForNavigationState, formatNavigationDistance, shouldRerouteNavigation, type NavigationCueLevel } from "./runningNavigation";
+import { navigationStateForLocation, cueForNavigationState, formatNavigationDistance, formatNavigationTime, navigationArrowForManeuver, shouldRerouteNavigation, type NavigationCueLevel } from "./runningNavigation";
 import { buildValhallaRunningRoute } from "./runningValhalla";
 import { loadPlannedRunningRoute, loadRunningRouteBuildState, savePlannedRunningRoute, saveRunningRouteBuildState, clearRunningRouteState, type PlannedRunningRoute } from "./runningRouteStore";
 import { speakRunningNavigation } from "./runningSpeech";
@@ -48,6 +48,17 @@ function setBuildState(sessionId: string, status: "idle" | "locating" | "buildin
 
 function routeIdentity(route: PlannedRunningRoute) {
   return `${route.sessionId}:${route.createdAt}:${route.rerouteCount}`;
+}
+
+function namespaceRouteManeuvers<T extends PlannedRunningRoute>(route: T, revision: number): T {
+  const prefix = `r${revision}:`;
+  return {
+    ...route,
+    maneuvers: route.maneuvers.map((maneuver) => ({
+      ...maneuver,
+      id: maneuver.id.startsWith(prefix) ? maneuver.id : `${prefix}${maneuver.id}`
+    }))
+  };
 }
 
 function syncNativeRoute(route: PlannedRunningRoute) {
@@ -111,12 +122,13 @@ async function buildInitialRoute(session: RunSession) {
       { mode: session.mode, plannedMinutes: session.plannedMinutes, start },
       { history: loadRunningProfile().history, home: start }
     );
-    const saved: PlannedRunningRoute = {
+    const saved = namespaceRouteManeuvers<PlannedRunningRoute>({
       ...route,
       sessionId: session.id,
-      storyMission: session.mode === "story" ? chooseStoryMission(session.id) : undefined,
+      storyMission: session.mode === "story" ? chooseStoryMission(session.id, session.storyMissionId ?? undefined) : undefined,
+      storyHeardChapterIds: session.mode === "story" ? session.storyHeardChapterIds : undefined,
       semanticsStatus: "pending"
-    };
+    }, 0);
     savePlannedRunningRoute(saved);
     syncNativeRoute(saved);
     enrichRouteSemantics(saved);
@@ -145,14 +157,16 @@ async function reroute(session: RunSession, route: PlannedRunningRoute) {
       { mode: session.mode, plannedMinutes: remainingMinutes, start: { lat: current.lat, lng: current.lng } },
       { history: loadRunningProfile().history, home: route.start, candidateCount: 3 }
     );
-    const saved: PlannedRunningRoute = {
+    const revision = route.rerouteCount + 1;
+    const saved = namespaceRouteManeuvers<PlannedRunningRoute>({
       ...replacement,
       sessionId: session.id,
       finish: route.start,
       storyMission: route.storyMission,
-      rerouteCount: route.rerouteCount + 1,
+      storyHeardChapterIds: route.storyHeardChapterIds,
+      rerouteCount: revision,
       semanticsStatus: "pending"
-    };
+    }, revision);
     savePlannedRunningRoute(saved);
     syncNativeRoute(saved);
     enrichRouteSemantics(saved);
@@ -206,6 +220,7 @@ function ensureNavigationDock() {
     <span class="running-nav-arrow">↑</span>
     <div><span class="eyebrow">Navigation</span><strong data-running-nav-instruction>Route guidance loading…</strong><small data-running-nav-detail></small></div>
     <b data-running-nav-distance></b>
+    <div class="running-nav-progress" aria-label="Route progress"><span data-running-nav-progress-bar></span><small data-running-nav-progress-text></small></div>
   `;
   endButton.parentElement.insertBefore(dock, endButton);
   return dock;
@@ -220,22 +235,32 @@ function updateNavigationDock(route: PlannedRunningRoute, session: RunSession) {
   const instruction = dock.querySelector<HTMLElement>("[data-running-nav-instruction]");
   const detail = dock.querySelector<HTMLElement>("[data-running-nav-detail]");
   const distanceNode = dock.querySelector<HTMLElement>("[data-running-nav-distance]");
+  const arrow = dock.querySelector<HTMLElement>(".running-nav-arrow");
+  const progressBar = dock.querySelector<HTMLElement>("[data-running-nav-progress-bar]");
+  const progressText = dock.querySelector<HTMLElement>("[data-running-nav-progress-text]");
   if (!latest) {
     if (instruction) instruction.textContent = "Waiting for a GPS fix…";
     if (detail) detail.textContent = "Your route is ready.";
     if (distanceNode) distanceNode.textContent = "";
+    if (progressBar) progressBar.style.setProperty("--route-progress", "0%");
+    if (progressText) progressText.textContent = "Route progress will appear when you start moving.";
     return;
   }
 
   const state = navigationStateForLocation(route, latest, nearestShapeIndex);
   nearestShapeIndex = state.nearestShapeIndex;
   if (instruction) instruction.textContent = state.nextManeuver?.instruction || "Stay on the route";
+  if (arrow) arrow.textContent = navigationArrowForManeuver(state.nextManeuver);
   if (detail) {
     detail.textContent = state.offRouteMeters > 80
       ? session.mode === "story" ? "Change of plan · recalculating if you stay off route" : "Recalculating if needed"
-      : `${(state.routeRemainingMeters / 1000).toFixed(1)} km remaining · route ${route.rerouteCount ? `recalculated ${route.rerouteCount}×` : "locked"}`;
+      : state.nextManeuver
+        ? `${formatNavigationTime(state.estimatedSecondsToManeuver)} to next turn · ${(state.routeRemainingMeters / 1000).toFixed(1)} km remaining`
+        : `${(state.routeRemainingMeters / 1000).toFixed(1)} km remaining · route ${route.rerouteCount ? `recalculated ${route.rerouteCount}×` : "locked"}`;
   }
   if (distanceNode) distanceNode.textContent = formatNavigationDistance(state.distanceToManeuverMeters);
+  if (progressBar) progressBar.style.setProperty("--route-progress", `${Math.round(state.routeProgressFraction * 100)}%`);
+  if (progressText) progressText.textContent = `${Math.round(state.routeProgressFraction * 100)}% route complete · ${(state.routeRemainingMeters / 1000).toFixed(1)} km to finish`;
 
   if (state.offRouteMeters > Math.max(55, latest.accuracy * 1.5)) {
     if (!offRouteSince) offRouteSince = Date.now();
@@ -260,6 +285,13 @@ function removeNavigationDock() {
 function tick() {
   const session = loadRunSession();
   if (!session) {
+    clearRunningRouteState();
+    clearNativeRouteOnce();
+    removeNavigationDock();
+    return;
+  }
+
+  if (session.mode === "just") {
     clearRunningRouteState();
     clearNativeRouteOnce();
     removeNavigationDock();

@@ -7,7 +7,9 @@ export interface RunningNavigationState {
   nearestShapeIndex: number;
   nextManeuver: RunningNavigationManeuver | null;
   distanceToManeuverMeters: number | null;
+  estimatedSecondsToManeuver: number | null;
   routeRemainingMeters: number;
+  routeProgressFraction: number;
 }
 
 export type NavigationCueLevel = "preview" | "now";
@@ -44,7 +46,9 @@ export function navigationStateForLocation(
       nearestShapeIndex: 0,
       nextManeuver: null,
       distanceToManeuverMeters: null,
-      routeRemainingMeters: 0
+      estimatedSecondsToManeuver: null,
+      routeRemainingMeters: 0,
+      routeProgressFraction: 0
     };
   }
 
@@ -75,15 +79,57 @@ export function navigationStateForLocation(
   const progress = route.cumulativeMeters[nearestIndex] ?? 0;
   const nextManeuver = route.maneuvers.find((maneuver) => maneuver.routeDistanceMeters > progress + 8) ?? null;
   const routeLength = route.cumulativeMeters[route.cumulativeMeters.length - 1] ?? route.distanceMeters;
+  const distanceToManeuverMeters = nextManeuver ? Math.max(0, nextManeuver.routeDistanceMeters - progress) : null;
+  const secondsPerMeter = routeLength > 0 ? route.estimatedMinutes * 60 / routeLength : 0;
 
   return {
     routeProgressMeters: progress,
     offRouteMeters: nearestDistance,
     nearestShapeIndex: nearestIndex,
     nextManeuver,
-    distanceToManeuverMeters: nextManeuver ? Math.max(0, nextManeuver.routeDistanceMeters - progress) : null,
-    routeRemainingMeters: Math.max(0, routeLength - progress)
+    distanceToManeuverMeters,
+    estimatedSecondsToManeuver: distanceToManeuverMeters === null || secondsPerMeter <= 0
+      ? null
+      : Math.max(1, Math.round(distanceToManeuverMeters * secondsPerMeter)),
+    routeRemainingMeters: Math.max(0, routeLength - progress),
+    routeProgressFraction: routeLength > 0 ? Math.min(1, Math.max(0, progress / routeLength)) : 0
   };
+}
+
+function usableRoadName(value: string) {
+  const clean = value.replace(/\s+/g, " ").trim();
+  return clean.length >= 2 && !/^(continue|destination|the route|unnamed road|road)$/i.test(clean) ? clean : null;
+}
+
+function maneuverRoadName(maneuver: RunningNavigationManeuver | undefined) {
+  const street = maneuver?.streetNames.map(usableRoadName).find((name): name is string => Boolean(name));
+  if (street) return street;
+  const match = maneuver?.instruction.match(/\b(?:onto|on|toward|towards)\s+(.+?)(?:[.,;]|$)/i);
+  return match ? usableRoadName(match[1]) : null;
+}
+
+/** Match a GPS fix to the provider road represented by the active route at that progress. */
+export function roadNameForLocation(route: PlannedRunningRoute, location: RunningRoutePoint) {
+  const state = navigationStateForLocation(route, location);
+  const current = [...route.maneuvers]
+    .reverse()
+    .find((maneuver) => maneuver.routeDistanceMeters <= state.routeProgressMeters + 20);
+  return maneuverRoadName(current) ?? maneuverRoadName(state.nextManeuver ?? undefined) ?? undefined;
+}
+
+// The route provider's stored maneuver is the source of truth. In particular, do
+// not infer a left/right turn from geometry: short GPS segments and loops make that
+// surprisingly easy to reverse.
+export function navigationArrowForManeuver(maneuver: RunningNavigationManeuver | null) {
+  const instruction = maneuver?.instruction.toLowerCase() ?? "";
+  if (/\b(?:u-turn|uturn)\b/.test(instruction)) return "↶";
+  if (/\b(?:roundabout|rotary)\b/.test(instruction)) return "↻";
+  if (/\bsharp left\b/.test(instruction)) return "↙";
+  if (/\bsharp right\b/.test(instruction)) return "↘";
+  if (/\b(?:turn|bear|keep|slight) left\b/.test(instruction)) return "↰";
+  if (/\b(?:turn|bear|keep|slight) right\b/.test(instruction)) return "↱";
+  if (/\b(?:arrive|destination)\b/.test(instruction)) return "◆";
+  return "↑";
 }
 
 export function cueForNavigationState(
@@ -99,7 +145,7 @@ export function cueForNavigationState(
     return {
       maneuverId: maneuver.id,
       level: "now",
-      speech: maneuver.verbalAlert || maneuver.instruction
+      speech: `In ${formatNavigationDistance(distance)}, ${formatNavigationTime(state.estimatedSecondsToManeuver)} away, ${maneuver.verbalAlert || maneuver.instruction}`
     };
   }
 
@@ -107,7 +153,7 @@ export function cueForNavigationState(
     return {
       maneuverId: maneuver.id,
       level: "preview",
-      speech: maneuver.verbalInstruction || `In ${Math.round(distance / 10) * 10} metres, ${maneuver.instruction}`
+      speech: `In ${formatNavigationDistance(distance)}, ${formatNavigationTime(state.estimatedSecondsToManeuver)} away, ${maneuver.verbalInstruction || maneuver.instruction}`
     };
   }
 
@@ -118,6 +164,13 @@ export function formatNavigationDistance(distance: number | null) {
   if (distance === null) return "";
   if (distance < 1000) return `${Math.max(10, Math.round(distance / 10) * 10)} m`;
   return `${(distance / 1000).toFixed(1)} km`;
+}
+
+export function formatNavigationTime(seconds: number | null) {
+  if (seconds === null || !Number.isFinite(seconds)) return "a moment";
+  if (seconds < 45) return "under a minute";
+  const minutes = Math.max(1, Math.round(seconds / 60));
+  return `${minutes} min${minutes === 1 ? "" : "s"}`;
 }
 
 export function shouldRerouteNavigation(

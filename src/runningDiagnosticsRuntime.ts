@@ -4,6 +4,7 @@ const PANEL_ID = "zenchad-running-diagnostics";
 let started = false;
 let refreshing = false;
 let latest: RunningDiagnosticsSnapshot | null = null;
+let lastRenderedMarkup: string | null = null;
 
 function value(value: unknown) {
   if (value === null || value === undefined) return "—";
@@ -15,6 +16,7 @@ function render() {
   const progressGrid = document.querySelector<HTMLElement>(".running-progress-grid");
   if (!progressGrid?.parentElement) {
     document.getElementById(PANEL_ID)?.remove();
+    lastRenderedMarkup = null;
     return;
   }
 
@@ -27,14 +29,17 @@ function render() {
   }
 
   if (!latest) {
-    panel.innerHTML = `<div class="section-heading"><div><span class="eyebrow">Field test</span><h2>Running diagnostics</h2></div></div><p>Checking the run systems…</p>`;
+    const markup = `<div class="section-heading"><div><span class="eyebrow">Field test</span><h2>Running diagnostics</h2></div></div><p>Checking the run systems…</p>`;
+    if (lastRenderedMarkup === markup) return;
+    panel.innerHTML = markup;
+    lastRenderedMarkup = markup;
     return;
   }
 
   const routeOk = latest.route.ready ? "READY" : latest.route.status.toUpperCase();
   const trackerOk = latest.nativeTracker.available ? (latest.nativeTracker.running ? "RUNNING" : "IDLE") : "WEB ONLY";
   const storyOk = latest.story.native ? latest.story.phase.toUpperCase() : "BROWSER";
-  panel.innerHTML = `
+  const markup = `
     <div class="section-heading"><div><span class="eyebrow">Field test</span><h2>Running diagnostics</h2></div><strong>PRIVACY SAFE</strong></div>
     <p>This panel intentionally omits coordinates and route geometry. Copy it after a test run if GPS, navigation, Story audio or watch stats behave strangely.</p>
     <div class="running-diagnostics-grid">
@@ -51,6 +56,9 @@ function render() {
     </div>
     <small data-running-diagnostics-message>${latest.route.message}</small>
   `;
+  if (lastRenderedMarkup === markup) return;
+  panel.innerHTML = markup;
+  lastRenderedMarkup = markup;
 
   const refreshButton = panel.querySelector<HTMLButtonElement>("[data-running-diagnostics-refresh]");
   if (refreshButton) refreshButton.onclick = () => { void refresh(); };
