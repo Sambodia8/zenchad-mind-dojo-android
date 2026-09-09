@@ -35,8 +35,8 @@ CLASS_INTROS = {
         "stretch comfortable and let your breathing stay easy."
     ),
     "before-run": (
-        "Welcome to Before Running with Mark. Start gently and let each movement warm your legs "
-        "without forcing the range."
+        "Welcome to Before Running with Mark. Start at the ankles, move through the whole body, "
+        "and keep every movement controlled and comfortable."
     ),
     "before-cycling": (
         "Welcome to Before Cycling with Mark. We will prepare the hips, thighs and knees before an "

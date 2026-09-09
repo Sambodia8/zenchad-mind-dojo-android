@@ -814,18 +814,21 @@ const warmupMovement = (
   muscleGroups: string[],
   sensationCue: string,
   bodyAreas: BodyArea[],
-  kind: Movement["kind"] = "dynamic-warmup"
+  kind: Movement["kind"] = "dynamic-warmup",
+  options: Partial<Pick<Movement, "sides" | "image" | "visualFrames">> = {}
 ): Movement => ({
   id,
   name,
   seconds,
   cue,
-  image: displayStretchAsset(`assets/stretches/generated/${id}.png`),
+  image: options.image ?? displayStretchAsset(`assets/stretches/generated/${id}.png`),
   kind,
   sensationKind: "working",
   muscleGroups,
   sensationCue,
-  bodyAreas
+  bodyAreas,
+  ...(options.sides ? { sides: true } : {}),
+  ...(options.visualFrames ? { visualFrames: options.visualFrames } : {})
 });
 
 export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
@@ -865,6 +868,256 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
     "The thighs and buttocks should feel active without knee pain.",
     [area(42, 67, 11, 18, -5), area(60, 67, 11, 18, 5)]
   ),
+  warmupMovement(
+    "hip-circles",
+    "Hip Circles",
+    30,
+    "Stand tall and make smooth circles through the hips, gradually increasing the range without forcing it.",
+    ["Hip flexors", "Glutes", "Adductors"],
+    "A loose, moving sensation around the hips and pelvis without pinching.",
+    [area(50, 59, 20, 11)],
+    "dynamic-warmup",
+    { image: "assets/stretches/generated/hip-circles.png" }
+  ),
+  warmupMovement(
+    "front-back-leg-swings",
+    "Front-to-Back Leg Swings",
+    15,
+    "Use a wall or sturdy support and swing the working leg forward and back from the hip while keeping the ribs stacked over the pelvis.",
+    ["Hip flexors", "Hamstrings", "Glutes", "Core"],
+    "A controlled moving sensation through the front and back of the hip and thigh, without pulling in the lower back.",
+    [area(45, 65, 12, 22, -10)],
+    "dynamic-warmup",
+    {
+      sides: true,
+      image: "assets/stretches/generated/pre-run-v2/front-back-leg-swings-01.png",
+      visualFrames: [
+        "assets/stretches/generated/pre-run-v2/front-back-leg-swings-01.png",
+        "assets/stretches/generated/pre-run-v2/front-back-leg-swings-02.png",
+        "assets/stretches/generated/pre-run-v2/front-back-leg-swings-03.png",
+        "assets/stretches/generated/pre-run-v2/front-back-leg-swings-02.png"
+      ]
+    }
+  ),
+  warmupMovement(
+    "lateral-leg-swings",
+    "Side-to-Side Leg Swings",
+    15,
+    "Face a wall or sturdy support and swing the working leg gently across and away from the body while keeping the trunk steady.",
+    ["Adductors", "Abductors", "Glutes", "Core"],
+    "A mobile, warming sensation through the inner and outer hip without twisting the standing knee.",
+    [area(49, 67, 22, 10)],
+    "dynamic-warmup",
+    {
+      sides: true,
+      image: "assets/stretches/generated/pre-run-v2/lateral-leg-swings-01.png",
+      visualFrames: [
+        "assets/stretches/generated/pre-run-v2/lateral-leg-swings-01.png",
+        "assets/stretches/generated/pre-run-v2/lateral-leg-swings-02.png",
+        "assets/stretches/generated/pre-run-v2/lateral-leg-swings-03.png",
+        "assets/stretches/generated/pre-run-v2/lateral-leg-swings-02.png"
+      ]
+    }
+  ),
+  warmupMovement(
+    "ankle-circles",
+    "Ankle Rotations",
+    15,
+    "Use support if useful, keep the knee quiet, and move the foot through gentle inward and outward rolls before circling the ankle in both directions.",
+    ["Ankles", "Calves", "Foot stabilisers"],
+    "Easy movement around the ankle and foot without forcing the joint or losing balance.",
+    [area(42, 82, 9, 7)],
+    "dynamic-warmup",
+    {
+      sides: true,
+      image: "assets/stretches/generated/pre-run-v2/ankle-circles-01.png",
+      visualFrames: [
+        "assets/stretches/generated/pre-run-v2/ankle-circles-01.png",
+        "assets/stretches/generated/pre-run-v2/ankle-circles-02.png",
+        "assets/stretches/generated/pre-run-v2/ankle-circles-03.png",
+        "assets/stretches/generated/pre-run-v2/ankle-circles-04.png",
+        "assets/stretches/generated/pre-run-v2/ankle-circles-01.png",
+        "assets/stretches/generated/pre-run-v2/ankle-circles-02.png",
+        "assets/stretches/generated/pre-run-v2/ankle-circles-03.png",
+        "assets/stretches/generated/pre-run-v2/ankle-circles-04.png",
+        "assets/stretches/generated/pre-run-v2/ankle-circles-01.png",
+        "assets/stretches/generated/pre-run-v2/ankle-circles-04.png",
+        "assets/stretches/generated/pre-run-v2/ankle-circles-03.png",
+        "assets/stretches/generated/pre-run-v2/ankle-circles-02.png"
+      ]
+    }
+  ),
+  warmupMovement(
+    "ankle-rocks",
+    "Ankle Rocks",
+    25,
+    "Stand tall with support nearby and rock smoothly from heels with the toes lifted to the balls of the feet with the heels raised.",
+    ["Tibialis anterior", "Calves", "Ankles"],
+    "The front of the shins and calves should alternately feel active; keep the movement controlled rather than bouncing.",
+    [area(42, 72, 9, 20, -4), area(60, 72, 9, 20, 4)],
+    "dynamic-warmup",
+    {
+      image: "assets/stretches/generated/pre-run-v2/ankle-rocks-01.png",
+      visualFrames: [
+        "assets/stretches/generated/pre-run-v2/ankle-rocks-01.png",
+        "assets/stretches/generated/pre-run-v2/ankle-rocks-02.png",
+        "assets/stretches/generated/pre-run-v2/ankle-rocks-03.png",
+        "assets/stretches/generated/pre-run-v2/ankle-rocks-04.png"
+      ]
+    }
+  ),
+  warmupMovement(
+    "alternating-hip-openers",
+    "Alternating Hip Openers",
+    30,
+    "Lift one knee toward the chest, rotate the thigh outward through the hip, set the foot down, and alternate sides; catching the foot is optional.",
+    ["Hip flexors", "Glutes", "Adductors", "Hip rotators"],
+    "A controlled opening around the moving hip while the standing leg and trunk stay steady.",
+    [area(39, 58, 14, 18, -12), area(62, 58, 14, 18, 12)],
+    "dynamic-warmup",
+    {
+      image: "assets/stretches/generated/pre-run-v2/alternating-hip-openers-01.png",
+      visualFrames: [
+        "assets/stretches/generated/pre-run-v2/alternating-hip-openers-01.png",
+        "assets/stretches/generated/pre-run-v2/alternating-hip-openers-02.png",
+        "assets/stretches/generated/pre-run-v2/alternating-hip-openers-01.png",
+        "assets/stretches/generated/pre-run-v2/alternating-hip-openers-03.png",
+        "assets/stretches/generated/pre-run-v2/alternating-hip-openers-04.png",
+        "assets/stretches/generated/pre-run-v2/alternating-hip-openers-03.png"
+      ]
+    }
+  ),
+  warmupMovement(
+    "knee-lift-torso-twists",
+    "Knee-Lift Torso Twists",
+    30,
+    "Keep the elbows open, lift one knee, and rotate the opposite elbow toward it before returning tall and alternating sides.",
+    ["Obliques", "Thoracic spine", "Hip flexors", "Shoulders"],
+    "The front of the lifting hip and the muscles around the waist and upper back should work without wrenching the lower spine.",
+    [area(50, 43, 18, 16), area(43, 61, 12, 18, -10), area(61, 61, 12, 18, 10)],
+    "dynamic-warmup",
+    {
+      image: "assets/stretches/generated/pre-run-v2/knee-lift-torso-twists-01.png",
+      visualFrames: [
+        "assets/stretches/generated/pre-run-v2/knee-lift-torso-twists-01.png",
+        "assets/stretches/generated/pre-run-v2/knee-lift-torso-twists-02.png",
+        "assets/stretches/generated/pre-run-v2/knee-lift-torso-twists-03.png",
+        "assets/stretches/generated/pre-run-v2/knee-lift-torso-twists-04.png"
+      ]
+    }
+  ),
+  warmupMovement(
+    "calf-raises",
+    "Calf Raises",
+    30,
+    "Rise smoothly onto the balls of both feet, pause briefly, then lower with control.",
+    ["Gastrocnemius", "Soleus", "Ankles"],
+    "The calves should feel warm and active rather than stretched.",
+    [area(42, 72, 10, 18), area(60, 72, 10, 18)],
+    "dynamic-warmup",
+    { image: "assets/stretches/generated/calf-raises.png" }
+  ),
+  warmupMovement(
+    "calf-rocks-heel-raises",
+    "Calf Rocks and Heel Raises",
+    30,
+    "Place both hands on a wall, keep the body long, and rock the heels up and down with control; alternate one heel down at a time if that feels better.",
+    ["Gastrocnemius", "Soleus", "Tibialis anterior", "Ankles"],
+    "A moving stretch and working sensation through the calves and ankles, never a sharp pull at the heel.",
+    [area(39, 73, 11, 19, -8), area(61, 73, 11, 19, 8)],
+    "dynamic-warmup",
+    {
+      image: "assets/stretches/generated/pre-run-v2/calf-rocks-heel-raises-01.png",
+      visualFrames: [
+        "assets/stretches/generated/pre-run-v2/calf-rocks-heel-raises-01.png",
+        "assets/stretches/generated/pre-run-v2/calf-rocks-heel-raises-02.png"
+      ]
+    }
+  ),
+  warmupMovement(
+    "arm-circles",
+    "Arm Circles — Forward and Reverse",
+    30,
+    "Make large, controlled circles through the shoulders, keeping the ribs stacked; change direction halfway through.",
+    ["Deltoids", "Rotator cuff", "Upper back", "Chest"],
+    "A smooth warming sensation around the shoulders and upper back without shrugging or arching the lower back.",
+    [area(50, 31, 34, 13)],
+    "dynamic-warmup",
+    {
+      image: "assets/stretches/generated/pre-run-v2/arm-circles-01.png",
+      visualFrames: [
+        "assets/stretches/generated/pre-run-v2/arm-circles-01.png",
+        "assets/stretches/generated/pre-run-v2/arm-circles-02.png",
+        "assets/stretches/generated/pre-run-v2/arm-circles-03.png",
+        "assets/stretches/generated/pre-run-v2/arm-circles-04.png",
+        "assets/stretches/generated/pre-run-v2/arm-circles-01.png",
+        "assets/stretches/generated/pre-run-v2/arm-circles-02.png",
+        "assets/stretches/generated/pre-run-v2/arm-circles-03.png",
+        "assets/stretches/generated/pre-run-v2/arm-circles-04.png",
+        "assets/stretches/generated/pre-run-v2/arm-circles-01.png",
+        "assets/stretches/generated/pre-run-v2/arm-circles-04.png",
+        "assets/stretches/generated/pre-run-v2/arm-circles-03.png",
+        "assets/stretches/generated/pre-run-v2/arm-circles-02.png"
+      ]
+    }
+  ),
+  warmupMovement(
+    "squat-to-forward-fold",
+    "Squat-to-Forward-Fold",
+    30,
+    "Stand slightly wider than the hips, hold the shins or toes if comfortable, lower into a chest-lifted squat, then raise the hips and relax into a fold.",
+    ["Glutes", "Adductors", "Hamstrings", "Lower back"],
+    "The hips and thighs work in the squat, then the backs of the legs and spine lengthen as the hips rise.",
+    [area(34, 66, 15, 18, -16), area(66, 66, 15, 18, 16), area(50, 44, 15, 17)],
+    "dynamic-warmup",
+    {
+      image: "assets/stretches/generated/pre-run-v2/squat-to-forward-fold-01.png",
+      visualFrames: [
+        "assets/stretches/generated/pre-run-v2/squat-to-forward-fold-01.png",
+        "assets/stretches/generated/pre-run-v2/squat-to-forward-fold-02.png",
+        "assets/stretches/generated/pre-run-v2/squat-to-forward-fold-03.png",
+        "assets/stretches/generated/pre-run-v2/squat-to-forward-fold-04.png"
+      ]
+    }
+  ),
+  warmupMovement(
+    "controlled-spinal-roll",
+    "Controlled Spinal Roll",
+    30,
+    "From the fold, slowly stack the spine to standing; then tuck the chin and roll down again one section at a time.",
+    ["Spinal extensors", "Abdominals", "Hamstrings"],
+    "A gradual moving sensation through the back and backs of the legs without jerking, dizziness, or forcing the range.",
+    [area(50, 47, 17, 27), area(56, 66, 14, 19, -5)],
+    "dynamic-warmup",
+    {
+      image: "assets/stretches/generated/pre-run-v2/controlled-spinal-roll-01.png",
+      visualFrames: [
+        "assets/stretches/generated/pre-run-v2/controlled-spinal-roll-01.png",
+        "assets/stretches/generated/pre-run-v2/controlled-spinal-roll-01.png",
+        "assets/stretches/generated/pre-run-v2/controlled-spinal-roll-02.png",
+        "assets/stretches/generated/pre-run-v2/controlled-spinal-roll-02.png",
+        "assets/stretches/generated/pre-run-v2/controlled-spinal-roll-03.png",
+        "assets/stretches/generated/pre-run-v2/controlled-spinal-roll-03.png",
+        "assets/stretches/generated/pre-run-v2/controlled-spinal-roll-04.png",
+        "assets/stretches/generated/pre-run-v2/controlled-spinal-roll-04.png",
+        "assets/stretches/generated/pre-run-v2/controlled-spinal-roll-03.png",
+        "assets/stretches/generated/pre-run-v2/controlled-spinal-roll-03.png",
+        "assets/stretches/generated/pre-run-v2/controlled-spinal-roll-02.png",
+        "assets/stretches/generated/pre-run-v2/controlled-spinal-roll-02.png"
+      ]
+    }
+  ),
+  warmupMovement(
+    "alternating-reverse-lunges",
+    "Alternating Reverse Lunges",
+    30,
+    "Step one foot back into a comfortable lunge, return to standing, then alternate sides without holding the bottom position.",
+    ["Quadriceps", "Glutes", "Hip flexors"],
+    "The thighs and glutes should feel active while the hips move through a comfortable range.",
+    [area(39, 64, 11, 19, -15), area(64, 69, 10, 19, 15)],
+    "dynamic-warmup",
+    { image: "assets/stretches/generated/alternating-reverse-lunges.png" }
+  ),
   {
     id: "wall-calf-stretch",
     name: "Wall Calf Stretch",
@@ -895,7 +1148,23 @@ const MOVEMENT_BY_ID = new Map(MOVEMENTS.map((movement) => [movement.id, movemen
 
 export const YOGA_TRANSITION_SECONDS = 5;
 
-export const FULL_HOUSE_EXCLUDED_IDS = ["brisk-walk-jog", "indoor-cycling"] as const;
+export const FULL_HOUSE_EXCLUDED_IDS = [
+  "brisk-walk-jog",
+  "indoor-cycling",
+  "hip-circles",
+  "front-back-leg-swings",
+  "lateral-leg-swings",
+  "ankle-circles",
+  "ankle-rocks",
+  "alternating-hip-openers",
+  "knee-lift-torso-twists",
+  "calf-raises",
+  "calf-rocks-heel-raises",
+  "arm-circles",
+  "squat-to-forward-fold",
+  "controlled-spinal-roll",
+  "alternating-reverse-lunges"
+] as const;
 export const FULL_HOUSE_ELIGIBLE_IDS = MOVEMENTS
   .filter((movement) => !FULL_HOUSE_EXCLUDED_IDS.includes(movement.id as typeof FULL_HOUSE_EXCLUDED_IDS[number]))
   .map((movement) => movement.id);
@@ -1089,38 +1358,45 @@ export const YOGA_CLASSES: YogaClass[] = [
     id: "before-run",
     name: "Before Running",
     timing: "Before running",
-    description: "A short standing sequence that gradually warms the legs used while running.",
+    description: "A short whole-body mobility warm-up that moves from the ankles through the hips, spine, legs, shoulders and back.",
     evidence:
-      "Based on NHS guidance to warm up with controlled knee bends, knee lifts and heel digs before more vigorous exercise.",
-    sourceUrl: "https://www.nhs.uk/live-well/exercise/how-to-warm-up-before-exercising/",
-    focusMuscles: ["Calves", "Quadriceps", "Hamstrings", "Glutes", "Hip flexors"],
+      "Adapted for ZenChad from Yoga With Tim's dynamic pre-run warm-up, using controlled joint movement and a comfortable range rather than forcing depth.",
+    sourceUrl: "https://www.youtube.com/watch?v=3WUtJxLv-wI",
+    focusMuscles: ["Ankles", "Hips", "Calves", "Shoulders", "Hamstrings", "Back"],
     image: "assets/yoga/class-cover-warmup-v2.png",
     steps: [
-      { movementId: "knee-bends", seconds: 30 },
-      { movementId: "knee-lifts", seconds: 30 },
-      { movementId: "heel-digs", seconds: 30 },
-      { movementId: "wall-calf-stretch", seconds: 20 },
-      { movementId: "standing-quad-stretch", seconds: 20 },
-      { movementId: "high-lunge", seconds: 30 },
-      { movementId: "side-lunge", seconds: 30 }
+      { movementId: "ankle-circles", seconds: 15 },
+      { movementId: "ankle-rocks", seconds: 25 },
+      { movementId: "alternating-hip-openers", seconds: 30 },
+      { movementId: "knee-lift-torso-twists", seconds: 30 },
+      { movementId: "front-back-leg-swings", seconds: 15 },
+      { movementId: "lateral-leg-swings", seconds: 15 },
+      { movementId: "calf-rocks-heel-raises", seconds: 30 },
+      { movementId: "arm-circles", seconds: 30 },
+      { movementId: "squat-to-forward-fold", seconds: 30 },
+      { movementId: "forward-fold", seconds: 20 },
+      { movementId: "controlled-spinal-roll", seconds: 30 }
     ]
   },
   {
     id: "before-cycling",
     name: "Before Cycling",
-    timing: "Before indoor cycling",
-    description: "A compact off-bike preparation for hips, thighs and knees before an easy spin.",
+    timing: "Before cycling",
+    description: "A short dynamic off-bike warm-up for the ankles, hips, glutes and thighs before you start pedalling.",
     evidence:
-      "British Cycling recommends building intensity progressively on the bike. Use this class before, not instead of, an easy progressive on-bike warm-up.",
-    sourceUrl: "https://www.britishcycling.org.uk/knowledge/article/izn20140115-Intermediate-Warming-Up-and-Cooling-Down-0",
-    focusMuscles: ["Quadriceps", "Hip flexors", "Glutes", "Calves"],
-    image: "assets/yoga/class-cover-warmup-v2.png",
+      "Use this mobility sequence to get the joints and cycling muscles moving, then build cadence and resistance progressively once you are on the bike.",
+    sourceUrl: "https://www.britishcycling.org.uk/knowledge/bike-kit/article/20251022-Set-up-Why-a-bike-fit-is-essential-for-indoor-training-0",
+    focusMuscles: ["Quadriceps", "Hip flexors", "Glutes", "Calves", "Ankles"],
+    image: "assets/stretches/generated/indoor-cycling.png",
     steps: [
-      { movementId: "knee-bends", seconds: 30 },
-      { movementId: "standing-quad-stretch", seconds: 20 },
-      { movementId: "high-lunge", seconds: 20 },
-      { movementId: "kneeling-lunge", seconds: 25 },
-      { movementId: "half-kneeling-quad-stretch", seconds: 20 }
+      { movementId: "knee-lifts", seconds: 30 },
+      { movementId: "hip-circles", seconds: 30 },
+      { movementId: "front-back-leg-swings", seconds: 15 },
+      { movementId: "lateral-leg-swings", seconds: 15 },
+      { movementId: "ankle-circles", seconds: 15 },
+      { movementId: "calf-raises", seconds: 30 },
+      { movementId: "alternating-reverse-lunges", seconds: 30 },
+      { movementId: "knee-bends", seconds: 30 }
     ]
   },
   {

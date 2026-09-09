@@ -201,3 +201,7 @@
 - Decision/change: Bumped the shareable Android package to versionCode 11/versionName 2.0 and rebuilt the complete current working tree as `Zen Chad Next Generation.apk`, preserving the existing application ID and user-data upgrade path.
 - Verification: Sync, progression, Yoga, theme, ZenPoints, shop, Streak Freeze, Running logic/native integration, TTS and photo tests; TypeScript/Vite build; Capacitor sync; Java 21 debug assembly; package/version metadata; v1/v2 signature; and matching source/release/Drive hashes passed. No device installation test was run.
 - Artifact: `S:\zENcHAD\ZenChadAndroid\releases\Zen Chad Next Generation.apk` and `D:\My Drive\ZenChad\Zen Chad Next Generation.apk`, 467,547,411 bytes, SHA-256 `795A1E2D690D4EF26549AE3D7EF2DA34158C95B379BBB11B7F193594C942BF05`.
+2026-09-09 - Zen Chad 2.1 pre-run mobility APK
+- Decision/change: Replaced Before Running with the 14-slide, 6:20 whole-body mobility sequence and 36 aligned Mark animation frames, then released Android versionCode 12/versionName 2.1.
+- Preserve/avoid: For ZenChad, "update the app" means update/sync/build the Android APK unless the user explicitly opts out; do not treat browser or desktop output as the requested deliverable.
+- Artifact: `releases/Zen-Chad-2.1-Pre-Run-Mobility.apk`, SHA-256 `25E841A0EA18A8202B6FF0B83547FDDD9527C374ACC065F7E5EC362D4ED1B731`; matching copy in `D:\My Drive\ZenChad`.

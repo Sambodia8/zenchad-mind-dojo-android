@@ -1,3 +1,15 @@
+# Zen Chad 2.1 — Pre-run whole-body mobility (2026-09-09)
+
+- Replaced Before Running with a 14-slide, 6:20 whole-body mobility warm-up moving through ankles, hips, spine, legs, calves, shoulders, hamstrings, and back.
+- Added 36 transparent, aligned Mark keyframes with 700 ms active-movement playback, pause/resume continuity, still-image transitions and fallbacks, side mirroring, and reduced-motion support.
+- Preserved Before Cycling while moving its warm-up records into canonical data, and kept runner/cycling-only movements out of Full House.
+- Version code 12; version name 2.1; shareable debug APK for side-loading and in-place updates.
+- Artifact: `Zen-Chad-2.1-Pre-Run-Mobility.apk`, 474,703,504 bytes.
+- SHA-256: `25E841A0EA18A8202B6FF0B83547FDDD9527C374ACC065F7E5EC362D4ED1B731`.
+- Verified with focused Yoga checks, TypeScript/Vite production build, Capacitor Android sync, JDK 21 debug assembly, package/version metadata, APK v1/v2 signatures, exact packaged Mark-frame count, exclusion of the review contact sheet, and matching local/Drive hashes.
+- Release copies: `S:\zENcHAD\ZenChadAndroid\releases\Zen-Chad-2.1-Pre-Run-Mobility.apk` and `D:\My Drive\ZenChad\Zen-Chad-2.1-Pre-Run-Mobility.apk`.
+- No live Android device or emulator test was available for this packaging pass.
+
 # Zen Chad Next Generation — current full rebuild (2026-09-07)
 
 - Rebuilt the complete current Android working tree, including the latest Home/Status experience, ZenPoints and shop rewards, Streak Freeze support, sync work, Yoga updates, and expanded Running Mode photo, voice, story, navigation, and native integration changes.

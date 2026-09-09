@@ -46,6 +46,8 @@ export interface Movement {
   name: string;
   image: string;
   seconds: number;
+  /** Ordered, pre-aligned key poses; the representative image remains the still fallback. */
+  visualFrames?: string[];
   sides?: boolean;
   cue: string;
   kind: MovementKind;

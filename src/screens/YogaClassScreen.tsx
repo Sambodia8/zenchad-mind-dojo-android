@@ -146,6 +146,7 @@ export default function YogaClassScreen({
   const current = slides[index];
   const next = slides[index + 1];
   const isBeforeRunning = yogaClass.id === "before-run";
+  const guidedItem = isBeforeRunning ? "movement" : "pose";
   const changingSides =
     phase === "transition" &&
     current.side === 1 &&
@@ -533,7 +534,7 @@ export default function YogaClassScreen({
           <h1>{yogaClass.name}</h1>
           <div className="yoga-ready-meta">
             <span><Clock3 size={16} /> {formatDuration(getYogaClassDuration(yogaClass))}</span>
-            <span>{slides.length} guided poses</span>
+            <span>{slides.length} guided {isBeforeRunning ? "movements" : "poses"}</span>
           </div>
           <p>{yogaClass.description}</p>
           <div className="routine-focus" aria-label="Focus muscles">
@@ -551,7 +552,7 @@ export default function YogaClassScreen({
             ) : null}
           </details>
           <p className="yoga-audio-note">
-            A chime starts every pose. Five quiet clock ticks give you time to move into the
+            A chime starts every {isBeforeRunning ? "movement" : "pose"}. Five quiet clock ticks give you time to move into the
             next position.
           </p>
         </section>
@@ -660,10 +661,10 @@ export default function YogaClassScreen({
         <span className="eyebrow">Yoga class complete</span>
         <h1>{yogaClass.name} logged.</h1>
         <p>
-          {returnToRunningPreparation
-            ? `${slides.length} guided poses added to your progress. Your warm-up is banked and the next preparation step is ready.`
-            : isBeforeRunning
-              ? `${slides.length} guided poses added to your progress. Your legs are warm. Choose a run, or browse another running class.`
+          {isBeforeRunning
+            ? returnToRunningPreparation
+              ? `${slides.length} guided movements added to your progress. Your whole body is warm and the next preparation step is ready.`
+              : `${slides.length} guided movements added to your progress. Your whole body is warm. Choose a run, or browse another running class.`
             : `${slides.length} guided poses added to your progress. Your session is logged — choose what you want to do next.`}
         </p>
         <div className="completion-reward-burst">
@@ -747,7 +748,7 @@ export default function YogaClassScreen({
         <div
           className="player-progress-rail"
           role="progressbar"
-          aria-label={`Pose ${current.stepNumber} of ${current.totalSteps}`}
+          aria-label={`${isBeforeRunning ? "Movement" : "Pose"} ${current.stepNumber} of ${current.totalSteps}`}
           aria-valuemin={1}
           aria-valuemax={current.totalSteps}
           aria-valuenow={current.stepNumber}
@@ -766,7 +767,7 @@ export default function YogaClassScreen({
             </div>
             <button className="player-guidance-action" type="button" onClick={openGuidance}>
               <Info size={17} />
-              <span><strong>Pose guidance</strong><small>Setup, sensation and target muscles</small></span>
+              <span><strong>{isBeforeRunning ? "Movement" : "Pose"} guidance</strong><small>Setup, sensation and target muscles</small></span>
             </button>
             <span className="player-settings-label">Class controls</span>
             <div className="segmented two mode-picker" aria-label="Advance mode">
@@ -847,7 +848,7 @@ export default function YogaClassScreen({
                 <h1>{next.movement.name}</h1>
                 <span>{changingSides ? "Switch sides" : next.side ? `Side ${next.side} of 2` : "Coming up"}</span>
               </div>
-              <strong className="transition-countdown" aria-label={`${secondsLeft} seconds until the next pose`}>
+              <strong className="transition-countdown" aria-label={`${secondsLeft} seconds until the next ${guidedItem}`}>
                 {secondsLeft}
               </strong>
             </div>
@@ -855,7 +856,14 @@ export default function YogaClassScreen({
         ) : (
           <>
             <div className="pose-artwork">
-              <MovementVisual movement={current.movement} mirrored={current.side === 2} />
+              <MovementVisual
+                key={`${index}-${current.movement.id}`}
+                movement={current.movement}
+                mirrored={current.side === 2}
+                playback={phase === "pose"}
+                paused={!running}
+                reducedMotion={data.preferences.reducedMotion}
+              />
             </div>
             <div className="pose-primary-meta">
               <div className="pose-name-line">
@@ -876,7 +884,7 @@ export default function YogaClassScreen({
         <div className="pose-xp-reward" role="status" aria-live="polite" key={poseReward.key}>
           <Award size={18} />
           <strong>+{poseReward.amount} XP</strong>
-          <span>Stretch complete</span>
+          <span>{isBeforeRunning ? "Movement" : "Stretch"} complete</span>
         </div>
       ) : null}
 
@@ -885,7 +893,7 @@ export default function YogaClassScreen({
           className="round-button small"
           onClick={goPrevious}
           disabled={phase === "transition" ? false : index === 0}
-          aria-label="Previous pose"
+          aria-label={`Previous ${guidedItem}`}
         >
           <ChevronLeft />
         </button>
@@ -900,7 +908,7 @@ export default function YogaClassScreen({
           className="round-button small"
           onClick={beginTransition}
           disabled={phase === "transition"}
-          aria-label="Next pose"
+          aria-label={`Next ${guidedItem}`}
         >
           <ChevronRight />
         </button>
@@ -921,7 +929,7 @@ export default function YogaClassScreen({
           >
             <div className="pose-guidance-heading">
               <div>
-                <span>Pose guidance</span>
+                <span>{isBeforeRunning ? "Movement" : "Pose"} guidance</span>
                 <h2 id="pose-guidance-title">{guidanceSlide.movement.name}</h2>
               </div>
               <button type="button" onClick={() => setGuidanceOpen(false)} aria-label="Close pose guidance">

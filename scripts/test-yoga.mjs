@@ -3,10 +3,12 @@ import {
   FULL_HOUSE_ELIGIBLE_IDS,
   FULL_HOUSE_EXCLUDED_IDS,
   MARKS_FLOW_IDS,
+  MOVEMENTS,
   SUN_SALUTATION_IDS,
   YOGA_CLASSES,
   expandYogaClassSlides,
   getYogaClass,
+  getYogaClassDuration,
   validateYogaClasses
 } from "../src/data.ts";
 import fs from "node:fs";
@@ -62,11 +64,77 @@ for (const classId of ["the-ogs", "standing-and-balance", "hips-and-hamstrings",
 
 assert.deepEqual(validateYogaClasses(), [], "all built-in Yoga classes validate");
 const beforeRun = getYogaClass("before-run");
-assert.ok(beforeRun.steps.some((step) => step.movementId === "wall-calf-stretch"));
-assert.ok(beforeRun.steps.some((step) => step.movementId === "standing-quad-stretch"));
+assert.deepEqual(
+  beforeRun.steps.map((step) => [step.movementId, step.seconds]),
+  [
+    ["ankle-circles", 15],
+    ["ankle-rocks", 25],
+    ["alternating-hip-openers", 30],
+    ["knee-lift-torso-twists", 30],
+    ["front-back-leg-swings", 15],
+    ["lateral-leg-swings", 15],
+    ["calf-rocks-heel-raises", 30],
+    ["arm-circles", 30],
+    ["squat-to-forward-fold", 30],
+    ["forward-fold", 20],
+    ["controlled-spinal-roll", 30]
+  ],
+  "Before Running follows the approved whole-body mobility sequence"
+);
+assert.equal(expandYogaClassSlides(beforeRun).length, 14, "three per-side movements expand to 14 guided movements");
+assert.equal(getYogaClassDuration(beforeRun), 380, "Before Running lasts 6:20 including transitions");
+assert.equal(beforeRun.sourceUrl, "https://www.youtube.com/watch?v=3WUtJxLv-wI");
+assert.deepEqual(beforeRun.focusMuscles, ["Ankles", "Hips", "Calves", "Shoulders", "Hamstrings", "Back"]);
+
+const beforeCycling = getYogaClass("before-cycling");
+assert.deepEqual(
+  beforeCycling.steps.map((step) => [step.movementId, step.seconds]),
+  [
+    ["knee-lifts", 30],
+    ["hip-circles", 30],
+    ["front-back-leg-swings", 15],
+    ["lateral-leg-swings", 15],
+    ["ankle-circles", 15],
+    ["calf-raises", 30],
+    ["alternating-reverse-lunges", 30],
+    ["knee-bends", 30]
+  ],
+  "Before Cycling remains unchanged after moving its records into canonical data"
+);
+
+const animatedMovementIds = [
+  "ankle-circles",
+  "ankle-rocks",
+  "alternating-hip-openers",
+  "knee-lift-torso-twists",
+  "front-back-leg-swings",
+  "lateral-leg-swings",
+  "calf-rocks-heel-raises",
+  "arm-circles",
+  "squat-to-forward-fold",
+  "controlled-spinal-roll"
+];
+
+const pngDimensions = (assetPath) => {
+  const buffer = fs.readFileSync(new URL(`../public/${assetPath}`, import.meta.url));
+  assert.deepEqual([...buffer.subarray(1, 4)], [80, 78, 71], `${assetPath} is a PNG`);
+  assert.ok([4, 6].includes(buffer[25]), `${assetPath} preserves an alpha channel`);
+  return [buffer.readUInt32BE(16), buffer.readUInt32BE(20)];
+};
+
+animatedMovementIds.forEach((movementId) => {
+  const movement = MOVEMENTS.find((candidate) => candidate.id === movementId);
+  assert.ok(movement, `${movementId} exists in canonical movement data`);
+  assert.ok(movement.visualFrames?.length >= 2, `${movementId} has an animated Mark frame set`);
+  const dimensions = movement.visualFrames.map(pngDimensions);
+  dimensions.forEach((size) => assert.deepEqual(size, dimensions[0], `${movementId} frames share one canvas size`));
+  assert.ok(fs.existsSync(new URL(`../public/${movement.image}`, import.meta.url)), `${movementId} representative image exists`);
+});
+
 assert.equal(
-  expandYogaClassSlides(beforeRun).find((slide) => slide.movement.id === "standing-quad-stretch")?.movement.name,
-  "Standing Knee Flexion Stretch"
+  fs.existsSync(new URL("../preBikeWarmupPlugin.ts", import.meta.url)),
+  false,
+  "the build-only pre-bike data shim has been removed"
 );
 assert.deepEqual(
   YOGA_CLASSES.slice(0, 6).map((yogaClass) => yogaClass.id),
