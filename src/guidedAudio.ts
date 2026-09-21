@@ -34,10 +34,7 @@ export const GUIDED_AUDIO_BY_MEDITATION: Record<string, GuidedAudioTrack[]> = {
     track("pratyahara-v4-qda-v3", "The Moon Garden Folds Its Petals", 600)
   ],
   nsdr: [
-    track("nsdr-v1-qda-v3", "When the City Powers Down", 780),
-    track("nsdr-v2-qda-v3", "The Last Train Enters the Depot", 780),
-    track("nsdr-v3-qda-v3", "The Seaside Hotel Turns Down the Lights", 780),
-    track("nsdr-v4-qda-v3", "The Observatory Closes for Dawn", 780)
+    track("nsdr-protocol-v1-qda-v3", "10-Minute NSDR Protocol", 600)
   ],
   "sound-awareness": [
     track("sound-awareness-v1-qda-v3", "Radio Constellations", 405),

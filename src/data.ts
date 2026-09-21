@@ -1,4 +1,4 @@
-import type { BodyArea, Meditation, Movement, YogaClass, YogaClassSlide, YogaClassStep, ZenStatId } from "./types";
+import type { BodyArea, BreathingGuidance, Meditation, Movement, YogaClass, YogaClassSlide, YogaClassStep, ZenStatId } from "./types";
 
 const phase = (
   name: string,
@@ -6,6 +6,15 @@ const phase = (
   kind: "prepare" | "active" | "rest" | "finish",
   instruction: string
 ) => ({ name, duration, kind, instruction });
+
+const BREATHING_SAFETY_NOTE =
+  "Keep every breath comfortable; return to natural breathing if you notice dizziness, air hunger, discomfort, or strain.";
+
+const breathingGuidance = (name: string, instruction: string): BreathingGuidance => ({
+  name,
+  instruction,
+  safetyNote: BREATHING_SAFETY_NOTE
+});
 
 export const MEDITATIONS: Meditation[] = [
   {
@@ -16,6 +25,10 @@ export const MEDITATIONS: Meditation[] = [
     category: "Emotional",
     benefit: "Compassion & positivity",
     description: "Cultivate kindness toward yourself, people you care about, and the wider world.",
+    breathingGuidance: breathingGuidance(
+      "Kindness breath",
+      "Breathe naturally into the belly; receive kindness on the inhale and offer it on the exhale."
+    ),
     tags: ["compassion", "anger", "connection"],
     color: "#f472b6",
     youtubeQuery: "guided metta loving kindness meditation",
@@ -52,6 +65,10 @@ export const MEDITATIONS: Meditation[] = [
     category: "Spiritual",
     benefit: "Less sensory overload",
     description: "Move attention from the outer world toward a quieter inner space.",
+    breathingGuidance: breathingGuidance(
+      "Quiet nasal breath",
+      "Let the breath move quietly through the nose when comfortable, with an easy, slightly softer exhale."
+    ),
     tags: ["sensory", "quiet", "inward"],
     color: "#34d399",
     youtubeQuery: "guided pratyahara sensory withdrawal meditation",
@@ -69,13 +86,17 @@ export const MEDITATIONS: Meditation[] = [
     category: "Relaxation",
     benefit: "Recovery without sleep",
     description: "A lying-down body scan for deep rest, recovery, and a nervous-system reset.",
+    breathingGuidance: breathingGuidance(
+      "Extended-exhale settling",
+      "Take three comfortable breaths with a gently longer exhale, then release all control of the breath."
+    ),
     tags: ["rest", "recovery", "body scan"],
     color: "#a78bfa",
     youtubeQuery: "NSDR non sleep deep rest guided",
     phases: [
-      phase("Get comfortable", 60, "prepare", "Lie down and support your knees or head if that helps."),
-      phase("Body scan", 600, "active", "Move slowly from toes to face, allowing each area to feel heavy."),
-      phase("Wake gently", 120, "finish", "Deepen the breath, move fingers and toes, and open your eyes.")
+      phase("Settle and breathe", 45, "prepare", "Get comfortable, close your eyes if it feels right, and follow three easy extended exhales."),
+      phase("Body scan", 495, "active", "Move attention from your feet through the whole body, noticing contact and allowing the body to settle."),
+      phase("Wake gently", 60, "finish", "Deepen the breath, move fingers and toes, and open your eyes slowly.")
     ]
   },
   {
@@ -86,6 +107,10 @@ export const MEDITATIONS: Meditation[] = [
     category: "Relaxation",
     benefit: "Detailed whole-body rest",
     description: "A spacious, intricate body scan that softens the face, tongue, limbs, torso, and whole body.",
+    breathingGuidance: breathingGuidance(
+      "Settling exhales",
+      "Use a few soft, unforced exhales to settle, then allow the body to breathe entirely by itself."
+    ),
     tags: ["rest", "body scan", "sleep"],
     color: "#8b5cf6",
     phases: [
@@ -106,6 +131,10 @@ export const MEDITATIONS: Meditation[] = [
     category: "Relaxation",
     benefit: "Easy, grounded breathing",
     description: "Practise comfortable lower-rib and belly breathing without forcing depth or pace.",
+    breathingGuidance: breathingGuidance(
+      "Lower-rib breathing",
+      "Invite the belly and lower ribs to widen gently; an optional four-in, six-out rhythm can guide the breath."
+    ),
     tags: ["breathing", "relaxation", "body"],
     color: "#38bdf8",
     phases: [
@@ -140,6 +169,10 @@ export const MEDITATIONS: Meditation[] = [
     category: "Focus",
     benefit: "Flexible attention",
     description: "Systematically shift focus between sounds to build mindful presence.",
+    breathingGuidance: breathingGuidance(
+      "Breath as sound",
+      "Keep breathing natural and uncounted, noticing the breath briefly as one nearby sound before widening awareness."
+    ),
     tags: ["sound", "attention", "ADHD"],
     color: "#22d3ee",
     phases: [
@@ -157,6 +190,10 @@ export const MEDITATIONS: Meditation[] = [
     category: "Focus",
     benefit: "Gentle concentration",
     description: "Use the breath as an anchor and practise returning without judging a wandering mind.",
+    breathingGuidance: breathingGuidance(
+      "Complete breath cycles",
+      "Follow each natural inhale and exhale at one comfortable sensation, returning gently whenever attention wanders."
+    ),
     tags: ["attention", "breath", "ADHD"],
     color: "#2dd4bf",
     phases: [
@@ -174,6 +211,10 @@ export const MEDITATIONS: Meditation[] = [
     category: "Spiritual",
     benefit: "Perspective & self-inquiry",
     description: "Examine thoughts and identity with the question: who is noticing this?",
+    breathingGuidance: breathingGuidance(
+      "Unshaped settling breath",
+      "Notice two or three ordinary breaths without changing them, then let breathing recede as inquiry begins."
+    ),
     tags: ["advanced", "inquiry", "perspective"],
     color: "#818cf8",
     phases: [
@@ -207,6 +248,10 @@ export const MEDITATIONS: Meditation[] = [
     category: "Spiritual",
     benefit: "Clarity & inner focus",
     description: "Place gentle attention at the space between the eyebrows.",
+    breathingGuidance: breathingGuidance(
+      "Even, gentle breath",
+      "Let inhale and exhale stay easy and even, with no holding, while the face and eyes remain relaxed."
+    ),
     tags: ["third eye", "focus", "chakra"],
     color: "#6366f1",
     youtubeQuery: "ajna third eye guided meditation",
@@ -224,6 +269,10 @@ export const MEDITATIONS: Meditation[] = [
     category: "Emotional",
     benefit: "Impulse tolerance",
     description: "Ride a craving like a wave, observing it rise and fall without acting on it.",
+    breathingGuidance: breathingGuidance(
+      "Wave breath",
+      "Use a comfortable inhale and a slightly longer exhale while observing the urge rather than suppressing it."
+    ),
     tags: ["craving", "impulse", "ADHD"],
     color: "#fb7185",
     youtubeQuery: "urge surfing mindfulness guided",
@@ -242,6 +291,10 @@ export const MEDITATIONS: Meditation[] = [
     category: "Emotional",
     benefit: "Return to the present",
     description: "Use the five senses and steady contact points to reconnect with the room around you.",
+    breathingGuidance: breathingGuidance(
+      "Grounding exhale",
+      "Let each easy exhale accompany awareness of your feet, seat, and the physical support beneath you."
+    ),
     tags: ["grounding", "senses", "present"],
     color: "#14b8a6",
     phases: [
@@ -260,6 +313,10 @@ export const MEDITATIONS: Meditation[] = [
     category: "Emotional",
     benefit: "Less resistance",
     description: "Make room for the present experience without approving, fixing, or judging it.",
+    breathingGuidance: breathingGuidance(
+      "Breathing around sensation",
+      "Let the breath make room around a difficult sensation without trying to fix, reduce, or breathe it away."
+    ),
     tags: ["anxiety", "acceptance", "calm"],
     color: "#2dd4bf",
     youtubeQuery: "radical acceptance guided meditation",
@@ -277,6 +334,10 @@ export const MEDITATIONS: Meditation[] = [
     category: "Focus",
     benefit: "Steady visual focus",
     description: "Alternate between a candle flame and its after-image to train concentration.",
+    breathingGuidance: breathingGuidance(
+      "Relaxed gaze breathing",
+      "Breathe naturally without holding, keeping the eyes soft and blinking whenever the body asks you to."
+    ),
     tags: ["candle", "visual", "focus"],
     color: "#f97316",
     youtubeQuery: "trataka candle gazing guided",

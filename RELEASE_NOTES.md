@@ -1,3 +1,14 @@
+# Zen Chad 2.5 — canonical 10-minute NSDR protocol (2026-09-21)
+
+- Replaced rotating story-style NSDR guidance with one canonical, breath-led 10-minute non-sleep deep rest protocol based on the supplied reference script.
+- Added explicit three extended-exhale instructions, progressive body scanning, contact/sinking cues, gentle movement, and gradual reorientation.
+- Generated with the approved adam owls soothing v2 / Eleven v3 settings; old NSDR assets remain on disk but are no longer referenced by the app.
+- Version code 16; version name 2.5; shareable debug APK for side-loading and in-place updates.
+- Artifact: `Zen-Chad-2.5-NSDR-Protocol.apk`, 500,122,403 bytes.
+- SHA-256: `094AF1FA8C71449F6DDCEC6DD89BB283862101C26BFB72FECFA03A3988A00BD2`.
+- Verified with ElevenLabs generation/resume (13 cues, 0 retries), exact 600-second audio duration, 15-second opening silence, Opus 48 kHz mono format, clean decode, catalogue audio verification, TypeScript/Vite production build, Capacitor sync, JDK 21 Gradle assembly, package/version metadata, APK v1/v2 signatures, and packaged NSDR asset presence. No Android device test was available.
+- Release copies: `S:\zENcHAD\ZenChadAndroid\releases\Zen-Chad-2.5-NSDR-Protocol.apk` and `D:\My Drive\ZenChad\Zen-Chad-2.5-NSDR-Protocol.apk`.
+
 # Zen Chad 2.4 — exact original character restoration (2026-09-13)
 
 - Restored the large Status character from the exact supplied 1086×1448 reference instead of another visual recreation. The normal starter outfit now renders the same source bytes as the canonical portrait, guaranteeing the original short magenta hair, larger head, slim build, face and pose.

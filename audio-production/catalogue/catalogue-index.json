@@ -3,7 +3,7 @@
   "manifests": [
     "audio-production/catalogue/metta-v1-qda-v3.json",
     "audio-production/catalogue/pratyahara-v1-qda-v3.json",
-    "audio-production/catalogue/nsdr-v1-qda-v3.json",
+    "audio-production/catalogue/nsdr-protocol-v1-qda-v3.json",
     "audio-production/catalogue/ego-v1-qda-v3.json",
     "audio-production/catalogue/ajna-v1-qda-v3.json",
     "audio-production/catalogue/sound-awareness-v1-qda-v3.json",
