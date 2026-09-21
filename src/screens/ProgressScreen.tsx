@@ -2,7 +2,7 @@ import { Check, Clock3, Coins, Flame, LockKeyhole, Target, X } from "lucide-reac
 import { useState, type CSSProperties, type Dispatch, type SetStateAction } from "react";
 import { createPortal } from "react-dom";
 import type { AppData, CosmeticSlot, ZenStatId } from "../types";
-import { cosmeticById, cosmeticsForSlot, equipCosmetic, isCosmeticOwned } from "../cosmetics";
+import { cosmeticById, cosmeticsForSlot, equipCosmetic, isCosmeticOwned, unequipCosmetic } from "../cosmetics";
 import { purchaseFailureMessage, purchaseShopItem } from "../shop";
 import {
   COSMETIC_SLOT_DEFINITIONS,
@@ -27,7 +27,8 @@ function CharacterPortrait({ className = "" }: { className?: string }) {
   return <img className={`status-avatar-image ${className}`.trim()} src="assets/status/zen-chad-status.png" alt="Sam, ZenChad avatar" />;
 }
 
-const PAPER_DOLL_BASE_ASSET = "/assets/status/paper-doll/base/zenchad-clean-base-underlayer.png";
+const PAPER_DOLL_BASE_ASSET = "/assets/status/paper-doll/base/zenchad-canonical-underlayer-v3.png";
+const ORIGINAL_PAPER_DOLL_ITEMS = ["runner-shorts", "red-trainers", "runner-top", "fitness-watch", "default-pink-hair"];
 
 function PaperDollCharacter({ data }: Props) {
   const previewParams = import.meta.env.DEV ? new URLSearchParams(window.location.search) : null;
@@ -42,6 +43,9 @@ function PaperDollCharacter({ data }: Props) {
   const layers = cosmeticIds.map((id) => ({ id, definition: cosmeticById(id) }));
   if (equipped.aura !== "indigo-flow" || layers.some(({ definition }) => !definition?.paperDollLayer || !definition.paperDollRole)) {
     return <CharacterPortrait />;
+  }
+  if (cosmeticIds.every((id, index) => id === ORIGINAL_PAPER_DOLL_ITEMS[index])) {
+    return <CharacterPortrait className="status-avatar-canonical" />;
   }
 
   return (
@@ -198,6 +202,11 @@ function WardrobeDialog({ slot, data, setData, onClose }: WardrobeDialogProps) {
     setFeedback(`${cosmeticById(itemId)?.name ?? "Cosmetic"} equipped.`);
   };
 
+  const unequip = (itemId: string) => {
+    setData((current) => unequipCosmetic(current, itemId));
+    setFeedback(`${cosmeticById(itemId)?.name ?? "Cosmetic"} unequipped.`);
+  };
+
   return createPortal(
     <div className="wardrobe-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
       <section className="wardrobe-dialog" role="dialog" aria-modal="true" aria-labelledby="wardrobe-title">
@@ -213,13 +222,17 @@ function WardrobeDialog({ slot, data, setData, onClose }: WardrobeDialogProps) {
             const canAfford = item.shopPrice !== undefined && data.zenPoints >= item.shopPrice;
             return (
               <article className={`wardrobe-option ${equipped ? "equipped" : ""} ${owned ? "owned" : "locked"}`} key={item.id}>
-                <div className="wardrobe-option-image"><img src={item.thumbnail} alt="" /></div>
+                <div className="wardrobe-option-image">
+                  {item.thumbnail ? <img src={item.thumbnail} alt="" /> : <span className="wardrobe-missing-art">Artwork<br />pending</span>}
+                </div>
                 <div className="wardrobe-option-copy">
                   <h3>{item.name}</h3>
                   <p>{item.description}</p>
                   <small>{item.starter ? "Starter item" : owned ? "Owned" : `${item.shopPrice} ZP`}</small>
                 </div>
-                {equipped ? (
+                {equipped && !item.starter ? (
+                  <button type="button" onClick={() => unequip(item.id)}>Unequip</button>
+                ) : equipped ? (
                   <button type="button" disabled><Check size={15} /> Equipped</button>
                 ) : owned ? (
                   <button type="button" onClick={() => equip(item.id)}>Equip</button>

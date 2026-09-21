@@ -1,4 +1,5 @@
 import type { AppData, CosmeticSlot } from "./types";
+import { DEFAULT_EQUIPPED_COSMETICS } from "./progression";
 
 export type PaperDollLayerRole = Exclude<CosmeticSlot, "aura">;
 
@@ -7,7 +8,7 @@ export interface CosmeticDefinition {
   name: string;
   description: string;
   slot: CosmeticSlot;
-  thumbnail: string;
+  thumbnail?: string;
   paperDollLayer?: string;
   paperDollRole?: PaperDollLayerRole;
   starter?: boolean;
@@ -17,11 +18,11 @@ export interface CosmeticDefinition {
 export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
   {
     id: "default-pink-hair",
-    name: "Original Pink Sweep",
-    description: "ZenChad's original medium-long, side-swept bright pink hair.",
+    name: "Purple Spiky Hair",
+    description: "ZenChad's original short, layered purple-magenta spikes.",
     slot: "hair",
-    thumbnail: "/assets/status/generated/hair/default-pink-long-hair-clean.png",
-    paperDollLayer: "/assets/status/paper-doll/layers/hair/default-pink-long-hair-clean.png",
+    thumbnail: "/assets/status/generated/core/head-magenta-spiky-hair.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/hair/default-magenta-spikes-canonical-v3.png",
     paperDollRole: "hair",
     starter: true
   },
@@ -31,9 +32,9 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     description: "Soft centre-parted blond hair inspired by Porter's Nurture era.",
     slot: "hair",
     thumbnail: "/assets/status/generated/hair/porter-robinson-nurture-hair.png",
-    paperDollLayer: "/assets/status/paper-doll/layers/hair/porter-robinson-nurture-hair-clean.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/hair/porter-robinson-nurture-hair-canonical-v3.png",
     paperDollRole: "hair",
-    shopPrice: 45
+    shopPrice: 20
   },
   {
     id: "noodle-dare-hair",
@@ -41,9 +42,9 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     description: "The deep indigo, eye-skimming DARE-era Noodle silhouette.",
     slot: "hair",
     thumbnail: "/assets/status/generated/hair/noodle-dare-hair.png",
-    paperDollLayer: "/assets/status/paper-doll/layers/hair/noodle-dare-hair-clean.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/hair/noodle-dare-hair-canonical-v3.png",
     paperDollRole: "hair",
-    shopPrice: 50
+    shopPrice: 25
   },
   {
     id: "silver-lilac-tousled-hair",
@@ -51,9 +52,9 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     description: "Tousled medium-length hair in cool silver-lilac with periwinkle shadows and icy highlights.",
     slot: "hair",
     thumbnail: "/assets/status/generated/hair/silver-lilac-tousled-hair.png",
-    paperDollLayer: "/assets/status/paper-doll/layers/hair/silver-lilac-tousled-hair-clean.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/hair/silver-lilac-tousled-hair-canonical-v3.png",
     paperDollRole: "hair",
-    shopPrice: 55
+    shopPrice: 30
   },
   {
     id: "runner-top",
@@ -61,7 +62,7 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     description: "The original zip-front ZenChad training shirt.",
     slot: "top",
     thumbnail: "/assets/status/generated/core/top-charcoal-training-shirt.png",
-    paperDollLayer: "/assets/status/paper-doll/layers/top/charcoal-training-shirt-clean.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/top/charcoal-training-shirt-canonical-v3.png",
     paperDollRole: "top",
     starter: true
   },
@@ -71,7 +72,7 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     description: "A calm cream jacket with indigo piping and a clean standing collar.",
     slot: "top",
     thumbnail: "/assets/status/generated/future/zenchad-cream-meditation-jacket.png",
-    paperDollLayer: "/assets/status/paper-doll/layers/top/cream-meditation-jacket-clean.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/top/cream-meditation-jacket-canonical-v3.png",
     paperDollRole: "top",
     shopPrice: 65
   },
@@ -81,7 +82,7 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     description: "The original black training watch with a green pulse display.",
     slot: "wrist",
     thumbnail: "/assets/status/generated/effects/fitness-smartwatch.png",
-    paperDollLayer: "/assets/status/paper-doll/layers/wrist/black-fitness-watch-clean.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/wrist/black-fitness-watch-canonical-v3.png",
     paperDollRole: "wrist",
     starter: true
   },
@@ -91,7 +92,7 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     description: "Three joyful rave kandi bracelets in Hana's candy colours.",
     slot: "wrist",
     thumbnail: "/assets/status/generated/wrist/hana-candy-bracelets.png",
-    paperDollLayer: "/assets/status/paper-doll/layers/wrist/hana-candy-bracelets-clean.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/wrist/hana-candy-bracelets-canonical-v3.png",
     paperDollRole: "wrist",
     shopPrice: 35
   },
@@ -101,7 +102,7 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     description: "A hand-braided red, blue, teal and yellow friendship bracelet made for runs together.",
     slot: "wrist",
     thumbnail: "/assets/status/generated/wrist/katie-run-friendship-bracelet.png",
-    paperDollLayer: "/assets/status/paper-doll/layers/wrist/katie-run-friendship-bracelet-clean.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/wrist/katie-run-friendship-bracelet-canonical-v3.png",
     paperDollRole: "wrist",
     starter: true
   },
@@ -111,9 +112,17 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     description: "The original lightweight ZenChad training shorts.",
     slot: "legs",
     thumbnail: "/assets/status/generated/core/legs-charcoal-training-shorts.png",
-    paperDollLayer: "/assets/status/paper-doll/layers/legs/charcoal-training-shorts-clean.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/legs/charcoal-training-shorts-canonical-v3.png",
     paperDollRole: "legs",
     starter: true
+  },
+  {
+    id: "cat-shorts",
+    name: "Cat Shorts",
+    description: "A playful cat-print shorts layer for the bottom slot.",
+    slot: "legs",
+    paperDollRole: "legs",
+    shopPrice: 25
   },
   {
     id: "red-trainers",
@@ -121,9 +130,17 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     description: "The original rugged black trainers with magenta accents.",
     slot: "shoes",
     thumbnail: "/assets/status/generated/core/shoes-black-magenta-trainers.png",
-    paperDollLayer: "/assets/status/paper-doll/layers/shoes/black-magenta-trainers-clean.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/shoes/black-magenta-trainers-canonical-v3.png",
     paperDollRole: "shoes",
     starter: true
+  },
+  {
+    id: "3d-printed-running-shoes",
+    name: "3D Printed Running Shoes",
+    description: "Your 3D-printed running shoes, ready for the next run.",
+    slot: "shoes",
+    paperDollRole: "shoes",
+    shopPrice: 30
   },
   {
     id: "indigo-flow",
@@ -160,6 +177,21 @@ export function equipCosmetic(data: AppData, cosmeticId: string): AppData {
       equippedCosmetics: {
         ...data.progression.equippedCosmetics,
         [item.slot]: item.id
+      }
+    }
+  };
+}
+
+export function unequipCosmetic(data: AppData, cosmeticId: string): AppData {
+  const item = cosmeticById(cosmeticId);
+  if (!item || data.progression.equippedCosmetics[item.slot] !== cosmeticId) return data;
+  return {
+    ...data,
+    progression: {
+      ...data.progression,
+      equippedCosmetics: {
+        ...data.progression.equippedCosmetics,
+        [item.slot]: DEFAULT_EQUIPPED_COSMETICS[item.slot]
       }
     }
   };

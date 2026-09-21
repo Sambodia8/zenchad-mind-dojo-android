@@ -1,3 +1,34 @@
+# Zen Chad 2.4 — exact original character restoration (2026-09-13)
+
+- Restored the large Status character from the exact supplied 1086×1448 reference instead of another visual recreation. The normal starter outfit now renders the same source bytes as the canonical portrait, guaranteeing the original short magenta hair, larger head, slim build, face and pose.
+- Rebuilt the wardrobe rig on the reference's native 3:4 coordinate system, added a neutral identity-preserving underlayer for changed outfit combinations, and refitted every existing paper-doll layer to that same canvas.
+- Added `ANDROID_APK_ONLY.md` to make the delivery rule explicit: this project is for the Android APK; its React/Vite source is only the internal Capacitor implementation and must not be treated or published as a standalone web app.
+- Version code 15; version name 2.4; shareable debug APK for side-loading and in-place updates.
+- Artifact: `Zen-Chad-2.4-Exact-Character-Restoration.apk`, 494,463,644 bytes.
+- SHA-256: `C85E921666BBBD47CAB332C3CD747128D0C6E36D18E98BFAE857828EE8B74990`.
+- Verified with exact reference/portrait SHA-256 equality, 1086×1448 canvas checks for the base and all eleven layers, shop/progression tests, TypeScript/Vite production compilation, Capacitor Android sync, JDK 21 Gradle assembly, package/version metadata, APK v1/v2 signatures, and packaged canonical asset presence. No Android device was connected for installation.
+
+# Zen Chad 2.3 — FFIX character restoration (2026-09-11)
+
+- Restored Sam's canonical slim, blue-eyed, lightly bearded, magenta-haired FFIX-style character to the Status paper doll using the supplied front/side/back model sheet as the authoritative reference.
+- Rebuilt the neutral 1024×1536 paper-doll base and starter outfit, returned the default Hair item to the short layered magenta spikes, and refitted every existing alternate hair, top and wrist layer to the restored head and body landmarks.
+- Kept existing cosmetic IDs, ownership, prices and equipped saves intact; old paper-doll assets remain available for rollback.
+- Reduced the eleven fitted transparent layers to under 1 MB total by clearing invisible RGB data, and kept rendered QA evidence outside the packaged public bundle.
+- Version code 14; version name 2.3; shareable debug APK for side-loading and in-place updates.
+- Artifact: `Zen-Chad-2.3-Character-Restoration.apk`, 478,579,475 bytes.
+- SHA-256: `EBC3CD3F8B74C8F5248E2FEEB2B26A56901EDF9BE1C25EE2F3B4BFC61A229579`.
+- Verified with shop/progression tests, TypeScript/Vite production build, 412×915 browser rendering and wardrobe interaction, console checks, Capacitor sync, JDK 21 clean Gradle assembly, package/version metadata, APK v1/v2 signatures, and matching source/release hashes. No live Android device installation was available.
+
+# Zen Chad 2.2 — Meditation voice playback click fix (2026-09-09)
+
+- Fixed repeated voice re-seeking during active meditation timers, which could produce a subtle clicking/lo-fi artifact in Android WebView playback.
+- Voice playback now seeks only when starting or resuming from pause; the active media clock is left uninterrupted while playing.
+- Version code 13; version name 2.2; shareable debug APK for side-loading and in-place updates.
+- Artifact: `Zen-Chad-2.2-Meditation-Audio-Fix.apk`, 474,487,889 bytes.
+- SHA-256: `10BC1D7311F00BC288A5EF5C69E57E1239CFA173C1981A18E4526EE394E50291`.
+- Verified with TypeScript/Vite production build, Capacitor Android sync, Gradle debug assembly, package/version metadata, APK v1/v2 signature verification, and matching local/Drive-copy sizes. No live Android device test was available.
+- Release copies: `S:\zENcHAD\ZenChadAndroid\releases\Zen-Chad-2.2-Meditation-Audio-Fix.apk` and `D:\My Drive\ZenChad\Zen-Chad-2.2-Meditation-Audio-Fix.apk`.
+
 # Zen Chad 2.1 — Pre-run whole-body mobility (2026-09-09)
 
 - Replaced Before Running with a 14-slide, 6:20 whole-body mobility warm-up moving through ankles, hips, spine, legs, calves, shoulders, hamstrings, and back.

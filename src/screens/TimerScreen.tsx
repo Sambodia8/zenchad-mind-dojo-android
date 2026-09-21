@@ -218,7 +218,11 @@ export default function TimerScreen({
       if (!audio || audioUnavailable) return;
       const target = Math.min(totalDuration, Math.max(0, elapsedSeconds));
       audio.volume = Math.min(1, Math.max(0, data.preferences.voiceVolume / 100));
-      if (!Number.isFinite(audio.currentTime) || Math.abs(audio.currentTime - target) > 0.45) {
+      // Do not repeatedly seek an already-playing voice to the timer's rounded
+      // one-second position. On Android WebView those tiny seeks can produce a
+      // repeating click in the speech. A paused voice needs positioning before
+      // it resumes; a playing voice can keep its own smooth media clock.
+      if (shouldPlay && audio.paused) {
         audio.currentTime = target;
       }
       if (shouldPlay && audio.paused) {

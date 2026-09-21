@@ -152,8 +152,10 @@ def main() -> None:
         full_alpha = Image.fromarray(alpha_pixels, mode="L")
     for erase_x0, erase_y0, erase_x1, erase_y1 in args.erase_box:
         full_alpha.paste(0, (erase_x0, erase_y0, erase_x1, erase_y1))
-    layer = dressed.convert("RGBA")
-    layer.putalpha(full_alpha)
+    dressed_rgba = dressed.convert("RGBA")
+    dressed_rgba.putalpha(full_alpha)
+    layer = Image.new("RGBA", base.size, (0, 0, 0, 0))
+    layer.alpha_composite(dressed_rgba)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     layer.save(args.output)
 

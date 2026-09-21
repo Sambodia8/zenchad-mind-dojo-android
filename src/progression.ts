@@ -62,8 +62,8 @@ export const COSMETIC_SLOT_DEFINITIONS: Array<{ slot: CosmeticSlot; label: strin
   { slot: "hair", label: "Hair", glyph: "✦" },
   { slot: "top", label: "Top", glyph: "▰" },
   { slot: "wrist", label: "Wrist", glyph: "⌚" },
-  { slot: "legs", label: "Legs", glyph: "▥" },
-  { slot: "shoes", label: "Shoes", glyph: "◒" },
+  { slot: "legs", label: "Bottoms", glyph: "▥" },
+  { slot: "shoes", label: "Footwear", glyph: "◒" },
   { slot: "aura", label: "Aura", glyph: "☯" }
 ];
 

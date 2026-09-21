@@ -161,6 +161,21 @@ async function main() {
     const order = index + 1;
     const endpoint = new URL("https://api.elevenlabs.io/v1/text-to-speech/" + encodeURIComponent(manifest.voiceId));
     endpoint.searchParams.set("output_format", manifest.segmentOutputFormat);
+    const segmentExtension = manifest.segmentOutputFormat.startsWith("opus_") ? ".ogg" : ".mp3";
+    const segmentPath = path.join(workDirectory, String(order).padStart(2, "0") + segmentExtension);
+    if (process.argv.includes("--resume") && await fileExists(segmentPath)) {
+      console.log("Reusing existing cue " + order + "/" + manifest.segments.length + " at " + segment.startSeconds + "s");
+      segmentFiles.push(segmentPath);
+      segmentResults.push({
+        order,
+        startSeconds: segment.startSeconds,
+        characters: segment.text.length,
+        resumed: true,
+        ...probe(segmentPath)
+      });
+      continue;
+    }
+
     console.log("Generating cue " + order + "/" + manifest.segments.length + " at " + segment.startSeconds + "s");
     const response = await fetch(endpoint, {
       method: "POST",
@@ -177,8 +192,6 @@ async function main() {
       throw new Error("Cue " + order + " failed without retry: HTTP " + response.status + ". " + detail);
     }
 
-    const segmentExtension = manifest.segmentOutputFormat.startsWith("opus_") ? ".ogg" : ".mp3";
-    const segmentPath = path.join(workDirectory, String(order).padStart(2, "0") + segmentExtension);
     await writeFile(segmentPath, Buffer.from(await response.arrayBuffer()));
     segmentFiles.push(segmentPath);
     segmentResults.push({

@@ -10,6 +10,8 @@
 ## GitHub completion
 - After any meaningful Zen Chad change, once the relevant checks pass, commit the changes and push the commit to GitHub unless the user explicitly says not to push.
 
+When the user asks to “rebuild the APK”, “build me a new APK”, or equivalent, that includes making the requested source changes, running the relevant checks/tests, building the web layer, syncing Capacitor Android, running the appropriate local Gradle assemble task, verifying the APK was produced, committing the intended source changes, and pushing them so `origin/main` stays up to date unless the user explicitly says not to push. Never force-push or discard unrelated local changes; do not commit APKs, Gradle build directories, local JDKs, temporary files, or other ignored artifacts. Preserve large offline meditation/soundscape binaries locally when they are unsuitable for the GitHub upload path. If local and remote history diverge, reconcile safely without destroying either side.
+
 ## Temporary Development Server Lifecycle
 - `npm run dev` starts Vite for browser QA and asset work; it is not a permanent background service.
 - When automation starts a ZenChad dev server, record the process tree and port, keep it scoped to the current task, and stop the Vite process together with its `npm`/shell wrappers when checks are complete.
