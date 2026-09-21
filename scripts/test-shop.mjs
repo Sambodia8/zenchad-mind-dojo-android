@@ -36,7 +36,8 @@ if (boughtSilverLilac.ok) {
 const runningShoes = cosmeticById("3d-printed-running-shoes");
 assert.equal(runningShoes?.slot, "shoes");
 assert.equal(runningShoes?.paperDollRole, "shoes");
-assert.equal(runningShoes?.thumbnail, undefined);
+assert.equal(runningShoes?.thumbnail, "/assets/status/generated/shoes/3d-printed-running-shoes.png");
+assert.equal(runningShoes?.paperDollLayer, "/assets/status/paper-doll/layers/shoes/3d-printed-running-shoes-canonical-v3.png");
 const boughtRunningShoes = purchaseShopItem({ ...defaultData, zenPoints: 30 }, "3d-printed-running-shoes", "2026-09-02T12:10:00.000Z");
 assert.equal(boughtRunningShoes.ok, true);
 if (boughtRunningShoes.ok) {
@@ -47,7 +48,8 @@ if (boughtRunningShoes.ok) {
 const catShorts = cosmeticById("cat-shorts");
 assert.equal(catShorts?.slot, "legs");
 assert.equal(catShorts?.paperDollRole, "legs");
-assert.equal(catShorts?.thumbnail, undefined);
+assert.equal(catShorts?.thumbnail, "/assets/status/generated/legs/cat-shorts.png");
+assert.equal(catShorts?.paperDollLayer, "/assets/status/paper-doll/layers/legs/cat-shorts-canonical-v3.png");
 const boughtCatShorts = purchaseShopItem({ ...defaultData, zenPoints: 25 }, "cat-shorts", "2026-09-02T12:15:00.000Z");
 assert.equal(boughtCatShorts.ok, true);
 if (boughtCatShorts.ok) {

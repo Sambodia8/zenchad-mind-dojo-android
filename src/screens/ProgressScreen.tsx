@@ -191,11 +191,11 @@ function WardrobeDialog({ slot, data, setData, onClose }: WardrobeDialogProps) {
   const items = cosmeticsForSlot(slot);
   const equippedId = data.progression.equippedCosmetics[slot];
 
-  const buy = (itemId: string) => setData((current) => {
-    const result = purchaseShopItem(current, itemId);
+  const buy = (itemId: string) => {
+    const result = purchaseShopItem(data, itemId);
+    setData(result.data);
     setFeedback(result.ok ? `${result.item.name} unlocked. Choose Equip when you want to wear it.` : purchaseFailureMessage(result.reason));
-    return result.data;
-  });
+  };
 
   const equip = (itemId: string) => {
     setData((current) => equipCosmetic(current, itemId));

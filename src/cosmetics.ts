@@ -121,6 +121,8 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     name: "Cat Shorts",
     description: "A playful cat-print shorts layer for the bottom slot.",
     slot: "legs",
+    thumbnail: "/assets/status/generated/legs/cat-shorts.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/legs/cat-shorts-canonical-v3.png",
     paperDollRole: "legs",
     shopPrice: 25
   },
@@ -139,6 +141,8 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     name: "3D Printed Running Shoes",
     description: "Your 3D-printed running shoes, ready for the next run.",
     slot: "shoes",
+    thumbnail: "/assets/status/generated/shoes/3d-printed-running-shoes.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/shoes/3d-printed-running-shoes-canonical-v3.png",
     paperDollRole: "shoes",
     shopPrice: 30
   },
