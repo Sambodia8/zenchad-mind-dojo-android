@@ -32,6 +32,7 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
     private static final String PREFS = "zenchad_running_background_navigation_v1";
     private static final String KEY_SESSION_ID = "sessionId";
     private static final String KEY_SPOKEN = "spoken";
+    private static final String KEY_MUTED = "muted";
 
     private final Context context;
     private final SharedPreferences prefs;
@@ -139,6 +140,12 @@ public class RunningBackgroundNavigator implements TextToSpeech.OnInitListener {
 
     public void onLocation(Location location) {
         if (location == null || sessionId.isEmpty()) return;
+        if (prefs.getBoolean(KEY_MUTED, false)) {
+            if (tts != null) tts.stop();
+            speaking = false;
+            releaseAudioFocus();
+            return;
+        }
         reloadRouteIfNeeded();
         if (lats.length < 2 || cumulative.length != lats.length) return;
 

@@ -2,8 +2,8 @@ import { loadRunSession, loadRunningProfile, type RunSession } from "./running";
 import { navigationStateForLocation, cueForNavigationState, formatNavigationDistance, formatNavigationTime, navigationArrowForManeuver, shouldRerouteNavigation, type NavigationCueLevel } from "./runningNavigation";
 import { buildValhallaRunningRoute } from "./runningValhalla";
 import { loadPlannedRunningRoute, loadRunningRouteBuildState, savePlannedRunningRoute, saveRunningRouteBuildState, clearRunningRouteState, type PlannedRunningRoute } from "./runningRouteStore";
-import { speakRunningNavigation } from "./runningSpeech";
-import { clearNativeBackgroundRunningRoute, setNativeBackgroundRunningRoute } from "./runningBackgroundNavigation";
+import { speakRunningNavigation, stopRunningNavigationSpeech } from "./runningSpeech";
+import { clearNativeBackgroundRunningRoute, setNativeBackgroundNavigationMuted, setNativeBackgroundRunningRoute } from "./runningBackgroundNavigation";
 import { annotateRunningRouteSemantics } from "./runningRouteSemantics";
 import { chooseStoryMission } from "./runningCampaign";
 
@@ -20,6 +20,7 @@ let nearestShapeIndex = 0;
 let offRouteSince = 0;
 let spoken: Record<string, NavigationCueLevel[]> = {};
 let speaking = false;
+let navigationMuted = false;
 let nativeRouteSignature = "";
 const semanticsInFlight = new Set<string>();
 
@@ -220,8 +221,18 @@ function ensureNavigationDock() {
     <span class="running-nav-arrow">↑</span>
     <div><span class="eyebrow">Navigation</span><strong data-running-nav-instruction>Route guidance loading…</strong><small data-running-nav-detail></small></div>
     <b data-running-nav-distance></b>
+    <button type="button" class="running-nav-mute" aria-pressed="false" aria-label="Mute turn instructions">Mute</button>
     <div class="running-nav-progress" aria-label="Route progress"><span data-running-nav-progress-bar></span><small data-running-nav-progress-text></small></div>
   `;
+  const mute = dock.querySelector<HTMLButtonElement>(".running-nav-mute");
+  mute?.addEventListener("click", () => {
+    navigationMuted = !navigationMuted;
+    mute.setAttribute("aria-pressed", String(navigationMuted));
+    mute.textContent = navigationMuted ? "Unmute" : "Mute";
+    mute.setAttribute("aria-label", navigationMuted ? "Unmute turn instructions" : "Mute turn instructions");
+    if (navigationMuted) void stopRunningNavigationSpeech();
+    void setNativeBackgroundNavigationMuted(navigationMuted);
+  });
   endButton.parentElement.insertBefore(dock, endButton);
   return dock;
 }
@@ -272,6 +283,7 @@ function updateNavigationDock(route: PlannedRunningRoute, session: RunSession) {
 
   const cue = cueForNavigationState(state, spoken);
   if (cue && !speaking) {
+    if (navigationMuted) return;
     spoken[cue.maneuverId] = [...(spoken[cue.maneuverId] ?? []), cue.level];
     speaking = true;
     void speakRunningNavigation(cue.speech).finally(() => { speaking = false; });
@@ -287,6 +299,7 @@ function tick() {
   if (!session) {
     clearRunningRouteState();
     clearNativeRouteOnce();
+    navigationMuted = false;
     removeNavigationDock();
     return;
   }
@@ -294,6 +307,7 @@ function tick() {
   if (session.mode === "just") {
     clearRunningRouteState();
     clearNativeRouteOnce();
+    navigationMuted = false;
     removeNavigationDock();
     return;
   }

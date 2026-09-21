@@ -3,6 +3,7 @@ import type { PlannedRunningRoute } from "./runningRouteStore";
 
 interface RunningBackgroundNavigationPlugin {
   setRoute(options: { routeJson: string }): Promise<void>;
+  setMuted(options: { muted: boolean }): Promise<void>;
   clearRoute(): Promise<void>;
 }
 
@@ -31,5 +32,14 @@ export async function setNativeBackgroundRunningRoute(route: PlannedRunningRoute
 
 export async function clearNativeBackgroundRunningRoute() {
   if (Capacitor.getPlatform() !== "android") return;
-  await RunningBackgroundNavigation.clearRoute();
+  await Promise.all([
+    RunningBackgroundNavigation.clearRoute(),
+    RunningBackgroundNavigation.setMuted({ muted: false })
+  ]);
+}
+
+/** Keeps the foreground and Android background navigation voices in agreement. */
+export async function setNativeBackgroundNavigationMuted(muted: boolean) {
+  if (Capacitor.getPlatform() !== "android") return;
+  await RunningBackgroundNavigation.setMuted({ muted });
 }

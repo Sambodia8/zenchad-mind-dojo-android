@@ -12,6 +12,8 @@ import java.nio.charset.StandardCharsets;
 @CapacitorPlugin(name = "RunningBackgroundNavigation")
 public class RunningBackgroundNavigationPlugin extends Plugin {
     public static final String ROUTE_FILE = "zenchad_running_navigation_route_v1.json";
+    private static final String PREFS = "zenchad_running_background_navigation_v1";
+    private static final String KEY_MUTED = "muted";
 
     @PluginMethod
     public void setRoute(PluginCall call) {
@@ -34,6 +36,16 @@ public class RunningBackgroundNavigationPlugin extends Plugin {
     @PluginMethod
     public void clearRoute(PluginCall call) {
         getContext().deleteFile(ROUTE_FILE);
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void setMuted(PluginCall call) {
+        boolean muted = call.getBoolean("muted", false);
+        getContext().getSharedPreferences(PREFS, android.content.Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(KEY_MUTED, muted)
+            .apply();
         call.resolve();
     }
 }

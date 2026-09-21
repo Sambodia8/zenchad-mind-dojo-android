@@ -131,6 +131,17 @@
   color: #fff4c0;
 }
 
+.running-nav-mute {
+  min-height: 36px;
+  padding: .38rem .55rem;
+  border: 1px solid rgba(159, 182, 255, .5);
+  border-radius: .6rem;
+  background: rgba(159, 182, 255, .1);
+  color: #f8fbff;
+  font: 800 .72rem/1 system-ui, sans-serif;
+}
+.running-nav-mute[aria-pressed="true"] { border-color: rgba(255, 211, 78, .7); background: rgba(255, 211, 78, .16); color: #fff4c0; }
+
 .running-navigation-dock .eyebrow { color: #9fb6ff; }
 
 .running-navigation-mini-map {
@@ -153,6 +164,8 @@
 }
 .running-street-map.ready { display: block !important; }
 .running-street-map .maplibregl-canvas { outline: none; }
+.running-street-map .maplibregl-ctrl-top-right { top: .5rem; right: .5rem; }
+.running-map-centre-control { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid rgba(234,245,255,.55); border-radius: .55rem; color: #fff; background: rgba(7,17,31,.88); font-size: 1.35rem; line-height: 1; }
 .running-street-map .maplibregl-ctrl-attrib { color: #d5dfef; background: rgba(7, 17, 31, .82); font-size: 9px; }
 .running-street-map .maplibregl-ctrl-attrib a { color: #fff4c0; }
 .running-street-map .maplibregl-ctrl-scale { border-color: #f4f7fb; color: #f4f7fb; background: rgba(7, 17, 31, .72); }

@@ -11,6 +11,8 @@ const states = new WeakMap<HTMLElement, {
   routeIdentity: string;
   loaded: boolean;
   errors: number;
+  completedShapeIndex: number;
+  followRunner: boolean;
 }>();
 
 function bearingDegrees(from: { lat: number; lng: number }, to: { lat: number; lng: number }) {
@@ -75,17 +77,29 @@ function updateMap(
   points: RunPoint[]
 ) {
   if (!state.loaded || state.errors >= 3 || !points.length) return;
+  const identity = `${route.sessionId}:${route.createdAt}:${route.rerouteCount}`;
+  if (identity !== state.routeIdentity) {
+    state.routeIdentity = identity;
+    state.completedShapeIndex = -1;
+    fitRoute(state.map, route);
+  }
   const split = Math.max(0, Math.min(route.geometry.length - 1, navigation.nearestShapeIndex));
-  sourceData(state.map, "zenchad-remaining", route.geometry.slice(split));
-  sourceData(state.map, "zenchad-completed", route.geometry.slice(0, split + 1));
+  // Do not replace both route sources every GPS tick. Apart from wasting render work,
+  // that made the blue completed line visibly restart whenever the camera moved.
+  if (split !== state.completedShapeIndex) {
+    sourceData(state.map, "zenchad-remaining", route.geometry.slice(split));
+    sourceData(state.map, "zenchad-completed", route.geometry.slice(0, split + 1));
+    state.completedShapeIndex = split;
+  }
   const latest = points[points.length - 1];
   state.marker
     .setLngLat([latest.lng, latest.lat])
     .setRotation(runnerHeading(points, route, navigation.nearestShapeIndex));
-  const identity = `${route.sessionId}:${route.createdAt}:${route.rerouteCount}`;
-  if (identity !== state.routeIdentity) {
-    state.routeIdentity = identity;
-    fitRoute(state.map, route);
+  // Follow only until the runner explores the map themselves. The camera moves
+  // without recreating either route layer, so the completed blue trace remains
+  // visually continuous when GPS carries the runner beyond the visible area.
+  if (state.followRunner && !state.map.getBounds().contains([latest.lng, latest.lat])) {
+    state.map.easeTo({ center: [latest.lng, latest.lat], duration: 350 });
   }
   container.classList.add("ready");
 }
@@ -119,7 +133,7 @@ export async function updateRunningStreetMap(
       style: OPENFREEMAP_DARK_STYLE,
       center: [route.start.lng, route.start.lat],
       zoom: 14,
-      interactive: false,
+      interactive: true,
       attributionControl: false,
       fadeDuration: 0
     });
@@ -136,7 +150,9 @@ export async function updateRunningStreetMap(
       marker,
       routeIdentity: `${route.sessionId}:${route.createdAt}:${route.rerouteCount}`,
       loaded: false,
-      errors: 0
+      errors: 0,
+      completedShapeIndex: -1,
+      followRunner: true
     };
     states.set(container, state);
     map.once("load", () => {
@@ -146,6 +162,27 @@ export async function updateRunningStreetMap(
       map.addLayer({ id: "zenchad-route-casing", type: "line", source: "zenchad-remaining", paint: { "line-color": "#17110a", "line-width": 10, "line-opacity": .78 } });
       map.addLayer({ id: "zenchad-route-remaining", type: "line", source: "zenchad-remaining", paint: { "line-color": "#f2c94c", "line-width": 6 } });
       map.addLayer({ id: "zenchad-route-completed", type: "line", source: "zenchad-completed", paint: { "line-color": "#2f9cff", "line-width": 6 } });
+      map.on("dragstart", () => { state.followRunner = false; });
+      map.on("zoomstart", () => { state.followRunner = false; });
+      const centreControl = {
+        onAdd() {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "running-map-centre-control";
+          button.textContent = "⌖";
+          button.title = "Centre on runner";
+          button.setAttribute("aria-label", "Centre map on runner");
+          button.addEventListener("click", () => {
+            const current = points.at(-1);
+            if (!current) return;
+            state.followRunner = true;
+            map.easeTo({ center: [current.lng, current.lat], duration: 350 });
+          });
+          return button;
+        },
+        onRemove() {}
+      };
+      map.addControl(centreControl as import("maplibre-gl").IControl, "top-right");
       state.loaded = true;
       // The street map is deliberately hidden until its style is ready so the
       // schematic remains the visual fallback. MapLibre therefore initialises
