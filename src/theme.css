@@ -1,6 +1,10 @@
 :root[data-appearance="dark"] {
   --ink: #eef2ff;
-  --muted: #9ba8c7;
+  /* The old grey "muted" token was repeatedly being used for headings and
+     live status copy, where it disappeared into the dark app surfaces. Keep
+     the dark theme deliberately high-contrast: secondary information is
+     softer by size and spacing, never by becoming hard to read. */
+  --muted: #f0f4ff;
   --panel: rgba(20, 29, 52, 0.82);
   --line: rgba(255, 255, 255, 0.09);
   --app-bg: #080d1b;
@@ -15,16 +19,16 @@
   --surface-soft: rgba(255, 255, 255, 0.04);
   --input-bg: rgba(5, 10, 23, 0.55);
   --search-bg: rgba(5, 10, 23, 0.5);
-  --hud-text: #cbd5e1;
-  --nav-text: #71809f;
+  --hud-text: #f0f4ff;
+  --nav-text: #f0f4ff;
   --nav-active: #c4b5fd;
   --accent-text: #a5b4fc;
   --secondary-text: #ddd6fe;
   --secondary-bg: rgba(124, 58, 237, 0.1);
-  --ghost-text: #b8c2d9;
+  --ghost-text: #f0f4ff;
   --ghost-bg: rgba(255, 255, 255, 0.025);
   --segmented-bg: rgba(4, 9, 20, 0.55);
-  --segmented-text: #8491ac;
+  --segmented-text: #f0f4ff;
   --segmented-active-text: #ede9fe;
   --segmented-active-bg: rgba(124, 58, 237, 0.3);
   --progress-track-bg: rgba(255, 255, 255, 0.07);
@@ -144,7 +148,17 @@
 :root[data-appearance="dark"] .card h3,
 :root[data-appearance="dark"] .page-intro h1,
 :root[data-appearance="dark"] .yoga-section-heading h2 {
-  color: var(--ink);
+  color: #fff;
+}
+
+/* A heading should never inherit a low-contrast grey from a feature surface. */
+:root[data-appearance="dark"] .section-heading h1,
+:root[data-appearance="dark"] .section-heading h2,
+:root[data-appearance="dark"] .section-heading h3,
+:root[data-appearance="dark"] .page-intro h2,
+:root[data-appearance="dark"] .page-intro h3,
+:root[data-appearance="dark"] .card h4 {
+  color: #fff;
 }
 
 :root[data-appearance="dark"] .yoga-class-meta,
