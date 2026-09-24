@@ -2692,6 +2692,51 @@ select:focus {
   text-shadow: 0 2px 0 #33204f, 0 0 1rem rgba(244, 207, 131, 0.28);
 }
 
+.meditation-breathing-summary {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 0.65rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+}
+
+.meditation-breathing-summary strong,
+.meditation-breathing-summary span {
+  display: block;
+}
+
+.meditation-breathing-summary span {
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.breathing-guidance-card {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.breathing-guidance-title {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.breathing-guidance-title span {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.breathing-guidance-title small,
+.breathing-guidance-card > small {
+  color: var(--muted);
+}
+
+.breathing-guidance-card p {
+  margin: 0;
+}
+
 .timer-ring span {
   color: #7f8da8;
   font-size: 0.8rem;

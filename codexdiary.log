@@ -223,3 +223,8 @@
 - Decision/change: Replaced rotating 13-minute NSDR story tracks with one canonical 10-minute breath-led body-scan protocol based on the supplied reference script; added resume support to the timed ElevenLabs generator so the eight previously paid cues could be reused after quota restoration.
 - Verification: Generated 13 cues with 0 retries, exact 600.0065-second Opus 48 kHz mono output, 15.135896-second opening silence, clean decode, catalogue audio verification, TypeScript/Vite production build, Capacitor sync, JDK 21 Gradle APK assembly, package/version metadata, v1/v2 signatures, and packaged audio asset presence. No Android device installation test was run.
 - Artifact: `S:\zENcHAD\ZenChadAndroid\releases\Zen-Chad-2.5-NSDR-Protocol.apk`, versionCode 16/versionName 2.5, SHA-256 `094AF1FA8C71449F6DDCEC6DD89BB283862101C26BFB72FECFA03A3988A00BD2`.
+
+2026-09-24 - Five-minute meditations and YouTube floating timer
+- Decision/change: Added exact five-minute phase variants with existing music/on-screen guidance; full-length spoken recordings stay unchanged. Binaural sessions open creator-published YouTube playlists with a native draggable countdown and no bundled media.
+- Preserve/avoid: Overlay requires Android display-over-apps permission, uses the session deadline, and returns to ZenChad for controls/saving. YouTube owns playback (including ads); timer completion does not stop it. No audio generation credits spent.
+- Verification: Exact timing across 17 practices, focused regression/UI checks and signed APK 2.8/code 19 passed. No phone connected for native overlay testing. APK: releases/ZenChad-2.8-Meditation-YouTube.apk.

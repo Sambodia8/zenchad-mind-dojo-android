@@ -15,6 +15,12 @@ export interface TimerPhase {
   instruction: string;
 }
 
+export interface BreathingGuidance {
+  name: string;
+  instruction: string;
+  safetyNote: string;
+}
+
 export interface Meditation {
   id: string;
   name: string;
@@ -26,6 +32,7 @@ export interface Meditation {
   tags: string[];
   color: string;
   phases: TimerPhase[];
+  breathingGuidance?: BreathingGuidance;
   youtubeQuery?: string;
   isVr?: boolean;
 }

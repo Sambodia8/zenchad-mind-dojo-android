@@ -20,22 +20,25 @@ import {
   Pause,
   Play,
   RotateCcw,
-  SkipForward
+  SkipForward,
+  Wind
 } from "lucide-react";
 import { MEDITATIONS } from "../data";
 import {
   chooseGuidedAudioVariant,
   rememberGuidedAudioVariant
 } from "../guidedAudio";
-import { GaplessAudioLoop } from "../gaplessAudioLoop";
+import {
+  buildMusicQueueIdsForCounter,
+  readMusicCycleCounter,
+  takeNextMusicCycleCounter
+} from "../meditationMusicPlaylist";
 import {
   chooseNamasteEnding,
   rememberNamasteEnding
 } from "../namasteAudio";
-import {
-  chooseMeditationMusic,
-  rememberMeditationMusic
-} from "../soundscapeAudio";
+import { musicTracksForMeditation, type MeditationMusicTrack } from "../soundscapeAudio";
+import { StreamingMusicPlaylist } from "../streamingMusicPlaylist";
 import {
   allowScreenSleep,
   cancelTimerNotifications,
@@ -50,6 +53,8 @@ import { playUiSfx } from "../uiSfx";
 import { XP_COLLECTION_DURATION } from "../components/XpCollectionAnimation";
 import ZenPointsRewardFeedback from "../components/ZenPointsRewardFeedback";
 import { zenPointsForMeditation } from "../zenPoints";
+import { fiveMinuteMeditation } from "../meditationDuration";
+import { BINAURAL_PLAYLISTS, hasMeditationOverlay, MeditationOverlay } from "../meditationOverlay";
 
 interface Props {
   meditationId: string;
@@ -66,6 +71,7 @@ interface PersistedTimer {
   meditationId: string;
   guidedAudioId?: string;
   meditationMusicId?: string;
+  meditationMusicQueueIds?: string[];
   namasteEndingId?: string;
   phaseIndex: number;
   remaining: number;
@@ -153,7 +159,8 @@ function restoreTimer(meditation: Meditation): PersistedTimer {
       remaining: completed ? 0 : Math.max(1, Math.ceil((deadline - now) / 1000)),
       completed,
       running: !completed,
-      elapsedSeconds: saved.elapsedSeconds + Math.max(0, Math.floor((now - saved.savedAt) / 1000)),
+      elapsedSeconds: Math.min(meditation.phases.reduce((sum, phase) => sum + phase.duration, 0),
+        saved.elapsedSeconds + Math.max(0, Math.floor((now - saved.savedAt) / 1000))),
       savedAt: now
     };
   } catch {
@@ -161,22 +168,56 @@ function restoreTimer(meditation: Meditation): PersistedTimer {
   }
 }
 
-export default function TimerScreen({
+export default function TimerScreen(props: Props) {
+  const key = `zenchad_duration_${props.meditationId}`;
+  const [shortSession, setShortSession] = useState(() => localStorage.getItem(key) === "5");
+  return <MeditationTimer key={`${props.meditationId}-${shortSession}`} {...props}
+    shortSession={shortSession} onDurationChange={(short) => {
+      localStorage.removeItem(ACTIVE_TIMER_KEY);
+      localStorage.setItem(key, short ? "5" : "full");
+      setShortSession(short);
+    }} />;
+}
+
+function MeditationTimer({
   meditationId,
   data,
   setData,
   navigate,
   mysteryCategory,
-  mysteryRunId
-}: Props) {
-  const meditation = MEDITATIONS.find((item) => item.id === meditationId) ?? MEDITATIONS[0];
+  mysteryRunId,
+  shortSession,
+  onDurationChange
+}: Props & { shortSession: boolean; onDurationChange: (short: boolean) => void }) {
+  const baseMeditation = MEDITATIONS.find((item) => item.id === meditationId) ?? MEDITATIONS[0];
+  const meditation = useMemo(() => shortSession ? fiveMinuteMeditation(baseMeditation) : baseMeditation, [baseMeditation, shortSession]);
+  const binaural = meditation.id === "binaural";
   const restored = useMemo(() => restoreTimer(meditation), [meditation]);
   const [guidedAudio, setGuidedAudio] = useState(() =>
-    chooseGuidedAudioVariant(meditation.id, restored.guidedAudioId)
+    shortSession || binaural ? undefined : chooseGuidedAudioVariant(meditation.id, restored.guidedAudioId)
   );
-  const [meditationMusic, setMeditationMusic] = useState(() =>
-    chooseMeditationMusic(meditation.id, restored.meditationMusicId)
+  const availableMusic = useMemo(() => binaural ? [] : musicTracksForMeditation(meditation.id), [meditation.id, binaural]);
+  const [playlist, setPlaylist] = useState(BINAURAL_PLAYLISTS[0].url);
+  const [openingYoutube, setOpeningYoutube] = useState(false);
+  const [youtubeMessage, setYoutubeMessage] = useState("");
+  const sessionDuration = useMemo(
+    () => meditation.phases.reduce((sum, item) => sum + item.duration, 0),
+    [meditation.phases]
   );
+  const [meditationMusicQueueIds, setMeditationMusicQueueIds] = useState(() =>
+    restored.meditationMusicQueueIds?.length
+      ? restored.meditationMusicQueueIds
+      : buildMusicQueueIdsForCounter(
+          availableMusic,
+          sessionDuration,
+          readMusicCycleCounter(),
+          restored.meditationMusicId
+        )
+  );
+  const [currentMusic, setCurrentMusic] = useState<MeditationMusicTrack | undefined>(() => {
+    const firstId = meditationMusicQueueIds[0];
+    return availableMusic.find((track) => track.id === firstId) ?? availableMusic[0];
+  });
   const [namasteEnding, setNamasteEnding] = useState(() =>
     chooseNamasteEnding(restored.namasteEndingId)
   );
@@ -197,13 +238,16 @@ export default function TimerScreen({
   const lastClockReadRef = useRef(Date.now());
   const finishingRef = useRef(false);
   const guidedAudioRef = useRef<HTMLAudioElement | null>(null);
-  const meditationMusicRef = useRef<GaplessAudioLoop | null>(null);
+  const meditationMusicRef = useRef<StreamingMusicPlaylist | null>(null);
   const namasteAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionSavedRef = useRef(false);
   const completionNavigationTimerRef = useRef<number | null>(null);
+  const musicCycleClaimedRef = useRef(
+    restored.started || Boolean(restored.meditationMusicQueueIds?.length)
+  );
   const mysteryMode = Boolean(mysteryCategory && mysteryRunId);
   const currentPhase = meditation.phases[phaseIndex];
-  const totalDuration = meditation.phases.reduce((sum, item) => sum + item.duration, 0);
+  const totalDuration = sessionDuration;
   const elapsedBefore = meditation.phases
     .slice(0, phaseIndex)
     .reduce((sum, item) => sum + item.duration, 0);
@@ -269,31 +313,29 @@ export default function TimerScreen({
   }, [guidedAudio]);
 
   useEffect(() => {
-    if (!meditationMusic) return;
-    let cancelled = false;
+    if (availableMusic.length === 0 || meditationMusicQueueIds.length === 0) return;
     setMusicUnavailable(false);
-    setMusicReady(false);
-    void GaplessAudioLoop.load(
-      meditationMusic.src,
-      data.preferences.meditationMusicVolume / 100,
-      () => setMusicUnavailable(true)
-    ).then((audio) => {
-      if (cancelled) {
-        audio.dispose();
-        return;
-      }
-      meditationMusicRef.current = audio;
-      setMusicReady(true);
-    }).catch(() => {
-      if (!cancelled) setMusicUnavailable(true);
-    });
+    let audio: StreamingMusicPlaylist;
+    try {
+      audio = new StreamingMusicPlaylist(
+        meditationMusicQueueIds,
+        availableMusic,
+        data.preferences.meditationMusicVolume / 100,
+        setCurrentMusic,
+        () => setMusicUnavailable(true)
+      );
+    } catch {
+      setMusicUnavailable(true);
+      return;
+    }
+    meditationMusicRef.current = audio;
+    setMusicReady(true);
     return () => {
-      cancelled = true;
-      meditationMusicRef.current?.dispose();
-      meditationMusicRef.current = null;
+      audio.dispose();
+      if (meditationMusicRef.current === audio) meditationMusicRef.current = null;
       setMusicReady(false);
     };
-  }, [meditationMusic]);
+  }, [availableMusic, meditationMusicQueueIds]);
 
   useEffect(() => {
     const audio = new Audio(namasteEnding.src);
@@ -347,13 +389,13 @@ export default function TimerScreen({
     const elapsed = elapsedBefore + currentPhase.duration - remaining;
     syncMeditationMusic(
       elapsed,
-      Boolean(meditationMusic && running && started && !completed)
+      Boolean(meditationMusicQueueIds.length && running && started && !completed)
     );
   }, [
     completed,
     currentPhase.duration,
     elapsedBefore,
-    meditationMusic,
+    meditationMusicQueueIds.length,
     musicReady,
     remaining,
     running,
@@ -422,7 +464,8 @@ export default function TimerScreen({
   const syncClock = useCallback(() => {
     if (!running || !deadlineRef.current || finishingRef.current) return;
     const now = Date.now();
-    elapsedRef.current += Math.max(0, (now - lastClockReadRef.current) / 1000);
+    elapsedRef.current = Math.min(totalDuration,
+      elapsedRef.current + Math.max(0, (now - lastClockReadRef.current) / 1000));
     lastClockReadRef.current = now;
 
     let nextIndex = phaseIndex;
@@ -443,7 +486,7 @@ export default function TimerScreen({
     }
     deadlineRef.current = nextDeadline;
     setRemaining(Math.max(1, Math.ceil((nextDeadline - now) / 1000)));
-  }, [finish, meditation.phases, phaseIndex, running, sound]);
+  }, [finish, meditation.phases, phaseIndex, running, sound, totalDuration]);
 
   useEffect(() => {
     if (!running || completed) return;
@@ -454,7 +497,10 @@ export default function TimerScreen({
   useEffect(() => {
     let listener: Awaited<ReturnType<typeof App.addListener>> | undefined;
     void App.addListener("appStateChange", ({ isActive }) => {
-      if (isActive) syncClock();
+      if (isActive) {
+        syncClock();
+        if (hasMeditationOverlay) void MeditationOverlay.hide().catch(() => {});
+      }
     }).then((handle) => {
       listener = handle;
     });
@@ -476,7 +522,7 @@ export default function TimerScreen({
     const state: PersistedTimer = {
       meditationId: meditation.id,
       guidedAudioId: guidedAudio?.id,
-      meditationMusicId: meditationMusic?.id,
+      meditationMusicQueueIds,
       namasteEndingId: namasteEnding.id,
       phaseIndex,
       remaining,
@@ -492,7 +538,7 @@ export default function TimerScreen({
     completed,
     guidedAudio?.id,
     meditation.id,
-    meditationMusic?.id,
+    meditationMusicQueueIds,
     namasteEnding.id,
     phaseIndex,
     remaining,
@@ -501,12 +547,15 @@ export default function TimerScreen({
   ]);
 
   const startOrResume = () => {
+    if (!started && !musicCycleClaimedRef.current) {
+      takeNextMusicCycleCounter();
+      musicCycleClaimedRef.current = true;
+    }
     if (guidedAudio) rememberGuidedAudioVariant(meditation.id, guidedAudio.id);
-    if (meditationMusic) rememberMeditationMusic(meditation.id, meditationMusic.id);
     rememberNamasteEnding(namasteEnding.id);
     const elapsed = elapsedBefore + currentPhase.duration - remaining;
     syncGuidedAudio(elapsed, Boolean(guidedAudio));
-    syncMeditationMusic(elapsed, Boolean(meditationMusic));
+    syncMeditationMusic(elapsed, meditationMusicQueueIds.length > 0);
     setStarted(true);
     setRunning(true);
     lastClockReadRef.current = Date.now();
@@ -515,6 +564,7 @@ export default function TimerScreen({
   };
 
   const pause = () => {
+    if (hasMeditationOverlay) void MeditationOverlay.hide().catch(() => {});
     syncClock();
     const elapsed = elapsedBefore + currentPhase.duration - remaining;
     syncGuidedAudio(elapsed, false);
@@ -555,6 +605,7 @@ export default function TimerScreen({
   };
 
   const reset = () => {
+    if (hasMeditationOverlay) void MeditationOverlay.hide().catch(() => {});
     setRunning(false);
     setStarted(false);
     setCompleted(false);
@@ -566,12 +617,51 @@ export default function TimerScreen({
     namasteAudioRef.current?.pause();
     deadlineRef.current = null;
     finishingRef.current = false;
-    setGuidedAudio(chooseGuidedAudioVariant(meditation.id));
-    setMeditationMusic(chooseMeditationMusic(meditation.id));
+    setGuidedAudio(shortSession || binaural ? undefined : chooseGuidedAudioVariant(meditation.id));
+    const nextMusicQueue = buildMusicQueueIdsForCounter(
+      availableMusic,
+      totalDuration,
+      takeNextMusicCycleCounter()
+    );
+    musicCycleClaimedRef.current = true;
+    setMeditationMusicQueueIds(nextMusicQueue);
+    setCurrentMusic(availableMusic.find((track) => track.id === nextMusicQueue[0]));
     setNamasteEnding(chooseNamasteEnding());
     localStorage.removeItem(ACTIVE_TIMER_KEY);
     void cancelTimerNotifications();
     void allowScreenSleep();
+  };
+
+  const openYoutube = async () => {
+    if (openingYoutube) return;
+    setOpeningYoutube(true);
+    setYoutubeMessage("");
+    try {
+      if (!hasMeditationOverlay) {
+        setYoutubeMessage("The floating YouTube timer is available in the Android app.");
+        return;
+      }
+      const { granted } = await MeditationOverlay.permission();
+      if (!granted) {
+        setYoutubeMessage("Allow ZenChad to display over other apps, then return and tap Open YouTube again.");
+        await MeditationOverlay.requestPermission();
+        return;
+      }
+      if (!running) startOrResume();
+      const laterSeconds = meditation.phases.slice(phaseIndex + 1).reduce((sum, phase) => sum + phase.duration, 0);
+      const deadline = (deadlineRef.current ?? Date.now() + remaining * 1000) + laterSeconds * 1000;
+      // Persist before switching apps: the WebView may immediately suspend its effects.
+      localStorage.setItem(ACTIVE_TIMER_KEY, JSON.stringify({
+        meditationId: meditation.id, phaseIndex, remaining, running: true, started: true,
+        completed: false, deadline: deadlineRef.current, elapsedSeconds: elapsedRef.current, savedAt: Date.now()
+      }));
+      await MeditationOverlay.open({ url: playlist, deadline });
+    } catch {
+      pause();
+      setYoutubeMessage("YouTube or the floating timer could not open. Your timer is paused; check the overlay permission and try again.");
+    } finally {
+      setOpeningYoutube(false);
+    }
   };
 
   const toggleTimerAlerts = async () => {
@@ -694,6 +784,43 @@ export default function TimerScreen({
         <p>{meditation.benefit}</p>
       </section>
 
+      {!started && (
+        <section className="card settings-card">
+          <label>Session length
+            <select value={shortSession ? "5" : "full"} onChange={(event) => onDurationChange(event.target.value === "5")}>
+              <option value="5">5 minutes · a little is enough</option>
+              <option value="full">Full practice · {Math.ceil(baseMeditation.phases.reduce((sum, phase) => sum + phase.duration, 0) / 60)} minutes</option>
+            </select>
+          </label>
+          {shortSession && !binaural && <p className="setting-note">A shorter practice with on-screen guidance and music. Spoken journeys are available with the full practice.</p>}
+        </section>
+      )}
+
+      {binaural && (
+        <section className="card settings-card">
+          <label>YouTube playlist
+            <select value={playlist} onChange={(event) => setPlaylist(event.target.value)}>
+              {BINAURAL_PLAYLISTS.map((item) => <option key={item.url} value={item.url}>{item.name}</option>)}
+            </select>
+          </label>
+          <p className="setting-note">Use stereo headphones. Open YouTube, choose Play there, and keep your countdown floating above it. Drag the timer to move it; tap Return to pause or finish in ZenChad. Internet required.</p>
+          <button className="button primary full" disabled={openingYoutube} onClick={() => void openYoutube()}>{openingYoutube ? "Opening…" : "Open YouTube + floating timer"}</button>
+          <p className="setting-note">The timer starts when YouTube opens. YouTube playback and ads are controlled by YouTube; finishing the timer does not stop the music.</p>
+          {youtubeMessage && <p role="status" className="status-message">{youtubeMessage}</p>}
+        </section>
+      )}
+
+      {meditation.breathingGuidance && (
+        <section className="card breathing-guidance-card">
+          <div className="breathing-guidance-title">
+            <Wind size={19} />
+            <span><small>Breathing for this practice</small><strong>{meditation.breathingGuidance.name}</strong></span>
+          </div>
+          <p>{meditation.breathingGuidance.instruction}</p>
+          <small>{meditation.breathingGuidance.safetyNote}</small>
+        </section>
+      )}
+
       {meditation.id === "trataka" && (
         <div className={`virtual-candle ${currentPhase.kind === "rest" || currentPhase.kind === "finish" ? "dimmed" : ""}`}>
           <span className="flame-shape"><i /></span>
@@ -781,10 +908,10 @@ export default function TimerScreen({
           <p className="voice-waiting">
             {guidedAudio
               ? "Offline voice guidance could not be loaded on this device."
-              : "Spoken guidance is not yet available for this meditation."}
+              : binaural ? "Your chosen YouTube playlist provides the audio." : shortSession ? "Follow the on-screen prompts for this five-minute practice." : "Spoken guidance is not yet available for this meditation."}
           </p>
         )}
-        {meditationMusic && (
+        {meditationMusicQueueIds.length > 0 && (
           <>
             <div className="setting-row">
               <span>
@@ -810,7 +937,9 @@ export default function TimerScreen({
             <p className="voice-waiting">
               {musicUnavailable
                 ? "Offline meditation music could not be loaded on this device."
-                : `Playing “${meditationMusic.title}”. Music A and B alternate between sessions without repeating.`}
+                : currentMusic
+                  ? `Playing “${currentMusic.title}”. All available tracks shuffle without repeating, with gentle crossfades.`
+                  : "Preparing the shuffled offline soundtrack."}
             </p>
             <label>
               Music volume

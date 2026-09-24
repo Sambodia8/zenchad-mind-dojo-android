@@ -122,6 +122,12 @@ export default function ToolkitScreen({
                   <h3>{meditation.name}</h3>
                   <strong style={{ color: meditation.color }}>{meditation.benefit}</strong>
                   <p>{meditation.description}</p>
+                  {meditation.breathingGuidance && (
+                    <p className="meditation-breathing-summary">
+                      <strong>Breathing · {meditation.breathingGuidance.name}</strong>
+                      <span>{meditation.breathingGuidance.instruction}</span>
+                    </p>
+                  )}
                   <div className="chip-row">
                     {meditation.tags.map((tag) => (
                       <span key={tag}>{tag}</span>
@@ -134,7 +140,12 @@ export default function ToolkitScreen({
                     >
                       <Play size={17} /> Start
                     </button>
-                    {meditation.youtubeQuery && (
+                    {meditation.id === "binaural" && (
+                      <button className="button ghost" onClick={() => navigate({ name: "timer", meditationId: meditation.id })}>
+                        <ExternalLink size={16} /> YouTube playlists
+                      </button>
+                    )}
+                    {meditation.youtubeQuery && meditation.id !== "binaural" && (
                       <a
                         className="button ghost"
                         href={`https://www.youtube.com/results?search_query=${encodeURIComponent(

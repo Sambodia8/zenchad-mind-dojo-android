@@ -3,23 +3,57 @@ export interface MeditationMusicTrack {
   meditationId: string;
   src: string;
   title: string;
-  variation: "a" | "b";
+  variation: "a" | "b" | "c" | "d";
   provider: "ElevenLabs" | "Treblo";
+  durationSeconds: number;
 }
+
+const MUSIC_DURATION_SECONDS: Record<string, number> = {
+  "metta-music-a": 55.0065,
+  "metta-music-b": 41.709979,
+  "pratyahara-music-a": 41.013,
+  "pratyahara-music-b": 41.292021,
+  "nsdr-music-a": 41.013,
+  "nsdr-music-b": 53.552146,
+  "sound-awareness-music-a": 41.013,
+  "sound-awareness-music-b": 43.5065,
+  "ego-music-a": 41.013,
+  "ego-music-b": 40.270333,
+  "ajna-music-a": 41.013,
+  "ajna-music-b": 43.846208,
+  "urge-surfing-music-a": 55.0065,
+  "urge-surfing-music-b": 41.245563,
+  "acceptance-music-a": 41.013,
+  "acceptance-music-b": 46.075333,
+  "trataka-music-a": 55.0065,
+  "trataka-music-b": 53.412833,
+  "diaphragmatic-breathing-music-a": 41.013,
+  "diaphragmatic-breathing-music-b": 39.527292,
+  "focused-attention-music-a": 41.013,
+  "focused-attention-music-b": 48.0065,
+  "grounding-music-a": 41.013,
+  "grounding-music-b": 44.217729,
+  "yoga-nidra-music-a": 55.0065,
+  "yoga-nidra-music-b": 49.836958
+};
 
 const music = (
   meditationId: string,
-  variation: "a" | "b",
+  variation: "a" | "b" | "c" | "d",
   title: string,
   provider: MeditationMusicTrack["provider"]
-): MeditationMusicTrack => ({
-  id: `${meditationId}-music-${variation}`,
+): MeditationMusicTrack => {
+  const id = `${meditationId}-music-${variation}`;
+  return {
+  id,
   meditationId,
   src: `assets/audio/soundscapes/${meditationId}-music-${variation}.ogg`,
   title,
   variation,
-  provider
-});
+  provider,
+  durationSeconds: MUSIC_DURATION_SECONDS[id] ?? 300
+  };
+};
 
 export const MUSIC_BY_MEDITATION: Record<string, MeditationMusicTrack[]> = {
   metta: [
@@ -76,6 +110,23 @@ export const MUSIC_BY_MEDITATION: Record<string, MeditationMusicTrack[]> = {
   ]
 };
 
+// The six approved five-minute pilot tracks are intentionally shared across
+// every meditation until the remaining style-specific tracks can be produced.
+// Their IDs and source paths remain canonical so one packaged asset can safely
+// participate in every style's persisted queue.
+export const SHARED_LONG_FORM_MUSIC: MeditationMusicTrack[] = [
+  music("metta", "c", "Weather Balloons at Dusk — Long Drift", "ElevenLabs"),
+  music("metta", "d", "Weather Balloons at Dusk — Long Horizon", "ElevenLabs"),
+  music("sound-awareness", "c", "Celestial Radio — Long Drift", "ElevenLabs"),
+  music("sound-awareness", "d", "Celestial Radio — Long Horizon", "ElevenLabs"),
+  music("yoga-nidra", "c", "Moonlit Aquarium — Long Drift", "ElevenLabs"),
+  music("yoga-nidra", "d", "Moonlit Aquarium — Long Horizon", "ElevenLabs")
+];
+
+export function musicTracksForMeditation(meditationId: string) {
+  return [...(MUSIC_BY_MEDITATION[meditationId] ?? []), ...SHARED_LONG_FORM_MUSIC];
+}
+
 const LAST_MUSIC_KEY = "zenchad_last_meditation_music_v1";
 
 function readLastMusic(): Record<string, string> {
@@ -90,7 +141,7 @@ export function chooseMeditationMusic(
   meditationId: string,
   preferredId?: string
 ): MeditationMusicTrack | undefined {
-  const tracks = MUSIC_BY_MEDITATION[meditationId] ?? [];
+  const tracks = musicTracksForMeditation(meditationId);
   const preferred = tracks.find((track) => track.id === preferredId);
   if (preferred) return preferred;
   if (tracks.length === 0) return undefined;

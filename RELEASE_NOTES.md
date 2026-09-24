@@ -161,3 +161,11 @@
 - SHA-256: `C04532F76EFD40044A92B1D9B900F9F89CFBD24E19FCF4ACD4F66895208DD5E9`.
 - Verified with progression checks, Running logic checks, native Running integration checks, TypeScript/Vite build, Capacitor sync, JDK 21 debug APK assembly, package/version inspection, and APK signature validation.
 - Drive copy: `D:\My Drive\ZenChad\Zen-Chad-1.6-debug.apk` in the [ZenChad Google Drive folder](https://drive.google.com/drive/folders/1qAXaw1awLpyj96aIiu3c-E6FhybA0Vw0).
+
+## 2.8 — Five-minute meditation and YouTube timer (2026-09-24)
+- All 17 meditations offer an exact five-minute option, retaining each phase and the closing. Short sessions use on-screen guidance and existing music; full practices retain their spoken recordings.
+- Binaural Beats offers two creator-published YouTube playlists. Android opens YouTube directly (browser fallback if absent) and displays a draggable native countdown with Return to ZenChad.
+- First use requests display-over-other-apps permission. YouTube handles playback and ads; timer completion does not pause YouTube. No media assets or dependencies added.
+- Background return/restoration caps credited time at the selected session length.
+- Verified: duration/progression/Running/music tests, 412x915 UI selection/play/pause/reset/restore/late-completion checks, TypeScript/Vite, Capacitor sync, Android assembly and matching existing signing certificate. No connected phone: native overlay permission, drag and YouTube handoff require on-device verification.
+- APK: `releases/ZenChad-2.8-Meditation-YouTube.apk` (versionCode 19); matching copy in `D:\My Drive\ZenChad`.
