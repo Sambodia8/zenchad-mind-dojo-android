@@ -74,6 +74,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
     private String activeAudioLabel = "";
     private String activeUtteranceId = "";
     private String activeLineKey = "";
+    private String activeUtteranceSessionId = "";
     private String sessionId = "";
     private long routeModifiedAt = -1L;
     private String routeMode = "";
@@ -133,17 +134,19 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
                 setAudioState("playing", activeAudioLabel, "");
             }
             @Override public void onDone(String utteranceId) {
-                if (!utteranceId.equals(activeUtteranceId)) return;
-                markLineHeard(activeLineKey);
+                if (!utteranceId.equals(activeUtteranceId) || !sessionId.equals(activeUtteranceSessionId)) return;
+                markLineHeardForSession(activeLineKey, activeUtteranceSessionId);
                 speaking = false;
                 activeUtteranceId = "";
                 activeLineKey = "";
+                activeUtteranceSessionId = "";
                 setAudioState("idle", "Next story segment pending", "");
             }
             @Override public void onError(String utteranceId) {
-                if (!utteranceId.equals(activeUtteranceId)) return;
+                if (!utteranceId.equals(activeUtteranceId) || !sessionId.equals(activeUtteranceSessionId)) return;
                 speaking = false;
                 activeUtteranceId = "";
+                activeUtteranceSessionId = "";
                 setAudioState("failed", activeAudioLabel, "Android narration failed to play.");
             }
         });
@@ -189,7 +192,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             }
         }
 
-        if (!prefs.getBoolean(KEY_OPENING_TWO, false) && elapsedSeconds >= 75d && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
+        if (hasHeardChapter("briefing") && !prefs.getBoolean(KEY_OPENING_TWO, false) && elapsedSeconds >= 75d && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
             if (speak("watcher", mission.watcherLine)) {
                 updateRadio("WATCHER ON THE LINE", "Keep your rhythm. The Director is watching the route.");
                 prefs.edit()
@@ -200,14 +203,14 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             }
         }
 
-        if (completionRatio >= 0.33d && !hasHeardChapter("pursuit") && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
+        if (hasHeardChapter("contact") && completionRatio >= 0.33d && !hasHeardChapter("pursuit") && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
             if (speak("pursuit-bridge", mission.chaseLine)) {
                 updateRadio("THE NET IS MOVING", "Stay loose. The pressure is building.");
                 return;
             }
         }
 
-        if (completionRatio >= 0.64d && !hasHeardChapter("complication") && !prefs.getBoolean(KEY_ACTIVE_CHASE, false) && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
+        if (hasHeardChapter("pursuit") && completionRatio >= 0.64d && !hasHeardChapter("complication") && !prefs.getBoolean(KEY_ACTIVE_CHASE, false) && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
             if (speak("complication-bridge", mission.helicopterLine)) {
                 updateRadio("SIGNAL SHIFT", "The mission has changed. Keep moving.");
                 return;
@@ -228,6 +231,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
         boolean chaseWindow =
             elapsedSeconds >= Math.max(150d, plannedSeconds * 0.14d) &&
             completionRatio < 0.76d &&
+            hasHeardChapter("pursuit") &&
             chaseCount < 2 &&
             now >= nextEventAt;
 
@@ -247,6 +251,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
 
         if (
             !prefs.getBoolean(KEY_HELICOPTER_TRIGGERED, false) &&
+            hasHeardChapter("pursuit") &&
             completionRatio >= 0.52d &&
             now >= prefs.getLong(KEY_NEXT_EVENT_AT, 0L) &&
             canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)
@@ -265,7 +270,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
             }
         }
 
-        if (completionRatio >= 0.84d && !prefs.getBoolean(KEY_HOME_LINE, false) && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
+        if (hasHeardChapter("complication") && completionRatio >= 0.84d && !prefs.getBoolean(KEY_HOME_LINE, false) && canSpeakStory(navigationSpeaking, distanceToNextManeuverMeters)) {
             if (speak("home", mission.homeLine)) {
                 updateRadio("EXTRACTION WINDOW", "Almost clear. Finish the route.");
                 prefs.edit().putBoolean(KEY_HOME_LINE, true).putString(KEY_PHASE, "home").apply();
@@ -478,6 +483,8 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
         if (text == null || text.trim().isEmpty() || speaking) return false;
         activeLineKey = lineKey == null ? "story" : lineKey;
         activeAudioLabel = audioLabelFor(lineKey);
+        final String playbackSessionId = sessionId;
+        final String playbackLineKey = activeLineKey;
         prefs.edit()
             .putString(KEY_AUDIO_TRANSCRIPT, text.trim())
             .putString(KEY_AUDIO_LINE_KEY, activeLineKey)
@@ -486,16 +493,19 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
         String assetName = voiceAssetName(lineKey);
         if (assetName != null && voiceEngine.play(assetName, (float) RunningStoryAudioSettings.getVoiceVolume(context), new RunningStoryVoiceEngine.PlaybackListener() {
             @Override public void onStarted() {
+                if (!playbackSessionId.equals(prefs.getString(KEY_SESSION_ID, ""))) return;
                 speaking = true;
                 setAudioState("playing", activeAudioLabel, "");
             }
             @Override public void onCompleted() {
-                markLineHeard(activeLineKey);
+                if (!playbackSessionId.equals(prefs.getString(KEY_SESSION_ID, ""))) return;
+                markLineHeardForSession(playbackLineKey, playbackSessionId);
                 speaking = false;
                 activeLineKey = "";
                 setAudioState("idle", "Next story segment pending", "");
             }
             @Override public void onError(String reason) {
+                if (!playbackSessionId.equals(prefs.getString(KEY_SESSION_ID, ""))) return;
                 speaking = false;
                 // A corrupt/unsupported recording must not silently lose the story.
                 // Fall back to the device voice; that path publishes playing/failed state.
@@ -520,6 +530,7 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
         Bundle params = new Bundle();
         params.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, (float) RunningStoryAudioSettings.getVoiceVolume(context));
         activeUtteranceId = utteranceId;
+        activeUtteranceSessionId = sessionId;
         int result = tts.speak(text.trim(), TextToSpeech.QUEUE_ADD, params, utteranceId);
         if (result == TextToSpeech.ERROR) {
             activeUtteranceId = "";
@@ -541,8 +552,9 @@ public class RunningBackgroundStoryDirector implements TextToSpeech.OnInitListen
         return "Story narration";
     }
 
-    private void markLineHeard(String lineKey) {
+    private void markLineHeardForSession(String lineKey, String expectedSessionId) {
         if (lineKey == null || lineKey.isEmpty()) return;
+        if (expectedSessionId == null || !expectedSessionId.equals(prefs.getString(KEY_SESSION_ID, ""))) return;
         Set<String> heard = new HashSet<>(prefs.getStringSet(KEY_HEARD_LINE_KEYS, new HashSet<>()));
         heard.add(lineKey);
         prefs.edit().putStringSet(KEY_HEARD_LINE_KEYS, heard).apply();

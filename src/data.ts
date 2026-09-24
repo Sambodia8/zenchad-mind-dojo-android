@@ -509,7 +509,10 @@ export const STRETCHES: Movement[] = [
     "Let the head hang and soften the knees.",
     ["Hamstrings", "Calves", "Lower back"],
     "Along the backs of the thighs and calves, with gentle length through the back.",
-    [area(63, 62, 16, 25, -4), area(48, 43, 13, 16, 18)]
+    [area(63, 62, 16, 25, -4), area(48, 43, 13, 16, 18)],
+    false,
+    "stretch",
+    "assets/stretches/forward-fold-v2.png"
   ),
   stretch(
     "half-kneeling-hamstring-stretch",
@@ -892,6 +895,9 @@ const warmupMovement = (
   ...(options.visualFrames ? { visualFrames: options.visualFrames } : {})
 });
 
+const repeatFramePair = (first: string, second: string, cycles: number) =>
+  Array.from({ length: cycles }, () => [first, second]).flat();
+
 export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
   warmupMovement(
     "brisk-walk-jog",
@@ -981,6 +987,28 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
     }
   ),
   warmupMovement(
+    "ankle-inversion-eversion",
+    "Ankle Inversion and Eversion",
+    15,
+    "Keep the working forefoot lightly grounded and the knee quiet while you roll the ankle gently inward and outward; use support if balance is difficult.",
+    ["Ankles", "Calves", "Foot stabilisers"],
+    "A small, controlled movement around the ankle and sides of the foot without forcing the joint.",
+    [area(42, 82, 9, 7)],
+    "dynamic-warmup",
+    {
+      sides: true,
+      image: "assets/stretches/generated/pre-run-v3/ankle-inversion-eversion-01.png",
+      visualFrames: [
+        "assets/stretches/generated/pre-run-v3/ankle-inversion-eversion-01.png",
+        "assets/stretches/generated/pre-run-v3/ankle-inversion-eversion-02.png",
+        "assets/stretches/generated/pre-run-v3/ankle-inversion-eversion-03.png",
+        "assets/stretches/generated/pre-run-v3/ankle-inversion-eversion-04.png",
+        "assets/stretches/generated/pre-run-v3/ankle-inversion-eversion-03.png",
+        "assets/stretches/generated/pre-run-v3/ankle-inversion-eversion-02.png"
+      ]
+    }
+  ),
+  warmupMovement(
     "ankle-circles",
     "Ankle Rotations",
     15,
@@ -1029,41 +1057,41 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
   ),
   warmupMovement(
     "alternating-hip-openers",
-    "Alternating Hip Openers",
+    "Hip Flexion and Opener",
     30,
-    "Lift one knee toward the chest, rotate the thigh outward through the hip, set the foot down, and alternate sides; catching the foot is optional.",
+    "Lift one knee toward the chest, rotate the thigh outward, and catch the outside of the foot if comfortable before changing sides.",
     ["Hip flexors", "Glutes", "Adductors", "Hip rotators"],
     "A controlled opening around the moving hip while the standing leg and trunk stay steady.",
     [area(39, 58, 14, 18, -12), area(62, 58, 14, 18, 12)],
     "dynamic-warmup",
     {
-      image: "assets/stretches/generated/pre-run-v2/alternating-hip-openers-01.png",
+      image: "assets/stretches/generated/pre-run-v3/hip-flexion-opener-01.png",
       visualFrames: [
-        "assets/stretches/generated/pre-run-v2/alternating-hip-openers-01.png",
-        "assets/stretches/generated/pre-run-v2/alternating-hip-openers-02.png",
-        "assets/stretches/generated/pre-run-v2/alternating-hip-openers-01.png",
-        "assets/stretches/generated/pre-run-v2/alternating-hip-openers-03.png",
-        "assets/stretches/generated/pre-run-v2/alternating-hip-openers-04.png",
-        "assets/stretches/generated/pre-run-v2/alternating-hip-openers-03.png"
+        "assets/stretches/generated/pre-run-v3/hip-flexion-opener-01.png",
+        "assets/stretches/generated/pre-run-v3/hip-flexion-opener-02.png",
+        "assets/stretches/generated/pre-run-v3/hip-flexion-opener-01.png",
+        "assets/stretches/generated/pre-run-v3/hip-flexion-opener-03.png",
+        "assets/stretches/generated/pre-run-v3/hip-flexion-opener-04.png",
+        "assets/stretches/generated/pre-run-v3/hip-flexion-opener-03.png"
       ]
     }
   ),
   warmupMovement(
     "knee-lift-torso-twists",
-    "Knee-Lift Torso Twists",
+    "Hip Flexion with Torso Rotation",
     30,
-    "Keep the elbows open, lift one knee, and rotate the opposite elbow toward it before returning tall and alternating sides.",
+    "Place your knuckles lightly at your temples with thumbs down, open the elbows, then lift one knee and rotate the opposite elbow toward it before changing sides.",
     ["Obliques", "Thoracic spine", "Hip flexors", "Shoulders"],
     "The front of the lifting hip and the muscles around the waist and upper back should work without wrenching the lower spine.",
     [area(50, 43, 18, 16), area(43, 61, 12, 18, -10), area(61, 61, 12, 18, 10)],
     "dynamic-warmup",
     {
-      image: "assets/stretches/generated/pre-run-v2/knee-lift-torso-twists-01.png",
+      image: "assets/stretches/generated/pre-run-v3/hip-flexion-torso-rotation-01.png",
       visualFrames: [
-        "assets/stretches/generated/pre-run-v2/knee-lift-torso-twists-01.png",
-        "assets/stretches/generated/pre-run-v2/knee-lift-torso-twists-02.png",
-        "assets/stretches/generated/pre-run-v2/knee-lift-torso-twists-03.png",
-        "assets/stretches/generated/pre-run-v2/knee-lift-torso-twists-04.png"
+        "assets/stretches/generated/pre-run-v3/hip-flexion-torso-rotation-01.png",
+        "assets/stretches/generated/pre-run-v3/hip-flexion-torso-rotation-02.png",
+        "assets/stretches/generated/pre-run-v3/hip-flexion-torso-rotation-01.png",
+        "assets/stretches/generated/pre-run-v3/hip-flexion-torso-rotation-03.png"
       ]
     }
   ),
@@ -1071,7 +1099,7 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
     "calf-raises",
     "Calf Raises",
     30,
-    "Rise smoothly onto the balls of both feet, pause briefly, then lower with control.",
+    "Keep the knees straight for 6 controlled raises to load the gastrocnemius, then soften the knees and do 6 more for the soleus. Use a wall for balance and lower slowly.",
     ["Gastrocnemius", "Soleus", "Ankles"],
     "The calves should feel warm and active rather than stretched.",
     [area(42, 72, 10, 18), area(60, 72, 10, 18)],
@@ -1079,46 +1107,55 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
     { image: "assets/stretches/generated/calf-raises.png" }
   ),
   warmupMovement(
-    "calf-rocks-heel-raises",
-    "Calf Rocks and Heel Raises",
+    "hamstring-sweeps",
+    "Alternating Hamstring Sweeps",
     30,
-    "Place both hands on a wall, keep the body long, and rock the heels up and down with control; alternate one heel down at a time if that feels better.",
+    "Step one heel forward with the toes lifted, hinge slightly at the hips, and sweep both hands toward the foot without bouncing. Stand, switch sides, and keep the movement comfortable.",
+    ["Hamstrings", "Calves", "Glutes"],
+    "A gentle moving length through the back of the front thigh and calf; ease off if it pulls or hurts.",
+    [area(58, 61, 16, 12), area(45, 78, 6, 18)],
+    "dynamic-warmup",
+    { sides: true, image: "assets/stretches/halfway-lift.png" }
+  ),
+  warmupMovement(
+    "calf-rocks-heel-raises",
+    "Calf Stretch and Heel Raises",
+    30,
+    "Place both hands on a wall, step the feet back into one long line, lower both heels into a calf stretch, then lift them with control; lower one heel at a time if needed.",
     ["Gastrocnemius", "Soleus", "Tibialis anterior", "Ankles"],
     "A moving stretch and working sensation through the calves and ankles, never a sharp pull at the heel.",
     [area(39, 73, 11, 19, -8), area(61, 73, 11, 19, 8)],
     "dynamic-warmup",
     {
-      image: "assets/stretches/generated/pre-run-v2/calf-rocks-heel-raises-01.png",
+      image: "assets/stretches/generated/pre-run-v3/calf-stretch-heel-raises-01.png",
       visualFrames: [
-        "assets/stretches/generated/pre-run-v2/calf-rocks-heel-raises-01.png",
-        "assets/stretches/generated/pre-run-v2/calf-rocks-heel-raises-02.png"
+        "assets/stretches/generated/pre-run-v3/calf-stretch-heel-raises-01.png",
+        "assets/stretches/generated/pre-run-v3/calf-stretch-heel-raises-02.png"
       ]
     }
   ),
   warmupMovement(
     "arm-circles",
-    "Arm Circles — Forward and Reverse",
+    "Small Arm Circles — Backward and Forward",
     30,
-    "Make large, controlled circles through the shoulders, keeping the ribs stacked; change direction halfway through.",
+    "Hold the arms straight out at shoulder height: make small backward circles with palms up, then turn the palms down and make small forward circles.",
     ["Deltoids", "Rotator cuff", "Upper back", "Chest"],
     "A smooth warming sensation around the shoulders and upper back without shrugging or arching the lower back.",
     [area(50, 31, 34, 13)],
     "dynamic-warmup",
     {
-      image: "assets/stretches/generated/pre-run-v2/arm-circles-01.png",
+      image: "assets/stretches/generated/pre-run-v3/small-arm-circles-01.png",
       visualFrames: [
-        "assets/stretches/generated/pre-run-v2/arm-circles-01.png",
-        "assets/stretches/generated/pre-run-v2/arm-circles-02.png",
-        "assets/stretches/generated/pre-run-v2/arm-circles-03.png",
-        "assets/stretches/generated/pre-run-v2/arm-circles-04.png",
-        "assets/stretches/generated/pre-run-v2/arm-circles-01.png",
-        "assets/stretches/generated/pre-run-v2/arm-circles-02.png",
-        "assets/stretches/generated/pre-run-v2/arm-circles-03.png",
-        "assets/stretches/generated/pre-run-v2/arm-circles-04.png",
-        "assets/stretches/generated/pre-run-v2/arm-circles-01.png",
-        "assets/stretches/generated/pre-run-v2/arm-circles-04.png",
-        "assets/stretches/generated/pre-run-v2/arm-circles-03.png",
-        "assets/stretches/generated/pre-run-v2/arm-circles-02.png"
+        ...repeatFramePair(
+          "assets/stretches/generated/pre-run-v3/small-arm-circles-01.png",
+          "assets/stretches/generated/pre-run-v3/small-arm-circles-02.png",
+          10
+        ),
+        ...repeatFramePair(
+          "assets/stretches/generated/pre-run-v3/small-arm-circles-03.png",
+          "assets/stretches/generated/pre-run-v3/small-arm-circles-04.png",
+          11
+        )
       ]
     }
   ),
@@ -1216,11 +1253,13 @@ export const FULL_HOUSE_EXCLUDED_IDS = [
   "front-back-leg-swings",
   "lateral-leg-swings",
   "ankle-circles",
+  "ankle-inversion-eversion",
   "ankle-rocks",
   "alternating-hip-openers",
   "knee-lift-torso-twists",
   "calf-raises",
   "calf-rocks-heel-raises",
+  "hamstring-sweeps",
   "arm-circles",
   "squat-to-forward-fold",
   "controlled-spinal-roll",
@@ -1419,24 +1458,24 @@ export const YOGA_CLASSES: YogaClass[] = [
     id: "before-run",
     name: "Before Running",
     timing: "Before running",
-    description: "A short whole-body mobility warm-up that moves from the ankles through the hips, spine, legs, shoulders and back.",
+    description: "A brief dynamic warm-up for the ankles, hips, glutes, calves, quadriceps and hamstrings. Keep it comfortable; if knee pain appears or worsens, choose a gentler option or stop.",
     evidence:
-      "Adapted for ZenChad from Yoga With Tim's dynamic pre-run warm-up, using controlled joint movement and a comfortable range rather than forcing depth.",
-    sourceUrl: "https://www.youtube.com/watch?v=3WUtJxLv-wI",
-    focusMuscles: ["Ankles", "Hips", "Calves", "Shoulders", "Hamstrings", "Back"],
+      "Dynamic movement and a gradual warm-up follow NHS exercise guidance. This routine is preparation, not treatment or a promise to prevent patellofemoral pain.",
+    sourceUrl: "https://www.nhs.uk/live-well/exercise/how-to-warm-up-before-exercising/",
+    focusMuscles: ["Ankles", "Hips", "Glutes", "Calves", "Quadriceps", "Hamstrings"],
     image: "assets/yoga/class-cover-warmup-v2.png",
     steps: [
-      { movementId: "ankle-circles", seconds: 15 },
-      { movementId: "ankle-rocks", seconds: 25 },
-      { movementId: "alternating-hip-openers", seconds: 30 },
-      { movementId: "knee-lift-torso-twists", seconds: 30 },
-      { movementId: "front-back-leg-swings", seconds: 15 },
-      { movementId: "lateral-leg-swings", seconds: 15 },
-      { movementId: "calf-rocks-heel-raises", seconds: 30 },
-      { movementId: "arm-circles", seconds: 30 },
-      { movementId: "squat-to-forward-fold", seconds: 30 },
-      { movementId: "forward-fold", seconds: 20 },
-      { movementId: "controlled-spinal-roll", seconds: 30 }
+      { movementId: "ankle-inversion-eversion", seconds: 10 },
+      { movementId: "ankle-rocks", seconds: 20 },
+      { movementId: "alternating-hip-openers", seconds: 20 },
+      { movementId: "knee-lift-torso-twists", seconds: 20 },
+      { movementId: "front-back-leg-swings", seconds: 10 },
+      { movementId: "lateral-leg-swings", seconds: 10 },
+      { movementId: "hamstring-sweeps", seconds: 15 },
+      { movementId: "calf-rocks-heel-raises", seconds: 20 },
+      { movementId: "calf-raises", seconds: 20 },
+      { movementId: "squat-to-forward-fold", seconds: 20 },
+      { movementId: "alternating-reverse-lunges", seconds: 15 }
     ]
   },
   {

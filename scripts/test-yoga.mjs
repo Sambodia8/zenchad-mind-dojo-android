@@ -67,24 +67,25 @@ const beforeRun = getYogaClass("before-run");
 assert.deepEqual(
   beforeRun.steps.map((step) => [step.movementId, step.seconds]),
   [
-    ["ankle-circles", 15],
-    ["ankle-rocks", 25],
-    ["alternating-hip-openers", 30],
-    ["knee-lift-torso-twists", 30],
-    ["front-back-leg-swings", 15],
-    ["lateral-leg-swings", 15],
-    ["calf-rocks-heel-raises", 30],
-    ["arm-circles", 30],
-    ["squat-to-forward-fold", 30],
-    ["forward-fold", 20],
-    ["controlled-spinal-roll", 30]
+    ["ankle-inversion-eversion", 10],
+    ["ankle-rocks", 20],
+    ["alternating-hip-openers", 20],
+    ["knee-lift-torso-twists", 20],
+    ["front-back-leg-swings", 10],
+    ["lateral-leg-swings", 10],
+    ["hamstring-sweeps", 15],
+    ["calf-rocks-heel-raises", 20],
+    ["calf-raises", 20],
+    ["squat-to-forward-fold", 20],
+    ["alternating-reverse-lunges", 15]
   ],
-  "Before Running follows the approved whole-body mobility sequence"
+  "Before Running uses a short dynamic sequence without a duplicated forward fold"
 );
-assert.equal(expandYogaClassSlides(beforeRun).length, 14, "three per-side movements expand to 14 guided movements");
-assert.equal(getYogaClassDuration(beforeRun), 380, "Before Running lasts 6:20 including transitions");
-assert.equal(beforeRun.sourceUrl, "https://www.youtube.com/watch?v=3WUtJxLv-wI");
-assert.deepEqual(beforeRun.focusMuscles, ["Ankles", "Hips", "Calves", "Shoulders", "Hamstrings", "Back"]);
+assert.equal(beforeRun.steps.filter((step) => step.movementId === "forward-fold").length, 0, "Forward Fold is already part of Squat to Forward Fold");
+assert.equal(expandYogaClassSlides(beforeRun).length, 15, "per-side leg and calf movements expand to a guided sequence");
+assert.ok(getYogaClassDuration(beforeRun) <= 360, "the pre-run movement sequence stays under six minutes");
+assert.equal(beforeRun.sourceUrl, "https://www.nhs.uk/live-well/exercise/how-to-warm-up-before-exercising/");
+assert.ok(beforeRun.focusMuscles.includes("Quadriceps"));
 
 const beforeCycling = getYogaClass("before-cycling");
 assert.deepEqual(
@@ -103,7 +104,7 @@ assert.deepEqual(
 );
 
 const animatedMovementIds = [
-  "ankle-circles",
+  "ankle-inversion-eversion",
   "ankle-rocks",
   "alternating-hip-openers",
   "knee-lift-torso-twists",
@@ -130,6 +131,24 @@ animatedMovementIds.forEach((movementId) => {
   dimensions.forEach((size) => assert.deepEqual(size, dimensions[0], `${movementId} frames share one canvas size`));
   assert.ok(fs.existsSync(new URL(`../public/${movement.image}`, import.meta.url)), `${movementId} representative image exists`);
 });
+
+const correctedWarmupVisuals = [
+  ["ankle-inversion-eversion", "Ankle Inversion and Eversion", "assets/stretches/generated/pre-run-v3/"],
+  ["alternating-hip-openers", "Hip Flexion and Opener", "assets/stretches/generated/pre-run-v3/"],
+  ["knee-lift-torso-twists", "Hip Flexion with Torso Rotation", "assets/stretches/generated/pre-run-v3/"],
+  ["calf-rocks-heel-raises", "Calf Stretch and Heel Raises", "assets/stretches/generated/pre-run-v3/"],
+  ["arm-circles", "Small Arm Circles — Backward and Forward", "assets/stretches/generated/pre-run-v3/"]
+];
+for (const [movementId, name, framePrefix] of correctedWarmupVisuals) {
+  const movement = MOVEMENTS.find((candidate) => candidate.id === movementId);
+  assert.equal(movement?.name, name, `${movementId} label matches the source movement`);
+  assert.ok(movement?.visualFrames?.every((frame) => frame.startsWith(framePrefix)), `${movementId} uses v3 frames`);
+}
+assert.equal(
+  MOVEMENTS.find((movement) => movement.id === "forward-fold")?.image,
+  "assets/stretches/display/forward-fold-v2.png",
+  "Forward Fold uses the versioned shared artwork"
+);
 
 assert.equal(
   fs.existsSync(new URL("../preBikeWarmupPlugin.ts", import.meta.url)),

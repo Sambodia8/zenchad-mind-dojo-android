@@ -240,3 +240,8 @@
 - Decision/change: Replaced Android all-files permission/fixed-path sync with Storage Access Framework Save/Open document pickers for manual backups and journal export. Report saved/cancelled/failure beside controls; wrap long text; display/export journals newest-first by entry date.
 - Preference: Keep supportive run behaviour without announcing no-shame rules or filtered comparisons. Removed those announcements from visible run screens.
 - Release: 2.10/code 21, ZenChad-2.10-Breathing-Journal-Export.apk in releases and Drive; 52 actual breathing segments verified, five NSDR package hashes matched, export/order/UI/regression checks passed. Native picker needs on-device verification (no device connected).
+
+2026-09-24 - Running mode integrity and trail preparation
+- Decision/change: Scoped story narration receipts to the active story session, guarded campaign callbacks by explicit mode/session, deferred final route generation until the GPS warm-up at the chosen start point, and cleared stale story/route metadata for Just Run. Added the compact configurable Run Hype List, contextual torch/Yuna reminders, and a short runner-aware dynamic warm-up without duplicate forward folds.
+- Verification: Running and native story integration regressions, Yoga checks, TypeScript/Vite production build, and 412 x 915 browser QA passed. Root cause of the reported Just Run/story activation remains unconfirmed because it did not reproduce and no Android handset was connected. Story playback lifecycle on device remains unverified.
+- Release: Android 2.11/code 22, `releases/ZenChad-2.11-Running-Preparation-Fix.apk`.

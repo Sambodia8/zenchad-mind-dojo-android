@@ -69,6 +69,7 @@ const routePreview = loadTsModule("src/runningRoutePreviewRuntime.ts", {
 const progression = loadTsModule("src/runningProgression.ts");
 const storyChapters = loadTsModule("src/runningStoryChapters.ts");
 const celebrationParticles = loadTsModule("src/celebrationParticles.ts");
+const runningHype = loadTsModule("src/runningHype.ts");
 const running = loadTsModule("src/running.ts", {
   "./data": { LEVEL_THRESHOLDS: [0, 60, 140, 235, 345, 520, 800, 1200, 1800] },
   "./runningStoryChapters": storyChapters
@@ -76,8 +77,8 @@ const running = loadTsModule("src/running.ts", {
 
 // Preparation is ordered, time-aware, resumable, and advances without duplicate awards.
 assert.deepEqual(
-  running.RUN_PREP_STEPS.slice(0, 5).map((step) => step.id),
-  ["phone", "headphones", "clothes", "water", "stretches"]
+  running.RUN_PREP_STEPS.map((step) => step.id),
+  ["phone", "headphones", "clothes", "water", "shoes", "outside", "stretches"]
 );
 assert.match(running.RUN_PREP_STEPS[2].instruction, /Don't forget socks\./);
 assert.match(
@@ -100,10 +101,13 @@ const restartedPrep = running.restartRunPreparation(phoneCompletion.next, prepSt
 assert.equal(restartedPrep.prepStepIndex, 0);
 assert.deepEqual(restartedPrep.prepAwards, {});
 assert.equal(restartedPrep.prepXp, 0);
-const outsidePrep = { ...running.createRunSession("quick", 20, prepStart), stage: "prep", prepStepIndex: running.RUN_PREP_STEPS.length - 1 };
+const outsidePrep = { ...running.createRunSession("quick", 20, prepStart), stage: "prep", prepStepIndex: running.RUN_PREP_STEPS.findIndex((step) => step.id === "outside") };
 const outsideCompletion = running.completeRunPrepStep(outsidePrep, prepStart + 60_000);
-assert.equal(outsideCompletion?.next.stage, "warmup", "outside preparation must lead to the separate warm-up walk");
-assert.equal(outsideCompletion?.next.runStartedAt, null, "the run timer must wait for an explicit start action");
+assert.equal(outsideCompletion?.next.stage, "prep", "destination warm-up remains after shoes and departure logistics");
+assert.equal(running.RUN_PREP_STEPS[outsideCompletion?.next.prepStepIndex ?? 0].id, "stretches");
+const warmupCompletion = running.skipRunPrepStep(outsideCompletion.next, prepStart + 61_000);
+assert.equal(warmupCompletion?.next.stage, "warmup", "finishing or skipping the dynamic warm-up starts the separate GPS stage");
+assert.equal(warmupCompletion?.next.runStartedAt, null, "the run timer must wait for an explicit start action");
 const skippedPhone = running.skipRunPrepStep(prepSession, prepStart + 1_000);
 assert.equal(skippedPhone?.next.prepStepIndex, 1, "a single preparation step can be skipped independently of run mode");
 assert.equal(skippedPhone?.next.prepAwards.phone, 0, "skipping preparation never grants its XP");
@@ -144,8 +148,47 @@ assert.equal(recoveredSession?.points.length, 1, "malformed GPS samples must be 
 assert.equal(recoveredSession?.points[0].distanceFromStart, 0);
 assert.deepEqual(recoveredSession?.companionIds, ["katie", "yuna"], "known companion tags survive resume in catalogue order");
 assert.equal(recoveredSession?.storyMissionId, null);
-assert.deepEqual(recoveredSession?.storyHeardChapterIds, ["briefing", "contact"], "only known Story chapter receipts survive resume");
+assert.deepEqual(recoveredSession?.storyHeardChapterIds, [], "Just Run recovery drops stale Story chapter receipts");
 assert.equal(recoveredSession?.version, 5, "resumed sessions migrate to the companion-tagging schema");
+const freshJustRun = running.createRunSession("just", 30, prepStart);
+assert.equal(freshJustRun.storyMissionId, null);
+assert.deepEqual(freshJustRun.storyHeardChapterIds, []);
+assert.equal(running.acceptsStoryCallback({ ...freshJustRun, stage: "active" }, freshJustRun.id), false, "Story callbacks are rejected by Just Run");
+assert.equal(running.acceptsStoryCallback({ ...freshJustRun, mode: "story", stage: "active" }, "another-run"), false, "late Story callbacks cannot cross session boundaries");
+assert.equal(running.acceptsStoryCallback({ ...freshJustRun, mode: "story", stage: "warmup" }, freshJustRun.id), false, "Story callbacks are rejected during prep and GPS warm-up");
+assert.equal(running.acceptsStoryCallback({ ...freshJustRun, mode: "story", stage: "active" }, freshJustRun.id), true, "the active matching Story session accepts its callbacks");
+assert.match(runningScreenSource, /clearRunningRouteState\(\)/, "starting a Just Run clears a previous planned route");
+assert.match(runningScreenSource, /createRunSession\("just"/, "the stretch choice and direct start remain in the Just Run path");
+assert.match(runningScreenSource, /RUN TIME[\s\S]*formatRunClock\(elapsedRunSeconds\)/, "the active HUD labels and places elapsed time before distance");
+assert.match(source("src/runningMode.css"), /\.running-active \.running-primary-stat strong \{ font-size: clamp\(3\.4rem/, "the active HUD gives elapsed time the primary metric size");
+localStorage.clear();
+
+// The compact Run Hype List keeps equipment setup across workouts while status
+// never carries a false "packed" result into the next session.
+const defaultHype = runningHype.loadRunHypeEquipment();
+assert.equal(defaultHype[0].id, "towel", "the sweat towel is first by personal importance");
+assert.match(defaultHype[0].note, /sensory essential/i);
+let hype = runningHype.createRunHypeChecklist("hype-run-1");
+hype.statusByItem.towel = "ready";
+hype.statusByItem.water = "not-needed";
+hype.homePrepDone = true;
+hype.travelMinutes = 35;
+runningHype.saveRunHypeChecklist(hype);
+assert.equal(runningHype.loadRunHypeChecklist("hype-run-1").travelMinutes, 35, "interrupted prep restores journey planning");
+const nextHype = runningHype.createRunHypeChecklist("hype-run-2");
+assert.equal(nextHype.statusByItem.towel, "outstanding", "packed status does not imply an item was packed for the next run");
+assert.equal(nextHype.statusByItem.water, "not-needed", "a personal not-needed choice may be remembered without claiming an item was packed");
+const sunset = runningHype.sunsetForLocation(51.5, -0.1, new Date(2026, 8, 24, 12));
+assert.ok(sunset instanceof Date && sunset.getUTCHours() >= 16 && sunset.getUTCHours() <= 19, "GPS-based sunset is calculated for the planned location and date");
+assert.equal(runningHype.sunsetForLocation(89, 0, new Date(2026, 5, 21)), null, "polar sunset estimates outside the supported latitude range are explicitly unknown");
+assert.match(runningScreenSource, /I have these already/, "the list has a one-tap user-confirmed ready action");
+assert.match(runningScreenSource, /homePrepDone: true/, "home and car logistics can be completed before travel");
+assert.match(runningScreenSource, /startTrailheadDynamicWarmup/, "dynamic warm-up is available at the selected start point");
+assert.match(runningScreenSource, /Yuna’s teatime is usually around 18:00/, "the companion-specific teatime reminder is conditional and approximate");
+const browserStoryRuntime = source("src/runningStoryRuntime.ts");
+assert.match(browserStoryRuntime, /state\.heardChapterIds\.includes\("contact"\) && completionRatio >= 0\.33/, "browser Story progression waits for heard Contact narration");
+assert.match(browserStoryRuntime, /state\.heardChapterIds\.includes\("pursuit"\) && completionRatio >= 0\.64/, "browser Story progression waits for heard Pursuit narration");
+assert.match(browserStoryRuntime, /state\.heardChapterIds\.includes\("complication"\) && completionRatio >= 0\.84/, "browser Story progression waits for heard Complication narration");
 localStorage.clear();
 
 const storyResults = loadTsModule("src/runningStoryResults.ts", {

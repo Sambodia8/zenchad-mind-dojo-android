@@ -244,17 +244,6 @@ export const RUN_PREP_STEPS: RunPrepStep[] = [
     speedBonus: true
   },
   {
-    id: "stretches",
-    title: "Warm-up stretches",
-    instruction: "Do the running warm-up. There is no speed bonus here: the goal is to warm up, not rush.",
-    targetSeconds: 0,
-    graceSeconds: 0,
-    baseXp: 3,
-    bonusXp: 0,
-    buttonLabel: "Warm-up done",
-    speedBonus: false
-  },
-  {
     id: "shoes",
     title: "Running shoes",
     instruction: "Shoes on. You are almost out of the door.",
@@ -275,6 +264,17 @@ export const RUN_PREP_STEPS: RunPrepStep[] = [
     bonusXp: 2,
     buttonLabel: "Outside",
     speedBonus: true
+  },
+  {
+    id: "stretches",
+    title: "Dynamic warm-up",
+    instruction: "Do the short running warm-up here at your start point. There is no speed bonus: move comfortably and take your time.",
+    targetSeconds: 0,
+    graceSeconds: 0,
+    baseXp: 3,
+    bonusXp: 0,
+    buttonLabel: "Warm-up done",
+    speedBonus: false
   }
 ];
 
@@ -383,8 +383,8 @@ export function loadRunSession(): RunSession | null {
       distanceMeters: finiteNonNegative(parsed.distanceMeters),
       points,
       companionIds: normaliseRunCompanionIds(parsed.companionIds),
-      storyMissionId: typeof parsed.storyMissionId === "string" ? parsed.storyMissionId : null,
-      storyHeardChapterIds: Array.isArray(parsed.storyHeardChapterIds)
+      storyMissionId: parsed.mode === "story" && typeof parsed.storyMissionId === "string" ? parsed.storyMissionId : null,
+      storyHeardChapterIds: parsed.mode === "story" && Array.isArray(parsed.storyHeardChapterIds)
         ? STORY_CHAPTER_IDS.filter((chapterId) => parsed.storyHeardChapterIds?.includes(chapterId))
         : [],
       runXp: finiteNonNegative(parsed.runXp),
@@ -436,6 +436,11 @@ export function normaliseRunCompanionIds(value: unknown): RunCompanionId[] {
     )
   );
   return RUN_COMPANIONS.filter((companion) => selected.has(companion.id)).map((companion) => companion.id);
+}
+
+/** A persisted Story callback is only valid while its own Story session is active. */
+export function acceptsStoryCallback(session: Pick<RunSession, "id" | "mode" | "stage"> | null, expectedSessionId?: string) {
+  return Boolean(session && session.mode === "story" && session.stage === "active" && (!expectedSessionId || session.id === expectedSessionId));
 }
 
 export function saveRunSession(session: RunSession | null) {

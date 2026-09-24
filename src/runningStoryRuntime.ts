@@ -1,4 +1,4 @@
-import { loadRunSession, type RunPoint, type RunSession } from "./running";
+import { acceptsStoryCallback, loadRunSession, type RunPoint, type RunSession } from "./running";
 import { navigationStateForLocation } from "./runningNavigation";
 import { loadPlannedRunningRoute, type PlannedRunningRoute } from "./runningRouteStore";
 import { badAccelerationAnchorNear, nextStoryCoverAnchor } from "./runningRouteSemantics";
@@ -85,6 +85,7 @@ function speakLine(state: StoryRunRuntimeState, id: string, title: string, detai
   speaking = true;
   queuedLineKeys.add(id);
   void speakStoryLine(speech).then((played) => {
+    if (!acceptsStoryCallback(loadRunSession(), state.sessionId)) return;
     const current = loadStoryRunRuntimeState(state.sessionId);
     if (!current) return;
     if (played) {
@@ -111,6 +112,7 @@ function replayLastTransmission(sessionId: string) {
   speaking = true;
   saveStoryRunRuntimeState({ ...current, audioState: "playing" });
   void speakStoryLine(current.lastTranscript).then((played) => {
+    if (!acceptsStoryCallback(loadRunSession(), sessionId)) return;
     const latest = loadStoryRunRuntimeState(sessionId);
     if (!latest) return;
     saveStoryRunRuntimeState(played
@@ -310,7 +312,7 @@ function maybeResolveHelicopter(state: StoryRunRuntimeState, progressMeters: num
 
 function tickStoryRun() {
   const session = loadRunSession();
-  if (!session || session.mode !== "story" || session.stage !== "active" || !session.runStartedAt) {
+  if (!session || !acceptsStoryCallback(session) || !session.runStartedAt) {
     removeChaseDock();
     removeStoryLivePanel();
     return;
@@ -352,7 +354,7 @@ function tickStoryRun() {
     );
   }
 
-  if (elapsed >= 75 && !storyLineWasPlayed(state, "opening-2")) {
+  if (state.heardChapterIds.includes("briefing") && elapsed >= 75 && !storyLineWasPlayed(state, "opening-2")) {
     state = speakLine(
       { ...state, phase: "cruise", nextEventAfter: Math.max(state.nextEventAfter, Date.now() + 50_000) },
       "opening-2",
@@ -362,7 +364,7 @@ function tickStoryRun() {
     );
   }
 
-  if (completionRatio >= 0.33 && !state.heardChapterIds.includes("pursuit")) {
+  if (state.heardChapterIds.includes("contact") && completionRatio >= 0.33 && !state.heardChapterIds.includes("pursuit")) {
     state = speakLine(
       state,
       "pursuit-bridge",
@@ -372,7 +374,7 @@ function tickStoryRun() {
     );
   }
 
-  if (completionRatio >= 0.64 && !state.heardChapterIds.includes("complication") && state.phase !== "chase") {
+  if (state.heardChapterIds.includes("pursuit") && completionRatio >= 0.64 && !state.heardChapterIds.includes("complication") && state.phase !== "chase") {
     state = speakLine(
       state,
       "complication-bridge",
@@ -398,6 +400,7 @@ function tickStoryRun() {
   if (state.phase === "helicopter") return;
 
   const chaseWindowOpen =
+    state.heardChapterIds.includes("pursuit") &&
     elapsed >= Math.max(150, session.plannedMinutes * 60 * 0.14) &&
     completionRatio < 0.76 &&
     state.chases.length < 2 &&
@@ -414,7 +417,7 @@ function tickStoryRun() {
 
   state = maybeStartHelicopter(state, session, route, progress.routeProgressMeters, completionRatio);
 
-  if (completionRatio >= 0.84 && !storyLineWasPlayed(state, "home-stretch")) {
+  if (state.heardChapterIds.includes("complication") && completionRatio >= 0.84 && !storyLineWasPlayed(state, "home-stretch")) {
     state = speakLine(
       { ...state, phase: "home" },
       "home-stretch",

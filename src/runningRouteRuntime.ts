@@ -204,8 +204,8 @@ function syncBriefingNote(session: RunSession) {
     return;
   }
 
-  if (strong) strong.textContent = state?.status === "error" ? "Route unavailable — run still works" : "Building your route…";
-  if (small) small.textContent = state?.message || "Zenchad is finding several pedestrian routes and choosing the best fit.";
+  if (strong) strong.textContent = state?.status === "error" ? "Route unavailable — run still works" : state ? "Route preparation status" : "Route planned after prep";
+  if (small) small.textContent = state?.message || "Once you are ready at your start point, a GPS fix will guide route planning. A route problem will never stop your run.";
   note.dataset.routeStatus = state?.status ?? "idle";
 }
 
@@ -313,9 +313,15 @@ function tick() {
   }
 
   if (session.stage === "briefing") {
-    void buildInitialRoute(session);
     syncBriefingNote(session);
     removeNavigationDock();
+    return;
+  }
+
+  if (session.stage === "warmup") {
+    // The runner has completed their preparation and the non-counted GPS stage
+    // now knows the real trailhead. Route planning stays out of home/car prep.
+    void buildInitialRoute(session);
     return;
   }
 

@@ -3,8 +3,10 @@ import {
   ArrowRight,
   BatteryCharging,
   BookOpen,
+  CarFront,
   Check,
   ChevronDown,
+  CheckCircle2,
   Clock3,
   Coins,
   Dices,
@@ -13,9 +15,13 @@ import {
   Headphones,
   History,
   Image,
+  ListChecks,
   Map,
   Medal,
   Navigation,
+  Plus,
+  ArrowUp,
+  ArrowDown,
   RotateCcw,
   ShoppingBag,
   Sparkles,
@@ -93,7 +99,8 @@ import { startActiveRunPhotoPolling } from "../runningPhotoRuntime";
 import { syncRunningNativePoints } from "../runningNativeGeolocationBridge";
 import { RunningVoiceSettings } from "../components/RunningVoiceSettings";
 import RunPhotoGallery from "../components/RunPhotoGallery";
-import { loadPlannedRunningRoute } from "../runningRouteStore";
+import { clearRunningRouteState, loadPlannedRunningRoute } from "../runningRouteStore";
+import { clearNativeBackgroundRunningRoute } from "../runningBackgroundNavigation";
 import { roadNameForLocation } from "../runningNavigation";
 import { cancelRunningReminder, isNativeAndroid, scheduleRunningReminder } from "../native";
 import { startNativeRunningTracker } from "../runningNative";
@@ -112,6 +119,18 @@ import {
 import { STORY_CHAPTERS, storyChapterTranscript, type StoryChapterId } from "../runningStoryChapters";
 import { speakStoryLine } from "../runningStorySpeech";
 import { createCelebrationParticles } from "../celebrationParticles";
+import {
+  createRunHypeChecklist,
+  hypeStatusLabel,
+  loadRunHypeChecklist,
+  loadRunHypeEquipment,
+  saveRunHypeChecklist,
+  sunsetForLocation,
+  saveRunHypeEquipment,
+  type RunHypeChecklist,
+  type RunHypeItem,
+  type RunHypeStatus
+} from "../runningHype";
 
 interface Props {
   data: AppData;
@@ -425,6 +444,13 @@ function RunPhotoEditor({
 export default function RunningModeScreen({ data, setData, navigate, startMode }: Props) {
   const restored = useRef<RunSession | null>(loadRunSession());
   const [session, setSession] = useState<RunSession | null>(restored.current);
+  const [hypeItems, setHypeItems] = useState<RunHypeItem[]>(() => loadRunHypeEquipment());
+  const [hypeChecklist, setHypeChecklist] = useState<RunHypeChecklist | null>(() =>
+    restored.current?.stage === "prep"
+      ? loadRunHypeChecklist(restored.current.id) ?? createRunHypeChecklist(restored.current.id)
+      : null
+  );
+  const [newHypeItem, setNewHypeItem] = useState("");
   const [profile, setProfile] = useState<RunningProfile>(() => loadRunningProfile());
   const [view, setView] = useState<RunningView>(() => initialViewFor(restored.current));
   const [selectedMode, setSelectedMode] = useState<RunMode>("quick");
@@ -435,6 +461,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
   const [historyFilter, setHistoryFilter] = useState<"all" | "routes" | "favorites">("all");
   const [now, setNow] = useState(Date.now());
   const [gpsStatus, setGpsStatus] = useState("GPS starts during the warm-up walk");
+  const [warmupPosition, setWarmupPosition] = useState<{ lat: number; lng: number } | null>(null);
   const [photoPermission, setPhotoPermission] = useState<RunPhotoPermission>("unavailable");
   const [photoStatus, setPhotoStatus] = useState<RunPhotoStatus>("unavailable");
   const [runPhotos, setRunPhotos] = useState<Record<string, RunPhoto[]>>({});
@@ -522,7 +549,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
   }, [session?.id, session?.runStartedAt, session?.stage]);
 
   useEffect(() => {
-    if (session?.stage !== "active") return;
+    if (!session || !["active", "warmup"].includes(session.stage)) return;
     let disposed = false;
     let listener: Awaited<ReturnType<typeof CapacitorApp.addListener>> | null = null;
     void CapacitorApp.addListener("appStateChange", async ({ isActive }) => {
@@ -584,6 +611,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           // Warm-up GPS is only used to get a reliable lock. It is never retained,
           // counted, or carried into pace, splits, the saved route, or rewards.
           if (current.stage === "warmup") {
+            setWarmupPosition({ lat: rawPoint.lat, lng: rawPoint.lng });
             setGpsStatus(`GPS warm-up locked · ±${Math.round(rawPoint.accuracy)} m`);
             return current;
           }
@@ -747,6 +775,11 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
 
   const startJustRun = () => {
     const startedAt = Date.now();
+    // A route or story receipt from a previous workout must never leak into this
+    // explicitly route-free session. The native tracker also resets its directors
+    // when it receives this new session id.
+    clearRunningRouteState();
+    void clearNativeBackgroundRunningRoute().catch(() => {});
     const next: RunSession = {
       ...createRunSession("just", 30, startedAt, data.stats.xp, data.stats.level),
       stage: "active",
@@ -783,8 +816,11 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
 
   const beginPrep = () => {
     if (!session) return;
-    const next: RunSession = { ...session, stage: "prep", prepStepIndex: 0, stepStartedAt: Date.now() };
+    const next: RunSession = { ...session, stage: "prep", stepStartedAt: Date.now() };
     setSavedSession(next);
+    const checklist = loadRunHypeChecklist(session.id) ?? createRunHypeChecklist(session.id);
+    saveRunHypeChecklist(checklist);
+    setHypeChecklist(checklist);
     setNow(Date.now());
     setResumePrepChoice(false);
     setView("prep");
@@ -811,9 +847,81 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
     if (!current || current.stage !== "prep") return;
     const next = restartRunPreparation(current);
     setSavedSession(next);
+    const checklist = createRunHypeChecklist(current.id);
+    saveRunHypeChecklist(checklist);
+    setHypeChecklist(checklist);
     setNow(Date.now());
     setResumePrepChoice(false);
     showToast("NEW PREP · STEP 1");
+  };
+
+  const saveHype = (next: RunHypeChecklist) => {
+    saveRunHypeChecklist(next);
+    setHypeChecklist(next);
+  };
+
+  const setHypeItemStatus = (itemId: string, status: RunHypeStatus) => {
+    if (!hypeChecklist || !session || hypeChecklist.sessionId !== session.id) return;
+    saveHype({ ...hypeChecklist, statusByItem: { ...hypeChecklist.statusByItem, [itemId]: status } });
+    if (status === "ready" && itemId.includes("torch")) {
+      const nextItems = hypeItems.map((item) => item.id === itemId ? { ...item, lastCheckedAt: Date.now() } : item);
+      saveRunHypeEquipment(nextItems);
+      setHypeItems(nextItems);
+    }
+  };
+
+  const reorderHypeItem = (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= hypeItems.length) return;
+    const next = [...hypeItems];
+    [next[index], next[target]] = [next[target], next[index]];
+    saveRunHypeEquipment(next);
+    setHypeItems(next);
+  };
+
+  const updateHypeItem = (itemId: string, update: Partial<RunHypeItem>) => {
+    const next = hypeItems.map((item) => item.id === itemId ? { ...item, ...update } : item);
+    saveRunHypeEquipment(next);
+    setHypeItems(next);
+  };
+
+  const addHypeItem = () => {
+    const label = newHypeItem.trim().slice(0, 60);
+    if (!label) return;
+    const next = [...hypeItems, { id: `custom-${Date.now()}`, label, importance: hypeItems.length + 1, note: "", carStored: false, custom: true }];
+    saveRunHypeEquipment(next);
+    setHypeItems(next);
+    setNewHypeItem("");
+    if (hypeChecklist) saveHype({ ...hypeChecklist, statusByItem: { ...hypeChecklist.statusByItem, [next[next.length - 1].id]: "outstanding" } });
+  };
+
+  const beginTrailheadWarmup = () => {
+    const current = loadRunSession();
+    if (!current || current.stage !== "prep") return;
+    const checklist = loadRunHypeChecklist(current.id) ?? createRunHypeChecklist(current.id);
+    const nextChecklist = { ...checklist, atTrailhead: true };
+    saveHype(nextChecklist);
+    const next = skipRemainingRunPreparation(current);
+    if (!next) return;
+    setSavedSession(next);
+    setNow(Date.now());
+    setView("warmup");
+    showToast("GPS WARM-UP READY · NOTHING ELSE TO PACK");
+  };
+
+  const startTrailheadDynamicWarmup = () => {
+    const current = loadRunSession();
+    if (!current || current.stage !== "prep") return;
+    const finalStepIndex = RUN_PREP_STEPS.length - 1;
+    const priorSteps = Object.fromEntries(RUN_PREP_STEPS.slice(0, finalStepIndex).map((step) => [step.id, 0]));
+    setSavedSession({
+      ...current,
+      stage: "prep",
+      prepStepIndex: finalStepIndex,
+      prepAwards: { ...current.prepAwards, ...priorSteps },
+      stepStartedAt: Date.now()
+    });
+    openBeforeRunningRoutine();
   };
 
   const completePrepStep = async () => {
@@ -1021,7 +1129,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
 
   const updateActiveRunCompanions = (companionIds: RunCompanionId[]) => {
     setSession((current) => {
-      if (!current || current.stage !== "active") return current;
+      if (!current || !["active", "prep"].includes(current.stage)) return current;
       const next = { ...current, companionIds };
       saveRunSession(next);
       return next;
@@ -1235,45 +1343,61 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
     );
   }
 
-  if (view === "prep" && session && currentPrep) {
-    const stepNumber = session.prepStepIndex + 1;
-    const currentXp = prepStepXp(currentPrep, prepElapsed);
-    const target = currentPrep.targetSeconds;
-    const grace = currentPrep.graceSeconds;
-    const inTarget = currentPrep.speedBonus && prepElapsed <= target;
-    const inGrace = currentPrep.speedBonus && !inTarget && prepElapsed < target + grace;
-    const remaining = inTarget ? Math.max(0, target - prepElapsed) : inGrace ? Math.max(0, target + grace - prepElapsed) : 0;
-
-    if (resumePrepChoice) {
-      return (
-        <div className="screen-stack running-mode running-prep">
-          <section className="running-prep-card" role="dialog" aria-labelledby="running-prep-resume-title">
-            <span className="running-prep-icon"><RotateCcw /></span>
-            <span className="eyebrow">Preparation already in progress</span>
-            <h1 id="running-prep-resume-title">Continue your previous prep?</h1>
-            <p>You were on step {stepNumber} of {RUN_PREP_STEPS.length}. Already earned XP stays banked whichever option you choose.</p>
-            <button className="button primary full" onClick={continuePreviousPreparation}>Continue previous <ArrowRight /></button>
-            <button className="button secondary full" onClick={startNewPreparation}>Start new — reset to step 1</button>
-          </section>
-        </div>
-      );
-    }
+  if (view === "prep" && session) {
+    const checklist = hypeChecklist?.sessionId === session.id ? hypeChecklist : createRunHypeChecklist(session.id);
+    const visibleItems = hypeItems.filter((item) => item.id !== "yuna-torch" || session.companionIds.includes("yuna"));
+    const estimatedFinish = now + (checklist.travelMinutes + session.plannedMinutes) * 60_000;
+    const teatime = new Date(now);
+    teatime.setHours(18, 0, 0, 0);
+    if (teatime.getTime() < now) teatime.setDate(teatime.getDate() + 1);
+    const yunaReminder = session.companionIds.includes("yuna") && now < teatime.getTime() && estimatedFinish >= teatime.getTime();
+    const allReady = () => {
+      const next = { ...checklist, statusByItem: Object.fromEntries(visibleItems.map((item) => [item.id, item.id.includes("torch") ? checklist.statusByItem[item.id] ?? "outstanding" : "ready"])) as Record<string, RunHypeStatus> };
+      saveHype(next);
+    };
 
     return (
-      <div className="screen-stack running-mode running-prep">
-        <div className="running-progress-row"><span>PREP {stepNumber}/{RUN_PREP_STEPS.length}</span><strong>+{session.prepXp} XP banked</strong></div>
-        <div className="running-progress-track"><span style={{ width: `${((stepNumber - 1) / RUN_PREP_STEPS.length) * 100}%` }} /></div>
-        <section className="running-prep-card">
-          <span className="running-prep-icon">{currentPrep.id === "phone" ? <BatteryCharging /> : currentPrep.id === "headphones" ? <Headphones /> : currentPrep.id === "outside" ? <Navigation /> : <Footprints />}</span>
-          <span className="eyebrow">Next tiny action</span><h1>{currentPrep.title}</h1><p>{prepStepInstruction(currentPrep, now)}</p>
-          {currentPrep.speedBonus ? (
-            <div className="running-prep-timer"><Clock3 /><span><strong>{remaining > 0 ? formatRunClock(remaining) : "Base XP safe"}</strong><small>{inTarget ? "full momentum bonus" : inGrace ? "bonus gently draining" : "no failure — base XP remains"}</small></span><b>+{currentXp} XP</b></div>
-          ) : (
-            <div className="running-prep-timer calm"><Sparkles /><span><strong>No rush</strong><small>Warm up properly. There is deliberately no speed bonus.</small></span><b>+{currentXp} XP</b></div>
-          )}
-          <button className="button primary full" onClick={completePrepStep}>{currentPrep.id === "stretches" ? "Start Before Running with Mark" : currentPrep.buttonLabel} <ArrowRight /></button>
-          <button className="button secondary full running-prep-skip" onClick={skipPrepStep}>Skip this step</button>
-          <button className="button ghost full running-prep-skip-all" onClick={skipAllPrep}>Skip remaining preparation</button>
+      <div className="screen-stack running-mode running-prep running-hype-list">
+        <button className="running-inline-back" onClick={() => setView("briefing")}>← Run briefing</button>
+        <section className="running-hype-intro">
+          <span className="running-prep-icon"><ListChecks /></span>
+          <span className="eyebrow">{runModeLabel(session.mode)} · one quick check</span>
+          <h1>Run Hype List</h1>
+          <p>Pick what applies today. Nothing here earns points or blocks your run. Mark only what you have actually packed or checked.</p>
+          <button className="button secondary" onClick={allReady}><CheckCircle2 /> I have these already</button>
+        </section>
+        <RunCompanionPicker companionIds={session.companionIds} onChange={updateActiveRunCompanions} />
+        <section className="running-hype-items" aria-label="Run equipment checklist">
+          {visibleItems.map((item, index) => {
+            const status = checklist.statusByItem[item.id] ?? "outstanding";
+            return <article className={`running-hype-item ${item.id === "towel" ? "essential" : ""}`} key={item.id}>
+              <div className="running-hype-item-heading"><span><strong>{item.label}</strong>{item.id === "towel" ? <b>PERSONAL ESSENTIAL</b> : null}</span><div className="running-hype-order"><button aria-label={`Move ${item.label} up`} disabled={index === 0} onClick={() => reorderHypeItem(index, -1)}><ArrowUp /></button><button aria-label={`Move ${item.label} down`} disabled={index === visibleItems.length - 1} onClick={() => reorderHypeItem(index, 1)}><ArrowDown /></button></div></div>
+              {item.note ? <small className="running-hype-note">{item.note}</small> : null}
+              {item.id.includes("torch") ? <small className="running-hype-note">The app cannot read battery charge. Packed / ready means you checked it manually today.</small> : null}
+              {item.id.includes("torch") && item.carStored && (!item.lastCheckedAt || now - item.lastCheckedAt > 30 * 24 * 60 * 60_000) ? <small className="running-hype-charge-due">Manual car torch charge check is due. “Kept in car” does not mean charged today.</small> : null}
+              <div className="running-hype-status" role="group" aria-label={`${item.label} status`}>
+                {(["ready", "not-needed", "outstanding"] as RunHypeStatus[]).map((option) => <button type="button" key={option} className={status === option ? "selected" : ""} aria-pressed={status === option} onClick={() => setHypeItemStatus(item.id, option)}>{hypeStatusLabel(option)}</button>)}
+              </div>
+              <div className="running-hype-customize"><label><input type="checkbox" checked={item.carStored} onChange={(event) => updateHypeItem(item.id, { carStored: event.target.checked })} /> Usually kept in car</label><input aria-label={`${item.label} personal note`} maxLength={140} placeholder="Optional personal note" value={item.note} onChange={(event) => updateHypeItem(item.id, { note: event.target.value })} /></div>
+            </article>;
+          })}
+        </section>
+        <form className="running-hype-add" onSubmit={(event) => { event.preventDefault(); addHypeItem(); }}>
+          <input aria-label="Add equipment to the Hype List" maxLength={60} placeholder="Add your own equipment" value={newHypeItem} onChange={(event) => setNewHypeItem(event.target.value)} />
+          <button type="submit" aria-label="Add equipment"><Plus /> Add</button>
+        </form>
+        <section className="running-hype-arrival">
+          <span className="eyebrow">Start point</span>
+          <strong>{checklist.homePrepDone ? "Home / car prep saved. Travel when you are ready." : "At home? Sort car and departure logistics before travelling."}</strong>
+          <label><input type="number" min="0" max="240" step="5" value={checklist.travelMinutes} onChange={(event) => saveHype({ ...checklist, travelMinutes: Number(event.target.value) || 0 })} /> Estimated journey minutes</label>
+          <label className="running-hype-wooded"><input type="checkbox" checked={checklist.woodedRoute} onChange={(event) => saveHype({ ...checklist, woodedRoute: event.target.checked })} /> This route is wooded or poorly lit</label>
+          {checklist.woodedRoute ? <label>Earlier darkness buffer (minutes)<input type="number" min="0" max="90" step="5" value={checklist.darknessBufferMinutes} onChange={(event) => saveHype({ ...checklist, darknessBufferMinutes: Number(event.target.value) || 0 })} /></label> : null}
+          {yunaReminder ? <p className="running-context-reminder">Yuna’s teatime is usually around 18:00. Your journey plus this run may overlap it; plan feeding or choose an earlier or shorter outing.</p> : null}
+          <button type="button" className="button secondary full" onClick={startTrailheadDynamicWarmup}>Do the short guided dynamic warm-up here <Footprints /></button>
+          <button type="button" className="button secondary full" onClick={() => saveHype({ ...checklist, homePrepDone: true })}>{checklist.homePrepDone ? "Home / car logistics saved" : "Home and car logistics are done — I’m travelling"} <CarFront /></button>
+          <button type="button" className="button primary full" onClick={beginTrailheadWarmup}>I’m at the start point — begin GPS warm-up <ArrowRight /></button>
+          <button type="button" className="button ghost full" onClick={beginTrailheadWarmup}>Skip the list and start warm-up GPS</button>
+          <small>Warm-up GPS is not counted. Only “Start running” begins your measured run.</small>
         </section>
         {toast ? <div className="running-toast">{toast}</div> : null}
       </div>
@@ -1281,6 +1405,10 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
   }
 
   if (view === "warmup" && session) {
+    const sunset = warmupPosition ? sunsetForLocation(warmupPosition.lat, warmupPosition.lng, new Date(now)) : null;
+    const darkBufferMinutes = hypeChecklist?.sessionId === session.id && hypeChecklist.woodedRoute ? hypeChecklist.darknessBufferMinutes : 0;
+    const predictedFinishAt = now + session.plannedMinutes * 60_000;
+    const torchNeeded = sunset !== null && predictedFinishAt + darkBufferMinutes * 60_000 >= sunset.getTime();
     return (
       <div className="screen-stack running-mode running-warmup">
         <section className="running-warmup-card">
@@ -1289,6 +1417,8 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           <h1>Walk easy for a moment.</h1>
           <p>GPS is waking up now. This walk is not saved, counted toward distance, used for pace, or rewarded. When you are ready, explicitly start the run.</p>
           <div className="running-warmup-gps"><Navigation /><span><strong>{gpsStatus}</strong><small>Only the run after the button below becomes your recorded route.</small></span></div>
+          {torchNeeded ? <section className="running-context-reminder running-torch-reminder"><strong>TORCH CHECK · YOUR FINISH MAY BE NEAR DARK</strong><p>Sunset near this start point is about {sunset?.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}{darkBufferMinutes ? ` · wooded-route buffer ${darkBufferMinutes} min` : ""}. Pack your torch and confirm its charge manually. Consider an earlier start, shorter route or a suitably lit option.</p></section> : null}
+          {!warmupPosition ? <small className="running-sunset-unknown">Sunset is unknown until GPS confirms this start point. Check local conditions and bring a torch if your route may enter darkness.</small> : null}
           <button className="button primary full" onClick={startActualRun}>I’ve started running <ArrowRight /></button>
         </section>
         {toast ? <div className="running-toast">{toast}</div> : null}
@@ -1310,7 +1440,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
       <div className="screen-stack running-mode running-active">
         <section className="running-live-hud">
           <div className="running-live-top"><span className="eyebrow">{runModeLabel(session.mode)}</span><span className={`running-gps ${gpsStatus.startsWith("GPS tracking") ? "locked" : ""}`}>{gpsStatus}</span></div>
-          <div className="running-primary-stat"><strong>{formatRunDistance(session.distanceMeters)}</strong><span>{formatRunClock(elapsedRunSeconds)}</span></div>
+           <div className="running-primary-stat"><span className="running-time-label">RUN TIME</span><strong className="running-time-value">{formatRunClock(elapsedRunSeconds)}</strong><span className="running-distance-value">{formatRunDistance(session.distanceMeters)} DISTANCE</span></div>
           <div className="running-live-stats"><span><small>RECENT · 30s</small><b>{recentPace ? formatRunPace(recentPace) : "Paused / finding pace"}</b></span><span><small>AVG PACE</small><b>{formatRunPace(averagePace)}</b></span><span><small>{justRun ? "GUIDANCE" : "PLAN"}</small><b>{justRun ? "Off" : `${session.plannedMinutes} min`}</b></span><span><small>ZEN POINTS</small><b>+{session.distanceZenPoints} ZP</b></span></div>
           {justRun ? (
             <section className="running-just-run-note"><Headphones /><div><strong>GPS on. Directions off.</strong><small>Your distance, pace and route are being recorded. No planned route or turn-by-turn prompts.</small></div></section>

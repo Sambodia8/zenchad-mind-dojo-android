@@ -142,17 +142,68 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
 .running-warmup-card > p { margin: 0 0 1rem; color: var(--text-muted); font-size: 1.02rem; line-height: 1.55; }
 .running-warmup-card .button { margin-top: 1rem; }
 
+.running-hype-intro,
+.running-hype-arrival { display: grid; gap: .7rem; padding: 1rem; border: 1px solid rgba(47,148,108,.28); border-radius: 1.15rem; background: var(--card-bg); }
+.running-hype-intro h1 { margin: 0; color: #f3faf6; font-size: clamp(1.8rem, 8vw, 2.6rem); }
+.running-hype-intro p { margin: 0; color: #d6e4dc; font-size: 1rem; line-height: 1.5; }
+.running-hype-intro .button { justify-self: start; min-height: 48px; }
+.running-hype-items { display: grid; gap: .65rem; }
+.running-hype-item { display: grid; gap: .4rem; padding: .8rem; border: 1px solid var(--border); border-radius: .95rem; background: var(--card-bg); }
+.running-hype-item.essential { border: 2px solid #187b55; background: #e6f7ed; }
+.running-hype-item-heading { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.running-hype-item-heading > span { display: grid; gap: .15rem; }
+.running-hype-item-heading strong { color: #f3faf6; font-size: 1.15rem; }
+.running-hype-item.essential .running-hype-item-heading strong { color: var(--run-ink); }
+.running-hype-item-heading b { color: #155b3f; font-size: .69rem; letter-spacing: .07em; }
+.running-hype-order { display: flex; gap: .25rem; }
+.running-hype-order button { display: grid; width: 44px; height: 44px; place-items: center; border: 1px solid var(--border); border-radius: .6rem; background: var(--card-bg); color: var(--run-ink); }
+.running-hype-order button:disabled { opacity: .35; }
+.running-hype-note { color: #d3e1d9; font-size: .92rem; line-height: 1.4; }
+.running-hype-item.essential .running-hype-note { color: #35483f; }
+.running-hype-charge-due { padding: .4rem .5rem; border-radius: .45rem; background: #fff0cd; color: #5b4000; font-size: .79rem; font-weight: 850; line-height: 1.3; }
+.running-hype-status { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .32rem; }
+.running-hype-status button { min-width: 0; min-height: 46px; padding: .35rem .25rem; border: 1px solid #71847a; border-radius: .58rem; background: #fff; color: #263a30; font: inherit; font-size: .73rem; font-weight: 850; line-height: 1.15; }
+.running-hype-status button.selected { border: 2px solid #145e40; background: #d9f2e4; color: #103e2c; box-shadow: inset 0 0 0 1px #145e40; }
+.running-hype-status button.selected::before { content: "✓ "; font-weight: 950; }
+.running-hype-customize { display: grid; gap: .35rem; }
+.running-hype-customize label { display: flex; min-height: 42px; align-items: center; gap: .4rem; color: #e0ebe5; font-size: .92rem; font-weight: 750; }
+.running-hype-customize input[type="checkbox"] { width: 20px; height: 20px; accent-color: #187b55; }
+.running-hype-customize input:not([type="checkbox"]),
+.running-hype-add input,
+.running-hype-arrival input { min-width: 0; min-height: 44px; padding: .55rem .65rem; border: 1px solid #89988f; border-radius: .55rem; background: #fff; color: #13251f; font: inherit; }
+.running-hype-add { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .45rem; }
+.running-hype-add button { display: flex; min-height: 44px; align-items: center; gap: .25rem; padding: .4rem .65rem; border: 1px solid #187b55; border-radius: .55rem; background: #e6f7ed; color: #12432f; font: inherit; font-weight: 850; }
+.running-hype-arrival { background: #f1f7f3; }
+.running-hype-arrival > strong { color: var(--run-ink); line-height: 1.35; }
+.running-hype-arrival label { display: grid; gap: .25rem; color: #30463b; font-size: .82rem; font-weight: 800; }
+.running-hype-arrival label.running-hype-wooded { display: flex; min-height: 44px; align-items: center; gap: .45rem; }
+.running-hype-arrival label.running-hype-wooded input { width: 20px; height: 20px; accent-color: #187b55; }
+.running-hype-arrival label input { width: 100%; }
+.running-hype-arrival .button { min-height: 48px; }
+.running-hype-arrival > small { color: #40554b; line-height: 1.4; }
+.running-hype-list .running-live-top { font-size: .88rem; }
+.running-hype-list .running-companion-options button { border-color: rgba(255,255,255,.2); background: #17231f; color: #f3faf6; }
+.running-hype-list .running-companion-options button strong { color: #f3faf6; font-size: 1rem; }
+.running-hype-list .running-companion-options button small { color: #c6d6ce; font-size: .82rem; }
+.running-hype-list .running-companion-options button.selected { border-color: #8be0b5; background: #254d3a; }
+.running-hype-list .running-companion-options button.selected strong { color: #ffffff; }
+.running-context-reminder { margin: 0; padding: .75rem; border: 1px solid #987419; border-radius: .7rem; background: #fff5d9; color: #49370a; font-weight: 750; line-height: 1.4; }
+.running-context-reminder p { margin: .25rem 0 0; }
+.running-torch-reminder { border: 2px solid #8a6100; background: #fff0c7; color: #432f00; }
+.running-torch-reminder strong { display: block; font-size: 1rem; }
+.running-sunset-unknown { display: block; padding: .7rem; border-radius: .65rem; background: #f6f4ec; color: #51462a; line-height: 1.4; }
+
 .running-live-hud { color: white; border: 0; background: radial-gradient(circle at 80% 0%, rgba(101,86,217,.38), transparent 35%), linear-gradient(150deg, #162720, #0d151b); }
 .running-live-hud .eyebrow { color: #9cdec0; }
-.running-gps { max-width: 54%; overflow: hidden; color: #c5cec9; text-overflow: ellipsis; white-space: nowrap; }
+.running-gps { max-width: 60%; color: #d4ded9; font-size: .82rem; line-height: 1.25; text-align: right; overflow-wrap: anywhere; }
 .running-gps.locked { color: #8be0b5; }
 .running-primary-stat { display: flex; flex-direction: column; margin: 1.2rem 0; }
 .running-primary-stat strong { font-size: clamp(3.3rem, 15vw, 5.5rem); line-height: 0.95; letter-spacing: -0.055em; }
 .running-primary-stat span { margin-top: 0.45rem; font-size: 1.5rem; font-weight: 800; color: #c6d4ce; }
 .running-live-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.45rem; margin-bottom: 0.9rem; }
 .running-live-stats span { display: flex; min-width: 0; flex-direction: column; gap: 0.12rem; }
-.running-live-stats small { color: #92a69e; font-size: 0.65rem; font-weight: 900; letter-spacing: 0.08em; }
-.running-live-stats b { overflow: hidden; font-size: 0.9rem; text-overflow: ellipsis; white-space: nowrap; }
+.running-live-stats small { color: #b0c4bb; font-size: 0.75rem; font-weight: 900; letter-spacing: 0.06em; }
+.running-live-stats b { overflow: hidden; font-size: 1rem; text-overflow: ellipsis; white-space: nowrap; }
 .running-progress-track.active { background: rgba(255,255,255,.1); }
 
 .running-story-radio,
@@ -173,8 +224,9 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
 .running-active { min-height: calc(100dvh - 1.4rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)); gap: 0.65rem; }
 .running-active .running-live-hud { padding: 0.85rem 1rem; }
 .running-active .running-primary-stat { margin: 0.65rem 0; }
-.running-active .running-primary-stat strong { font-size: clamp(2.65rem, 12vw, 4.25rem); }
-.running-active .running-primary-stat span { margin-top: 0.2rem; font-size: 1.15rem; }
+.running-active .running-primary-stat strong { font-size: clamp(3.4rem, 16vw, 5.2rem); }
+.running-active .running-primary-stat .running-time-label { margin: 0; color: #9cdec0; font-size: .78rem; font-weight: 950; letter-spacing: .12em; }
+.running-active .running-primary-stat .running-distance-value { margin-top: .15rem; color: #d6e3dd; font-size: clamp(1.55rem, 7vw, 2.1rem); font-weight: 850; letter-spacing: -.025em; }
 .running-active .running-live-stats { margin-bottom: 0.55rem; }
 .running-active .running-end-button { position: static; margin-top: 0.1rem; }
 .running-active .running-primary-stat strong,
@@ -194,8 +246,8 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
 }
 .running-companion-heading { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
 .running-companion-heading > span { display: grid; gap: .12rem; }
-.running-companion-heading strong { color: var(--text); font-size: .92rem; }
-.running-companion-heading small { color: var(--text-muted); font-size: .7rem; line-height: 1.25; }
+.running-companion-heading strong { color: var(--text); font-size: 1.05rem; }
+.running-companion-heading small { color: var(--text-muted); font-size: .82rem; line-height: 1.35; }
 .running-companion-heading > svg { width: 1.25rem; height: 1.25rem; flex: 0 0 auto; color: var(--run-green); }
 .running-companion-toggle { width: 100%; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
 .running-companion-toggle-icons { display: flex; align-items: center; gap: .45rem; color: var(--run-green); }
@@ -206,7 +258,7 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
 .running-companion-options button {
   display: grid;
   min-width: 0;
-  min-height: 48px;
+  min-height: 56px;
   align-content: center;
   justify-items: start;
   gap: .06rem;
@@ -218,8 +270,8 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
   font: inherit;
   text-align: left;
 }
-.running-companion-options button strong { overflow: hidden; font-size: .8rem; text-overflow: ellipsis; white-space: nowrap; }
-.running-companion-options button small { overflow: hidden; color: var(--text-muted); font-size: .62rem; text-overflow: ellipsis; white-space: nowrap; }
+.running-companion-options button strong { overflow: hidden; font-size: 1rem; text-overflow: ellipsis; white-space: nowrap; }
+.running-companion-options button small { overflow: hidden; color: var(--text-muted); font-size: .78rem; text-overflow: ellipsis; white-space: nowrap; }
 .running-companion-options button.selected { border-color: var(--run-green); background: var(--run-mint); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--run-green) 35%, transparent); }
 .running-companion-options button.selected strong { color: var(--run-ink); }
 .running-companion-picker.compact { padding: .7rem .8rem; gap: .5rem; }
@@ -227,7 +279,7 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
 .running-companion-picker.compact .running-companion-heading small { font-size: .65rem; }
 .running-active > .running-companion-picker { border-color: rgba(139, 224, 181, .24); background: #13211c; color: white; }
 .running-active > .running-companion-picker .running-companion-heading strong { color: #effff6; }
-.running-active > .running-companion-picker .running-companion-heading small { color: #9fb6ac; }
+.running-active > .running-companion-picker .running-companion-heading small { color: #c1d2ca; font-size: .78rem; }
 .running-active > .running-companion-picker .running-companion-options button { border-color: rgba(255,255,255,.16); background: rgba(255,255,255,.06); color: #effff6; }
 .running-active > .running-companion-picker .running-companion-options button small { color: #9fb6ac; }
 .running-active > .running-companion-picker .running-companion-options button.selected { border-color: #8be0b5; background: rgba(70, 181, 126, .24); }
@@ -251,12 +303,13 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
   .running-active > .running-photo-status .button { min-height: 44px; padding: .35rem .52rem; }
   .running-active .running-live-hud { padding: .62rem .85rem; }
   .running-active .running-primary-stat { margin-block: .32rem; }
-  .running-active .running-primary-stat strong { font-size: 2.35rem; }
-  .running-active .running-primary-stat span { font-size: 1rem; }
+   .running-active .running-primary-stat strong { font-size: 3rem; }
+   .running-active .running-primary-stat .running-time-label { font-size: .72rem; }
+   .running-active .running-primary-stat .running-distance-value { font-size: 1.45rem; }
   .running-active .running-live-stats { gap: .24rem .45rem; margin-bottom: .4rem; }
-  .running-active .running-live-stats b { font-size: .82rem; }
+  .running-active .running-live-stats b { font-size: .92rem; }
   .running-active > .running-companion-picker { padding: .55rem .68rem; gap: .4rem; }
-  .running-active > .running-companion-picker .running-companion-options button { min-height: 44px; padding-block: .34rem; }
+   .running-active > .running-companion-picker .running-companion-options button { min-height: 48px; padding-block: .34rem; }
   /* Keep the finish action in normal document flow on short phones. A sticky
      button here used to sit on top of the route-progress footer. */
   .running-active .running-end-button {
