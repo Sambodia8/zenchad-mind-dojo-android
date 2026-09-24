@@ -25,7 +25,7 @@ export default function SettingsScreen({ data, setData }: Props) {
     setSyncBusy(true);
     const result = await exportSyncData(data);
     setSyncStatus(result.status);
-    setMessage(result.ok ? "Data exported. Tasker can now upload the fixed sync file." : result.reason ?? "Export failed.");
+    setMessage(result.reason ?? (result.ok ? "Backup saved." : "Export failed."));
     setSyncBusy(false);
   };
 
@@ -82,14 +82,16 @@ export default function SettingsScreen({ data, setData }: Props) {
 
       <section className="card settings-sheet sync-sheet">
         <div className="setting-row illustrated-setting">
-          <span><RefreshCw /><span><strong>Data sync</strong><small>One shared ZenChad file keeps Android and desktop in step.</small></span></span>
+          <span><RefreshCw /><span><strong>Backup & restore</strong><small>Save your journal, progress and settings in one file.</small></span></span>
         </div>
         <div className="sync-actions">
           <button type="button" className="button primary" onClick={handleExport} disabled={syncBusy}><Upload size={16} /> Export data</button>
           <button type="button" className="button secondary" onClick={handleImport} disabled={syncBusy}><Download size={16} /> Import data</button>
         </div>
-        <p className="setting-note">Android file: <code>/storage/emulated/0/ZenChad/zenchad-sync.json</code>. Tasker transfers it to your Google Drive ZenChad folder.</p>
-        {syncStatus.lastSuccessAt ? <small className="status-message"><Check /> Last successful sync {new Date(syncStatus.lastSuccessAt).toLocaleString()}</small> : null}
+        <p className="setting-note">Export data opens “Save as”. Choose Downloads or a Drive folder, then tap Save. Import data lets you choose an existing ZenChad backup. No “all files access” permission is needed.</p>
+        {syncBusy && <p className="status-message" role="status">Choose a file location in the Android picker to continue, or cancel to return.</p>}
+        {message && <p className="status-message" role="status">{message}</p>}
+        {syncStatus.lastSuccessAt ? <small className="status-message"><Check /> Last successful backup or restore {new Date(syncStatus.lastSuccessAt).toLocaleString()}</small> : null}
         {syncStatus.lastError ? <small className="status-message sync-error">{syncStatus.lastError}</small> : null}
       </section>
 
@@ -139,7 +141,6 @@ export default function SettingsScreen({ data, setData }: Props) {
             }))}
           />
         </label>
-        {message ? <small className="status-message"><Check /> {message}</small> : null}
       </section>
 
       <section className="card settings-sheet">

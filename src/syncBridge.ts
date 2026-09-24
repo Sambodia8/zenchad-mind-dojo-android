@@ -14,6 +14,7 @@ import { isNativeAndroid } from "./native";
 
 interface NativeSyncResult {
   ok: boolean;
+  cancelled?: boolean;
   json?: string;
   reason?: string;
   path?: string;
@@ -23,6 +24,7 @@ interface NativeSyncResult {
 interface NativeSyncPlugin {
   getStatus(): Promise<NativeSyncResult>;
   exportSync(options: { json: string }): Promise<NativeSyncResult>;
+  exportDocument(options: { json: string; filename: string }): Promise<NativeSyncResult>;
   importSync(): Promise<NativeSyncResult>;
 }
 
@@ -33,15 +35,27 @@ export type SyncActionResult = NativeSyncResult & { status: SyncStatus };
 let remoteApplyInProgress = false;
 let exportTimer: number | null = null;
 
-function browserExport(json: string): NativeSyncResult {
+function browserExport(json: string, filename = "zenchad-sync.json"): NativeSyncResult {
   const blob = new Blob([json], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = "zenchad-sync.json";
+  anchor.download = filename;
+  document.body.appendChild(anchor);
   anchor.click();
-  URL.revokeObjectURL(url);
-  return { ok: true, reason: "A copy of the sync file was downloaded." };
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 30_000);
+  return { ok: true, reason: "Download started. Check your downloads for the JSON file." };
+}
+
+export async function exportJournalFile(json: string, filename: string): Promise<NativeSyncResult> {
+  try {
+    return isNativeAndroid()
+      ? await NativeSync.exportDocument({ json, filename })
+      : browserExport(json, filename);
+  } catch {
+    return { ok: false, reason: "The journal could not be saved. Please try again." };
+  }
 }
 
 async function browserImport(): Promise<NativeSyncResult> {
@@ -49,6 +63,7 @@ async function browserImport(): Promise<NativeSyncResult> {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = ".json,application/json";
+    input.oncancel = () => resolve({ ok: false, cancelled: true, reason: "Import cancelled. Your data is unchanged." });
     input.onchange = () => {
       const file = input.files?.[0];
       if (!file) {
@@ -87,6 +102,7 @@ export async function exportSyncData(data: AppData): Promise<SyncActionResult> {
   } catch (error) {
     result = { ok: false, reason: error instanceof Error ? error.message : "Export failed." };
   }
+  if (result.cancelled) return { ...result, status: getSyncStatus() };
   setSyncStatus({
     configured: result.ok,
     lastAction: result.ok ? "export" : "error",
@@ -102,6 +118,7 @@ export async function importSyncData(setData: (data: AppData) => void): Promise<
     if (isNativeAndroid()) result = await NativeSync.importSync();
     else if (desktopApi()) result = await desktopApi()!.importNow();
     else result = await browserImport();
+    if (result.ok && !result.json?.trim()) throw new Error("The selected backup is empty. Your data is unchanged.");
     if (result.ok && result.json) {
       const envelope = parseSyncEnvelope(result.json);
       cancelScheduledDesktopExport();
@@ -113,6 +130,7 @@ export async function importSyncData(setData: (data: AppData) => void): Promise<
   } catch (error) {
     result = { ok: false, reason: error instanceof Error ? error.message : "Import failed." };
   }
+  if (result.cancelled) return { ...result, status: getSyncStatus() };
   setSyncStatus({
     configured: result.ok,
     lastAction: result.ok ? "import" : "error",

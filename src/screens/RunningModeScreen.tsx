@@ -248,7 +248,7 @@ function BestEffortList({ efforts, personalBestKeys }: { efforts: RunBestEffort[
   if (!efforts.length) return null;
   return (
     <section className="running-insight-section">
-      <div className="section-heading"><div><span className="eyebrow">Positive comparisons only</span><h2>Best efforts</h2></div><Medal /></div>
+      <div className="section-heading"><div><span className="eyebrow">This run</span><h2>Best efforts</h2></div><Medal /></div>
       <div className="running-effort-list">
         {efforts.map((effort) => {
           const personalBest = personalBestKeys.includes(effort.key);
@@ -1155,7 +1155,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
 
         <RunningVoiceSettings data={data} setData={setData} compact />
 
-        <section className="card running-principle"><Sparkles /><div><strong>No shame engine</strong><p>Starting earns something. Progress earns more. Missing a target never deletes what you already earned.</p></div></section>
+        <section className="card running-principle"><Sparkles /><div><strong>Every run counts</strong><p>Head out at your own pace and collect points along the way.</p></div></section>
       </div>
     );
   }
@@ -1320,7 +1320,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
         <RunCompanionPicker companionIds={session.companionIds} onChange={updateActiveRunCompanions} compact />
         {!justRun && (session.mode === "story"
           ? <section className="running-story-radio"><Activity /><div><span className="eyebrow">Runner radio</span><strong>{storyCopy}</strong><small>Chapter, narration and next-transmission status update live below.</small></div></section>
-          : <section className="running-km-card"><Zap /><div><strong>Next celebration: {Math.floor(session.distanceMeters / 1000) + 1} km</strong><small>No previous-run comparisons while you are moving.</small></div></section>)}
+          : <section className="running-km-card"><Zap /><div><strong>Next celebration: {Math.floor(session.distanceMeters / 1000) + 1} km</strong><small>Find a pace that feels comfortable today.</small></div></section>)}
         {!justRun ? <section className={`running-photo-status ${photoPermission === "limited" ? "limited" : ""}`} aria-live="polite">
           <Image />
           <div><strong>{photoStatus === "ready" ? "New run photos are watched" : photoStatus === "limited" ? "Selected photos only" : photoStatus === "permission-denied" ? "Run photos are off" : photoStatus === "permission-required" ? "Enable optional run photos" : "Run photos unavailable"}</strong><small>{photoStatus === "limited" ? "New Camera photos may be hidden. Manage access to allow all photos." : RUN_PHOTO_PRIVACY_NOTE}</small></div>

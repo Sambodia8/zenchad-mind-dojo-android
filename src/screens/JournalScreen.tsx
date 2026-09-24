@@ -22,6 +22,8 @@ import { addJournalXp, importJournalText, makeJournal, recordMeditationCompletio
 import { recordSyncTombstones } from "../sync";
 import type { AppData, JournalEntry } from "../types";
 import { meditationIdForName } from "../progression";
+import { chronologicalJournal, serialiseJournal } from "../journalOrder";
+import { exportJournalFile } from "../syncBridge";
 
 interface Props {
   data: AppData;
@@ -78,6 +80,8 @@ export default function JournalScreen({ data, setData, draftMeditation, mysteryR
   const [durationMinutes, setDurationMinutes] = useState("10");
   const [practiceDate, setPracticeDate] = useState(dateInputValue());
   const [importMessage, setImportMessage] = useState("");
+  const [exportBusy, setExportBusy] = useState(false);
+  const entries = chronologicalJournal(data.journal);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [voiceRecording, setVoiceRecording] = useState(false);
   const [voiceBusy, setVoiceBusy] = useState(false);
@@ -276,14 +280,16 @@ export default function JournalScreen({ data, setData, draftMeditation, mysteryR
     }
   };
 
-  const exportJournal = () => {
-    const blob = new Blob([JSON.stringify(data.journal, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = `zenchad-journal-${new Date().toISOString().slice(0, 10)}.json`;
-    anchor.click();
-    URL.revokeObjectURL(url);
+  const exportJournal = async () => {
+    if (exportBusy) return;
+    setExportBusy(true);
+    setImportMessage("Choose where to save your journal, then tap Save.");
+    try {
+      const result = await exportJournalFile(serialiseJournal(data.journal), `zenchad-journal-${dateInputValue()}.json`);
+      setImportMessage(result.ok
+        ? `${data.journal.length} journal entries. ${result.reason ?? "Journal saved."}`
+        : result.reason ?? "Journal export failed. Please try again.");
+    } finally { setExportBusy(false); }
   };
 
   const prepareVoiceEditor = () => {
@@ -451,7 +457,7 @@ export default function JournalScreen({ data, setData, draftMeditation, mysteryR
   };
 
   return (
-    <div className="screen-stack">
+    <div className="screen-stack journal-screen">
       <section className="page-intro">
         <span className="eyebrow">Meditation journal</span>
         <h1>Notice what changed</h1>
@@ -501,8 +507,8 @@ export default function JournalScreen({ data, setData, draftMeditation, mysteryR
         <button className="button secondary" onClick={() => fileInput.current?.click()}>
           <FileUp size={18} /> Import file
         </button>
-        <button className="button ghost" onClick={exportJournal} disabled={!data.journal.length}>
-          <Download size={18} /> Export
+        <button className="button ghost" onClick={() => void exportJournal()} disabled={!data.journal.length || exportBusy}>
+          <Download size={18} /> {exportBusy ? "Saving…" : "Export journal"}
         </button>
         <div className="topbar-menu" ref={journalMenuRef}>
           <button
@@ -535,7 +541,7 @@ export default function JournalScreen({ data, setData, draftMeditation, mysteryR
         </div>
         <input ref={fileInput} hidden type="file" accept=".json,.txt,.md" onChange={importFile} />
       </div>
-      {importMessage && <p className="status-message">{importMessage}</p>}
+      {importMessage && <p className="status-message" role="status">{importMessage}</p>}
       {voiceMessage && <p className="status-message">{voiceMessage}</p>}
       {qwenMessage && <p className="status-message">{qwenMessage}</p>}
       {isNativeAndroid() && whisperDownloadTotalBytes > 0 && !whisperModelInstalled && (
@@ -620,7 +626,8 @@ export default function JournalScreen({ data, setData, draftMeditation, mysteryR
         </section>
       ) : (
         <div className="journal-list">
-          {data.journal.map((entry) => (
+          <p className="setting-note">Newest entries first · ordered by entry date</p>
+          {entries.map((entry) => (
             <article className="card journal-entry" key={entry.id}>
               <div className="section-row">
                 <div>

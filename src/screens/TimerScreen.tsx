@@ -20,12 +20,12 @@ import {
   Pause,
   Play,
   RotateCcw,
-  SkipForward,
-  Wind
+  SkipForward
 } from "lucide-react";
 import { MEDITATIONS } from "../data";
 import {
   chooseGuidedAudioVariant,
+  GUIDED_AUDIO_BY_MEDITATION,
   rememberGuidedAudioVariant
 } from "../guidedAudio";
 import {
@@ -55,6 +55,7 @@ import ZenPointsRewardFeedback from "../components/ZenPointsRewardFeedback";
 import { zenPointsForMeditation } from "../zenPoints";
 import { fiveMinuteMeditation } from "../meditationDuration";
 import { BINAURAL_PLAYLISTS, hasMeditationOverlay, MeditationOverlay } from "../meditationOverlay";
+import BreathingGuidanceCard from "../components/BreathingGuidanceCard";
 
 interface Props {
   meditationId: string;
@@ -194,7 +195,8 @@ function MeditationTimer({
   const binaural = meditation.id === "binaural";
   const restored = useMemo(() => restoreTimer(meditation), [meditation]);
   const [guidedAudio, setGuidedAudio] = useState(() =>
-    shortSession || binaural ? undefined : chooseGuidedAudioVariant(meditation.id, restored.guidedAudioId)
+    shortSession || binaural ? undefined : chooseGuidedAudioVariant(meditation.id,
+      restored.guidedAudioId ?? (meditation.id === "nsdr" ? "nsdr-protocol-v1-qda-v3" : undefined))
   );
   const availableMusic = useMemo(() => binaural ? [] : musicTracksForMeditation(meditation.id), [meditation.id, binaural]);
   const [playlist, setPlaylist] = useState(BINAURAL_PLAYLISTS[0].url);
@@ -617,7 +619,8 @@ function MeditationTimer({
     namasteAudioRef.current?.pause();
     deadlineRef.current = null;
     finishingRef.current = false;
-    setGuidedAudio(shortSession || binaural ? undefined : chooseGuidedAudioVariant(meditation.id));
+    setGuidedAudio(shortSession || binaural ? undefined : chooseGuidedAudioVariant(meditation.id,
+      meditation.id === "nsdr" ? "nsdr-protocol-v1-qda-v3" : undefined));
     const nextMusicQueue = buildMusicQueueIdsForCounter(
       availableMusic,
       totalDuration,
@@ -810,16 +813,15 @@ function MeditationTimer({
         </section>
       )}
 
-      {meditation.breathingGuidance && (
-        <section className="card breathing-guidance-card">
-          <div className="breathing-guidance-title">
-            <Wind size={19} />
-            <span><small>Breathing for this practice</small><strong>{meditation.breathingGuidance.name}</strong></span>
-          </div>
-          <p>{meditation.breathingGuidance.instruction}</p>
-          <small>{meditation.breathingGuidance.safetyNote}</small>
-        </section>
-      )}
+      <BreathingGuidanceCard meditation={meditation} volume={data.preferences.voiceVolume} running={running} />
+      {!started && guidedAudio && <section className="card settings-card">
+        <label>Spoken guidance
+          <select value={guidedAudio.id} onChange={(event) => setGuidedAudio(chooseGuidedAudioVariant(meditation.id, event.target.value))}>
+            {(GUIDED_AUDIO_BY_MEDITATION[meditation.id] ?? []).map((track) => <option key={track.id} value={track.id}>{track.title}</option>)}
+          </select>
+        </label>
+        <p className="setting-note">The voice begins after 15 seconds of settling time. It guides your breathing and practice, with quiet gaps to follow along.</p>
+      </section>}
 
       {meditation.id === "trataka" && (
         <div className={`virtual-candle ${currentPhase.kind === "rest" || currentPhase.kind === "finish" ? "dimmed" : ""}`}>
@@ -884,7 +886,7 @@ function MeditationTimer({
         {guidedAudio && !audioUnavailable ? (
           <>
             <p className="voice-waiting">
-              Playing “{guidedAudio.title}”. Offline variants rotate between sessions and work
+              {running ? "Playing" : "Selected"} “{guidedAudio.title}”. Offline variants rotate between sessions and work
               without a connection.
             </p>
             <label>
@@ -911,6 +913,11 @@ function MeditationTimer({
               : binaural ? "Your chosen YouTube playlist provides the audio." : shortSession ? "Follow the on-screen prompts for this five-minute practice." : "Spoken guidance is not yet available for this meditation."}
           </p>
         )}
+        {!guidedAudio && meditation.breathingGuidance && <label>Voice volume
+          <input type="range" min="0" max="100" value={data.preferences.voiceVolume}
+            onChange={(event) => setData((current) => ({ ...current, preferences: { ...current.preferences, voiceVolume: Number(event.target.value) } }))} />
+          <span>{data.preferences.voiceVolume}%</span>
+        </label>}
         {meditationMusicQueueIds.length > 0 && (
           <>
             <div className="setting-row">

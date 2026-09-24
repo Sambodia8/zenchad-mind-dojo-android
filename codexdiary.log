@@ -234,3 +234,9 @@
 - Preserve/avoid: Source-coordinate clip/fit metadata lives in PaperDollAvatar.tsx. Measure the live header plus safe-area inset rather than assuming the obsolete Status header height. Allow the frame to scroll on shorter screens.
 - Verification: Full 13-item visual audit, combined outfit equip flow, three phone widths with simulated top inset, and shop/progression/Running checks passed. No Android device connected.
 - Release: Android 2.9/code 20, ZenChad-2.9-Status-Wardrobe-Fix.apk; matching local/Drive SHA-256 38A44D6699F176F95B89F118063279FDFF9B632640EA59DBBFE08BEDD5D7034F.
+
+2026-09-24 - Breathing guidance, journal exports and run wording
+- Decision/change: Added direct breathing-instruction previews using existing narration cue offsets (no extra audio), explicit NSDR steps and selectable full narration with the protocol as default. Full tracks have spoken guidance; five-minute sessions remain on-screen with a spoken pre-session preview.
+- Decision/change: Replaced Android all-files permission/fixed-path sync with Storage Access Framework Save/Open document pickers for manual backups and journal export. Report saved/cancelled/failure beside controls; wrap long text; display/export journals newest-first by entry date.
+- Preference: Keep supportive run behaviour without announcing no-shame rules or filtered comparisons. Removed those announcements from visible run screens.
+- Release: 2.10/code 21, ZenChad-2.10-Breathing-Journal-Export.apk in releases and Drive; 52 actual breathing segments verified, five NSDR package hashes matched, export/order/UI/regression checks passed. Native picker needs on-device verification (no device connected).

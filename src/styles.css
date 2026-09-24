@@ -2737,6 +2737,18 @@ select:focus {
   margin: 0;
 }
 
+.nsdr-instructions {
+  margin: 0;
+  padding-left: 1.3rem;
+  display: grid;
+  gap: 0.55rem;
+  line-height: 1.5;
+}
+
+.breathing-guidance-card .button {
+  white-space: normal;
+}
+
 .timer-ring span {
   color: #7f8da8;
   font-size: 0.8rem;
@@ -9147,6 +9159,7 @@ html:has(.status-route) .bike-resume-banner { display: none; }
 
 .sync-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.65rem;
 }
 
@@ -9163,6 +9176,47 @@ html:has(.status-route) .bike-resume-banner { display: none; }
 
 .sync-error {
   color: #b44f48;
+}
+
+.journal-screen, .journal-screen > *, .settings-screen > *,
+.journal-entry .section-row > div, .sync-sheet .setting-row > span,
+.sync-sheet .setting-row > span > span {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.journal-screen .journal-actions, .journal-screen .editor-actions {
+  flex-wrap: wrap;
+}
+
+.journal-screen .button, .sync-actions .button {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.journal-screen .status-message, .settings-screen .status-message,
+.journal-entry h3, .journal-entry p, .journal-entry-meta,
+.sync-sheet .setting-note, .sync-sheet .setting-row small {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.journal-screen .status-message, .settings-screen .status-message {
+  display: block;
+  white-space: normal;
+  color: #e5dcff;
+  font-family: system-ui, sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  text-transform: none;
+}
+
+.sync-sheet .setting-row strong { color: #f4efff; }
+.sync-sheet .setting-note {
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.5;
 }
 .shop-balance { display: flex; align-items: center; gap: 0.45rem; color: var(--accent-strong, #765e88); }
 .shop-balance span { color: var(--muted); font-size: 0.82rem; }
