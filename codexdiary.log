@@ -228,3 +228,9 @@
 - Decision/change: Added exact five-minute phase variants with existing music/on-screen guidance; full-length spoken recordings stay unchanged. Binaural sessions open creator-published YouTube playlists with a native draggable countdown and no bundled media.
 - Preserve/avoid: Overlay requires Android display-over-apps permission, uses the session deadline, and returns to ZenChad for controls/saving. YouTube owns playback (including ads); timer completion does not stop it. No audio generation credits spent.
 - Verification: Exact timing across 17 practices, focused regression/UI checks and signed APK 2.8/code 19 passed. No phone connected for native overlay testing. APK: releases/ZenChad-2.8-Meditation-YouTube.apk.
+
+2026-09-24 - Status wardrobe fit and face portrait
+- Decision/change: Use one SVG source-coordinate renderer for the 1086x1448 paper doll and face portrait; clip old face/shoulder remnants from alternate hair, realign jacket and bracelets, and retain all cosmetic IDs and ownership. Existing raster art is preserved; no generation needed.
+- Preserve/avoid: Source-coordinate clip/fit metadata lives in PaperDollAvatar.tsx. Measure the live header plus safe-area inset rather than assuming the obsolete Status header height. Allow the frame to scroll on shorter screens.
+- Verification: Full 13-item visual audit, combined outfit equip flow, three phone widths with simulated top inset, and shop/progression/Running checks passed. No Android device connected.
+- Release: Android 2.9/code 20, ZenChad-2.9-Status-Wardrobe-Fix.apk; matching local/Drive SHA-256 38A44D6699F176F95B89F118063279FDFF9B632640EA59DBBFE08BEDD5D7034F.

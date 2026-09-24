@@ -1,6 +1,7 @@
 import { Check, Clock3, Coins, Flame, LockKeyhole, Target, X } from "lucide-react";
-import { useState, type CSSProperties, type Dispatch, type SetStateAction } from "react";
+import { useState, useLayoutEffect, useRef, type CSSProperties, type Dispatch, type SetStateAction } from "react";
 import { createPortal } from "react-dom";
+import PaperDollAvatar from "../components/PaperDollAvatar";
 import type { AppData, CosmeticSlot, ZenStatId } from "../types";
 import { cosmeticById, cosmeticsForSlot, equipCosmetic, isCosmeticOwned, unequipCosmetic } from "../cosmetics";
 import { purchaseFailureMessage, purchaseShopItem } from "../shop";
@@ -23,45 +24,14 @@ function formatTime(seconds: number) {
   return hours ? `${hours}h ${minutes % 60}m` : `${minutes}m`;
 }
 
-function CharacterPortrait({ className = "" }: { className?: string }) {
-  return <img className={`status-avatar-image ${className}`.trim()} src="assets/status/zen-chad-status.png" alt="Sam, ZenChad avatar" />;
-}
-
-const PAPER_DOLL_BASE_ASSET = "/assets/status/paper-doll/base/zenchad-canonical-underlayer-v3.png";
-const ORIGINAL_PAPER_DOLL_ITEMS = ["runner-shorts", "red-trainers", "runner-top", "fitness-watch", "default-pink-hair"];
-
 function PaperDollCharacter({ data }: Props) {
-  const previewParams = import.meta.env.DEV ? new URLSearchParams(window.location.search) : null;
-  const previewTopId = previewParams?.get("paperDollTop");
-  const previewHairId = previewParams?.get("paperDollHair");
-  const previewWristId = previewParams?.get("paperDollWrist");
-  const equipped = data.progression.equippedCosmetics;
-  const topId = previewTopId ?? equipped.top;
-  const wristId = previewWristId ?? equipped.wrist;
-  const hairId = previewHairId ?? equipped.hair;
-  const cosmeticIds = [equipped.legs, equipped.shoes, topId, wristId, hairId];
-  const layers = cosmeticIds.map((id) => ({ id, definition: cosmeticById(id) }));
-  if (equipped.aura !== "indigo-flow" || layers.some(({ definition }) => !definition?.paperDollLayer || !definition.paperDollRole)) {
-    return <CharacterPortrait />;
+  const preview = import.meta.env.DEV ? new URLSearchParams(window.location.search) : null;
+  const equipped = { ...data.progression.equippedCosmetics };
+  for (const slot of ["hair", "top", "wrist", "legs", "shoes"] as const) {
+    const id = preview?.get(`paperDoll${slot[0].toUpperCase()}${slot.slice(1)}`);
+    if (id && cosmeticById(id)?.slot === slot) equipped[slot] = id;
   }
-  if (cosmeticIds.every((id, index) => id === ORIGINAL_PAPER_DOLL_ITEMS[index])) {
-    return <CharacterPortrait className="status-avatar-canonical" />;
-  }
-
-  return (
-    <div className="status-avatar-stack" data-paper-doll-items={cosmeticIds.join(",")}>
-      <img className="status-avatar-layer status-avatar-base" src={PAPER_DOLL_BASE_ASSET} alt="Sam, ZenChad avatar" />
-      {layers.map(({ id, definition }) => definition?.paperDollLayer && definition.paperDollRole && (
-        <img
-          key={`${definition.paperDollRole}-${id}`}
-          className={`status-avatar-layer status-avatar-wearable status-avatar-${definition.paperDollRole}`}
-          data-paper-doll-layer={definition.paperDollRole}
-          src={definition.paperDollLayer}
-          alt=""
-        />
-      ))}
-    </div>
-  );
+  return <PaperDollAvatar equipped={equipped} />;
 }
 
 function PanelTitle({ children }: { children: string }) {
@@ -87,7 +57,7 @@ function SummaryPanel({ data }: Props) {
   return (
     <section className="status-summary-panel">
       <div className="status-portrait-frame">
-        <CharacterPortrait className="status-portrait" />
+        <PaperDollAvatar equipped={data.progression.equippedCosmetics} portrait />
       </div>
       <div className="status-summary-copy">
         <strong>Sam</strong>
@@ -254,8 +224,25 @@ function WardrobeDialog({ slot, data, setData, onClose }: WardrobeDialogProps) {
 
 export default function ProgressScreen({ data, setData }: Props) {
   const [openSlot, setOpenSlot] = useState<CosmeticSlot | null>(null);
+  const screenRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const screen = screenRef.current;
+    const header = document.querySelector<HTMLElement>(".topbar");
+    if (!screen || !header) return;
+    const measure = () => {
+      // The frame's first panel begins at 20.7% of its width. Keep it below
+      // the actual header, including Android's status-bar inset and font scaling.
+      const inset = Math.max(0, header.getBoundingClientRect().bottom + 8 - screen.clientWidth * 0.207);
+      screen.style.setProperty("--status-top-offset", `${inset}px`);
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(header);
+    observer.observe(screen);
+    measure();
+    return () => observer.disconnect();
+  }, []);
   return (
-    <div className="status-screen">
+    <div className="status-screen" ref={screenRef}>
       <div className="status-main-board">
         <div className="status-left-column">
           <SummaryPanel data={data} />

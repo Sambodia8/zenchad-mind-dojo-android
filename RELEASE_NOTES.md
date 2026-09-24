@@ -169,3 +169,12 @@
 - Background return/restoration caps credited time at the selected session length.
 - Verified: duration/progression/Running/music tests, 412x915 UI selection/play/pause/reset/restore/late-completion checks, TypeScript/Vite, Capacitor sync, Android assembly and matching existing signing certificate. No connected phone: native overlay permission, drag and YouTube handoff require on-device verification.
 - APK: `releases/ZenChad-2.8-Meditation-YouTube.apk` (versionCode 19); matching copy in `D:\My Drive\ZenChad`.
+
+## 2.9 — Status wardrobe fitting (2026-09-24)
+- Removed old face/shoulder fragments from alternate hair, aligned the cream jacket and wrist jewellery to the current body, and kept a shared 1086x1448 source coordinate system for all equipment.
+- Replaced the summary's body thumbnail with a centred face portrait that follows equipped hair.
+- Measured the live header to prevent the name panel being hidden under Android's top inset; shorter screens can scroll the complete frame.
+- Preserved artwork, cosmetic IDs, ownership, prices, and the original default character. No generated media or additional asset payload.
+- Verified all 13 wearables visually, combined equip flow, three phone widths including simulated 32px top inset, shop/progression/Running checks, production bundle, Capacitor sync, APK assembly, signature and matching local/Drive hashes. No connected Android device.
+- At 412x915: header bottom 69.59px; name glyph top 98.67px (29.08px clearance). Portrait container 64.89x86.92px, image box 62.89x84.92px, equal 1px border gaps; geometric centre error 0px.
+- APK: `releases/ZenChad-2.9-Status-Wardrobe-Fix.apk`, versionCode 20; copied to `D:\My Drive\ZenChad`. SHA-256: `38A44D6699F176F95B89F118063279FDFF9B632640EA59DBBFE08BEDD5D7034F`.

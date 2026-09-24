@@ -7565,10 +7565,10 @@ html:has(.status-route) .bike-resume-banner { display: none; }
   position: relative;
   z-index: 1;
   width: 100%;
-  height: 100dvh;
+  height: auto;
   margin: 0;
   padding: 0 0 calc(4.55rem + env(safe-area-inset-bottom));
-  overflow: hidden;
+  overflow: visible;
 }
 
 .app-shell.status-route .topbar-status {
@@ -7633,9 +7633,10 @@ html:has(.status-route) .bike-resume-banner { display: none; }
   display: block;
   container-type: inline-size;
   width: min(100%, 866px);
-  height: 100%;
+  aspect-ratio: 100 / 195;
+  height: auto;
   min-height: 0;
-  margin: 0 auto;
+  margin: var(--status-top-offset, 0px) auto 0;
   overflow: hidden;
   color: var(--status-ink);
   background: #020611 url("/assets/status/status-frame-v2.png") top center / 100% auto no-repeat;
@@ -7722,6 +7723,12 @@ html:has(.status-route) .bike-resume-banner { display: none; }
   object-position: center 8%;
   transform: scale(2.45);
   transform-origin: center 11%;
+}
+
+.status-portrait-frame > .status-face-portrait {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .status-summary-copy {
