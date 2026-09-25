@@ -552,4 +552,24 @@ const diagnosticsSource = source("src/runningDiagnostics.ts");
 assert.ok(diagnosticsSource.includes("exact GPS coordinates and route geometry are intentionally omitted"), "copied diagnostics must carry the privacy guarantee");
 assert.doesNotMatch(diagnosticsSource, /`[^`]*(?:lat|lng)=\$\{/i, "diagnostics text must not interpolate raw latitude/longitude");
 
+const places = loadTsModule("src/runningPlace.ts", {
+  "@capacitor/core": { Capacitor: { getPlatform: () => "web" }, registerPlugin: () => ({}) },
+  "./running": running
+});
+const unnamedRun = { routeName: "Recorded route", routeNameSource: "generated", routeRoadNames: [], points: [{ lat: 51, lng: -1, accuracy: 5, at: 1 }] };
+assert.equal(places.needsRunPlaceName(unnamedRun), true, "old unnamed runs can be repaired");
+assert.equal(places.needsRunPlaceName({ ...unnamedRun, routeNameSource: "user" }), false, "never overwrite a manual name, even if it is the fallback text");
+assert.equal(places.needsRunPlaceName({ ...unnamedRun, points: [] }), false);
+const placePoints = Array.from({ length: 10 }, (_, i) => ({ lat: 51 + i / 1000, lng: -1, accuracy: 5, at: i, distanceFromStart: i * 100 }));
+const sampledPoints = [];
+const repaired = await places.resolveRunPlaceName(placePoints, async (point) => { sampledPoints.push(point); return point.at < 5 ? "Forest Road" : "Village Lane"; });
+assert.deepEqual(repaired.roadNames, ["Forest Road", "Village Lane"]);
+assert.equal(sampledPoints.length, 3, "limit lookups to three recorded coordinates");
+assert.ok(sampledPoints.every((point) => placePoints.includes(point)));
+assert.equal((await places.resolveRunPlaceName(placePoints, async () => { throw new Error("offline"); })).routeName, "Recorded route");
+assert.equal((await places.resolveRunPlaceName([{ ...placePoints[0], lat: NaN }], async () => { throw new Error("must not look up invalid GPS"); })).roadNames.length, 0);
+let namedLookups = 0;
+assert.equal((await places.resolveRunPlaceName([{ ...placePoints[0], roadName: "Known Road" }], async () => { namedLookups++; })).routeName, "Known Road");
+assert.equal(namedLookups, 0, "reuse recorded road names without network access");
+
 console.log("Running logic tests passed.");

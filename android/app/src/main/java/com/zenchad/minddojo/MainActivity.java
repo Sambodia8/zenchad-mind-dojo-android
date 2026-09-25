@@ -10,6 +10,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(QwenJournalPlugin.class);
         registerPlugin(AppearancePlugin.class);
         registerPlugin(RunningTrackerPlugin.class);
+        registerPlugin(RunningPlacePlugin.class);
         registerPlugin(RunningAudioPlugin.class);
         registerPlugin(RunningSpeechPlugin.class);
         registerPlugin(RunningBackgroundNavigationPlugin.class);

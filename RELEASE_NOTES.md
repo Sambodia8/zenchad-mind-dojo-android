@@ -187,3 +187,8 @@
 - Removed visible no-shame and filtered-comparison announcements from run screens; rewards and best-effort calculations are unchanged.
 - Verification: journal order/timezone/Unicode/round-trip tests, sync merge, progression, Running tests, browser downloads with complete matching journal/backup content, 360/412px overflow checks, NSDR preview playback/stop/session handoff, TypeScript/Vite, Capacitor sync, Android compile, signatures and matching local/Drive hashes. No phone connected: the native document-picker interaction remains untested on-device.
 - APK: `releases/ZenChad-2.10-Breathing-Journal-Export.apk`, versionCode 21, 395,627,883 bytes. Drive copy: `D:\My Drive\ZenChad`. SHA-256: `118156007DD0F6EFC0682A843C62355641D06BC8701972E7AFC7380C3A6DEFA5`.
+
+## 2.12 - Run location names and blond hair fit
+- Unnamed runs now look up road/locality names from recorded GPS positions after saving. Older unnamed runs are repaired when Running Mode opens; manually edited names are preserved. Offline/unavailable lookups retain the fallback and retry on a later visit.
+- Porter blond hair is 28% larger around the forehead anchor in both the character and face portrait, giving it more volume and longer side strands.
+- Running, progression and shop checks plus phone-sized browser visual checks passed. Native geocoding remains untested on a handset because no device is connected.

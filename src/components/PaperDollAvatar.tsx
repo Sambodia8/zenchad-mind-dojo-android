@@ -6,7 +6,9 @@ import type { EquippedCosmetics } from "../types";
 // Clip in the source layer's space, then fit to the current body's landmarks.
 export const PAPER_DOLL_FITS: Record<string, { clip: string; transform?: string }> = {
   "porter-robinson-nurture-hair": {
-    clip: "M460 150H628V337H589L594 289 594 267 586 253 580 233 570 210H518L507 229 501 245 491 262 493 290 499 337H460Z"
+    clip: "M460 150H628V337H589L594 289 594 267 586 253 580 233 570 210H518L507 229 501 245 491 262 493 290 499 337H460Z",
+    // Fit visible strands, not the transparent canvas; keep the part at the forehead.
+    transform: "translate(544 210) scale(1.28) translate(-544 -210)"
   },
   "noodle-dare-hair": {
     clip: "M431 130H665V345H610L609 278 604 248 594 245 579 256 555 269 518 281 493 291 480 310 480 345H431Z"

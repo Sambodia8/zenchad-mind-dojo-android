@@ -102,6 +102,7 @@ import RunPhotoGallery from "../components/RunPhotoGallery";
 import { clearRunningRouteState, loadPlannedRunningRoute } from "../runningRouteStore";
 import { clearNativeBackgroundRunningRoute } from "../runningBackgroundNavigation";
 import { roadNameForLocation } from "../runningNavigation";
+import { needsRunPlaceName, resolveRunPlaceName } from "../runningPlace";
 import { cancelRunningReminder, isNativeAndroid, scheduleRunningReminder } from "../native";
 import { startNativeRunningTracker } from "../runningNative";
 import { playUiSfx } from "../uiSfx";
@@ -480,6 +481,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
   const photoPoller = useRef<ReturnType<typeof startActiveRunPhotoPolling> | null>(null);
   const justRunStarted = useRef(false);
   const finishingRun = useRef(false);
+  const placeNameAttempts = useRef(new Set<string>());
   const processedDistanceRewardIds = useRef(new Set(Object.keys(restored.current?.distanceZenPointAwards ?? {})));
 
   const setSavedSession = (next: RunSession | null) => {
@@ -854,6 +856,36 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
     setResumePrepChoice(false);
     showToast("NEW PREP · STEP 1");
   };
+
+  const historyRecordIds = profile.history.map((record) => record.id).join("|");
+  useEffect(() => {
+    let cancelled = false;
+    let activeRecordId: string | null = null;
+    const unnamed = profile.history.filter((record) => needsRunPlaceName(record) && !placeNameAttempts.current.has(record.id));
+    void (async () => {
+      for (const record of unnamed) {
+        if (cancelled) break;
+        activeRecordId = record.id;
+        placeNameAttempts.current.add(record.id);
+        const result = await resolveRunPlaceName(record.points);
+        if (cancelled) break;
+        activeRecordId = null;
+        if (!result.roadNames.length) continue;
+        setProfile((current) => {
+          const next = { ...current, history: current.history.map((item) =>
+            item.id === record.id && needsRunPlaceName(item)
+              ? { ...item, routeName: result.routeName, routeRoadNames: result.roadNames }
+              : item) };
+          saveRunningProfile(next);
+          return next;
+        });
+      }
+    })();
+    return () => {
+      cancelled = true;
+      if (activeRecordId) placeNameAttempts.current.delete(activeRecordId);
+    };
+  }, [historyRecordIds]);
 
   const saveHype = (next: RunHypeChecklist) => {
     saveRunHypeChecklist(next);
