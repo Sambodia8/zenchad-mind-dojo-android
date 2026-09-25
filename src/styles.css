@@ -10123,3 +10123,163 @@ html:has(.status-route) .bike-resume-banner { display: none; }
 }
 .yoga-skip-before-run { margin-top: .25rem; }
 .yoga-player-skip { min-height: 40px; padding: .45rem .65rem; border: 1px solid rgba(255,255,255,.24); border-radius: 999px; background: rgba(255,255,255,.1); color: inherit; font: inherit; font-size: .76rem; font-weight: 850; white-space: nowrap; }
+
+/* Circuit stays a small, practical interruption in the Dojo flow. */
+.home-adventure-card {
+  display: grid;
+  gap: .65rem;
+  padding: .78rem .85rem .82rem;
+  border: 1px solid rgba(117, 222, 194, .32);
+  border-radius: 1.15rem;
+  color: #f7f5ff;
+  background:
+    radial-gradient(circle at 96% 4%, rgba(101, 228, 197, .16), transparent 38%),
+    linear-gradient(135deg, rgba(19, 30, 48, .97), rgba(16, 15, 37, .98));
+  box-shadow: 0 .75rem 1.8rem rgba(0, 0, 0, .24), inset 0 1px rgba(255, 255, 255, .06);
+}
+
+.home-adventure-heading {
+  display: grid;
+  grid-template-columns: 2.1rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .62rem;
+}
+
+.home-adventure-mark {
+  display: grid;
+  width: 2.1rem;
+  height: 2.1rem;
+  place-items: center;
+  border: 1px solid rgba(109, 229, 196, .38);
+  border-radius: .75rem;
+  color: #9df7d8;
+  background-color: #172c3a;
+  background-image: url("/assets/zen-coach/circuit-concept-board.png");
+  background-position: right top;
+  background-repeat: no-repeat;
+  background-size: 240% auto;
+}
+.home-adventure-mark.off { background-image: none; }
+.home-adventure-mark.off::before { content: "✦"; font-size: 1.15rem; }
+
+
+
+.home-adventure-eyebrow {
+  display: block;
+  margin-bottom: .1rem;
+  color: #a2e9d5;
+  font-size: .62rem;
+  font-weight: 850;
+  line-height: 1;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.home-adventure-heading h2 {
+  overflow: hidden;
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 4.9vw, 1.45rem);
+  font-weight: 400;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-adventure-progress {
+  align-self: start;
+  padding: .28rem .38rem;
+  border: 1px solid rgba(213, 188, 255, .24);
+  border-radius: .5rem;
+  color: #e8ddff;
+  background: rgba(139, 99, 206, .14);
+  font-size: .68rem;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.home-adventure-progress-track { display: flex; gap: .26rem; }
+.home-adventure-progress-track > span { height: .22rem; flex: 1; border-radius: 999px; background: rgba(255, 255, 255, .13); }
+.home-adventure-progress-track > .is-complete { background: linear-gradient(90deg, #71d9b8, #c0f7d8); box-shadow: 0 0 .55rem rgba(112, 232, 191, .46); }
+
+.home-adventure-reason { margin: 0; color: #c8c9d7; font-size: .77rem; line-height: 1.32; }
+.home-adventure-reason strong { color: #e7e2f0; }
+
+.home-adventure-actions { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .48rem; }
+.home-adventure-primary,
+.home-adventure-options {
+  display: inline-flex;
+  min-height: 2.42rem;
+  align-items: center;
+  justify-content: center;
+  gap: .26rem;
+  border-radius: .72rem;
+  font: inherit;
+  font-size: .76rem;
+  font-weight: 850;
+}
+
+.home-adventure-primary {
+  border: 1px solid rgba(159, 247, 216, .68);
+  color: #08211e;
+  background: linear-gradient(135deg, #9cf0d1, #69d6bd);
+  box-shadow: 0 .35rem .8rem rgba(58, 204, 167, .18);
+}
+
+.home-adventure-options {
+  padding: 0 .68rem;
+  border: 1px solid rgba(221, 211, 243, .22);
+  color: #e5deef;
+  background: rgba(255, 255, 255, .045);
+}
+
+.home-adventure-options svg { width: .92rem; height: .92rem; }
+.home-adventure-reset { width: fit-content; }
+
+.home-adventure-primary:hover,
+.home-adventure-primary:focus-visible { background: #c0f7df; }
+.home-adventure-options:hover,
+.home-adventure-options:focus-visible,
+.home-adventure-options-panel > button:hover,
+.home-adventure-options-panel > button:focus-visible { border-color: rgba(166, 242, 216, .55); background: rgba(105, 214, 189, .11); }
+
+.home-adventure-options-panel {
+  display: grid;
+  gap: .38rem;
+  padding-top: .12rem;
+}
+
+.home-adventure-options-panel > button {
+  display: flex;
+  min-height: 2.65rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: .6rem;
+  padding: .45rem .58rem;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: .65rem;
+  color: #f3effa;
+  background: rgba(255, 255, 255, .035);
+  text-align: left;
+}
+
+.home-adventure-options-panel span { display: grid; gap: .08rem; }
+.home-adventure-options-panel strong { font-size: .73rem; }
+.home-adventure-options-panel small { color: #b9b5c9; font-size: .68rem; }
+.home-adventure-options-panel em { color: #a7ead7; font-size: .7rem; font-style: normal; font-weight: 800; white-space: nowrap; }
+.home-adventure-options-panel .home-adventure-rest-option { display: block; min-height: 2.25rem; color: #c9c3d2; text-align: center; }
+
+@media (min-width: 480px) and (max-height: 900px) {
+  .home-adventure-card { gap: .5rem; padding: .65rem .72rem; }
+  .home-adventure-reason { font-size: .72rem; }
+  .home-adventure-primary, .home-adventure-options { min-height: 2.15rem; }
+}
+
+.home-adventure-card { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+.home-adventure-heading h2 { font-family: inherit; font-size: 1.24rem; font-weight: 800; line-height: 1.15; white-space: normal; }
+.home-adventure-eyebrow { font-size: .72rem; }
+.home-adventure-reason { font-size: .88rem; line-height: 1.4; }
+.home-adventure-primary, .home-adventure-options { font-family: inherit; font-size: .85rem; }
+.home-adventure-options-panel strong { font-size: .88rem; }
+.home-adventure-options-panel small, .home-adventure-options-panel em { font-size: .8rem; }

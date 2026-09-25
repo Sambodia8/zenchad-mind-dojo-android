@@ -166,6 +166,8 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
 .running-hype-status button.selected { border: 2px solid #145e40; background: #d9f2e4; color: #103e2c; box-shadow: inset 0 0 0 1px #145e40; }
 .running-hype-status button.selected::before { content: "✓ "; font-weight: 950; }
 .running-hype-customize { display: grid; gap: .35rem; }
+.running-hype-customize summary { color: #d3e1d9; cursor: pointer; font-size: .79rem; font-weight: 800; }
+.running-hype-item.essential .running-hype-customize summary { color: #35483f; }
 .running-hype-customize label { display: flex; min-height: 42px; align-items: center; gap: .4rem; color: #e0ebe5; font-size: .92rem; font-weight: 750; }
 .running-hype-customize input[type="checkbox"] { width: 20px; height: 20px; accent-color: #187b55; }
 .running-hype-customize input:not([type="checkbox"]),
@@ -187,6 +189,44 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
 .running-hype-list .running-companion-options button small { color: #c6d6ce; font-size: .82rem; }
 .running-hype-list .running-companion-options button.selected { border-color: #8be0b5; background: #254d3a; }
 .running-hype-list .running-companion-options button.selected strong { color: #ffffff; }
+.running-circuit-picker { display: grid; gap: .65rem; padding: .85rem; border: 1px solid color-mix(in srgb, var(--run-violet) 38%, var(--border)); border-radius: 1rem; background: color-mix(in srgb, var(--card-bg) 94%, var(--run-violet)); }
+.running-circuit-heading { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+.running-circuit-heading > span:first-child { display: grid; gap: .12rem; }
+.running-circuit-heading strong { color: var(--text); font-size: 1.05rem; }
+.running-circuit-heading small { color: var(--text-muted); font-size: .82rem; line-height: 1.35; }
+.running-circuit-heading > svg, .running-circuit-heading > span:last-child { color: var(--run-violet); }
+.running-circuit-heading > span:last-child { display: flex; gap: .45rem; }
+.running-circuit-heading > span:last-child svg { width: 1.15rem; height: 1.15rem; transition: transform 180ms ease; }
+.running-circuit-picker.expanded .running-circuit-heading > span:last-child svg:last-child { transform: rotate(180deg); }
+.running-circuit-picker.compact .running-circuit-heading { width: 100%; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; }
+.running-circuit-picker.compact.collapsed { padding-block: .62rem; }
+.running-circuit-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem; }
+.running-circuit-options button { display: grid; min-height: 54px; align-content: center; justify-items: start; gap: .06rem; padding: .48rem .62rem; border: 1px solid var(--border); border-radius: .75rem; background: var(--card-bg); color: var(--text); font: inherit; text-align: left; }
+.running-circuit-options button strong { font-size: .9rem; }
+.running-circuit-options button small { color: var(--text-muted); font-size: .7rem; line-height: 1.15; }
+.running-circuit-options button.selected { border-color: var(--run-violet); background: color-mix(in srgb, var(--run-violet) 14%, var(--card-bg)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--run-violet) 32%, transparent); }
+.running-rescue-card { display: grid; gap: .55rem; padding: .9rem; border: 1px solid color-mix(in srgb, #dc7d44 55%, var(--border)); border-radius: 1rem; background: color-mix(in srgb, var(--card-bg) 92%, #dc7d44); }
+.running-rescue-card h2 { margin: 0; color: var(--text); font-size: 1.1rem; }
+.running-rescue-card p { margin: 0; color: var(--text-muted); font-size: .8rem; line-height: 1.35; }
+.running-rescue-card > div { display: flex; flex-wrap: wrap; gap: .4rem; }
+.running-rescue-card button { min-height: 44px; flex: 1 1 8rem; border: 1px solid color-mix(in srgb, #c45c2d 55%, var(--border)); border-radius: .65rem; background: var(--card-bg); color: var(--text); padding: .45rem .55rem; font: inherit; font-size: .76rem; font-weight: 850; }
+.running-coach-plan-card, .running-coach-plan-context { display: grid; gap: .35rem; padding: .9rem; border: 1px solid color-mix(in srgb, var(--run-violet) 44%, var(--border)); border-radius: 1rem; background: color-mix(in srgb, var(--card-bg) 93%, var(--run-violet)); }
+.running-coach-plan-card h2 { margin: 0; color: var(--text); font-size: 1.25rem; }
+.running-coach-plan-card p, .running-coach-plan-card small, .running-coach-plan-context small { margin: 0; color: var(--text-muted); font-size: .8rem; line-height: 1.35; }
+.running-coach-plan-context { margin-top: .8rem; }
+.running-coach-plan-context strong { color: var(--text); }
+.running-coach-plan-card, .running-coach-plan-context, .running-circuit-picker, .running-debrief { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+.running-coach-plan-card h2 { font-family: inherit; font-size: 1.3rem; font-weight: 800; }
+.running-coach-plan-card p, .running-coach-plan-card small, .running-coach-plan-context small { font-size: .9rem; }
+.running-coach-plan-card .button { font-family: inherit; font-size: .95rem; }
+.running-circuit-heading small { font-size: .88rem; }
+.running-circuit-options button { font-size: .9rem; }
+.running-circuit-options button small { font-size: .8rem; }
+.running-debrief p { font-size: .9rem; }
+.running-debrief-row > strong { font-size: .92rem; }
+.running-debrief button { font-size: .82rem; }
+.running-hype-list .running-companion-options button strong { font-size: 1rem; }
+.running-hype-list .running-companion-options button small { font-size: .87rem; }
 .running-context-reminder { margin: 0; padding: .75rem; border: 1px solid #987419; border-radius: .7rem; background: #fff5d9; color: #49370a; font-weight: 750; line-height: 1.4; }
 .running-context-reminder p { margin: .25rem 0 0; }
 .running-torch-reminder { border: 2px solid #8a6100; background: #fff0c7; color: #432f00; }
@@ -284,6 +324,24 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
 .running-active > .running-companion-picker .running-companion-options button small { color: #9fb6ac; }
 .running-active > .running-companion-picker .running-companion-options button.selected { border-color: #8be0b5; background: rgba(70, 181, 126, .24); }
 .running-active > .running-companion-picker .running-companion-options button.selected strong { color: #dffff0; }
+.running-active > .running-circuit-picker { border-color: rgba(182, 166, 255, .3); background: #171927; color: white; }
+.running-active > .running-circuit-picker .running-circuit-heading strong { color: #f2efff; }
+.running-active > .running-circuit-picker .running-circuit-heading small { color: #c8c3dd; }
+.running-active > .running-circuit-picker .running-circuit-options button { border-color: rgba(255,255,255,.16); background: rgba(255,255,255,.06); color: #f2efff; }
+.running-active > .running-circuit-picker .running-circuit-options button small { color: #c8c3dd; }
+.running-active-rescue { background: #251d1a; border-color: rgba(237, 151, 103, .35); }
+.running-active-rescue .eyebrow { color: #f0b88f; }
+.running-active-rescue button { border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.08); color: #fff4ee; }
+.running-debrief { display: grid; gap: .75rem; padding: 1rem; border: 1px solid color-mix(in srgb, var(--run-violet) 38%, var(--border)); border-radius: 1.1rem; background: color-mix(in srgb, var(--card-bg) 94%, var(--run-violet)); }
+.running-debrief h2 { margin: .12rem 0 .25rem; color: var(--text); font-size: 1.35rem; }
+.running-debrief p { margin: 0; color: var(--text-muted); font-size: .8rem; line-height: 1.35; }
+.running-debrief-row { display: grid; gap: .4rem; }
+.running-debrief-row > strong { color: var(--text); font-size: .82rem; }
+.running-debrief-row > div, .running-debrief-reasons { display: flex; flex-wrap: wrap; gap: .38rem; }
+.running-debrief button { min-height: 40px; border: 1px solid var(--border); border-radius: 999px; background: var(--card-bg); color: var(--text); padding: .38rem .62rem; font: inherit; font-size: .72rem; font-weight: 800; }
+.running-debrief button.selected { border-color: var(--run-green); background: var(--run-mint); color: var(--run-ink); }
+.running-debrief details { display: grid; gap: .5rem; }
+.running-debrief summary { color: var(--run-violet); cursor: pointer; font-size: .8rem; font-weight: 850; }
 .running-companion-summary { display: flex; min-width: 0; align-items: center; gap: .42rem; color: var(--text-muted); font-size: .76rem; font-weight: 800; }
 .running-companion-summary svg { width: 1rem; height: 1rem; flex: 0 0 auto; color: var(--run-green); }
 .running-companion-summary span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -572,3 +630,7 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
   .running-hub-links button { flex-direction: row; justify-content: flex-start; padding-inline: .85rem; }
   .running-live-stats { grid-template-columns: 1fr 1fr; }
 }
+
+.running-debrief p { font-size: .9rem; }
+.running-debrief-row > strong { font-size: .92rem; }
+.running-debrief button { font-size: .82rem; }

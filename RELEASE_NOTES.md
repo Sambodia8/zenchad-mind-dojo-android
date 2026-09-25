@@ -1,3 +1,13 @@
+# Zen Chad 2.15 — Zen Coach (2026-09-25)
+
+- Added a daily run or Bike Quest recommendation with three alternatives, rest and snooze, a rolling three-session goal, and a short feedback loop based on real completed sessions.
+- Carried accepted plans into Running Mode or Bike Quest. Running adds a compact Hype List, optional Circuit style, contextual Yuna/daylight prompts, rescue choices, and a quick debrief.
+- Added an opt-in Atlas of privacy-trimmed completed GPS routes and optional local reminders with quiet hours. No live weather/calendar source or unverified route is presented as available.
+- Version code 26; version name 2.15; shareable debug APK: `ZenChad-2.15-Zen-Coach.apk`.
+- SHA-256: `178430C68F10CCC8A702386D7CA14A726790FE10357155DC6561E9AA3A0AC914`.
+- Verified Zen Coach and Running tests, TypeScript/Vite production build, Capacitor Android sync, Gradle assembly, package/version metadata, APK v1/v2 signature, and 412 × 915 browser flows. Native notifications and GPS still need device verification.
+- Release copies: `S:\zENcHAD\ZenChadAndroid\releases\ZenChad-2.15-Zen-Coach.apk` and `D:\My Drive\ZenChad\ZenChad-2.15-Zen-Coach.apk`; both match the source SHA-256.
+
 # Zen Chad 2.7 — Run Quest warm-up art fix (2026-09-22)
 
 - Replaced only the inaccurate Before Running artwork: source-accurate ankle inversion/eversion, hip flexion and opener, hip flexion with torso rotation, small shoulder-height arm circles in two palm-direction phases, calf stretch and heel raises, and the shared longer-haired Yoga Mark Forward Fold.

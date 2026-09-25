@@ -28,6 +28,27 @@ export interface RunningRouteRequest {
   recentRouteFingerprints?: string[];
 }
 
+/** Coarse private shape signature; GPS noise and reversed direction usually keep the same bucket. */
+export function routeFingerprintFromPoints(points: RunningRoutePoint[], distanceMeters: number): string | null {
+  if (!Number.isFinite(distanceMeters) || distanceMeters <= 0) return null;
+  let count = 0;
+  let minLat = Infinity, maxLat = -Infinity, minLng = Infinity, maxLng = -Infinity;
+  for (const point of points) {
+    if (!Number.isFinite(point.lat) || !Number.isFinite(point.lng)) continue;
+    count += 1;
+    minLat = Math.min(minLat, point.lat);
+    maxLat = Math.max(maxLat, point.lat);
+    minLng = Math.min(minLng, point.lng);
+    maxLng = Math.max(maxLng, point.lng);
+  }
+  if (count < 2) return null;
+  const centreLat = (minLat + maxLat) / 2;
+  const centreLng = (minLng + maxLng) / 2;
+  const widthMeters = (maxLng - minLng) * 111_320 * Math.cos(centreLat * Math.PI / 180);
+  const heightMeters = (maxLat - minLat) * 111_320;
+  return [Math.round(centreLat * 300), Math.round(centreLng * 300), Math.round(distanceMeters / 400), Math.round(widthMeters / 300), Math.round(heightMeters / 300)].join(":");
+}
+
 export interface RunningRouteChoice {
   candidate: RunningRouteCandidate;
   score: number;
@@ -39,7 +60,7 @@ export interface RunningRouteProvider {
   getCandidates(request: RunningRouteRequest): Promise<RunningRouteCandidate[]>;
 }
 
-const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
+const clamp01 = (value: number) => Number.isFinite(value) ? Math.min(1, Math.max(0, value)) : 0;
 
 function durationFit(candidate: RunningRouteCandidate, plannedMinutes: number) {
   const tolerance = Math.max(6, plannedMinutes * 0.35);
@@ -56,9 +77,10 @@ function finishConvenience(candidate: RunningRouteCandidate) {
 
 export function routeCandidateIsUsable(candidate: RunningRouteCandidate) {
   if (candidate.geometry.length < 2) return false;
+  if (candidate.geometry.some((point) => !Number.isFinite(point.lat) || !Number.isFinite(point.lng) || Math.abs(point.lat) > 90 || Math.abs(point.lng) > 180)) return false;
   if (!Number.isFinite(candidate.estimatedMinutes) || candidate.estimatedMinutes <= 0) return false;
   if (!Number.isFinite(candidate.distanceMeters) || candidate.distanceMeters <= 0) return false;
-  if (candidate.routeConfidence < 0.45) return false;
+  if (!Number.isFinite(candidate.routeConfidence) || candidate.routeConfidence < 0.45) return false;
 
   // Explicit project rule: low-confidence map interpretation must never become an invented shortcut.
   if (candidate.uncertainShortcutCount > 0) return false;
@@ -73,6 +95,8 @@ export function scoreRunningRoute(candidate: RunningRouteCandidate, request: Run
   const familiarity = clamp01(candidate.familiarityScore);
   const game = clamp01(candidate.gameOpportunityScore);
   const confidence = clamp01(candidate.routeConfidence);
+  const fingerprint = routeFingerprintFromPoints(candidate.geometry, candidate.distanceMeters);
+  const recentlyRepeated = fingerprint !== null && request.recentRouteFingerprints?.includes(fingerprint);
 
   let score: number;
   if (request.mode === "story") {
@@ -92,6 +116,7 @@ export function scoreRunningRoute(candidate: RunningRouteCandidate, request: Run
       finish * 0.11 +
       confidence * 0.04;
   }
+  if (recentlyRepeated) score -= request.mode === "story" ? 0.18 : 0.12;
 
   const reasons: string[] = [];
   if (fit >= 0.85) reasons.push("good fit for the chosen time");
@@ -100,6 +125,7 @@ export function scoreRunningRoute(candidate: RunningRouteCandidate, request: Run
   if (interest >= 0.7) reasons.push("has varied or interesting surroundings");
   if (request.mode === "story" && game >= 0.65) reasons.push("has strong Story Run set-piece opportunities");
   if (request.mode === "quick" && familiarity >= 0.65) reasons.push("keeps enough familiar ground to stay low-friction");
+  if (recentlyRepeated) reasons.push("recently used route");
 
   return { candidate, score, reasons };
 }

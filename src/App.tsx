@@ -21,7 +21,7 @@ import {
 import { App as CapacitorApp } from "@capacitor/app";
 import type { AppData, Route } from "./types";
 import { addJournalXp, loadData, makeJournal, saveData } from "./storage";
-import { addRunningXp } from "./running";
+import { addRunningXp, loadRunningProfile, saveRunningProfile } from "./running";
 import {
   RUNNING_BONUS_QUEUED_EVENT,
   markRunningRewardBonusesApplied,
@@ -46,6 +46,7 @@ import ThemesScreen from "./screens/ThemesScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import BikeQuestScreen from "./screens/BikeQuestScreen";
 import RunningModeScreen from "./screens/RunningModeScreen";
+import ZenCoachAtlasScreen from "./screens/ZenCoachAtlasScreen";
 import MysteryChallengeScreen from "./screens/MysteryChallengeScreen";
 import LevelUpModal from "./components/LevelUpModal";
 import { getYogaClass } from "./data";
@@ -67,6 +68,7 @@ const titleFor = (route: Route) => {
     case "yoga-builder": return "Routine Builder";
     case "bike-quest": return "Bike Quest";
     case "running": return "Running";
+    case "zen-coach-atlas": return "Adventure Atlas";
     case "mystery-challenge": return "The Quiet Sequence";
     case "timer": return "Meditation";
     case "journal": return "Meditation Journal";
@@ -100,11 +102,12 @@ export default function App() {
   const xpCollectionIdRef = useRef(0);
   const [xpCollection, setXpCollection] = useState<{ id: number; amount: number } | null>(null);
   const [isYogaImmersive, setIsYogaImmersive] = useState(false);
+  const [atlasRevision, setAtlasRevision] = useState(0);
   const levelProgress = getLevelProgress(data.stats.xp, data.stats.level);
   const isStatusRoute = route.name === "progress";
   const isYogaRoute = ["yoga", "yoga-pose", "yoga-class", "yoga-builder"].includes(route.name);
   const showBackButton = !isYogaImmersive && [
-    "timer", "yoga-pose", "yoga-class", "yoga-builder", "bike-quest", "running",
+    "timer", "yoga-pose", "yoga-class", "yoga-builder", "bike-quest", "running", "zen-coach-atlas",
     "mystery-challenge", "journal", "guide", "soundscapes", "rewards", "shop", "themes", "settings"
   ].includes(route.name);
 
@@ -361,6 +364,14 @@ export default function App() {
       case "yoga-builder": return <YogaRoutineBuilderScreen editClassId={route.editClassId} data={data} setData={setData} navigate={navigate} />;
       case "bike-quest": return <BikeQuestScreen data={data} setData={setData} navigate={navigate} resume={route.resume} />;
       case "running": return <RunningModeScreen data={data} setData={setData} navigate={navigate} startMode={route.startMode} />;
+      case "zen-coach-atlas": {
+        const profile = loadRunningProfile();
+        return <ZenCoachAtlasScreen records={profile.history} routePrivacyMeters={profile.routePrivacyMeters} onFavoriteChange={(runIds, isFavorite) => {
+          const current = loadRunningProfile();
+          saveRunningProfile({ ...current, history: current.history.map((record) => runIds.includes(record.id) ? { ...record, isFavorite } : record) });
+          setAtlasRevision((value) => value + 1);
+        }} />;
+      }
       case "mystery-challenge": return <MysteryChallengeScreen data={data} setData={setData} navigate={navigate} />;
       case "journal": return <JournalScreen data={data} setData={setData} draftMeditation={route.draftMeditation} mysteryRunId={route.mysteryRunId} />;
       case "progress": return <ProgressScreen data={data} setData={setData} />;
@@ -371,7 +382,7 @@ export default function App() {
       case "themes": return <ThemesScreen data={data} setData={setData} />;
       case "settings": return <SettingsScreen data={data} setData={setData} />;
     }
-  }, [data, navigate, route]);
+  }, [atlasRevision, data, navigate, route]);
 
   const nav = [
     { route: { name: "home" } as Route, label: "Home", icon: Home },
@@ -385,7 +396,7 @@ export default function App() {
     ? "library"
     : route.name === "yoga-pose" || route.name === "yoga-class" || route.name === "yoga-builder"
       ? "yoga"
-      : ["bike-quest", "running", "mystery-challenge", "journal", "guide", "soundscapes", "rewards", "shop", "themes", "settings"].includes(route.name)
+      : ["bike-quest", "running", "zen-coach-atlas", "mystery-challenge", "journal", "guide", "soundscapes", "rewards", "shop", "themes", "settings"].includes(route.name)
         ? "toolkit"
         : route.name;
 

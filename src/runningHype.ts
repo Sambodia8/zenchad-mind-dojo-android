@@ -1,4 +1,15 @@
 export type RunHypeStatus = "ready" | "not-needed" | "outstanding";
+export type RunEnjoyment = "loved" | "good" | "okay" | "not-for-me";
+export type RunEffort = "easy" | "moderate" | "hard" | "too-hard";
+export type RunFeedbackReason = "great-scenery" | "inconvenient-travel" | "repetitive" | "tired" | "discomfort" | "yuna-enjoyed" | "another";
+
+export interface RunDebrief {
+  runId: string;
+  enjoyment?: RunEnjoyment;
+  effort?: RunEffort;
+  reason?: RunFeedbackReason;
+  updatedAt: number;
+}
 
 export interface RunHypeItem {
   id: string;
@@ -22,6 +33,7 @@ export interface RunHypeChecklist {
 
 const EQUIPMENT_KEY = "zenchad_running_hype_equipment_v1";
 const CHECKLIST_KEY = "zenchad_running_hype_checklist_v1";
+const DEBRIEF_KEY = "zenchad_running_debriefs_v1";
 
 const DEFAULT_ITEMS: RunHypeItem[] = [
   { id: "towel", label: "Sweat towel", importance: 1, note: "Personal sensory essential", carStored: false },
@@ -37,6 +49,47 @@ const DEFAULT_ITEMS: RunHypeItem[] = [
 
 function validStatus(value: unknown): value is RunHypeStatus {
   return value === "ready" || value === "not-needed" || value === "outstanding";
+}
+
+function validEnjoyment(value: unknown): value is RunEnjoyment {
+  return value === "loved" || value === "good" || value === "okay" || value === "not-for-me";
+}
+
+function validEffort(value: unknown): value is RunEffort {
+  return value === "easy" || value === "moderate" || value === "hard" || value === "too-hard";
+}
+
+function validFeedbackReason(value: unknown): value is RunFeedbackReason {
+  return value === "great-scenery" || value === "inconvenient-travel" || value === "repetitive" || value === "tired" || value === "discomfort" || value === "yuna-enjoyed" || value === "another";
+}
+
+export function loadRunDebriefs(): Record<string, RunDebrief> {
+  try {
+    const value = JSON.parse(localStorage.getItem(DEBRIEF_KEY) || "{}");
+    if (!value || typeof value !== "object") return {};
+    return Object.fromEntries(Object.entries(value).flatMap(([runId, candidate]) => {
+      if (!candidate || typeof candidate !== "object" || typeof runId !== "string") return [];
+      const feedback = candidate as Partial<RunDebrief>;
+      if (!Number.isFinite(feedback.updatedAt)) return [];
+      return [[runId, {
+        runId,
+        ...(validEnjoyment(feedback.enjoyment) ? { enjoyment: feedback.enjoyment } : {}),
+        ...(validEffort(feedback.effort) ? { effort: feedback.effort } : {}),
+        ...(validFeedbackReason(feedback.reason) ? { reason: feedback.reason } : {}),
+        updatedAt: Number(feedback.updatedAt)
+      }]];
+    }));
+  } catch {
+    return {};
+  }
+}
+
+export function saveRunDebriefs(debriefs: Record<string, RunDebrief>) {
+  const entries = Object.entries(debriefs)
+    .filter(([, feedback]) => feedback && Number.isFinite(feedback.updatedAt))
+    .sort(([, a], [, b]) => b.updatedAt - a.updatedAt)
+    .slice(0, 100);
+  localStorage.setItem(DEBRIEF_KEY, JSON.stringify(Object.fromEntries(entries)));
 }
 
 export function loadRunHypeEquipment(): RunHypeItem[] {

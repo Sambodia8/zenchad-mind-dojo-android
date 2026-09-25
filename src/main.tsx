@@ -22,6 +22,7 @@ import { startRunningElevationRuntime } from "./runningElevationRuntime";
 import { startRunningHistoryEnrichmentRuntime } from "./runningHistoryEnrichmentRuntime";
 import { startRunningHealthRuntime } from "./runningHealthRuntime";
 import { startRunningDiagnosticsRuntime } from "./runningDiagnosticsRuntime";
+import { startZenCoachNotificationRuntime } from "./zenCoachNotifications";
 import { loadData } from "./storage";
 import { startAppearanceController } from "./theme";
 import "./styles.css";
@@ -45,6 +46,7 @@ import "./runningElevation.css";
 import "./runningHistoryEnrichment.css";
 import "./runningHealth.css";
 import "./runningDiagnostics.css";
+import "./zenCoachSettings.css";
 import "./theme.css";
 
 startBikeQuestRuntime();
@@ -69,6 +71,7 @@ startRunningElevationRuntime();
 startRunningHistoryEnrichmentRuntime();
 startRunningHealthRuntime();
 startRunningDiagnosticsRuntime();
+startZenCoachNotificationRuntime();
 startPostActivityShowerRuntime();
 startAppearanceController(loadData().preferences.appearanceMode);
 

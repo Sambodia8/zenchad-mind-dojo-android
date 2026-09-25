@@ -1,0 +1,13 @@
+.zen-coach-settings { display: grid; gap: 0.8rem; }
+.zen-coach-settings .setting-input { display: grid; gap: 0.35rem; }
+.zen-coach-settings select {
+  width: 100%; min-height: 44px; padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border); border-radius: 0.7rem;
+  background: #171528; color: #f5f0ff; font: inherit;
+}
+.zen-coach-settings input[type="time"] { width: 100%; min-height: 44px; padding: .55rem .7rem; border: 1px solid var(--border); border-radius: .7rem; background: #171528; color: #f5f0ff; font: inherit; }
+.zen-coach-settings-actions { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+.zen-coach-quiet-toggle { display: flex; align-items: center; gap: .5rem; color: var(--text); }
+.zen-coach-quiet-toggle input { width: 20px; height: 20px; accent-color: #76dfc0; }
+.zen-coach-quiet-times { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.bike-coach-target { padding: .55rem .7rem; border: 1px solid rgba(112, 220, 186, .35); border-radius: .7rem; background: #152c2d; color: #dcfff2; font: 700 .88rem/1.35 system-ui, -apple-system, "Segoe UI", sans-serif; }

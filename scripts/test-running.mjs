@@ -44,7 +44,7 @@ assert.match(runningScreenSource, /aria-expanded=\{expanded\}/, "the live Runnin
 assert.match(runningScreenSource, /Scroll for story, route and finish/, "Story runs must make the scrollable continuation obvious");
 assert.match(source("src/runningMode.css"), /\.running-active \.running-end-button\s*\{\s*position:\s*static/, "the finish action must stay in document flow instead of covering Story content");
 assert.equal((runningScreenSource.match(/scheduleRunningReminder\(startedAt, next\.plannedMinutes\)/g) ?? []).length, 2, "both measured and Just Runs should schedule a reminder");
-assert.equal((runningScreenSource.match(/void cancelRunningReminder\(\)/g) ?? []).length, 3, "banking, resetting, and replacing a session should cancel the reminder");
+assert.equal((runningScreenSource.match(/void cancelRunningReminder\(\)/g) ?? []).length, 4, "banking, resetting, replacing, and accepting a coached session should cancel the prior reminder");
 assert.match(source("src/native.ts"), /const RUNNING_REMINDER_NOTIFICATION_ID = 6201/);
 assert.match(source("src/native.ts"), /Math\.max\(1, plannedMinutes\) \+ 15/);
 assert.match(source("src/native.ts"), /Your run is still active\. Open ZenChad to finish and bank it when you are ready\./);
@@ -184,7 +184,7 @@ assert.equal(runningHype.sunsetForLocation(89, 0, new Date(2026, 5, 21)), null, 
 assert.match(runningScreenSource, /I have these already/, "the list has a one-tap user-confirmed ready action");
 assert.match(runningScreenSource, /homePrepDone: true/, "home and car logistics can be completed before travel");
 assert.match(runningScreenSource, /startTrailheadDynamicWarmup/, "dynamic warm-up is available at the selected start point");
-assert.match(runningScreenSource, /Yuna’s teatime is usually around 18:00/, "the companion-specific teatime reminder is conditional and approximate");
+assert.match(runningScreenSource, /Yuna’s usual dinner is around 18:00/, "the companion-specific dinner reminder is conditional and approximate");
 const browserStoryRuntime = source("src/runningStoryRuntime.ts");
 assert.match(browserStoryRuntime, /state\.heardChapterIds\.includes\("contact"\) && completionRatio >= 0\.33/, "browser Story progression waits for heard Contact narration");
 assert.match(browserStoryRuntime, /state\.heardChapterIds\.includes\("pursuit"\) && completionRatio >= 0\.64/, "browser Story progression waits for heard Pursuit narration");

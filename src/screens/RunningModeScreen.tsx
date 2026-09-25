@@ -98,6 +98,7 @@ import {
 import { startActiveRunPhotoPolling } from "../runningPhotoRuntime";
 import { syncRunningNativePoints } from "../runningNativeGeolocationBridge";
 import { RunningVoiceSettings } from "../components/RunningVoiceSettings";
+import { refreshZenCoachNotification } from "../zenCoachNotifications";
 import RunPhotoGallery from "../components/RunPhotoGallery";
 import { clearRunningRouteState, loadPlannedRunningRoute } from "../runningRouteStore";
 import { clearNativeBackgroundRunningRoute } from "../runningBackgroundNavigation";
@@ -125,13 +126,28 @@ import {
   hypeStatusLabel,
   loadRunHypeChecklist,
   loadRunHypeEquipment,
+  loadRunDebriefs,
   saveRunHypeChecklist,
   sunsetForLocation,
   saveRunHypeEquipment,
+  saveRunDebriefs,
+  type RunDebrief,
+  type RunEffort,
+  type RunEnjoyment,
+  type RunFeedbackReason,
   type RunHypeChecklist,
   type RunHypeItem,
   type RunHypeStatus
 } from "../runningHype";
+import {
+  loadAcceptedZenCoachPlan,
+  loadZenCoachProfile,
+  recordZenCoachFeedback,
+  saveAcceptedZenCoachPlan,
+  saveZenCoachProfile,
+  type ZenCoachPlan,
+  type ZenCoachProfile
+} from "../zenCoach";
 
 interface Props {
   data: AppData;
@@ -349,6 +365,29 @@ function RunCompanionPicker({
   );
 }
 
+const COACH_STYLES: { id: ZenCoachProfile["coachStyle"]; label: string; detail: string }[] = [
+  { id: "off", label: "Off", detail: "No Circuit prompts" },
+  { id: "minimal", label: "Minimal", detail: "Only the useful bits" },
+  { id: "calm", label: "Calm", detail: "Quiet and steady" },
+  { id: "enthusiastic", label: "Enthusiastic", detail: "More energy" },
+  { id: "dry-humor", label: "Dry humor", detail: "Useful, mildly sarcastic" }
+];
+
+function CircuitCoachSelector({ style, onChange, compact = false }: { style: ZenCoachProfile["coachStyle"]; onChange: (style: ZenCoachProfile["coachStyle"]) => void; compact?: boolean }) {
+  const [expanded, setExpanded] = useState(!compact);
+  const selected = COACH_STYLES.find((option) => option.id === style) ?? COACH_STYLES[0];
+  return (
+    <section className={`running-circuit-picker ${compact ? "compact" : ""} ${expanded ? "expanded" : "collapsed"}`}>
+      {compact ? <button type="button" className="running-circuit-heading" aria-expanded={expanded} onClick={() => setExpanded((current) => !current)}>
+        <span><strong>Circuit coach</strong><small>{selected.label} · {selected.detail}</small></span><span><Volume2 /><ChevronDown /></span>
+      </button> : <div className="running-circuit-heading"><span><strong>Circuit coach</strong><small>A digital coaching preference. Your physical companions stay separate.</small></span><Volume2 /></div>}
+      {(!compact || expanded) ? <div className="running-circuit-options" role="group" aria-label="Circuit coaching style">
+        {COACH_STYLES.map((option) => <button type="button" key={option.id} className={style === option.id ? "selected" : ""} aria-pressed={style === option.id} onClick={() => onChange(option.id)}><strong>{option.label}</strong><small>{option.detail}</small></button>)}
+      </div> : null}
+    </section>
+  );
+}
+
 function RunNameEditor({ record, onSave }: { record: RunRecord; onSave: (name: string) => void }) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(record.routeName);
@@ -452,6 +491,10 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
       : null
   );
   const [newHypeItem, setNewHypeItem] = useState("");
+  const [zenCoachProfile, setZenCoachProfile] = useState<ZenCoachProfile>(() => loadZenCoachProfile());
+  const [acceptedCoachPlan, setAcceptedCoachPlan] = useState<ZenCoachPlan | null>(() => loadAcceptedZenCoachPlan());
+  const runDebriefsRef = useRef<Record<string, RunDebrief>>(loadRunDebriefs());
+  const [runDebriefs, setRunDebriefs] = useState<Record<string, RunDebrief>>(() => runDebriefsRef.current);
   const [profile, setProfile] = useState<RunningProfile>(() => loadRunningProfile());
   const [view, setView] = useState<RunningView>(() => initialViewFor(restored.current));
   const [selectedMode, setSelectedMode] = useState<RunMode>("quick");
@@ -754,12 +797,24 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
   }, [currentPrep?.id, currentPrep?.speedBonus]);
 
   const chooseMode = (mode: RunMode) => {
+    if (acceptedCoachPlan) {
+      saveAcceptedZenCoachPlan(null);
+      setAcceptedCoachPlan(null);
+    }
     setSelectedMode(mode);
     if (mode === "story") {
       setSelectedStoryMissionId(null);
       setResumeSelectedStory(true);
     }
     setView("duration");
+  };
+
+  const chooseJustRun = () => {
+    if (acceptedCoachPlan) {
+      saveAcceptedZenCoachPlan(null);
+      setAcceptedCoachPlan(null);
+    }
+    setView("just-choice");
   };
 
   const chooseDuration = (minutes: number) => {
@@ -771,6 +826,17 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
       next.storyHeardChapterIds = resumeSelectedStory ? storyMissionHeardChapters(mission.id) : [];
     }
     processedDistanceRewardIds.current.clear();
+    setSavedSession(next);
+    setView("briefing");
+  };
+
+  const startAcceptedCoachRun = () => {
+    if (!acceptedCoachPlan || acceptedCoachPlan.activity !== "run") return;
+    void cancelRunningReminder();
+    const next = createRunSession("quick", acceptedCoachPlan.minutes, Date.now(), data.stats.xp, data.stats.level);
+    next.companionIds = acceptedCoachPlan.companionIds;
+    processedDistanceRewardIds.current.clear();
+    setSelectedMode("quick");
     setSavedSession(next);
     setView("briefing");
   };
@@ -855,6 +921,29 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
     setNow(Date.now());
     setResumePrepChoice(false);
     showToast("NEW PREP · STEP 1");
+  };
+
+  const updateCoachStyle = (coachStyle: ZenCoachProfile["coachStyle"]) => {
+    const next = { ...zenCoachProfile, coachStyle };
+    saveZenCoachProfile(next);
+    setZenCoachProfile(next);
+  };
+
+  const updateRunDebrief = (runId: string, update: Partial<Pick<RunDebrief, "enjoyment" | "effort" | "reason">>) => {
+    const nextFeedback = { ...runDebriefsRef.current[runId], runId, ...update, updatedAt: Date.now() };
+    const next = { ...runDebriefsRef.current, [runId]: nextFeedback };
+    runDebriefsRef.current = next;
+    saveRunDebriefs(next);
+    setRunDebriefs(next);
+    if (acceptedCoachPlan && nextFeedback.enjoyment && nextFeedback.effort) {
+      const nextCoachProfile = recordZenCoachFeedback(zenCoachProfile, acceptedCoachPlan, {
+        enjoyment: nextFeedback.enjoyment,
+        effort: nextFeedback.effort,
+        ...(nextFeedback.reason ? { reason: nextFeedback.reason } : {})
+      });
+      saveZenCoachProfile(nextCoachProfile);
+      setZenCoachProfile(nextCoachProfile);
+    }
   };
 
   const historyRecordIds = profile.history.map((record) => record.id).join("|");
@@ -1110,7 +1199,9 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
         progression: awardStrengthProgress(currentData.progression, durationSeconds)
       }, dailyZenPoints));
       setSavedProfile(nextProfile);
+      void refreshZenCoachNotification();
       setSavedSession(nextSession);
+      if (acceptedCoachPlan) saveAcceptedZenCoachPlan(null);
       setNow(endedAt);
       setConfirmEnd(false);
       setView("summary");
@@ -1122,12 +1213,41 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
 
   const resetRun = () => {
     void cancelRunningReminder();
+    if (acceptedCoachPlan) saveAcceptedZenCoachPlan(null);
+    setAcceptedCoachPlan(null);
     setSavedSession(null);
     setSelectedMode("quick");
     setConfirmEnd(false);
     setResumePrepChoice(false);
     setView("hub");
     setGpsStatus("GPS starts during the warm-up walk");
+  };
+
+  const rescuePrepPlan = (reason: "short" | "dark" | "yuna" | "rest") => {
+    const current = loadRunSession();
+    if (!current || current.stage !== "prep") return;
+    if (reason === "rest") {
+      resetRun();
+      showToast("PLAN ENDED · REST IS A VALID PLAN");
+      return;
+    }
+    const minutes = reason === "short" ? Math.min(current.plannedMinutes, 20) : Math.min(current.plannedMinutes, 15);
+    setSavedSession({ ...current, plannedMinutes: minutes });
+    const message = reason === "dark"
+      ? "SHORTER PLAN SET · NO VERIFIED LIT ROUTE IS CONNECTED"
+      : reason === "yuna"
+        ? "SHORTER PLAN SET · LOOK AFTER YUNA FIRST"
+        : "20-MINUTE PLAN SET · KEEP IT LOCAL AND FAMILIAR";
+    showToast(message);
+  };
+
+  const rescueActiveRun = (reason: "easy" | "head-back" | "yuna") => {
+    setConfirmEnd(true);
+    showToast(reason === "head-back"
+      ? "NO VERIFIED RETURN NAVIGATION · USE YOUR KNOWN SAFE ROUTE OR FINISH"
+      : reason === "yuna"
+        ? "STOP SAFELY FOR YUNA · YOU CAN BANK THE RUN WHEN READY"
+        : "EASE OFF · THIS RUN CAN BE FINISHED WHENEVER YOU NEED");
   };
 
   const buyStoreItem = (id: string, price: number) => {
@@ -1274,11 +1394,17 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           </button>
         ) : null}
 
+        {acceptedCoachPlan?.activity === "run" && !session ? <section className="running-coach-plan-card">
+          <span className="eyebrow">Circuit's accepted pick</span><h2>{acceptedCoachPlan.title}</h2><p>{acceptedCoachPlan.reason}</p>
+          {acceptedCoachPlan.notices.map((notice) => <small key={notice}>{notice}</small>)}
+          <button type="button" className="button primary full" onClick={startAcceptedCoachRun}>Start this {acceptedCoachPlan.minutes}-minute plan <ArrowRight /></button>
+        </section> : null}
+
         <div className="running-mode-grid">
           <button className="running-mode-card quick" onClick={() => chooseMode("quick")}>
             <Navigation /><span className="eyebrow">Less thinking</span><strong>Quick Run</strong><small>Pick a time. Get out. Let the route do the thinking.</small>
           </button>
-          <button className="running-mode-card just" onClick={() => setView("just-choice")}>
+          <button className="running-mode-card just" onClick={chooseJustRun}>
             <Headphones /><span className="eyebrow">Music-friendly</span><strong>Just Run</strong><small>Tap once. GPS tracks distance, pace and your activity — with no route or directions.</small>
           </button>
           <button className="running-mode-card story" onClick={() => chooseMode("story")}>
@@ -1288,6 +1414,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
 
         <div className="running-hub-links">
           <button onClick={() => setView("history")}><History /> Run history</button>
+          <button onClick={() => navigate({ name: "zen-coach-atlas" })}><Map /> Adventure Atlas</button>
           <button onClick={() => setView("store")}><ShoppingBag /> Runner store</button>
           <button onClick={() => setView("progress")}><Trophy /> Progress</button>
           <button onClick={() => setView("story-archive")}><BookOpen /> Story archive</button>
@@ -1368,6 +1495,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
         <section className="running-briefing">
           <Map /><span className="eyebrow">Route Director</span><h1>{session.plannedMinutes}-minute {runModeLabel(session.mode)}</h1>
           <p>{session.mode === "story" ? "Novelty-biased routing: interesting terrain and set-piece opportunities, usually bringing you back near home." : "Balanced routing: familiar enough to be easy, interesting enough not to be dull, usually bringing you back near home."}</p>
+          {acceptedCoachPlan?.activity === "run" ? <section className="running-coach-plan-context"><strong>Adventure plan kept</strong><small>{acceptedCoachPlan.route ? `${acceptedCoachPlan.route.label} was checked ${new Date(acceptedCoachPlan.route.verifiedAt).toLocaleDateString()}. ${acceptedCoachPlan.travelMinutes ? `${acceptedCoachPlan.travelMinutes} min travel.` : ""}` : "No route preview yet. Directions depend on successful planning at your start point."}</small></section> : null}
           <div className="running-route-note"><Navigation /><span><strong>Routing engine is the next native pass</strong><small>This foundation build tracks foreground GPS and the full run loop. Turn-by-turn route generation is not connected yet.</small></span></div>
           <button className="button primary full" onClick={beginPrep}>Start prep <ArrowRight /></button>
         </section>
@@ -1381,8 +1509,8 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
     const estimatedFinish = now + (checklist.travelMinutes + session.plannedMinutes) * 60_000;
     const teatime = new Date(now);
     teatime.setHours(18, 0, 0, 0);
-    if (teatime.getTime() < now) teatime.setDate(teatime.getDate() + 1);
-    const yunaReminder = session.companionIds.includes("yuna") && now < teatime.getTime() && estimatedFinish >= teatime.getTime();
+    const yunaSelected = session.companionIds.includes("yuna");
+    const yunaReminder = yunaSelected && now <= teatime.getTime() && estimatedFinish >= teatime.getTime();
     const allReady = () => {
       const next = { ...checklist, statusByItem: Object.fromEntries(visibleItems.map((item) => [item.id, item.id.includes("torch") ? checklist.statusByItem[item.id] ?? "outstanding" : "ready"])) as Record<string, RunHypeStatus> };
       saveHype(next);
@@ -1399,6 +1527,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           <button className="button secondary" onClick={allReady}><CheckCircle2 /> I have these already</button>
         </section>
         <RunCompanionPicker companionIds={session.companionIds} onChange={updateActiveRunCompanions} />
+        <CircuitCoachSelector style={zenCoachProfile.coachStyle} onChange={updateCoachStyle} />
         <section className="running-hype-items" aria-label="Run equipment checklist">
           {visibleItems.map((item, index) => {
             const status = checklist.statusByItem[item.id] ?? "outstanding";
@@ -1410,7 +1539,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
               <div className="running-hype-status" role="group" aria-label={`${item.label} status`}>
                 {(["ready", "not-needed", "outstanding"] as RunHypeStatus[]).map((option) => <button type="button" key={option} className={status === option ? "selected" : ""} aria-pressed={status === option} onClick={() => setHypeItemStatus(item.id, option)}>{hypeStatusLabel(option)}</button>)}
               </div>
-              <div className="running-hype-customize"><label><input type="checkbox" checked={item.carStored} onChange={(event) => updateHypeItem(item.id, { carStored: event.target.checked })} /> Usually kept in car</label><input aria-label={`${item.label} personal note`} maxLength={140} placeholder="Optional personal note" value={item.note} onChange={(event) => updateHypeItem(item.id, { note: event.target.value })} /></div>
+              <details className="running-hype-customize"><summary>Personal note and storage</summary><label><input type="checkbox" checked={item.carStored} onChange={(event) => updateHypeItem(item.id, { carStored: event.target.checked })} /> Usually kept in car</label><input aria-label={`${item.label} personal note`} maxLength={140} placeholder="Optional personal note" value={item.note} onChange={(event) => updateHypeItem(item.id, { note: event.target.value })} /></details>
             </article>;
           })}
         </section>
@@ -1424,12 +1553,17 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           <label><input type="number" min="0" max="240" step="5" value={checklist.travelMinutes} onChange={(event) => saveHype({ ...checklist, travelMinutes: Number(event.target.value) || 0 })} /> Estimated journey minutes</label>
           <label className="running-hype-wooded"><input type="checkbox" checked={checklist.woodedRoute} onChange={(event) => saveHype({ ...checklist, woodedRoute: event.target.checked })} /> This route is wooded or poorly lit</label>
           {checklist.woodedRoute ? <label>Earlier darkness buffer (minutes)<input type="number" min="0" max="90" step="5" value={checklist.darknessBufferMinutes} onChange={(event) => saveHype({ ...checklist, darknessBufferMinutes: Number(event.target.value) || 0 })} /></label> : null}
-          {yunaReminder ? <p className="running-context-reminder">Yuna’s teatime is usually around 18:00. Your journey plus this run may overlap it; plan feeding or choose an earlier or shorter outing.</p> : null}
+          {yunaSelected ? <p className="running-context-reminder">Yuna’s usual dinner is around 18:00. Check her feeding plan before setting off.</p> : null}
+          {yunaReminder ? <p className="running-context-reminder">Your journey plus this run may overlap Yuna’s usual dinner. Plan feeding first or choose a shorter outing.</p> : null}
           <button type="button" className="button secondary full" onClick={startTrailheadDynamicWarmup}>Do the short guided dynamic warm-up here <Footprints /></button>
           <button type="button" className="button secondary full" onClick={() => saveHype({ ...checklist, homePrepDone: true })}>{checklist.homePrepDone ? "Home / car logistics saved" : "Home and car logistics are done — I’m travelling"} <CarFront /></button>
           <button type="button" className="button primary full" onClick={beginTrailheadWarmup}>I’m at the start point — begin GPS warm-up <ArrowRight /></button>
           <button type="button" className="button ghost full" onClick={beginTrailheadWarmup}>Skip the list and start warm-up GPS</button>
           <small>Warm-up GPS is not counted. Only “Start running” begins your measured run.</small>
+        </section>
+        <section className="running-rescue-card" aria-label="Rescue My Workout">
+          <span className="eyebrow">Circumstances changed?</span><h2>Rescue My Workout</h2><p>Keep the prep you have done. This app has no verified live routing, so it will never invent a safe shortcut or a lit alternative.</p>
+          <div><button type="button" onClick={() => rescuePrepPlan("short")}>I only have 20 min</button><button type="button" onClick={() => rescuePrepPlan("dark")}>It’s too dark</button>{yunaSelected ? <button type="button" onClick={() => rescuePrepPlan("yuna")}>Yuna needs to stop</button> : null}<button type="button" onClick={() => rescuePrepPlan("rest")}>Not today</button></div>
         </section>
         {toast ? <div className="running-toast">{toast}</div> : null}
       </div>
@@ -1480,6 +1614,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
         </section>
         <div className="running-scroll-cue"><ChevronDown /> {justRun ? "Scroll for run controls" : session.mode === "story" ? "Scroll for story, route and finish" : "Scroll for route and finish"}</div>
         <RunCompanionPicker companionIds={session.companionIds} onChange={updateActiveRunCompanions} compact />
+        <CircuitCoachSelector style={zenCoachProfile.coachStyle} onChange={updateCoachStyle} compact />
         {!justRun && (session.mode === "story"
           ? <section className="running-story-radio"><Activity /><div><span className="eyebrow">Runner radio</span><strong>{storyCopy}</strong><small>Chapter, narration and next-transmission status update live below.</small></div></section>
           : <section className="running-km-card"><Zap /><div><strong>Next celebration: {Math.floor(session.distanceMeters / 1000) + 1} km</strong><small>Find a pace that feels comfortable today.</small></div></section>)}
@@ -1489,6 +1624,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           {photoPermission === "full" || photoPermission === "unavailable" ? null : <button className="button ghost" onClick={() => void requestPhotoAccess()}>{photoPermission === "limited" ? "Manage access" : "Allow photos"}</button>}
         </section> : null}
         <section className="running-checkpoint-strip"><Zap /><span><strong>{Object.keys(session.checkpointAwards).length}/4 progress checkpoints</strong><small>+{session.checkpointXp} XP · +{session.distanceZenPoints} distance ZP{session.checkpointDice ? ` · 🎲 ${session.checkpointDice}` : ""}</small></span></section>
+        <section className="running-rescue-card running-active-rescue" aria-label="Live rescue options"><span className="eyebrow">Need a change?</span><div><button type="button" onClick={() => rescueActiveRun("easy")}>Make it easier</button><button type="button" onClick={() => rescueActiveRun("head-back")}>Head back</button>{session.companionIds.includes("yuna") ? <button type="button" onClick={() => rescueActiveRun("yuna")}>Yuna needs a stop</button> : null}</div></section>
         <button disabled={finishBanking} className={`button full running-end-button ${confirmEnd ? "confirming" : ""}`} onClick={() => confirmEnd ? finishRun() : setConfirmEnd(true)}>{finishBanking ? "Banking run…" : confirmEnd ? "Tap again — bank this run" : justRun ? "Finish Just Run" : completionRatio < 1 ? "Finish run early" : "Finish & bank run"}</button>
         {confirmEnd ? <button className="button ghost full" onClick={() => setConfirmEnd(false)}>Keep running — no pressure</button> : null}
         {toast ? <div className="running-toast">{toast}</div> : null}
@@ -1501,6 +1637,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
     const record = completedRecord;
     const levelsGained = Math.max(0, (session.completionLevelAfter ?? 1) - (session.completionLevelBefore ?? session.playerLevelAtStart));
     const totalZenPoints = session.distanceZenPoints + session.checkpointZenPoints + session.firstRunOfDayZenPoints;
+    const debrief = runDebriefs[session.id];
     return (
       <div className="screen-stack running-mode running-summary">
         <div className="running-confetti" aria-hidden="true">{celebrationParticles.map((particle, index) => <span key={index} style={{
@@ -1527,6 +1664,13 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           <div className="running-result-grid"><span><small>Distance</small><strong>{formatRunDistance(session.distanceMeters)}</strong></span><span><small>Elapsed</small><strong>{formatRunClock(elapsedRunSeconds)}</strong></span><span><small>Moving</small><strong>{formatRunClock(record?.movingSeconds ?? 0)}</strong></span><span><small>Avg pace · elapsed</small><strong>{formatRunPace(averagePace)}</strong></span></div>
           <RouteTrace points={session.points} label="Trace of your recorded route" />
           <div className="running-milestones"><span className={completionRatio >= 0.5 ? "done" : ""}>50%</span><span className={completionRatio >= 0.75 ? "done" : ""}>75%</span><span className={completionRatio >= 1 ? "done" : ""}>100%</span></div>
+        </section>
+
+        <section className="running-debrief" aria-label="Quick run feedback">
+          <div><span className="eyebrow">Two-second check-in</span><h2>How was that?</h2><p>Optional. Your answers help future suggestions stay grounded in what you actually enjoyed.</p></div>
+          <div className="running-debrief-row"><strong>Enjoyment</strong><div role="group" aria-label="Run enjoyment">{([['loved', 'Loved it'], ['good', 'Good'], ['okay', 'Okay'], ['not-for-me', 'Not for me']] as [RunEnjoyment, string][]).map(([value, label]) => <button type="button" key={value} className={debrief?.enjoyment === value ? "selected" : ""} aria-pressed={debrief?.enjoyment === value} onClick={() => updateRunDebrief(session.id, { enjoyment: value })}>{label}</button>)}</div></div>
+          <div className="running-debrief-row"><strong>Effort</strong><div role="group" aria-label="Run effort">{([['easy', 'Easy'], ['moderate', 'Moderate'], ['hard', 'Hard'], ['too-hard', 'Too hard']] as [RunEffort, string][]).map(([value, label]) => <button type="button" key={value} className={debrief?.effort === value ? "selected" : ""} aria-pressed={debrief?.effort === value} onClick={() => updateRunDebrief(session.id, { effort: value })}>{label}</button>)}</div></div>
+          <details><summary>Optional reason</summary><div className="running-debrief-reasons" role="group" aria-label="Run feedback reason">{([['great-scenery', 'Great scenery'], ['inconvenient-travel', 'Travel'], ['repetitive', 'Repetitive'], ['tired', 'Tired'], ['discomfort', 'Discomfort'], ['yuna-enjoyed', 'Yuna enjoyed it'], ['another', 'Another reason']] as [RunFeedbackReason, string][]).map(([value, label]) => <button type="button" key={value} className={debrief?.reason === value ? "selected" : ""} aria-pressed={debrief?.reason === value} onClick={() => updateRunDebrief(session.id, { reason: value })}>{label}</button>)}</div></details>
         </section>
 
         {record?.personalBestKeys.length ? (

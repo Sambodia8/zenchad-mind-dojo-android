@@ -2,6 +2,7 @@ import { useState, type Dispatch, type SetStateAction } from "react";
 import {
   ArrowLeft,
   Bike,
+  ChevronDown,
   Footprints,
   MoonStar,
   NotebookPen,
@@ -9,6 +10,15 @@ import {
   type LucideIcon
 } from "lucide-react";
 import type { Route } from "../types";
+import { refreshZenCoachNotification } from "../zenCoachNotifications";
+import {
+  getDailyZenCoachRecommendation,
+  loadZenCoachProfile,
+  recordZenCoachDecision,
+  saveZenCoachProfile,
+  saveAcceptedZenCoachPlan,
+  type ZenCoachPlan
+} from "../zenCoach";
 
 interface Props {
   navigate: Dispatch<SetStateAction<Route>>;
@@ -56,8 +66,34 @@ const homePaths: HomePath[] = [
 
 export default function HomeScreen({ navigate }: Props) {
   const [movementChoiceOpen, setMovementChoiceOpen] = useState(false);
+  const [adventureOptionsOpen, setAdventureOptionsOpen] = useState(false);
+  const [restAcknowledged, setRestAcknowledged] = useState(false);
+  const [snoozed, setSnoozed] = useState(false);
+  const [recommendation] = useState(() => getDailyZenCoachRecommendation());
+  const coachVisible = loadZenCoachProfile().coachStyle !== "off";
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+
+  const rememberDecision = (plan: ZenCoachPlan, decision: "accepted" | "rejected" | "rest" | "snoozed", reason?: string) => {
+    saveZenCoachProfile(recordZenCoachDecision(loadZenCoachProfile(), plan, decision, undefined, reason));
+    void refreshZenCoachNotification();
+  };
+
+  const startAdventure = (plan: ZenCoachPlan, fallbackReason?: string) => {
+    const decision = plan.activity === "rest" ? "rest" : "accepted";
+    rememberDecision(plan, decision, fallbackReason);
+    saveAcceptedZenCoachPlan(plan.activity === "rest" ? null : plan);
+
+    if (plan.activity === "run") {
+      navigate({ name: "running" });
+    } else if (plan.activity === "bike") {
+      navigate({ name: "bike-quest" });
+    } else {
+      setSnoozed(false);
+      setRestAcknowledged(true);
+      setAdventureOptionsOpen(false);
+    }
+  };
 
   return (
     <div className="home-dojo-screen">
@@ -68,6 +104,70 @@ export default function HomeScreen({ navigate }: Props) {
           <span>Today in the</span>
           <h1 id="home-dojo-title">Dojo</h1>
         </div>
+      </section>
+
+      <section className="home-adventure-card" aria-labelledby="home-adventure-title">
+        <div className="home-adventure-heading">
+          <span className={`home-adventure-mark${coachVisible ? "" : " off"}`} aria-hidden="true" />
+          <div>
+            <span className="home-adventure-eyebrow">{coachVisible ? "Circuit's pick" : "Today's adventure"}</span>
+            <h2 id="home-adventure-title">{restAcknowledged ? snoozed ? "We'll leave it for tomorrow" : "Rest is part of the plan" : recommendation.primary.title}</h2>
+          </div>
+          <span className="home-adventure-progress" aria-label={`${recommendation.weekly.completed} of ${recommendation.weekly.target} sessions this rolling week`}>
+            {recommendation.weekly.completed}/{recommendation.weekly.target}
+          </span>
+        </div>
+
+        <div className="home-adventure-progress-track" aria-hidden="true">
+          {Array.from({ length: recommendation.weekly.target }, (_, index) => (
+            <span key={index} className={index < recommendation.weekly.completed ? "is-complete" : ""} />
+          ))}
+        </div>
+
+        {restAcknowledged ? (
+          <p className="home-adventure-reason">{snoozed ? "Reminders are paused until tomorrow. Open the app whenever you choose." : "No catch-up required. Come back when movement feels useful."}</p>
+        ) : (
+          <p className="home-adventure-reason"><strong>Why this:</strong> {recommendation.primary.reason}</p>
+        )}
+
+        {!restAcknowledged ? (
+          <div className="home-adventure-actions">
+            <button type="button" className="home-adventure-primary" onClick={() => startAdventure(recommendation.primary)}>
+              {recommendation.primary.activity === "rest" ? "Take a quiet rest" : `Let's ${recommendation.primary.activity === "bike" ? "ride" : "run"}`}
+            </button>
+            <button
+              type="button"
+              className="home-adventure-options"
+              onClick={() => setAdventureOptionsOpen((open) => !open)}
+              aria-expanded={adventureOptionsOpen}
+            >
+              Change plan <ChevronDown aria-hidden="true" />
+            </button>
+          </div>
+        ) : (
+          <button type="button" className="home-adventure-options home-adventure-reset" onClick={() => { setRestAcknowledged(false); setSnoozed(false); }}>
+            See today's pick
+          </button>
+        )}
+
+        {adventureOptionsOpen && !restAcknowledged ? (
+          <div className="home-adventure-options-panel" aria-label="Quieter alternatives">
+            <button type="button" onClick={() => { rememberDecision(recommendation.primary, "rejected", "shorter"); startAdventure(recommendation.fallbacks.b, "shorter"); }}>
+              <span><strong>Make it shorter</strong><small>{recommendation.fallbacks.b.title}</small></span>
+              <em>{recommendation.fallbacks.b.minutes} min</em>
+            </button>
+            <button type="button" onClick={() => { rememberDecision(recommendation.primary, "rejected", "tired"); startAdventure(recommendation.fallbacks.c, "tired"); }}>
+              <span><strong>Keep it gentle</strong><small>{recommendation.fallbacks.c.title}</small></span>
+              <em>{recommendation.fallbacks.c.activity === "rest" ? "No pressure" : `${recommendation.fallbacks.c.minutes} min`}</em>
+            </button>
+            <button type="button" className="home-adventure-rest-option" onClick={() => { rememberDecision(recommendation.primary, "rest"); saveAcceptedZenCoachPlan(null); setRestAcknowledged(true); setAdventureOptionsOpen(false); }}>
+              Not today
+            </button>
+            <button type="button" className="home-adventure-rest-option" onClick={() => { rememberDecision(recommendation.primary, "snoozed"); saveAcceptedZenCoachPlan(null); setSnoozed(true); setRestAcknowledged(true); setAdventureOptionsOpen(false); }}>
+              Remind me tomorrow
+            </button>
+          </div>
+        ) : null}
       </section>
 
       <section className="home-paths" aria-labelledby="home-paths-title">

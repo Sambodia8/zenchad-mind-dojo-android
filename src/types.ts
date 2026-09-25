@@ -286,6 +286,7 @@ export type Route =
   | { name: "yoga"; mode?: "classes" }
   | { name: "bike-quest"; resume?: "pre-stretch-complete" | "post-stretch-complete" }
   | { name: "running"; startMode?: "just" }
+  | { name: "zen-coach-atlas" }
   | {
       name: "timer";
       meditationId: string;

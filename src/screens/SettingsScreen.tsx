@@ -5,6 +5,9 @@ import type { AppData } from "../types";
 import { exportSyncData, getDataSyncStatus, importSyncData } from "../syncBridge";
 import type { SyncStatus } from "../sync";
 import { RunningVoiceSettings } from "../components/RunningVoiceSettings";
+import { loadZenCoachProfile, saveZenCoachProfile, type ZenCoachProfile } from "../zenCoach";
+import { saveRunDebriefs } from "../runningHype";
+import { loadZenCoachNotificationSettings, refreshZenCoachNotification, setZenCoachNotificationEnabled, updateZenCoachNotificationSettings, type ZenCoachNotificationSettings } from "../zenCoachNotifications";
 
 interface Props {
   data: AppData;
@@ -17,6 +20,31 @@ export default function SettingsScreen({ data, setData }: Props) {
     configured: false, lastAction: null, lastSuccessAt: null, lastError: null, sourceDeviceId: ""
   }));
   const [syncBusy, setSyncBusy] = useState(false);
+  const [coachProfile, setCoachProfile] = useState(loadZenCoachProfile);
+  const [coachNotifications, setCoachNotifications] = useState(loadZenCoachNotificationSettings);
+  const [coachNotificationMessage, setCoachNotificationMessage] = useState("");
+
+  const updateCoachProfile = (change: Partial<ZenCoachProfile>) => {
+    const next = { ...coachProfile, ...change };
+    saveZenCoachProfile(next);
+    setCoachProfile(next);
+    void refreshZenCoachNotification();
+  };
+
+  const toggleCoachNotifications = async () => {
+    const result = await setZenCoachNotificationEnabled(!coachNotifications.enabled);
+    setCoachNotifications(loadZenCoachNotificationSettings());
+    setCoachNotificationMessage(result.ok
+      ? coachNotifications.enabled ? "Adventure reminders are off." : "Adventure reminders are on. Quiet hours and rest choices are respected."
+      : result.reason ?? "The reminder could not be enabled.");
+  };
+
+  const changeCoachNotificationSettings = async (change: Partial<Omit<ZenCoachNotificationSettings, "enabled">>) => {
+    const result = await updateZenCoachNotificationSettings(change);
+    setCoachNotifications(loadZenCoachNotificationSettings());
+    if (!result.ok) setCoachNotificationMessage(result.reason ?? "Choose a valid time.");
+    else setCoachNotificationMessage("");
+  };
 
   useEffect(() => { void getDataSyncStatus().then(setSyncStatus); }, []);
 
@@ -34,6 +62,7 @@ export default function SettingsScreen({ data, setData }: Props) {
     const result = await importSyncData((next) => setData(next));
     setSyncStatus(result.status);
     setMessage(result.ok ? "Data imported and merged safely." : result.reason ?? "Import failed.");
+    if (result.ok) void refreshZenCoachNotification();
     setSyncBusy(false);
   };
 
@@ -124,6 +153,66 @@ export default function SettingsScreen({ data, setData }: Props) {
       </section>
 
       <RunningVoiceSettings data={data} setData={setData} />
+
+      <section className="card settings-sheet zen-coach-settings" aria-labelledby="zen-coach-settings-title">
+        <div className="setting-row illustrated-setting">
+          <span><Gauge /><span><strong id="zen-coach-settings-title">Zen Coach</strong><small>Local suggestions based on completed workouts</small></span></span>
+        </div>
+        <label className="setting-input">
+          Sessions in a rolling week
+          <select value={coachProfile.weeklyTarget} onChange={(event) => updateCoachProfile({ weeklyTarget: Number(event.target.value) })}>
+            {[1, 2, 3, 4, 5, 6, 7].map((target) => <option value={target} key={target}>{target}</option>)}
+          </select>
+        </label>
+        <label className="setting-input">
+          Activity preference
+          <select value={coachProfile.preferredActivity} onChange={(event) => updateCoachProfile({ preferredActivity: event.target.value as ZenCoachProfile["preferredActivity"] })}>
+            <option value="auto">Mix runs and rides</option>
+            <option value="run">Prefer running</option>
+            <option value="bike">Prefer cycling</option>
+          </select>
+        </label>
+        <label className="setting-input">
+          Route preference
+          <select value={coachProfile.novelty} onChange={(event) => updateCoachProfile({ novelty: event.target.value as ZenCoachProfile["novelty"] })}>
+            <option value="balanced">Balanced</option>
+            <option value="familiar">Familiar today</option>
+            <option value="surprise">Surprise me</option>
+          </select>
+        </label>
+        <label className="setting-input">
+          Circuit's style
+          <select value={coachProfile.coachStyle} onChange={(event) => updateCoachProfile({ coachStyle: event.target.value as ZenCoachProfile["coachStyle"] })}>
+            <option value="off">Off</option>
+            <option value="minimal">Minimal</option>
+            <option value="calm">Calm</option>
+            <option value="enthusiastic">Enthusiastic</option>
+            <option value="dry-humor">Dry humor</option>
+          </select>
+        </label>
+        <div className="zen-coach-settings-actions">
+          {coachProfile.restUntil && coachProfile.restUntil > Date.now() ? <button type="button" className="button secondary" onClick={() => updateCoachProfile({ restUntil: null })}>End rest day</button> : null}
+          <button type="button" className="button secondary" onClick={() => { updateCoachProfile({ feedback: [], decisions: [] }); saveRunDebriefs({}); }}>Clear coaching feedback</button>
+        </div>
+        <p className="setting-note">Suggestions and feedback stay on this device. Clearing feedback resets what Circuit has learned from your choices; completed workouts remain in your history.</p>
+      </section>
+
+      <section className="card settings-sheet zen-coach-settings" aria-labelledby="zen-coach-reminder-title">
+        <div className="setting-row illustrated-setting">
+          <span>{coachNotifications.enabled ? <Bell /> : <BellOff />}<span><strong id="zen-coach-reminder-title">Adventure reminder</strong><small>One specific local suggestion when a session is due</small></span></span>
+          <button type="button" className={`toggle ${coachNotifications.enabled ? "on" : ""}`} onClick={() => void toggleCoachNotifications()} aria-label="Toggle Zen Coach adventure reminder" aria-pressed={coachNotifications.enabled}><span /></button>
+        </div>
+        <label className="setting-input">Preferred time
+          <input type="time" value={coachNotifications.time} onChange={(event) => void changeCoachNotificationSettings({ time: event.target.value })} />
+        </label>
+        <label className="zen-coach-quiet-toggle"><input type="checkbox" checked={coachNotifications.quietHoursEnabled} onChange={(event) => void changeCoachNotificationSettings({ quietHoursEnabled: event.target.checked })} /> Quiet hours</label>
+        {coachNotifications.quietHoursEnabled ? <div className="zen-coach-quiet-times">
+          <label className="setting-input">From<input type="time" value={coachNotifications.quietStart} onChange={(event) => void changeCoachNotificationSettings({ quietStart: event.target.value })} /></label>
+          <label className="setting-input">Until<input type="time" value={coachNotifications.quietEnd} onChange={(event) => void changeCoachNotificationSettings({ quietEnd: event.target.value })} /></label>
+        </div> : null}
+        <p className="setting-note">Off by default. Android will ask before the first reminder. Rest, snooze, a completed workout, or a met weekly goal stops the pending suggestion.</p>
+        {coachNotificationMessage ? <p className="status-message" role="status">{coachNotificationMessage}</p> : null}
+      </section>
 
       <section className="card settings-sheet">
         <div className="setting-row illustrated-setting">

@@ -44,6 +44,18 @@ import { addCompletedSession } from "../storage";
 import type { AppData, Route, Stats } from "../types";
 import { playUiSfx } from "../uiSfx";
 import { awardStrengthProgress } from "../progression";
+import { recordCompletedBikeRide } from "../bikeQuestHistory";
+import { refreshZenCoachNotification } from "../zenCoachNotifications";
+import {
+  loadAcceptedZenCoachPlan,
+  loadZenCoachProfile,
+  recordZenCoachFeedback,
+  saveAcceptedZenCoachPlan,
+  saveZenCoachProfile,
+  type ZenCoachEffort,
+  type ZenCoachEnjoyment,
+  type ZenCoachPlan
+} from "../zenCoach";
 
 interface Props {
   data: AppData;
@@ -119,6 +131,7 @@ function RewardBurst({ celebration }: { celebration: Celebration }) {
 }
 
 export default function BikeQuestScreen({ data, setData, navigate, resume }: Props) {
+  const acceptedCoachPlan = useRef(loadAcceptedZenCoachPlan());
   const restoredQuest = useRef<BikeQuestState | null>(loadBikeQuestState());
   const [quest, setQuest] = useState<BikeQuestState | null>(restoredQuest.current);
   const [now, setNow] = useState(Date.now());
@@ -127,6 +140,11 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
   const [celebration, setCelebration] = useState<Celebration | null>(null);
   const [armSetLocked, setArmSetLocked] = useState(false);
   const [displayedQuestXp, setDisplayedQuestXp] = useState(restoredQuest.current?.totalQuestXp ?? 0);
+  const [bikeFeedback, setBikeFeedback] = useState<{ enjoyment?: ZenCoachEnjoyment; effort?: ZenCoachEffort }>(() => {
+    const id = restoredQuest.current?.startedAt;
+    const saved = id ? loadZenCoachProfile().feedback.find((entry) => entry.planId === `bike-ride:${id}`) : null;
+    return saved ? { enjoyment: saved.enjoyment, effort: saved.effort } : {};
+  });
   const [resumeNotice, setResumeNotice] = useState(
     Boolean(
       restoredQuest.current &&
@@ -331,7 +349,14 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
     persistQuest(next);
   };
 
+  useEffect(() => {
+    if (acceptedCoachPlan.current?.activity !== "bike" || quest || loadBikeQuestState()) return;
+    startQuest();
+  }, [quest]);
+
   const resetQuest = () => {
+    if (acceptedCoachPlan.current?.activity === "bike") saveAcceptedZenCoachPlan(null);
+    acceptedCoachPlan.current = null;
     void cancelBikeRideNotification();
     clearBikeQuestState();
     setQuest(null);
@@ -339,6 +364,7 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
     setCelebration(null);
     setResumeNotice(false);
     setDisplayedQuestXp(0);
+    setBikeFeedback({});
   };
 
   const chooseVr = useCallback(
@@ -462,6 +488,8 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
       totalQuestXp: current.totalQuestXp + rideXp
     };
     persistQuest(next);
+    recordCompletedBikeRide({ id: String(current.startedAt), completedAt: endedAt, rideSeconds: seconds });
+    void refreshZenCoachNotification();
     setData((currentData) => ({
       ...currentData,
       stats: addCompletedSession(currentData.stats, seconds),
@@ -503,6 +531,19 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
       step: "complete",
       stepStartedAt: Date.now()
     }));
+    if (acceptedCoachPlan.current?.activity === "bike") saveAcceptedZenCoachPlan(null);
+  };
+
+  const updateBikeFeedback = (change: { enjoyment?: ZenCoachEnjoyment; effort?: ZenCoachEffort }) => {
+    if (!quest?.rideSeconds || quest.step !== "complete") return;
+    const next = { ...bikeFeedback, ...change };
+    setBikeFeedback(next);
+    if (!next.enjoyment || !next.effort) return;
+    const base = acceptedCoachPlan.current?.activity === "bike" ? acceptedCoachPlan.current : null;
+    const plan: ZenCoachPlan = base
+      ? { ...base, id: `bike-ride:${quest.startedAt}` }
+      : { id: `bike-ride:${quest.startedAt}`, activity: "bike", title: "Bike Quest", minutes: Math.round(quest.rideSeconds / 60), effort: "easy", reason: "Completed Bike Quest", route: null, travelMinutes: 0, companionIds: [], optional: false, notices: [] };
+    saveZenCoachProfile(recordZenCoachFeedback(loadZenCoachProfile(), plan, { enjoyment: next.enjoyment, effort: next.effort }));
   };
 
   const elapsedForStep = quest ? Math.max(0, (now - quest.stepStartedAt) / 1000) : 0;
@@ -550,6 +591,9 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
           <span style={{ width: `${Math.min(100, (progress / 9) * 100)}%` }} />
         </div>
       </div>
+      {acceptedCoachPlan.current?.activity === "bike" && quest.step !== "complete" ? (
+        <div className="bike-coach-target" role="note">Circuit plan · around {acceptedCoachPlan.current.minutes} min on the bike. You can stop whenever you need.</div>
+      ) : null}
       {resumeNotice ? (
         <section className="bike-resume-banner" role="status">
           <div>
@@ -849,6 +893,11 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
           {formatClock(quest.rideSeconds)} on the bike · {quest.armSets} arm set
           {quest.armSets === 1 ? "" : "s"}. The next quest starts from zero fuss.
         </p>
+        <section className="running-debrief" aria-label="Quick ride feedback">
+          <div><span className="eyebrow">Two-second check-in</span><h2>How was that?</h2><p>Optional. Your answers stay on this device and help future suggestions.</p></div>
+          <div className="running-debrief-row"><strong>Enjoyment</strong><div role="group" aria-label="Ride enjoyment">{([['loved', 'Loved it'], ['good', 'Good'], ['okay', 'Okay'], ['not-for-me', 'Not for me']] as [ZenCoachEnjoyment, string][]).map(([value, label]) => <button type="button" key={value} className={bikeFeedback.enjoyment === value ? "selected" : ""} aria-pressed={bikeFeedback.enjoyment === value} onClick={() => updateBikeFeedback({ enjoyment: value })}>{label}</button>)}</div></div>
+          <div className="running-debrief-row"><strong>Effort</strong><div role="group" aria-label="Ride effort">{([['easy', 'Easy'], ['moderate', 'Moderate'], ['hard', 'Hard'], ['too-hard', 'Too hard']] as [ZenCoachEffort, string][]).map(([value, label]) => <button type="button" key={value} className={bikeFeedback.effort === value ? "selected" : ""} aria-pressed={bikeFeedback.effort === value} onClick={() => updateBikeFeedback({ effort: value })}>{label}</button>)}</div></div>
+        </section>
         <button className="button primary full" onClick={resetQuest}>
           <RotateCcw /> Start a fresh quest
         </button>
