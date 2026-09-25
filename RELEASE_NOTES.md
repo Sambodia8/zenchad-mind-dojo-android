@@ -222,3 +222,8 @@
 - Rebuilt the lilac, dark-purple Noodle and blond hair overlays to remove embedded eyes, ears, skin and shoulder fragments. Refitted each clean hairstyle for fuller, natural coverage of the head in the avatar and portrait.
 - Preserved the original spiky starter appearance, wardrobe ownership and item IDs.
 - Reviewed every hairstyle enlarged and through the actual 412x915 wardrobe flow. No device connected for installation testing.
+
+## 2.14 - Complete replacement heads
+- Changed the three alternate Hair cosmetics from hair-only overlays to complete replacement-head groups. Each group carries the canonical head silhouette, the original character's exact face pixels, and its fitted hairstyle.
+- Preserved the first purple-spiky head unchanged as the identity source. Alternate heads now share its eyes, nose, mouth, beard and expression while retaining their distinct hairstyles.
+- Reviewed all four heads together at enlarged scale and in the 412x915 Status screen, including the blond head with the alternate cream jacket. No magenta remnants, dark ear holes, duplicate features, collar fragments or browser errors remained.
