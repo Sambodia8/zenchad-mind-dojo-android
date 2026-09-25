@@ -192,3 +192,8 @@
 - Unnamed runs now look up road/locality names from recorded GPS positions after saving. Older unnamed runs are repaired when Running Mode opens; manually edited names are preserved. Offline/unavailable lookups retain the fallback and retry on a later visit.
 - Porter blond hair is 28% larger around the forehead anchor in both the character and face portrait, giving it more volume and longer side strands.
 - Running, progression and shop checks plus phone-sized browser visual checks passed. Native geocoding remains untested on a handset because no device is connected.
+
+## 2.13 - Rebuilt clean hair layers
+- Rebuilt the lilac, dark-purple Noodle and blond hair overlays to remove embedded eyes, ears, skin and shoulder fragments. Refitted each clean hairstyle for fuller, natural coverage of the head in the avatar and portrait.
+- Preserved the original spiky starter appearance, wardrobe ownership and item IDs.
+- Reviewed every hairstyle enlarged and through the actual 412x915 wardrobe flow. No device connected for installation testing.

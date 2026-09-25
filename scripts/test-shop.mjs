@@ -26,7 +26,7 @@ if (boughtHair.ok) {
 const silverLilac = cosmeticById("silver-lilac-tousled-hair");
 assert.equal(silverLilac?.slot, "hair");
 assert.equal(silverLilac?.paperDollRole, "hair");
-assert.equal(silverLilac?.paperDollLayer, "/assets/status/paper-doll/layers/hair/silver-lilac-tousled-hair-canonical-v3.png");
+assert.equal(silverLilac?.paperDollLayer, "/assets/status/paper-doll/layers/hair/silver-lilac-tousled-hair-canonical-v4.png");
 const boughtSilverLilac = purchaseShopItem({ ...defaultData, zenPoints: 30 }, "silver-lilac-tousled-hair", "2026-09-02T12:05:00.000Z");
 assert.equal(boughtSilverLilac.ok, true);
 if (boughtSilverLilac.ok) {

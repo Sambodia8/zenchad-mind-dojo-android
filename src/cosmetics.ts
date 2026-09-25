@@ -32,7 +32,7 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     description: "Soft centre-parted blond hair inspired by Porter's Nurture era.",
     slot: "hair",
     thumbnail: "/assets/status/generated/hair/porter-robinson-nurture-hair.png",
-    paperDollLayer: "/assets/status/paper-doll/layers/hair/porter-robinson-nurture-hair-canonical-v3.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/hair/porter-robinson-nurture-hair-canonical-v5.png",
     paperDollRole: "hair",
     shopPrice: 20
   },
@@ -42,7 +42,7 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     description: "The deep indigo, eye-skimming DARE-era Noodle silhouette.",
     slot: "hair",
     thumbnail: "/assets/status/generated/hair/noodle-dare-hair.png",
-    paperDollLayer: "/assets/status/paper-doll/layers/hair/noodle-dare-hair-canonical-v3.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/hair/noodle-dare-hair-canonical-v4.png",
     paperDollRole: "hair",
     shopPrice: 25
   },
@@ -52,7 +52,7 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     description: "Tousled medium-length hair in cool silver-lilac with periwinkle shadows and icy highlights.",
     slot: "hair",
     thumbnail: "/assets/status/generated/hair/silver-lilac-tousled-hair.png",
-    paperDollLayer: "/assets/status/paper-doll/layers/hair/silver-lilac-tousled-hair-canonical-v3.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/hair/silver-lilac-tousled-hair-canonical-v4.png",
     paperDollRole: "hair",
     shopPrice: 30
   },
