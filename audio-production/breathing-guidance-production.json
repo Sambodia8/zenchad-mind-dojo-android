@@ -1,0 +1,408 @@
+{
+  "schemaVersion": 1,
+  "title": "ZenChad reusable breathing guidance",
+  "purpose": "Thirteen short spoken passages for insertion into the offline narrated meditation catalogue.",
+  "approval": {
+    "approved": true,
+    "approvedBy": "user",
+    "approvedAt": "2026-09-21T06:12:18.935Z",
+    "note": "User explicitly approved generation in Codex task on 2026-09-21."
+  },
+  "provider": "elevenlabs",
+  "voiceId": "qDaEJf74mtxsdGvyyq8t",
+  "voiceName": "adam owls soothing v2",
+  "modelId": "eleven_v3",
+  "outputFormat": "opus_48000_192",
+  "outputDirectory": "output/elevenlabs-tests/breathing-guidance",
+  "generationPolicy": {
+    "requiresExplicitGenerateFlag": true,
+    "generationEnabled": false,
+    "paidRequestsAllowed": false,
+    "automaticRetries": 0,
+    "maxGenerations": 13,
+    "maxApprovedCharacters": 10000,
+    "status": "generated",
+    "completedAt": "2026-09-21T06:16:40.709Z",
+    "paidRequestsMade": 13
+  },
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "sharedSafetyRule": "Counts are optional. Keep every breath comfortable and return to natural breathing if there is dizziness, air hunger, discomfort, or strain.",
+  "scripts": [
+    {
+      "order": 1,
+      "id": "metta-breathing-v1",
+      "meditationId": "metta",
+      "title": "Kindness breath",
+      "scriptRevision": "approved-v1",
+      "approved": true,
+      "estimatedDurationSeconds": 36,
+      "fileName": "metta-breathing-v1.ogg",
+      "text": "[softly] Let the breath stay natural. As you inhale, feel the belly receive a little space, as though kindness is arriving without needing to be earned. As you exhale, offer that kindness gently outward. Again... receive on the inhale... and offer on the exhale. One more easy cycle, with no need to make it deep. Counts are optional. If you notice dizziness, air hunger, discomfort, or strain, return to your ordinary breathing.",
+      "affectedNarrationIds": [
+        "metta-v1-qda-v3",
+        "metta-v2-qda-v3",
+        "metta-v3-qda-v3",
+        "metta-v4-qda-v3"
+      ],
+      "provenance": {
+        "generated": true,
+        "generatedAt": "2026-09-21T06:16:40.709Z",
+        "requestId": "utwL1EJ35zCPM6qhLhTZ",
+        "seed": 710001,
+        "durationSeconds": 31.2865,
+        "bytes": 843719,
+        "codec": "opus",
+        "sampleRate": 48000,
+        "channels": 1
+      }
+    },
+    {
+      "order": 2,
+      "id": "pratyahara-breathing-v1",
+      "meditationId": "pratyahara",
+      "title": "Quiet nasal breath",
+      "scriptRevision": "approved-v1",
+      "approved": true,
+      "estimatedDurationSeconds": 37,
+      "fileName": "pratyahara-breathing-v1.ogg",
+      "text": "[softly] If it is comfortable, let the next inhale travel quietly through the nose. Allow the exhale to soften and lengthen by only a little. Again... a quiet inhale... and an unforced exhale, as the outer world turns down one notch. Take one more easy cycle, then let the breath choose its own rhythm. Counts are optional. Breathe through the mouth if needed, and return to natural breathing with any dizziness, air hunger, discomfort, or strain.",
+      "affectedNarrationIds": [
+        "pratyahara-v1-qda-v3",
+        "pratyahara-v2-qda-v3",
+        "pratyahara-v3-qda-v3",
+        "pratyahara-v4-qda-v3"
+      ],
+      "provenance": {
+        "generated": true,
+        "generatedAt": "2026-09-21T06:16:40.709Z",
+        "requestId": "jGlj3OxUXnrHuLGZkcHX",
+        "seed": 710002,
+        "durationSeconds": 38.5665,
+        "bytes": 934002,
+        "codec": "opus",
+        "sampleRate": 48000,
+        "channels": 1
+      }
+    },
+    {
+      "order": 3,
+      "id": "nsdr-breathing-v1",
+      "meditationId": "nsdr",
+      "title": "Extended-exhale settling",
+      "scriptRevision": "approved-v1",
+      "approved": true,
+      "estimatedDurationSeconds": 35,
+      "fileName": "nsdr-breathing-v1.ogg",
+      "text": "[softly] Take three easy settling breaths. Let the first inhale arrive comfortably... then allow the exhale to last just a little longer. Again... an easy inhale... and a slow, unforced exhale. One more time, breathing in without filling or straining... and breathing out until the body naturally wants to inhale again. Now release the pattern and let breathing happen by itself. Counts are optional. Return to ordinary breathing with any dizziness, air hunger, discomfort, or strain.",
+      "affectedNarrationIds": [
+        "nsdr-v1-qda-v3",
+        "nsdr-v2-qda-v3",
+        "nsdr-v3-qda-v3",
+        "nsdr-v4-qda-v3"
+      ],
+      "excludedNarrationIds": [
+        {
+          "id": "nsdr-protocol-v1-qda-v3",
+          "reason": "Already contains guided breathing and a complete body scan; do not add a duplicate passage."
+        }
+      ],
+      "provenance": {
+        "generated": true,
+        "generatedAt": "2026-09-21T06:16:40.709Z",
+        "requestId": "gq5SnANw3fDZS3LjfRmN",
+        "seed": 710003,
+        "durationSeconds": 44.0065,
+        "bytes": 998384,
+        "codec": "opus",
+        "sampleRate": 48000,
+        "channels": 1
+      }
+    },
+    {
+      "order": 4,
+      "id": "yoga-nidra-breathing-v1",
+      "meditationId": "yoga-nidra",
+      "title": "Settling exhales",
+      "scriptRevision": "approved-v1",
+      "approved": true,
+      "estimatedDurationSeconds": 34,
+      "fileName": "yoga-nidra-breathing-v1.ogg",
+      "text": "[softly] Notice the body breathing where it rests. Let one comfortable inhale arrive... then soften through a slightly longer exhale. Again... inhale without effort... and exhale as though the surface beneath you can receive a little more weight. Take one final easy breath, then stop shaping it completely. The body knows how to continue. Counts are optional. If there is dizziness, air hunger, discomfort, or strain, return straight away to your natural breathing.",
+      "affectedNarrationIds": [
+        "yoga-nidra-v1-qda-v3",
+        "yoga-nidra-v2-qda-v3",
+        "yoga-nidra-v3-qda-v3",
+        "yoga-nidra-v4-qda-v3"
+      ],
+      "provenance": {
+        "generated": true,
+        "generatedAt": "2026-09-21T06:16:40.709Z",
+        "requestId": "GPaq8XDu2o3TfhGaOVyc",
+        "seed": 710004,
+        "durationSeconds": 45.6865,
+        "bytes": 1074418,
+        "codec": "opus",
+        "sampleRate": 48000,
+        "channels": 1
+      }
+    },
+    {
+      "order": 5,
+      "id": "diaphragmatic-breathing-v1",
+      "meditationId": "diaphragmatic-breathing",
+      "title": "Lower-rib breathing",
+      "scriptRevision": "approved-v1",
+      "approved": true,
+      "estimatedDurationSeconds": 39,
+      "fileName": "diaphragmatic-breathing-v1.ogg",
+      "text": "[softly] Place attention around the belly and lower ribs. If a count feels comfortable, breathe in for one... two... three... four, allowing that area to widen gently. Breathe out for one... two... three... four... five... six, without squeezing the lungs empty. Try one more easy cycle at that pace, or choose a shorter count. The count is optional and depth is never the goal. Return to natural breathing with any dizziness, air hunger, discomfort, or strain.",
+      "affectedNarrationIds": [
+        "diaphragmatic-breathing-v1-qda-v3",
+        "diaphragmatic-breathing-v2-qda-v3",
+        "diaphragmatic-breathing-v3-qda-v3",
+        "diaphragmatic-breathing-v4-qda-v3"
+      ],
+      "provenance": {
+        "generated": true,
+        "generatedAt": "2026-09-21T06:16:40.709Z",
+        "requestId": "1ROAnexhixxYYbwzuYqY",
+        "seed": 710005,
+        "durationSeconds": 41.0465,
+        "bytes": 974073,
+        "codec": "opus",
+        "sampleRate": 48000,
+        "channels": 1
+      }
+    },
+    {
+      "order": 6,
+      "id": "sound-awareness-breathing-v1",
+      "meditationId": "sound-awareness",
+      "title": "Breath as sound",
+      "scriptRevision": "approved-v1",
+      "approved": true,
+      "estimatedDurationSeconds": 34,
+      "fileName": "sound-awareness-breathing-v1.ogg",
+      "text": "[softly] Keep the breath completely natural and uncounted. For one inhale, listen for its nearest sound... perhaps air at the nose, fabric moving, or no sound at all. Follow the exhale in the same way. Repeat for one more ordinary cycle. Then let the breath become just one small sound inside the wider room. Nothing needs to be made louder or deeper. If there is dizziness, air hunger, discomfort, or strain, return to effortless breathing.",
+      "affectedNarrationIds": [
+        "sound-awareness-v1-qda-v3",
+        "sound-awareness-v2-qda-v3",
+        "sound-awareness-v3-qda-v3",
+        "sound-awareness-v4-qda-v3"
+      ],
+      "provenance": {
+        "generated": true,
+        "generatedAt": "2026-09-21T06:16:40.709Z",
+        "requestId": "V3ItyDBA4XYiIHBalNfm",
+        "seed": 710006,
+        "durationSeconds": 37.0465,
+        "bytes": 886497,
+        "codec": "opus",
+        "sampleRate": 48000,
+        "channels": 1
+      }
+    },
+    {
+      "order": 7,
+      "id": "focused-attention-breathing-v1",
+      "meditationId": "focused-attention",
+      "title": "Complete breath cycles",
+      "scriptRevision": "approved-v1",
+      "approved": true,
+      "estimatedDurationSeconds": 35,
+      "fileName": "focused-attention-breathing-v1.ogg",
+      "text": "[softly] Choose one place where breathing is easy to feel: the nose, chest, belly, or ribs. Follow one natural inhale from beginning to end... then one complete exhale. Again, stay with the full inhale... and the full exhale. Take a third easy cycle, returning gently if attention wanders. You are practising the return, not a perfect focus. Counts are optional. With dizziness, air hunger, discomfort, or strain, let go of the exercise and breathe naturally.",
+      "affectedNarrationIds": [
+        "focused-attention-v1-qda-v3",
+        "focused-attention-v2-qda-v3",
+        "focused-attention-v3-qda-v3",
+        "focused-attention-v4-qda-v3"
+      ],
+      "provenance": {
+        "generated": true,
+        "generatedAt": "2026-09-21T06:16:40.709Z",
+        "requestId": "XLqIhTKkXQLOxVKkkQmg",
+        "seed": 710007,
+        "durationSeconds": 42.4065,
+        "bytes": 1036945,
+        "codec": "opus",
+        "sampleRate": 48000,
+        "channels": 1
+      }
+    },
+    {
+      "order": 8,
+      "id": "ego-breathing-v1",
+      "meditationId": "ego",
+      "title": "Unshaped settling breath",
+      "scriptRevision": "approved-v1",
+      "approved": true,
+      "estimatedDurationSeconds": 33,
+      "fileName": "ego-breathing-v1.ogg",
+      "text": "[softly] Before the inquiry begins, notice one ordinary inhale arriving by itself... and one exhale leaving by itself. Notice a second cycle without deciding how long or deep it should be. Is breathing something you are doing, or something you are noticing? There is no correct answer. Let the question fade and allow the breath to recede into the background. Counts are optional. Return to simple natural breathing with any dizziness, air hunger, discomfort, or strain.",
+      "affectedNarrationIds": [
+        "ego-v1-qda-v3",
+        "ego-v2-qda-v3",
+        "ego-v3-qda-v3",
+        "ego-v4-qda-v3"
+      ],
+      "provenance": {
+        "generated": true,
+        "generatedAt": "2026-09-21T06:16:40.709Z",
+        "requestId": "uYl1O1BgFaU5edYdVA8O",
+        "seed": 710008,
+        "durationSeconds": 38.0865,
+        "bytes": 966980,
+        "codec": "opus",
+        "sampleRate": 48000,
+        "channels": 1
+      }
+    },
+    {
+      "order": 9,
+      "id": "ajna-breathing-v1",
+      "meditationId": "ajna",
+      "title": "Even, gentle breath",
+      "scriptRevision": "approved-v1",
+      "approved": true,
+      "estimatedDurationSeconds": 35,
+      "fileName": "ajna-breathing-v1.ogg",
+      "text": "[softly] Let the eyes and the space between the eyebrows remain soft. Take an easy inhale... and an equally easy exhale, with no pause or hold between them. Again... breathe in gently... and breathe out gently. One more smooth cycle, while the jaw and forehead stay relaxed. The breath does not need to become deep or special. Counts are optional. If dizziness, air hunger, discomfort, or strain appears, release the focus and return to natural breathing.",
+      "affectedNarrationIds": [
+        "ajna-v1-qda-v3",
+        "ajna-v2-qda-v3",
+        "ajna-v3-qda-v3",
+        "ajna-v4-qda-v3"
+      ],
+      "provenance": {
+        "generated": true,
+        "generatedAt": "2026-09-21T06:16:40.709Z",
+        "requestId": "m8rmJ12XYwXylIWmp9Yx",
+        "seed": 710009,
+        "durationSeconds": 42.9665,
+        "bytes": 998123,
+        "codec": "opus",
+        "sampleRate": 48000,
+        "channels": 1
+      }
+    },
+    {
+      "order": 10,
+      "id": "urge-surfing-breathing-v1",
+      "meditationId": "urge-surfing",
+      "title": "Wave breath",
+      "scriptRevision": "approved-v1",
+      "approved": true,
+      "estimatedDurationSeconds": 36,
+      "fileName": "urge-surfing-breathing-v1.ogg",
+      "text": "[reassuringly] Let the urge be present without trying to push it away. Take a comfortable inhale as the wave gathers... then a slightly longer, unforced exhale as it moves beneath you. Again... breathe in and notice the sensations... breathe out and let them change at their own pace. Take one more easy cycle. The breath supports observation; it does not have to remove the urge. Counts are optional. Return to natural breathing with dizziness, air hunger, discomfort, or strain.",
+      "affectedNarrationIds": [
+        "urge-surfing-v1-qda-v3",
+        "urge-surfing-v2-qda-v3",
+        "urge-surfing-v3-qda-v3",
+        "urge-surfing-v4-qda-v3"
+      ],
+      "provenance": {
+        "generated": true,
+        "generatedAt": "2026-09-21T06:16:40.709Z",
+        "requestId": "PLTQaIOA2BUGzG9yd746",
+        "seed": 710010,
+        "durationSeconds": 41.2865,
+        "bytes": 947690,
+        "codec": "opus",
+        "sampleRate": 48000,
+        "channels": 1
+      }
+    },
+    {
+      "order": 11,
+      "id": "grounding-breathing-v1",
+      "meditationId": "grounding",
+      "title": "Grounding exhale",
+      "scriptRevision": "approved-v1",
+      "approved": true,
+      "estimatedDurationSeconds": 35,
+      "fileName": "grounding-breathing-v1.ogg",
+      "text": "[softly] Feel the feet, seat, or back meeting the surface beneath you. Let an easy inhale arrive... and as you exhale, notice one clear point of support. Again... breathe in comfortably... then breathe out while feeling the floor, chair, or bed holding your weight. Take one more natural cycle and name the contact silently: here. Counts are optional. If you notice dizziness, air hunger, discomfort, or strain, stop shaping the breath and let it return to normal.",
+      "affectedNarrationIds": [
+        "grounding-v1-qda-v3",
+        "grounding-v2-qda-v3",
+        "grounding-v3-qda-v3",
+        "grounding-v4-qda-v3"
+      ],
+      "provenance": {
+        "generated": true,
+        "generatedAt": "2026-09-21T06:16:40.709Z",
+        "requestId": "Umzb35bizx3f45Jk3hPh",
+        "seed": 710011,
+        "durationSeconds": 44.0865,
+        "bytes": 1018168,
+        "codec": "opus",
+        "sampleRate": 48000,
+        "channels": 1
+      }
+    },
+    {
+      "order": 12,
+      "id": "acceptance-breathing-v1",
+      "meditationId": "acceptance",
+      "title": "Breathing around sensation",
+      "scriptRevision": "approved-v1",
+      "approved": true,
+      "estimatedDurationSeconds": 37,
+      "fileName": "acceptance-breathing-v1.ogg",
+      "text": "[reassuringly] Find the difficult sensation without asking it to change. Let the next inhale create a little room around it... and let the exhale move without pushing the feeling away. Again... space on the inhale... softness around the edges on the exhale. Take one more easy breath, allowing this moment to be exactly as it is. The breath is company, not a tool for fixing. Counts are optional. Return to natural breathing with dizziness, air hunger, discomfort, or strain.",
+      "affectedNarrationIds": [
+        "acceptance-v4-qda-v3",
+        "acceptance-v2-story-qda-v3",
+        "acceptance-v3-story-qda-v3",
+        "acceptance-v4-story-qda-v3"
+      ],
+      "provenance": {
+        "generated": true,
+        "generatedAt": "2026-09-21T06:16:40.709Z",
+        "requestId": "KVO36dUNvXqthUeey2e6",
+        "seed": 710012,
+        "durationSeconds": 43.2065,
+        "bytes": 979680,
+        "codec": "opus",
+        "sampleRate": 48000,
+        "channels": 1
+      }
+    },
+    {
+      "order": 13,
+      "id": "trataka-breathing-v1",
+      "meditationId": "trataka",
+      "title": "Relaxed gaze breathing",
+      "scriptRevision": "approved-v1",
+      "approved": true,
+      "estimatedDurationSeconds": 34,
+      "fileName": "trataka-breathing-v1.ogg",
+      "text": "[softly] Keep the gaze gentle and blink whenever you need to. Let one natural inhale pass without changing the eyes... then let the exhale leave without holding it. Repeat for another easy cycle while the jaw, brow, and shoulders remain relaxed. The flame is an anchor, not a test of endurance, and the breath stays ordinary. Counts are optional. If there is dizziness, air hunger, discomfort, eye strain, or any other strain, look away and return to natural breathing.",
+      "affectedNarrationIds": [
+        "trataka-v1-qda-v3",
+        "trataka-v2-qda-v3",
+        "trataka-v3-qda-v3",
+        "trataka-v4-qda-v3"
+      ],
+      "provenance": {
+        "generated": true,
+        "generatedAt": "2026-09-21T06:16:40.709Z",
+        "requestId": "Msn1O3ocIizaes2rnEsG",
+        "seed": 710013,
+        "durationSeconds": 38.7265,
+        "bytes": 1004282,
+        "codec": "opus",
+        "sampleRate": 48000,
+        "channels": 1
+      }
+    }
+  ]
+}

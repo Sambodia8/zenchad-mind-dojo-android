@@ -224,6 +224,16 @@
 - Verification: Generated 13 cues with 0 retries, exact 600.0065-second Opus 48 kHz mono output, 15.135896-second opening silence, clean decode, catalogue audio verification, TypeScript/Vite production build, Capacitor sync, JDK 21 Gradle APK assembly, package/version metadata, v1/v2 signatures, and packaged audio asset presence. No Android device installation test was run.
 - Artifact: `S:\zENcHAD\ZenChadAndroid\releases\Zen-Chad-2.5-NSDR-Protocol.apk`, versionCode 16/versionName 2.5, SHA-256 `094AF1FA8C71449F6DDCEC6DD89BB283862101C26BFB72FECFA03A3988A00BD2`.
 
+2026-09-21 - Zen Chad 2.6 breathing, restored NSDR, and shared long music
+- Decision/change: Added approved spoken/visible breathing guidance across the 53-track catalogue, restored four complete ten-minute NSDR journeys, and replaced single-track looping with streamed eight-second equal-power crossfades. With Music credits exhausted, every style temporarily shares the six approved five-minute pilot tracks alongside its own A/B tracks.
+- Preserve/avoid: Keep the global music-cycle counter and exact active queue persisted across restarts; every eight-track cycle must exhaust all tracks before repeating. Do not spend more generation credits unless the user explicitly revisits the deferred twenty style-specific tracks.
+- Artifact: Android 2.6/code 17, `releases/Zen-Chad-2.6-Breathing-NSDR-Long-Music.apk`, SHA-256 `F89FACFC26B4781A9012F90ED1EA2650C15B3CDADD3ECE39F26CBD750113DEA9`; packaged size is 391,449,737 bytes.
+2026-09-22 - Run Quest warm-up art v3
+- Decision/change: Replaced only the six inaccurate visual areas with Yoga With Tim transcript-aligned transparent Mark artwork, added Before Running's ankle inversion/eversion movement, and kept Before Cycling's ankle circles and every unaffected sequence intact.
+- Preserve/avoid: Keep 700 ms frame playback, pause/resume, reduced-motion behavior, 6:20 class duration, rewards, Run Quest handoff, and rollback frames under pre-run-v2. Keep the review sheet/prompts outside the public bundle.
+- Key files: src/data.ts, scripts/test-yoga.mjs, public/assets/stretches/generated/pre-run-v3/, public/assets/stretches/forward-fold-v2.png, design-reference/pre-run-v3/.
+- Build: Version 2.7 (code 18), APK `ZenChad-2.7-Run-Warmup-Art-Fix.apk`; focused Yoga checks, production build, Capacitor sync, JDK 21 Gradle assembly, package/signature/hash checks, 412 × 915 browser QA, and in-place device installation completed. Device remained locked for final physical slide inspection.
+
 2026-09-24 - Five-minute meditations and YouTube floating timer
 - Decision/change: Added exact five-minute phase variants with existing music/on-screen guidance; full-length spoken recordings stay unchanged. Binaural sessions open creator-published YouTube playlists with a native draggable countdown and no bundled media.
 - Preserve/avoid: Overlay requires Android display-over-apps permission, uses the session deadline, and returns to ZenChad for controls/saving. YouTube owns playback (including ads); timer completion does not stop it. No audio generation credits spent.

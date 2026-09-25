@@ -280,6 +280,22 @@ Future production should retain the approved continuous workflow: stop only for 
 request, defective audio, a security issue, or a technical condition where continuing would waste
 credits.
 
+## Breathing-guidance expansion
+
+The next catalogue expansion adds one reusable thirty-to-forty-second breathing passage for each of
+the thirteen narrated meditation styles. The draft production manifest is
+`audio-production/breathing-guidance-production.json`. Its scripts and batch remain unapproved: no
+paid request is authorized until the manifest's top-level approval and the selected scripts are
+explicitly approved. Generation requires an explicit flag, is capped at thirteen requests, and has
+zero automatic retries.
+
+Each passage guides two or three comfortable breath cycles, treats counting as optional, avoids
+breath retention and forceful ventilation, and tells the listener to return to natural breathing if
+there is dizziness, air hunger, discomfort, or strain. A passage is generated once and reused across
+that meditation's narration variants. The current NSDR Protocol already contains guided breathing,
+so the NSDR passage applies only to the four restored story journeys. The scan and breath-work audit
+is recorded in `audio-production/NSDR_BODY_SCAN_AUDIT.md`.
+
 ## Working locations
 
 - Approved generation manifests: `audio-production/`

@@ -1,3 +1,28 @@
+# Zen Chad 2.7 — Run Quest warm-up art fix (2026-09-22)
+
+- Replaced only the inaccurate Before Running artwork: source-accurate ankle inversion/eversion, hip flexion and opener, hip flexion with torso rotation, small shoulder-height arm circles in two palm-direction phases, calf stretch and heel raises, and the shared longer-haired Yoga Mark Forward Fold.
+- Added the source-accurate `ankle-inversion-eversion` movement for Before Running while retaining the existing `ankle-circles` movement for Before Cycling; revised labels and cues to match the supplied Yoga With Tim transcript.
+- Stored rollback-safe movement frames under `public/assets/stretches/generated/pre-run-v3/`, kept the new Forward Fold as `forward-fold-v2.png`, and kept prompts/contact sheets under `design-reference/pre-run-v3/` outside the packaged public bundle.
+- Preserved 700 ms playback, pause/resume, reduced-motion behavior, class duration, rewards, Run Quest handoff, all unaffected movement frames, and existing Yoga/Before Cycling content.
+- Version code 18; version name 2.7; shareable debug APK for in-place updates.
+- Artifact: `ZenChad-2.7-Run-Warmup-Art-Fix.apk`, 395,879,900 bytes.
+- SHA-256: `19D5C265A0D16DCC37054B8F51DAD1B961FCD207B04EBA4E07CBBC638CB822EB`.
+- Verified focused Yoga checks, TypeScript/Vite production build, Capacitor sync, JDK 21 Gradle assembly, package/version metadata, APK v1/v2 signatures, transparent 540 × 720 frame dimensions, exact mirrored hip-opener pairs, packaged replacement assets, and matching source/release/Drive hashes. Browser QA passed at 412 × 915 with reduced-motion emulation and no console errors. The APK installed in place on the connected Android device; its screen was locked during the final physical visual check.
+- Release copies: `S:\zENcHAD\ZenChadAndroid\releases\ZenChad-2.7-Run-Warmup-Art-Fix.apk` and `D:\My Drive\ZenChad\ZenChad-2.7-Run-Warmup-Art-Fix.apk`.
+
+# Zen Chad 2.6 — breathing, restored NSDR, and long-form music (2026-09-21)
+
+- Added visible breathing guidance to all thirteen narrated meditation styles and inserted one approved spoken breathing passage into every narration except the already-complete NSDR Protocol.
+- Restored all four older NSDR journeys as ten-minute choices alongside the protocol, preserving every original body-scan cue at natural speech speed while tightening only quiet intervals.
+- Added six five-minute stereo music tracks as a shared offline pool across every meditation. Each soundtrack now plays its local A/B tracks and all six long tracks before repeating, with eight-second equal-power crossfades.
+- Added a persistent music-cycle counter so each new session receives a deterministic shuffled order that advances across app shutdowns and phone restarts; an active timer restores its exact queue and playback position.
+- Re-encoded all 53 narration variants as 48 kHz mono Opus and retained pre-insertion masters outside packaged assets. Packaged narration fell from 203.76 MB to 77.70 MB.
+- Version code 17; version name 2.6; shareable debug APK for side-loading and in-place updates.
+- Artifact: `Zen-Chad-2.6-Breathing-NSDR-Long-Music.apk`, 391,449,737 bytes—108,672,666 bytes smaller than 2.5.
+- SHA-256: `F89FACFC26B4781A9012F90ED1EA2650C15B3CDADD3ECE39F26CBD750113DEA9`.
+- Verified all 53 narration candidates for duration, full decode, opening silence, cue overlap, codec and bitrate; verified four restored NSDR tracks at 600.006 seconds; passed persistent music-counter/shuffle tests, TypeScript/Vite production build, Capacitor sync, JDK 21 Gradle assembly, package/version metadata, APK v1/v2 signatures, and packaged music/NSDR asset checks. No live Android device test was available.
+- Release copies: `S:\zENcHAD\ZenChadAndroid\releases\Zen-Chad-2.6-Breathing-NSDR-Long-Music.apk` and `D:\My Drive\ZenChad\Zen-Chad-2.6-Breathing-NSDR-Long-Music.apk`.
+
 # Zen Chad 2.5 — canonical 10-minute NSDR protocol (2026-09-21)
 
 - Replaced rotating story-style NSDR guidance with one canonical, breath-led 10-minute non-sleep deep rest protocol based on the supplied reference script.
