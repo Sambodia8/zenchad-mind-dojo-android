@@ -1,3 +1,10 @@
+# Zen Chad 2.19 — Supine Twist anatomy correction (2026-09-27)
+
+- Reworked the Supine Twist from a clear reference pose: torso and pelvis rotate as one, the bent knee crosses the midline, and both shoulders remain grounded. The hip-to-thigh connection is visible and continuous.
+- Version code 30; version name 2.19; shareable debug APK: `ZenChad-2.19-Supine-Twist-Anatomy-Fix.apk`.
+- Verified TypeScript/Vite build, Capacitor sync, JDK 21 Gradle assembly, package/version metadata, v1/v2 signatures, and packaged Supine Twist asset hash. No connected-device check was performed.
+- SHA-256: `A73AB5C5BE2868DAF772307E37AC4EC5363C22FABF48BC4278478FE8EAF74BD4`; size 403,982,233 bytes. Local and Drive copies match.
+
 # Zen Chad 2.18 — Stretch artwork consistency fix (2026-09-27)
 
 - Made all five refreshed stretch illustrations opaque on the same white background.

@@ -292,3 +292,8 @@
 - Decision/change: Made all five Mark stretch display images opaque with a consistent white background. Regenerated Supine Twist so the bent knee crosses the body's midline with shoulders grounded, clearly separating it from Figure Four.
 - Verification: TypeScript/Vite and Capacitor sync, JDK 21 Gradle assembly, version metadata, APK v1/v2 signatures, opaque backgrounds, and packaged image hashes passed. Local and Drive APK copies match at 403,967,615 bytes; SHA-256 `C8383196AAC4E9E7685BE346A81DABF3054D2F152982D04386AD1C633DCE9809`. No connected-device check.
 - Release: Android 2.18/code 29, `ZenChad-2.18-Stretch-Artwork-Fix.apk`.
+
+2026-09-27 - Supine Twist anatomy correction
+- Decision/change: Replaced the twist card illustration using a looked-up pose reference and a clearer elevated view, with one continuous leg-to-hip connection, the bent knee across midline, and shoulders grounded.
+- Verification: TypeScript/Vite and Capacitor sync, JDK 21 Gradle assembly, package/version metadata, APK v1/v2 signatures, and packaged Supine Twist asset hash passed. Local and Drive copies match at 403,982,233 bytes; SHA-256 `A73AB5C5BE2868DAF772307E37AC4EC5363C22FABF48BC4278478FE8EAF74BD4`. No connected-device check.
+- Release: Android 2.19/code 30, `ZenChad-2.19-Supine-Twist-Anatomy-Fix.apk`.
