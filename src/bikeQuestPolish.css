@@ -45,6 +45,27 @@
   color: #f6c86b;
 }
 
+/* Keep reward copy readable on the intentionally pale XP badge. */
+.bike-ride-complete .completion-reward-burst,
+.bike-ride-complete .completion-reward-burst strong { color: #684315; }
+.bike-ride-complete .completion-reward-burst small { color: #715b38; }
+
+/* The debrief sits on the light completion card, so use a matching light control palette. */
+.bike-quest-final .running-debrief { color: #29271f; background: rgba(255, 250, 238, 0.94); }
+.bike-quest-final .running-debrief h2,
+.bike-quest-final .running-debrief-row > strong { color: #29271f; }
+.bike-quest-final .running-debrief p { color: #5c564a; }
+.bike-quest-final .running-debrief button {
+  border-color: #aaa493;
+  color: #29271f;
+  background: #fffdf7;
+}
+.bike-quest-final .running-debrief button.selected {
+  border-color: #27805d;
+  color: #154b36;
+  background: #c9f0dc;
+}
+
 /* Focus mode is synchronised by bikeQuestRuntime.ts. It applies to Bike Quest itself and
    the cycling Yoga classes launched from the quest. */
 html.bike-quest-focus-mode .bottom-nav {

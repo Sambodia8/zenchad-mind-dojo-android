@@ -57,6 +57,8 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
 .running-hero h1,
 .running-briefing h1,
 .running-summary-hero h1 { margin: 0.15rem 0 0.55rem; font-size: clamp(2rem, 8vw, 3.3rem); letter-spacing: -0.04em; }
+.running-hub .running-hero h1 { color: #f8fafc; }
+.running-hub .running-hero .eyebrow { color: #b9b1ff; }
 .running-hero p,
 .running-briefing p,
 .running-summary-hero p { margin: 0; color: var(--text-muted); }
@@ -70,6 +72,9 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
 
 .running-mode-grid { display: grid; gap: 0.85rem; }
 .running-mode-card { display: flex; min-height: 10rem; flex-direction: column; align-items: flex-start; gap: 0.35rem; padding: 1.15rem; border: 1px solid var(--border); border-radius: 1.25rem; text-align: left; background: var(--card-bg); }
+.running-mode-card.quick { color: #f8fafc; border-color: rgba(130, 116, 255, 0.38); background: radial-gradient(circle at 90% 15%, rgba(132, 116, 255, 0.22), transparent 38%), linear-gradient(145deg, #18223a, #10182c); }
+.running-mode-card.quick .eyebrow { color: #b9b1ff; }
+.running-mode-card.quick small { color: #d2d7e7; }
 .running-mode-card.just { border-color: rgba(47, 148, 108, 0.36); background: linear-gradient(145deg, rgba(224, 247, 235, 0.96), rgba(246, 251, 246, 0.96)); }
 .running-mode-card.just svg { color: var(--run-green); }
 .running-mode-card.story { color: #f8fafc; border-color: rgba(130, 116, 255, 0.38); background: radial-gradient(circle at 90% 15%, rgba(132, 116, 255, 0.34), transparent 35%), linear-gradient(145deg, #18221f, #101820); }

@@ -249,6 +249,15 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
     [persistQuest]
   );
 
+  useEffect(() => {
+    const refreshCompletedQuest = () => {
+      const latest = loadBikeQuestState();
+      if (latest) persistQuest(latest);
+    };
+    window.addEventListener("zenchad:bike-shower-updated", refreshCompletedQuest);
+    return () => window.removeEventListener("zenchad:bike-shower-updated", refreshCompletedQuest);
+  }, [persistQuest]);
+
   const awardXp = useCallback(
     (
       key: string,

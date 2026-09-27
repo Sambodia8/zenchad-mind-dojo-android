@@ -276,3 +276,14 @@
 - Decision/change: Added one daily local run/Bike Quest recommendation with A/B/C alternatives, rest and snooze, a rolling three-completion target, recent-run and ride history, route-safety filtering, and short feedback that adjusts future suggestions. Accepted plans carry into Running Mode or Bike Quest.
 - Decision/change: Added the compact Run Hype List, separate optional Circuit coach styling, Yuna and daylight prompts, mid-run rescue, debrief, privacy-trimmed opt-in Atlas, and optional local reminders with quiet hours. No weather/calendar feed or unverified trail is represented as live guidance.
 - Verification: Zen Coach and Running focused checks, TypeScript/Vite production build, and 412x915 browser flows passed. Native notification and GPS behavior still need a connected Android device. Release target: 2.15/code 26, ZenChad-2.15-Zen-Coach.apk.
+2026-09-27 - Bike Quest delayed shower follow-up and contrast fixes
+- Decision/change: “Ask me next launch” on the Bike Quest shower prompt defers the question to the next app launch; a later quick/full response credits XP to the completed ride, and declining clears the prompt. Corrected XP badge, debrief controls/copy, and Running hub heading/card contrast from screenshots.
+- Preserve/avoid: Do not block finishing Bike Quest on optional recovery. The follow-up is one-time and local to the originating ride.
+- Verification: TypeScript/Vite production build, Capacitor sync, JDK 21 Android assembly, package/version metadata, v1/v2 signatures, and matching release-copy size. Source APK SHA-256: `8E00002E0886613ECE9063E1B46ADC2911EC0E0B61BED2BCF17E7B7DDB16BF5D`; no connected-device check.
+- Key files: `src/postActivityShowerRuntime.ts`, `src/postActivityShower.css`, `src/bikeQuestPolish.css`, `src/runningMode.css`, `src/screens/BikeQuestScreen.tsx`.
+
+2026-09-27 - Mark stretch illustration refresh
+- Decision/change: Replaced the display assets for Kneeling Lunge, Half-Kneeling Quad Stretch, Seated Hamstring Stretch, Figure Four Stretch, and Supine Twist using the supplied routine screenshots for pose guidance and the recent generated Mark stretch reference for identity, clothing, and style. The app reads these display assets for its stretch cards.
+- Preserve/avoid: Keep the named exercise poses and existing stretch behavior unchanged; avoid duplicating the larger artwork in unused source paths.
+- Verification: TypeScript/Vite build and Capacitor sync succeeded; Gradle debug APK assembled with package/version 2.17/code 28. APK v1/v2 signatures passed; all five packaged display images match source hashes. No connected-device check. Local and Drive release copies match at 403,585,311 bytes; SHA-256 `4F3ED74A01D10A897D44DE62E6B3C7F74195CA4B9049F73A884AEB85670AA702`.
+- Release: Android 2.17/code 28, `ZenChad-2.17-Mark-Stretch-Illustrations.apk`.

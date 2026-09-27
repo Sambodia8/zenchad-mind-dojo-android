@@ -8,8 +8,8 @@ android {
         applicationId "com.zenchad.minddojo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 26
-        versionName "2.15"
+        versionCode 28
+        versionName "2.17"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "arm64-v8a"

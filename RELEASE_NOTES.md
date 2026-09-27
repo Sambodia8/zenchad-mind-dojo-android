@@ -1,3 +1,20 @@
+# Zen Chad 2.17 — Mark stretch illustration refresh (2026-09-27)
+
+- Replaced the in-app illustrations for Kneeling Lunge, Half-Kneeling Quad Stretch, Seated Hamstring Stretch, Figure Four Stretch, and Supine Twist with new Mark-matched artwork based on the supplied pose references.
+- Version code 28; version name 2.17; shareable debug APK: `ZenChad-2.17-Mark-Stretch-Illustrations.apk`.
+- Verified TypeScript/Vite production build, Capacitor sync, JDK 21 Gradle assembly, package/version metadata, APK v1/v2 signatures, and all five packaged display assets against source hashes. No connected-device check was performed.
+- SHA-256: `4F3ED74A01D10A897D44DE62E6B3C7F74195CA4B9049F73A884AEB85670AA702`; size 403,585,311 bytes.
+- Release copies: `S:\zENcHAD\ZenChadAndroid\releases\ZenChad-2.17-Mark-Stretch-Illustrations.apk` and `D:\My Drive\ZenChad\ZenChad-2.17-Mark-Stretch-Illustrations.apk`; hashes match.
+
+# Zen Chad 2.16 — Bike Quest follow-up and contrast fixes (2026-09-27)
+
+- Added an optional “Ask me next launch” shower choice to Bike Quest. The next app launch asks whether the shower happened later and awards the chosen bonus XP to the original quest.
+- Improved contrast for Bike Quest reward and feedback text, plus the Running screen headings and quick-run card.
+- Version code 27; version name 2.16; shareable debug APK: `ZenChad-2.16-Bike-Quest-Contrast.apk`.
+- SHA-256: `8E00002E0886613ECE9063E1B46ADC2911EC0E0B61BED2BCF17E7B7DDB16BF5D`.
+- Verified TypeScript/Vite build, Capacitor sync, JDK 21 Gradle assembly, package/version metadata, and APK v1/v2 signatures. No connected-device check was performed.
+- Release copies: `S:\zENcHAD\ZenChadAndroid\releases\ZenChad-2.16-Bike-Quest-Contrast.apk` and `D:\My Drive\ZenChad\ZenChad-2.16-Bike-Quest-Contrast.apk`; both are 398,751,390 bytes.
+
 # Zen Chad 2.15 — Zen Coach (2026-09-25)
 
 - Added a daily run or Bike Quest recommendation with three alternatives, rest and snooze, a rolling three-session goal, and a short feedback loop based on real completed sessions.

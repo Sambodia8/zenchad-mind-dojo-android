@@ -42,6 +42,11 @@ interface RewardBonusStoreSnapshot {
   bonuses?: RewardBonusSnapshot[];
 }
 
+interface PendingBikeShower {
+  contextKey: string;
+  createdAt: number;
+}
+
 const SHOWER_STORE_KEY = "zenchad_post_activity_shower_v1";
 const BIKE_QUEST_KEY = "zenchad_bike_quest_v1";
 const RUN_SESSION_KEY = "zenchad_running_session_v1";
@@ -49,6 +54,10 @@ const RUNNING_BONUS_KEY = "zenchad_running_reward_bonus_v1";
 const RUNNING_BONUS_EVENT = "zenchad:running-bonus-queued";
 const BRIDGE_PREFIX = "post-activity-shower|";
 const RUN_PANEL_ID = "zenchad-post-run-shower";
+const PENDING_BIKE_SHOWER_KEY = "zenchad_pending_bike_shower_v1";
+const DEFERRED_PANEL_ID = "zenchad-deferred-bike-shower";
+const BIKE_SHOWER_UPDATED_EVENT = "zenchad:bike-shower-updated";
+const APP_LAUNCHED_AT = Date.now();
 
 let started = false;
 
@@ -210,7 +219,7 @@ function createChooser(
       </button>
     </div>
     <button type="button" class="post-activity-shower-skip" data-shower-choice="skip" aria-pressed="false">
-      <span>Skip</span>
+      <span>${contextKey.startsWith("bike:") ? "Ask me next launch" : "Skip"}</span>
     </button>
   `;
 
@@ -262,13 +271,14 @@ function inferLegacyBikeRecord(contextKey: string, quest: BikeQuestSnapshot) {
 
 function selectBikeShower(contextKey: string, choice: ShowerChoice) {
   const quest = readJson<BikeQuestSnapshot>(BIKE_QUEST_KEY);
-  if (!quest || quest.step !== "recovery") return;
+  if (!quest || (quest.step !== "recovery" && quest.step !== "complete")) return;
 
   if (choice === "skip") {
     quest.showerSkipped = true;
     quest.showerLogged = false;
     writeJson(BIKE_QUEST_KEY, quest);
     saveChoice(contextKey, makeRecord("skip", 0, 0));
+    writeJson(PENDING_BIKE_SHOWER_KEY, { contextKey, createdAt: Date.now() } satisfies PendingBikeShower);
     return;
   }
 
@@ -284,8 +294,56 @@ function selectBikeShower(contextKey: string, choice: ShowerChoice) {
   writeJson(BIKE_QUEST_KEY, quest);
 
   saveChoice(contextKey, makeRecord(choice, finalXp, delta));
+  localStorage.removeItem(PENDING_BIKE_SHOWER_KEY);
   patchBikeQuestHud(quest);
   if (delta > 0) ensureGlobalXp(contextKey);
+  window.dispatchEvent(new CustomEvent(BIKE_SHOWER_UPDATED_EVENT));
+}
+
+function renderDeferredBikeShower() {
+  const pending = readJson<PendingBikeShower>(PENDING_BIKE_SHOWER_KEY);
+  const existing = document.getElementById(DEFERRED_PANEL_ID);
+  if (!pending || pending.createdAt >= APP_LAUNCHED_AT) {
+    existing?.remove();
+    return;
+  }
+  const quest = readJson<BikeQuestSnapshot>(BIKE_QUEST_KEY);
+  if (!quest || bikeContextKey(quest) !== pending.contextKey || quest.step !== "complete" || quest.showerLogged) {
+    localStorage.removeItem(PENDING_BIKE_SHOWER_KEY);
+    existing?.remove();
+    return;
+  }
+  if (existing) return;
+
+  const overlay = document.createElement("div");
+  overlay.id = DEFERRED_PANEL_ID;
+  overlay.className = "post-activity-shower-deferred-backdrop";
+  overlay.innerHTML = `
+    <section class="post-activity-shower-deferred" role="dialog" aria-modal="true" aria-labelledby="post-activity-shower-title">
+      <span class="eyebrow">Bike Quest follow-up</span>
+      <h2 id="post-activity-shower-title">Did you shower after your ride?</h2>
+      <p>Your ride is already complete. Add a small bonus if you showered later.</p>
+      <div class="post-activity-shower-grid">
+        <button type="button" data-deferred-choice="quick"><span>Quick</span><small>+30 XP</small></button>
+        <button type="button" data-deferred-choice="full"><span>Full</span><small>+60 XP</small></button>
+      </div>
+      <button type="button" class="post-activity-shower-deferred-skip" data-deferred-choice="skip">No thanks</button>
+    </section>
+  `;
+  overlay.querySelectorAll<HTMLButtonElement>("[data-deferred-choice]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const choice = button.dataset.deferredChoice as ShowerChoice;
+      if (choice === "skip") {
+        localStorage.removeItem(PENDING_BIKE_SHOWER_KEY);
+        saveChoice(pending.contextKey, makeRecord("skip", 0, 0));
+        overlay.remove();
+        return;
+      }
+      selectBikeShower(pending.contextKey, choice);
+      overlay.remove();
+    });
+  });
+  document.body.appendChild(overlay);
 }
 
 function renderBikeShower() {
@@ -367,6 +425,7 @@ function tick() {
   cleanupAppliedBridgeBonuses();
   renderBikeShower();
   renderRunningShower();
+  renderDeferredBikeShower();
 }
 
 export function startPostActivityShowerRuntime() {
