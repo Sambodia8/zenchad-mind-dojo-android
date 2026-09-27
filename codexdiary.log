@@ -287,3 +287,8 @@
 - Preserve/avoid: Keep the named exercise poses and existing stretch behavior unchanged; avoid duplicating the larger artwork in unused source paths.
 - Verification: TypeScript/Vite build and Capacitor sync succeeded; Gradle debug APK assembled with package/version 2.17/code 28. APK v1/v2 signatures passed; all five packaged display images match source hashes. No connected-device check. Local and Drive release copies match at 403,585,311 bytes; SHA-256 `4F3ED74A01D10A897D44DE62E6B3C7F74195CA4B9049F73A884AEB85670AA702`.
 - Release: Android 2.17/code 28, `ZenChad-2.17-Mark-Stretch-Illustrations.apk`.
+
+2026-09-27 - Stretch artwork consistency fix
+- Decision/change: Made all five Mark stretch display images opaque with a consistent white background. Regenerated Supine Twist so the bent knee crosses the body's midline with shoulders grounded, clearly separating it from Figure Four.
+- Verification: TypeScript/Vite and Capacitor sync, JDK 21 Gradle assembly, version metadata, APK v1/v2 signatures, opaque backgrounds, and packaged image hashes passed. Local and Drive APK copies match at 403,967,615 bytes; SHA-256 `C8383196AAC4E9E7685BE346A81DABF3054D2F152982D04386AD1C633DCE9809`. No connected-device check.
+- Release: Android 2.18/code 29, `ZenChad-2.18-Stretch-Artwork-Fix.apk`.

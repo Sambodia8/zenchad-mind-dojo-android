@@ -1,3 +1,11 @@
+# Zen Chad 2.18 — Stretch artwork consistency fix (2026-09-27)
+
+- Made all five refreshed stretch illustrations opaque on the same white background.
+- Redrew Supine Twist with the bent knee clearly crossing the body and the shoulders grounded, so it reads distinctly from Figure Four.
+- Version code 29; version name 2.18; shareable debug APK: `ZenChad-2.18-Stretch-Artwork-Fix.apk`.
+- Verified TypeScript/Vite build, Capacitor sync, JDK 21 Gradle assembly, package/version metadata, v1/v2 APK signatures, opaque backgrounds, and all five packaged image hashes. No connected-device check was performed.
+- SHA-256: `C8383196AAC4E9E7685BE346A81DABF3054D2F152982D04386AD1C633DCE9809`; size 403,967,615 bytes. Local and Drive copies match.
+
 # Zen Chad 2.17 — Mark stretch illustration refresh (2026-09-27)
 
 - Replaced the in-app illustrations for Kneeling Lunge, Half-Kneeling Quad Stretch, Seated Hamstring Stretch, Figure Four Stretch, and Supine Twist with new Mark-matched artwork based on the supplied pose references.
