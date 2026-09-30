@@ -201,6 +201,15 @@
 :root[data-appearance] .back-link,
 :root[data-appearance] .eyebrow { color: var(--accent-text); }
 
+:root[data-appearance="dark"] .back-link {
+  background: rgba(24, 29, 47, 0.94);
+}
+
+/* This invitation is deliberately a light paper card in the dark app. */
+:root[data-appearance] .mystery-invitation-card .eyebrow { color: #543618; }
+:root[data-appearance] .mystery-invitation-card small { color: #493c30; }
+:root[data-appearance] .running-mode-card.just .eyebrow { color: #285440; }
+
 :root[data-appearance] textarea,
 :root[data-appearance] input,
 :root[data-appearance] select {
@@ -372,7 +381,7 @@
   box-shadow: 0 -0.7rem 2rem rgba(0, 0, 0, 0.32);
 }
 
-:root[data-appearance] .home-route .bottom-nav button { color: #77718d; }
+:root[data-appearance] .home-route .bottom-nav button { color: #9992ad; }
 :root[data-appearance] .home-route .bottom-nav button.active { color: #c8a7ff; }
 
 :root[data-appearance] .home-reimagined > .card {
@@ -501,7 +510,7 @@
 }
 
 :root[data-appearance] .app-shell:not(.yoga-immersive) .bottom-nav button {
-  color: #77718d;
+  color: #9992ad;
   font-family: inherit;
   background: transparent;
   box-shadow: none;

@@ -75,7 +75,13 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
 .running-mode-card.quick { color: #f8fafc; border-color: rgba(130, 116, 255, 0.38); background: radial-gradient(circle at 90% 15%, rgba(132, 116, 255, 0.22), transparent 38%), linear-gradient(145deg, #18223a, #10182c); }
 .running-mode-card.quick .eyebrow { color: #b9b1ff; }
 .running-mode-card.quick small { color: #d2d7e7; }
+.running-mode-card.quick strong,
+.running-mode-card.story strong { color: #f8fafc; }
 .running-mode-card.just { border-color: rgba(47, 148, 108, 0.36); background: linear-gradient(145deg, rgba(224, 247, 235, 0.96), rgba(246, 251, 246, 0.96)); }
+.running-mode-card.just,
+.running-mode-card.just strong { color: #16372b; }
+.running-mode-card.just .eyebrow,
+.running-mode-card.just small { color: #285440; }
 .running-mode-card.just svg { color: var(--run-green); }
 .running-mode-card.story { color: #f8fafc; border-color: rgba(130, 116, 255, 0.38); background: radial-gradient(circle at 90% 15%, rgba(132, 116, 255, 0.34), transparent 35%), linear-gradient(145deg, #18221f, #101820); }
 .running-mode-card.story .eyebrow,
@@ -110,6 +116,8 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
 .running-duration-grid strong { display: block; color: var(--run-green); font-size: 2.5rem; line-height: 1; }
 .running-duration-grid span { color: var(--text-muted); font-weight: 800; }
 .running-duration-grid button.recommended { border: 2px solid var(--run-green); background: var(--run-mint); }
+.running-duration-grid button.recommended strong,
+.running-duration-grid button.recommended span { color: #20533d; }
 .running-adaptive-plan,
 .running-warmup-gps,
 .running-checkpoint-strip { display: grid; grid-template-columns: auto 1fr; gap: .7rem; align-items: center; padding: .9rem; border: 1px solid rgba(47,148,108,.25); border-radius: 1rem; background: rgba(47,148,108,.08); }

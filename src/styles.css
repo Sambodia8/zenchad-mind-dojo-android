@@ -1284,7 +1284,10 @@ select:focus {
 }
 
 .button:disabled {
-  opacity: 0.45;
+  opacity: 1;
+  border-style: dashed;
+  filter: saturate(0.5);
+  box-shadow: none;
   cursor: not-allowed;
 }
 
@@ -2529,6 +2532,7 @@ select:focus {
 
 .inventory-list small {
   margin-top: 0.15rem;
+  color: #493c30;
 }
 
 .inventory-list small b {
@@ -2793,7 +2797,10 @@ select:focus {
 }
 
 .round-button:disabled {
-  opacity: 0.3;
+  opacity: 1;
+  border-style: dashed;
+  filter: saturate(0.5);
+  box-shadow: none;
 }
 
 .settings-card {
@@ -3826,7 +3833,7 @@ textarea::placeholder {
 .button.primary {
   border: 1px solid #2f694b;
   color: #fffdf7;
-  background: linear-gradient(180deg, #5aa978, #3d865d);
+  background: linear-gradient(180deg, #34784e, #285d3d);
   box-shadow: 0 8px 17px rgba(48, 103, 73, 0.22), inset 0 1px rgba(255, 255, 255, 0.3);
 }
 
@@ -3976,7 +3983,7 @@ textarea::placeholder {
 .treasure-button {
   border-color: #8f672f;
   color: #fffaf0;
-  background: linear-gradient(180deg, #bd8b41, #95672b);
+  background: linear-gradient(180deg, #805925, #65451d);
   box-shadow: 0 8px 20px rgba(119, 79, 31, 0.22);
 }
 
@@ -4095,7 +4102,7 @@ textarea::placeholder {
 
 .round-button.play {
   color: #fffdf7;
-  background: linear-gradient(180deg, #61ad7c, #3d825b);
+  background: linear-gradient(180deg, #34784e, #285d3d);
   box-shadow: 0 8px 20px rgba(52, 107, 75, 0.25);
 }
 
@@ -4332,14 +4339,14 @@ textarea::placeholder {
   padding: 0.55rem 0.8rem;
   border: 1px solid rgba(89, 72, 50, 0.22);
   border-radius: 1rem 1rem 0.35rem 1rem;
-  color: #5c554c;
-  background: rgba(230, 222, 236, 0.76);
+  color: #f1ebff;
+  background: #40375b;
 }
 
 .guide-choices button.active {
   border-color: var(--green-deep);
   color: #fffdf7;
-  background: var(--green);
+  background: #34784e;
 }
 
 .recommendation-bubble {
@@ -5690,7 +5697,7 @@ textarea::placeholder {
 }
 
 .xp-glyph {
-  color: #8b642d;
+  color: #dbad64;
   font-size: 0.66rem;
   font-weight: 950;
   letter-spacing: -0.04em;
@@ -7110,7 +7117,7 @@ textarea::placeholder {
   padding: 0;
   border: 1px solid currentColor;
   border-radius: 50%;
-  opacity: .2;
+  opacity: 1;
   color: var(--text);
   background: var(--card-bg);
   cursor: pointer;
@@ -7118,8 +7125,8 @@ textarea::placeholder {
 }
 
 .persistent-settings-trigger svg { width: 1.2rem; height: 1.2rem; }
-.persistent-settings-trigger:hover { opacity: .2; }
-.persistent-settings-trigger:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; opacity: .2; }
+.persistent-settings-trigger:hover { opacity: 1; }
+.persistent-settings-trigger:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; opacity: 1; }
 .persistent-experience-hud { flex-wrap: nowrap; }
 .persistent-experience-hud .hud-xp { white-space: nowrap; }
 
