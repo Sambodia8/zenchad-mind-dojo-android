@@ -77,6 +77,16 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
     shopPrice: 65
   },
   {
+    id: "haunted-house-jersey",
+    name: "Haunted House Jersey",
+    description: "A black horror graphic tee with vivid red occult artwork and striped sleeves.",
+    slot: "top",
+    thumbnail: "/assets/status/generated/tops/haunted-house-jersey-v1.png",
+    paperDollLayer: "/assets/status/paper-doll/layers/top/haunted-house-jersey-v1-canonical.png",
+    paperDollRole: "top",
+    shopPrice: 65
+  },
+  {
     id: "fitness-watch",
     name: "Fitness Watch",
     description: "The original black training watch with a green pulse display.",
