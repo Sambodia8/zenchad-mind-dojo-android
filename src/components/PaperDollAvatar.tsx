@@ -7,7 +7,9 @@ import type { EquippedCosmetics } from "../types";
 export const PAPER_DOLL_FITS: Record<string, { clip?: string; transform?: string }> = {
   // These three styles use one replacement-head group: the exact canonical face
   // and neck, plus a hairstyle fitted to that identity rather than the bald base.
-  "porter-robinson-nurture-hair": { transform: "translate(0 -22)" },
+  // The visible centre part in the supplied blond layer sits 28 source pixels
+  // right of the canonical face centre. Fit the artwork, not its 1086px canvas.
+  "porter-robinson-nurture-hair": { transform: "translate(-28 -22)" },
   "noodle-dare-hair": { transform: "translate(544 204) scale(0.72) translate(-552 -228)" },
   "silver-lilac-tousled-hair": { transform: "translate(544 207) scale(0.82) translate(-544 -234)" },
   "cream-meditation-jacket": {

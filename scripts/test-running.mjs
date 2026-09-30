@@ -183,7 +183,9 @@ assert.ok(sunset instanceof Date && sunset.getUTCHours() >= 16 && sunset.getUTCH
 assert.equal(runningHype.sunsetForLocation(89, 0, new Date(2026, 5, 21)), null, "polar sunset estimates outside the supported latitude range are explicitly unknown");
 assert.match(runningScreenSource, /I have these already/, "the list has a one-tap user-confirmed ready action");
 assert.match(runningScreenSource, /homePrepDone: true/, "home and car logistics can be completed before travel");
-assert.match(runningScreenSource, /startTrailheadDynamicWarmup/, "dynamic warm-up is available at the selected start point");
+assert.match(runningScreenSource, /if \(view === "prep" && session && currentPrep\)[\s\S]*One thing at a time[\s\S]*Start guided stretches/, "run preparation shows one rewarded step at a time and leads into guided stretches");
+assert.match(runningScreenSource, /if \(view === "packing" && session\)/, "the equipment checklist remains available as an optional separate view");
+assert.doesNotMatch(runningScreenSource, /startTrailheadDynamicWarmup|beginTrailheadWarmup/, "optional packing must not bypass the rewarded preparation steps");
 assert.match(runningScreenSource, /Yuna’s usual dinner is around 18:00/, "the companion-specific dinner reminder is conditional and approximate");
 const browserStoryRuntime = source("src/runningStoryRuntime.ts");
 assert.match(browserStoryRuntime, /state\.heardChapterIds\.includes\("contact"\) && completionRatio >= 0\.33/, "browser Story progression waits for heard Contact narration");

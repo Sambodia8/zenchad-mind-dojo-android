@@ -26,3 +26,5 @@ When the user asks to “rebuild the APK”, “build me a new APK”, or equiva
 - Use a 412 x 915 CSS-pixel viewport for Android UI checks and screenshots. This matches the Pixel-sized layout reference in `design-qa.md`.
 - Prefer one focused pass through each state transition. Do not replay full timed routines when a control/state transition can be verified directly.
 - Capture only the key evidence screens requested by the task.
+- Before shipping changed UI, verify real rendered text contrast on buttons, cards, inputs, badges and selected/disabled states at 412 x 915 in light and dark themes. Require at least 4.5:1 for normal text and 3:1 for large text; disabled labels must remain plainly readable. Fix any pale-on-pale or dark-on-dark result.
+- Before each APK build, confirm this canonical checkout's commit/status, latest release and highest version code. Bump both version fields, sync current assets, verify the final APK's package/version/signature and relevant assets, then record the release size and reason for any large size change. Do not infer missing features from APK size alone.

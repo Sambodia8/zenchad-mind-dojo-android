@@ -1,3 +1,14 @@
+# Zen Chad 2.20 — step-by-step run preparation and readability (2026-09-30)
+
+- Restored the seven-step rewarded Quick/Story run preparation, including the guided Before Running stretches. Equipment and travel planning remains available separately and cannot bypass the steps by accident.
+- Replaced the overwhelming Hype List introduction with an optional equipment checklist, corrected its pale button/input contrast in both themes, and fixed the preparation heading and timer contrast.
+- Aligned the visible centre part of the Porter Robinson blond hair with the canonical Status face.
+- Confirmed the single Android release line: 2.5's larger APK included 203.76 MB of narration; 2.6 re-encoded that narration to 77.70 MB while retaining and extending NSDR. This release builds on the newer 2.19 source tree.
+- Version code 31; version name 2.20; shareable APK: `ZenChad-2.20-Run-Prep-Readability.apk`.
+- Running, Yoga and Shop checks passed; the browser walked through all six preparation actions into guided stretches at 412 x 915. Both themes were inspected for readable controls. TypeScript/Vite build, Capacitor sync and Gradle debug assembly passed.
+- APK package `com.zenchad.minddojo` is signed with the same certificate as 2.19; v1/v2 signature verification passed. All five packaged NSDR narrations and the latest Supine Twist artwork match 2.19 byte-for-byte. No Android device was connected for installation.
+- Size: 407,804,007 bytes; SHA-256: `54F7284A5A7E03767A7DC18DAC7027CC053900C4BEDAE649B60BF64958A5B9CA`. Most of the roughly 3.8 MB increase over 2.19 comes from the Haunted House Jersey assets added to the current source tree after that release; the NSDR tracks did not change. Local and Drive release copies have matching hashes.
+
 # Zen Chad 2.19 — Supine Twist anatomy correction (2026-09-27)
 
 - Reworked the Supine Twist from a clear reference pose: torso and pelvis rotate as one, the bent knee crosses the midline, and both shoulders remain grounded. The hip-to-thigh connection is visible and continuous.

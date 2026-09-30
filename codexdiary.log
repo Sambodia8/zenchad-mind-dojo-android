@@ -297,3 +297,8 @@
 - Decision/change: Replaced the twist card illustration using a looked-up pose reference and a clearer elevated view, with one continuous leg-to-hip connection, the bent knee across midline, and shoulders grounded.
 - Verification: TypeScript/Vite and Capacitor sync, JDK 21 Gradle assembly, package/version metadata, APK v1/v2 signatures, and packaged Supine Twist asset hash passed. Local and Drive copies match at 403,982,233 bytes; SHA-256 `A73AB5C5BE2868DAF772307E37AC4EC5363C22FABF48BC4278478FE8EAF74BD4`. No connected-device check.
 - Release: Android 2.19/code 30, `ZenChad-2.19-Supine-Twist-Anatomy-Fix.apk`.
+
+2026-09-30 - Zen Chad 2.20 restores run preparation and readability
+- Decision/change: The 2.15 equipment checklist had replaced the rewarded run-preparation screen, leaving the existing seven-step state and stretch handoff unreachable. Restored one step per screen, kept equipment/travel planning optional, fixed both-theme contrast on the affected controls, and aligned the Porter blond hair to the canonical face.
+- Release lineage: Built from the sole current Android tree after 2.19/code 30. The 2.5-to-2.6 APK size reduction came from narration re-encoding, not a separate meditation branch. Next version is 2.20/code 31.
+- Verification: Focused Running, Yoga, Shop checks; TypeScript/Vite; 412 x 915 browser walkthrough through the guided stretch entry; light/dark readability inspection; Capacitor sync and Gradle debug assembly. APK 2.20/code 31 has the same signing certificate as 2.19, five byte-identical NSDR tracks and the same corrected Supine Twist artwork. Local release: 407,804,007 bytes, SHA-256 `54F7284A5A7E03767A7DC18DAC7027CC053900C4BEDAE649B60BF64958A5B9CA`. No connected Android device.
