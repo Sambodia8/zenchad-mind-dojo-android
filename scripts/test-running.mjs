@@ -78,9 +78,11 @@ const running = loadTsModule("src/running.ts", {
 // Preparation is ordered, time-aware, resumable, and advances without duplicate awards.
 assert.deepEqual(
   running.RUN_PREP_STEPS.map((step) => step.id),
-  ["phone", "headphones", "clothes", "water", "shoes", "outside", "stretches"]
+  ["phone", "headphones", "clothes", "shirt", "socks", "water", "shoes", "outside", "stretches"]
 );
-assert.match(running.RUN_PREP_STEPS[2].instruction, /Don't forget socks\./);
+assert.match(running.RUN_PREP_STEPS[2].instruction, /shorts/i);
+assert.match(running.RUN_PREP_STEPS[3].instruction, /T-shirt/i);
+assert.match(running.RUN_PREP_STEPS[4].instruction, /socks/i);
 assert.match(
   running.prepStepInstruction(running.RUN_PREP_STEPS[0], new Date(2026, 7, 20, 21, 0)),
   /torch/i
@@ -149,7 +151,16 @@ assert.equal(recoveredSession?.points[0].distanceFromStart, 0);
 assert.deepEqual(recoveredSession?.companionIds, ["katie", "yuna"], "known companion tags survive resume in catalogue order");
 assert.equal(recoveredSession?.storyMissionId, null);
 assert.deepEqual(recoveredSession?.storyHeardChapterIds, [], "Just Run recovery drops stale Story chapter receipts");
-assert.equal(recoveredSession?.version, 5, "resumed sessions migrate to the companion-tagging schema");
+assert.equal(recoveredSession?.version, 6, "resumed sessions migrate to the itemised preparation schema");
+assert.ok(running.RUN_COMPANIONS.some((companion) => companion.id === "runkeeper"), "Runkeeper appears in the dedicated companion choice");
+localStorage.setItem("zenchad_running_session_v1", JSON.stringify({
+  ...running.createRunSession("quick", 20, prepStart),
+  version: 5,
+  stage: "prep",
+  prepStepIndex: 3,
+  prepAwards: { phone: 2, headphones: 2, clothes: 4 }
+}));
+assert.equal(running.RUN_PREP_STEPS[running.loadRunSession()?.prepStepIndex ?? -1]?.id, "water", "an unfinished older run resumes at the same task after new clothing steps are inserted");
 const freshJustRun = running.createRunSession("just", 30, prepStart);
 assert.equal(freshJustRun.storyMissionId, null);
 assert.deepEqual(freshJustRun.storyHeardChapterIds, []);
@@ -172,21 +183,26 @@ let hype = runningHype.createRunHypeChecklist("hype-run-1");
 hype.statusByItem.towel = "ready";
 hype.statusByItem.water = "not-needed";
 hype.homePrepDone = true;
+hype.phase = "packing";
+hype.packingIndex = 2;
 hype.travelMinutes = 35;
 runningHype.saveRunHypeChecklist(hype);
 assert.equal(runningHype.loadRunHypeChecklist("hype-run-1").travelMinutes, 35, "interrupted prep restores journey planning");
+assert.equal(runningHype.loadRunHypeChecklist("hype-run-1").packingIndex, 2, "interrupted packing resumes at one item rather than reopening the whole list");
 const nextHype = runningHype.createRunHypeChecklist("hype-run-2");
+assert.equal(nextHype.phase, "companions", "each new run begins with its companion choice");
 assert.equal(nextHype.statusByItem.towel, "outstanding", "packed status does not imply an item was packed for the next run");
 assert.equal(nextHype.statusByItem.water, "not-needed", "a personal not-needed choice may be remembered without claiming an item was packed");
 const sunset = runningHype.sunsetForLocation(51.5, -0.1, new Date(2026, 8, 24, 12));
 assert.ok(sunset instanceof Date && sunset.getUTCHours() >= 16 && sunset.getUTCHours() <= 19, "GPS-based sunset is calculated for the planned location and date");
 assert.equal(runningHype.sunsetForLocation(89, 0, new Date(2026, 5, 21)), null, "polar sunset estimates outside the supported latitude range are explicitly unknown");
-assert.match(runningScreenSource, /I have these already/, "the list has a one-tap user-confirmed ready action");
-assert.match(runningScreenSource, /homePrepDone: true/, "home and car logistics can be completed before travel");
+assert.match(runningScreenSource, /Packed \/ ready/, "each gear item can be confirmed separately");
+assert.match(runningScreenSource, /homePrepDone: done/, "home and car logistics can be completed before travel");
 assert.match(runningScreenSource, /if \(view === "prep" && session && currentPrep\)[\s\S]*One thing at a time[\s\S]*Start guided stretches/, "run preparation shows one rewarded step at a time and leads into guided stretches");
-assert.match(runningScreenSource, /if \(view === "packing" && session\)/, "the equipment checklist remains available as an optional separate view");
+assert.match(runningScreenSource, /if \(view === "companions" && session\)/, "companion choice has its own screen");
+assert.match(runningScreenSource, /if \(view === "packing" && session\)/, "equipment advances one item at a time");
 assert.doesNotMatch(runningScreenSource, /startTrailheadDynamicWarmup|beginTrailheadWarmup/, "optional packing must not bypass the rewarded preparation steps");
-assert.match(runningScreenSource, /Yuna’s usual dinner is around 18:00/, "the companion-specific dinner reminder is conditional and approximate");
+assert.match(runningScreenSource, /Yuna’s dinner is usually around 18:00/, "the companion-specific dinner reminder is conditional and approximate");
 const browserStoryRuntime = source("src/runningStoryRuntime.ts");
 assert.match(browserStoryRuntime, /state\.heardChapterIds\.includes\("contact"\) && completionRatio >= 0\.33/, "browser Story progression waits for heard Contact narration");
 assert.match(browserStoryRuntime, /state\.heardChapterIds\.includes\("pursuit"\) && completionRatio >= 0\.64/, "browser Story progression waits for heard Pursuit narration");

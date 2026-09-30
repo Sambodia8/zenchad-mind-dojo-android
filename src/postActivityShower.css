@@ -78,7 +78,8 @@
 
 .post-activity-shower-choice:disabled:not(.selected),
 .post-activity-shower-skip:disabled:not(.selected) {
-  opacity: 0.48;
+  border-style: dashed;
+  opacity: 1;
 }
 
 .post-activity-shower-host {
@@ -124,21 +125,30 @@
   color: #f8fafc;
   background: linear-gradient(150deg, #18223a, #0d1428);
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 .post-activity-shower-deferred .eyebrow { color: #b9b1ff; }
-.post-activity-shower-deferred h2 { margin: 0; color: #fff; font-size: clamp(1.4rem, 6vw, 1.8rem); }
-.post-activity-shower-deferred p { margin: 0; color: #d5d9e8; line-height: 1.45; }
+.post-activity-shower-deferred h2 { margin: 0; color: #fff; font-family: inherit; font-size: clamp(1.4rem, 6vw, 1.8rem); letter-spacing: 0; line-height: 1.25; text-transform: none; }
+.post-activity-shower-deferred p { margin: 0; color: #d5d9e8; font-size: 1rem; line-height: 1.45; }
+.post-activity-shower-deferred .post-activity-shower-grid { grid-template-columns: 1fr; }
 .post-activity-shower-deferred button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .8rem;
   min-height: 3.6rem;
+  padding: .75rem 1rem;
   border: 1px solid rgba(190, 198, 224, 0.35);
   border-radius: 1rem;
   color: #f8fafc;
   background: #27334d;
   font: inherit;
+  font-size: 1rem;
   font-weight: 850;
+  text-transform: none;
 }
-.post-activity-shower-deferred button small { color: #c7d2fe; font-size: 0.82rem; }
+.post-activity-shower-deferred button small { flex: 0 0 auto; color: #d9dfff; font-size: 0.9rem; }
 .post-activity-shower-deferred-skip { min-height: 3rem !important; color: #d5d9e8 !important; background: transparent !important; }
 
 @media (prefers-reduced-motion: reduce) {

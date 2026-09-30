@@ -23,6 +23,8 @@ export interface RunHypeItem {
 
 export interface RunHypeChecklist {
   sessionId: string;
+  phase: "companions" | "packing" | "travel" | "prep";
+  packingIndex: number;
   statusByItem: Record<string, RunHypeStatus>;
   atTrailhead: boolean;
   homePrepDone: boolean;
@@ -137,7 +139,7 @@ export function createRunHypeChecklist(sessionId: string): RunHypeChecklist {
     item.id,
     last?.statusByItem[item.id] === "not-needed" ? "not-needed" : "outstanding"
   ])) as Record<string, RunHypeStatus>;
-  return { sessionId, statusByItem, atTrailhead: false, homePrepDone: false, travelMinutes: 0, woodedRoute: false, darknessBufferMinutes: 30 };
+  return { sessionId, phase: "companions", packingIndex: 0, statusByItem, atTrailhead: false, homePrepDone: false, travelMinutes: 0, woodedRoute: false, darknessBufferMinutes: 30 };
 }
 
 export function loadRunHypeChecklist(sessionId?: string): RunHypeChecklist | null {
@@ -149,6 +151,8 @@ export function loadRunHypeChecklist(sessionId?: string): RunHypeChecklist | nul
       : {};
     return {
       sessionId: value.sessionId,
+      phase: ["companions", "packing", "travel", "prep"].includes(value.phase) ? value.phase : "prep",
+      packingIndex: Number.isFinite(value.packingIndex) ? Math.max(0, Math.floor(value.packingIndex)) : 0,
       statusByItem,
       atTrailhead: value.atTrailhead === true,
       homePrepDone: value.homePrepDone === true,

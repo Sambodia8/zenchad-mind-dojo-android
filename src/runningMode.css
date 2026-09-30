@@ -161,6 +161,41 @@ html.running-live-mode .bike-resume-banner { display: none !important; }
 .running-prep-steps .button,
 .running-packing .button { font-family: inherit; text-transform: none; }
 .running-mode.running-prep-steps .button.primary { border-color: #22573b; background: #277048; color: #ffffff; }
+.running-companions-step .running-prep-card,
+.running-packing-step .running-prep-card,
+.running-travel-step .running-prep-card { justify-content: flex-start; gap: .7rem; }
+.running-companions-step .running-prep-card { padding: 1rem; gap: .35rem; }
+.running-companions-step .running-prep-icon { width: 3rem; height: 3rem; margin-bottom: 0; }
+.running-companions-step .running-prep-card h1 { margin: .1rem 0; font-size: clamp(1.7rem, 7vw, 2.1rem); }
+.running-companions-step .running-prep-card > p { margin: .1rem 0 .35rem; font-size: .94rem; line-height: 1.4; }
+.running-companions-step .running-companion-picker { padding: .55rem; gap: .35rem; background: #11231e; }
+.running-companions-step .running-companion-heading strong { color: #f1faf4; }
+.running-companions-step .running-companion-heading small { color: #d6e8dd; }
+.running-companions-step .running-companion-options { grid-template-columns: 1fr; gap: .3rem; }
+.running-companions-step .running-companion-options button { min-height: 52px; padding: .4rem .7rem; border-color: #4a6a59; color: #f1faf4; background: #1b3027; }
+.running-companions-step .running-companion-options button strong { color: #f1faf4; font-size: 1.08rem; }
+.running-companions-step .running-companion-options button small { color: #d6e8dd; font-size: .84rem; }
+.running-companions-step .running-companion-options button.selected { border-color: #226544; color: #173b2a; background: #e0f3e7; }
+.running-companions-step .running-companion-options button.selected strong { color: #173b2a; }
+.running-companions-step .running-companion-options button.selected small { color: #315543; }
+.running-companion-tip { margin: .3rem 0; padding: .7rem .8rem; border: 1px solid #638a75; border-radius: .8rem; color: #eefaf2; background: #193729; font-size: .92rem; line-height: 1.4; }
+.running-gear-actions { display: grid; gap: .6rem; width: 100%; }
+.running-packing-step .running-hype-customize { margin-top: .6rem; }
+.running-packing-step .running-hype-customize summary,
+.running-gear-add summary,
+.running-coach-optional summary { min-height: 44px; padding: .65rem 0; color: #e8f5ec; font-size: .94rem; font-weight: 800; cursor: pointer; }
+.running-packing-step .running-hype-customize label { color: #e8f5ec; }
+.running-gear-add,
+.running-coach-optional { padding: .2rem .85rem; border: 1px solid #3d6250; border-radius: .9rem; background: #14281f; }
+.running-gear-add .running-hype-add { margin: .25rem 0 .8rem; }
+.running-travel-step .running-prep-card label { display: grid; gap: .3rem; color: #e8f5ec; font-size: .92rem; font-weight: 800; }
+.running-travel-step .running-prep-card label.running-hype-wooded { display: flex; align-items: center; gap: .55rem; }
+.running-travel-step .running-prep-card input[type="number"] { min-height: 48px; padding: .6rem; border: 1px solid #70917d; border-radius: .65rem; color: #153627; background: #f7fff9; font: inherit; }
+.running-travel-step .running-prep-card input[type="checkbox"] { width: 22px; height: 22px; accent-color: #28784d; }
+.running-travel-step .running-circuit-picker { margin-bottom: .7rem; }
+.running-travel-step .running-circuit-options button strong,
+.running-travel-step .running-circuit-options button.selected strong { color: #effff6; }
+.running-travel-step .running-circuit-options button small { color: #d1e1d8; }
 :root[data-appearance="light"] .running-prep-steps .running-progress-row strong { color: #1c6847; }
 .running-packing-link { align-self: center; min-height: 44px; padding: .55rem .8rem; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: .9rem; text-decoration: underline; text-underline-offset: .2em; cursor: pointer; }
 .running-mode.running-packing .running-hype-intro { background: #10211d; color: #ffffff; }

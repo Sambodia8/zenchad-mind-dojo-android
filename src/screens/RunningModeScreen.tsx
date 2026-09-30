@@ -20,8 +20,6 @@ import {
   Medal,
   Navigation,
   Plus,
-  ArrowUp,
-  ArrowDown,
   RotateCcw,
   ShoppingBag,
   Sparkles,
@@ -32,6 +30,7 @@ import {
 } from "lucide-react";
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -107,6 +106,7 @@ import { needsRunPlaceName, resolveRunPlaceName } from "../runningPlace";
 import { cancelRunningReminder, isNativeAndroid, scheduleRunningReminder } from "../native";
 import { startNativeRunningTracker } from "../runningNative";
 import { playUiSfx } from "../uiSfx";
+import { queueRunShowerFollowUp } from "../postActivityShowerRuntime";
 import { awardStrengthProgress } from "../progression";
 import { awardZenPoints } from "../zenPoints";
 import type { AppData, Route } from "../types";
@@ -123,7 +123,6 @@ import { speakStoryLine } from "../runningStorySpeech";
 import { createCelebrationParticles } from "../celebrationParticles";
 import {
   createRunHypeChecklist,
-  hypeStatusLabel,
   loadRunHypeChecklist,
   loadRunHypeEquipment,
   loadRunDebriefs,
@@ -161,8 +160,11 @@ type RunningView =
   | "just-choice"
   | "duration"
   | "briefing"
+  | "companions"
   | "prep"
   | "packing"
+  | "travel"
+  | "rescue"
   | "warmup"
   | "active"
   | "summary"
@@ -172,6 +174,7 @@ type RunningView =
   | "progress";
 
 const DURATIONS = [20, 30, 45, 60];
+const PREP_EQUIPMENT_IDS = new Set(["phone", "headphones", "clothes", "water", "shoes"]);
 
 const STORE_ITEMS = [
   { id: "runner-red", name: "Signal Red runner jacket", price: 350, note: "Cosmetic prototype" },
@@ -183,7 +186,7 @@ const STORE_ITEMS = [
 const initialViewFor = (session: RunSession | null): RunningView => {
   if (!session) return "hub";
   if (session.stage === "briefing") return "briefing";
-  if (session.stage === "prep") return "prep";
+  if (session.stage === "prep") return loadRunHypeChecklist(session.id)?.phase ?? "prep";
   if (session.stage === "warmup") return "warmup";
   if (session.stage === "active") return "active";
   return "summary";
@@ -527,6 +530,13 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
   const finishingRun = useRef(false);
   const placeNameAttempts = useRef(new Set<string>());
   const processedDistanceRewardIds = useRef(new Set(Object.keys(restored.current?.distanceZenPointAwards ?? {})));
+
+  useLayoutEffect(() => {
+    if (!["companions", "packing", "travel", "rescue", "prep", "summary"].includes(view)) return;
+    window.scrollTo(0, 0);
+    const main = document.querySelector<HTMLElement>(".main-content");
+    if (main) main.scrollTop = 0;
+  }, [view, hypeChecklist?.packingIndex, session?.prepStepIndex]);
 
   const setSavedSession = (next: RunSession | null) => {
     saveRunSession(next);
@@ -892,7 +902,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
     setHypeChecklist(checklist);
     setNow(Date.now());
     setResumePrepChoice(false);
-    setView("prep");
+    setView(checklist.phase);
   };
 
   const openBeforeRunningRoutine = () => {
@@ -916,11 +926,12 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
     if (!current || current.stage !== "prep") return;
     const next = restartRunPreparation(current);
     setSavedSession(next);
-    const checklist = createRunHypeChecklist(current.id);
+    const checklist = createRunHypeChecklist(next.id);
     saveRunHypeChecklist(checklist);
     setHypeChecklist(checklist);
     setNow(Date.now());
     setResumePrepChoice(false);
+    setView("companions");
     showToast("NEW PREP · STEP 1");
   };
 
@@ -982,23 +993,63 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
     setHypeChecklist(next);
   };
 
-  const setHypeItemStatus = (itemId: string, status: RunHypeStatus) => {
-    if (!hypeChecklist || !session || hypeChecklist.sessionId !== session.id) return;
-    saveHype({ ...hypeChecklist, statusByItem: { ...hypeChecklist.statusByItem, [itemId]: status } });
-    if (status === "ready" && itemId.includes("torch")) {
-      const nextItems = hypeItems.map((item) => item.id === itemId ? { ...item, lastCheckedAt: Date.now() } : item);
+  const showPrepPhase = (phase: RunHypeChecklist["phase"]) => {
+    if (!session) return;
+    const current = loadRunHypeChecklist(session.id) ?? createRunHypeChecklist(session.id);
+    const count = hypeItems.filter((item) => !PREP_EQUIPMENT_IDS.has(item.id) && (item.id !== "yuna-torch" || session.companionIds.includes("yuna"))).length;
+    saveHype({ ...current, phase, packingIndex: phase === "packing" && current.packingIndex >= count ? 0 : current.packingIndex });
+    setView(phase);
+  };
+
+  const awardPrepDecision = (key: string, xp: number) => {
+    if (xp <= 0) return;
+    const current = loadRunSession();
+    if (!current || current.stage !== "prep" || current.prepAwards[key] !== undefined) return;
+    setSavedSession({
+      ...current,
+      prepAwards: { ...current.prepAwards, [key]: xp },
+      prepXp: current.prepXp + xp
+    });
+    setData((currentData) => ({ ...currentData, stats: addRunningXp(currentData.stats, xp) }));
+    navigator.vibrate?.([28, 35, 80]);
+    if (data.preferences.uiSoundsEnabled) playUiSfx("xpGain");
+    showToast(`STEP COMPLETE · +${xp} XP`);
+  };
+
+  const finishCompanionStep = () => {
+    if (!session) return;
+    awardPrepDecision("companions", 2);
+    const hasEquipment = hypeItems.some((item) => !PREP_EQUIPMENT_IDS.has(item.id) && (item.id !== "yuna-torch" || session.companionIds.includes("yuna")));
+    showPrepPhase(hasEquipment ? "packing" : "travel");
+  };
+
+  const completeGearStep = (item: RunHypeItem, index: number, count: number, status: RunHypeStatus) => {
+    if (!session) return;
+    const current = loadRunHypeChecklist(session.id) ?? createRunHypeChecklist(session.id);
+    if (current.phase !== "packing" || current.packingIndex !== index) return;
+    const nextIndex = index + 1;
+    saveHype({
+      ...current,
+      phase: nextIndex >= count ? "travel" : "packing",
+      packingIndex: nextIndex,
+      statusByItem: { ...current.statusByItem, [item.id]: status }
+    });
+    if (status === "ready" && item.id.includes("torch")) {
+      const nextItems = hypeItems.map((candidate) => candidate.id === item.id ? { ...candidate, lastCheckedAt: Date.now() } : candidate);
       saveRunHypeEquipment(nextItems);
       setHypeItems(nextItems);
     }
+    if (status !== "outstanding") awardPrepDecision(`gear:${item.id}`, 2);
+    else showToast(`${item.label.toUpperCase()} · LEFT FOR LATER`);
+    if (nextIndex >= count) setView("travel");
   };
 
-  const reorderHypeItem = (index: number, direction: -1 | 1) => {
-    const target = index + direction;
-    if (target < 0 || target >= hypeItems.length) return;
-    const next = [...hypeItems];
-    [next[index], next[target]] = [next[target], next[index]];
-    saveRunHypeEquipment(next);
-    setHypeItems(next);
+  const finishTravelStep = (done: boolean) => {
+    if (!session) return;
+    const current = loadRunHypeChecklist(session.id) ?? createRunHypeChecklist(session.id);
+    saveHype({ ...current, phase: "prep", homePrepDone: done });
+    if (done) awardPrepDecision("travel", 2);
+    setView("prep");
   };
 
   const updateHypeItem = (itemId: string, update: Partial<RunHypeItem>) => {
@@ -1171,6 +1222,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
         progression: awardStrengthProgress(currentData.progression, durationSeconds)
       }, dailyZenPoints));
       setSavedProfile(nextProfile);
+      queueRunShowerFollowUp(current.id, endedAt);
       void refreshZenCoachNotification();
       setSavedSession(nextSession);
       if (acceptedCoachPlan) saveAcceptedZenCoachPlan(null);
@@ -1517,7 +1569,26 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           <button className="button secondary full running-prep-skip" onClick={skipPrepStep}>Skip this step</button>
           <button className="button ghost full running-prep-skip-all" onClick={skipAllPrep}>Skip remaining preparation</button>
         </section>
-        <button type="button" className="running-packing-link" onClick={() => setView("packing")}>Equipment and travel details (optional)</button>
+        <button type="button" className="running-packing-link" onClick={() => showPrepPhase("packing")}>Review packing one item at a time</button>
+        {toast ? <div className="running-toast">{toast}</div> : null}
+      </div>
+    );
+  }
+
+  if (view === "companions" && session) {
+    return (
+      <div className="screen-stack running-mode running-prep running-prep-steps running-companions-step">
+        <section className="running-prep-card">
+          <span className="running-prep-icon"><UsersRound /></span>
+          <span className="eyebrow">First, who is coming?</span>
+          <h1>Who is running with you?</h1>
+          <p>Choose everyone who is joining. Going solo counts too. This choice makes the next steps relevant to your run.</p>
+          <RunCompanionPicker companionIds={session.companionIds} onChange={updateActiveRunCompanions} />
+          {session.companionIds.includes("yuna") ? <p className="running-companion-tip">Yuna’s torch and dinner timing will appear in your preparation.</p> : null}
+          {session.companionIds.includes("runkeeper") ? <p className="running-companion-tip">Start Runkeeper separately when you reach the start point. ZenChad cannot control or sync it.</p> : null}
+          {session.companionIds.some((id) => id === "katie" || id === "hana" || id === "rtr") ? <p className="running-companion-tip">Check the meeting point and timing with your running people before leaving.</p> : null}
+          <button className="button primary full" onClick={finishCompanionStep}>{session.companionIds.length ? "Companions set" : "I'm going solo"}{session.prepAwards.companions === undefined ? " · +2 XP" : ""} <ArrowRight /></button>
+        </section>
         {toast ? <div className="running-toast">{toast}</div> : null}
       </div>
     );
@@ -1525,67 +1596,68 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
 
   if (view === "packing" && session) {
     const checklist = hypeChecklist?.sessionId === session.id ? hypeChecklist : createRunHypeChecklist(session.id);
-    const visibleItems = hypeItems.filter((item) => item.id !== "yuna-torch" || session.companionIds.includes("yuna"));
+    const visibleItems = hypeItems.filter((item) => !PREP_EQUIPMENT_IDS.has(item.id) && (item.id !== "yuna-torch" || session.companionIds.includes("yuna")));
+    const index = checklist.packingIndex;
+    const item = visibleItems[index];
+    return (
+      <div className="screen-stack running-mode running-prep running-prep-steps running-packing-step">
+        <button className="running-inline-back" onClick={() => index > 0 ? saveHype({ ...checklist, packingIndex: index - 1 }) : showPrepPhase("companions")}>← {index > 0 ? "Previous item" : "Companions"}</button>
+        {item ? <>
+          <div className="running-progress-row"><span>PACKING {index + 1}/{visibleItems.length}</span><strong>+{session.prepXp} XP earned</strong></div>
+          <div className="running-progress-track" aria-hidden="true"><span style={{ width: `${(index / visibleItems.length) * 100}%` }} /></div>
+          <section className="running-prep-card">
+            <span className="running-prep-icon"><ListChecks /></span>
+            <span className="eyebrow">One item at a time</span>
+            <h1>{item.label}</h1>
+            <p>{item.note || "Check this item before you move on."}</p>
+            {item.id.includes("torch") ? <p className="running-companion-tip">Check its charge yourself today. ZenChad cannot read a torch battery.</p> : null}
+            {item.id.includes("torch") && item.carStored && (!item.lastCheckedAt || now - item.lastCheckedAt > 30 * 24 * 60 * 60_000) ? <p className="running-hype-charge-due">The torch kept in your car is due for a manual charge check.</p> : null}
+            <div className="running-gear-actions" role="group" aria-label={`${item.label} status`}>
+              <button className="button primary full" onClick={() => completeGearStep(item, index, visibleItems.length, "ready")}>Packed / ready{session.prepAwards[`gear:${item.id}`] === undefined ? " · +2 XP" : ""} <ArrowRight /></button>
+              <button className="button secondary full" onClick={() => completeGearStep(item, index, visibleItems.length, "not-needed")}>Not needed today{session.prepAwards[`gear:${item.id}`] === undefined ? " · +2 XP" : ""}</button>
+              <button className="button ghost full" onClick={() => completeGearStep(item, index, visibleItems.length, "outstanding")}>Deal with it later</button>
+            </div>
+            <details className="running-hype-customize"><summary>Note or storage for this item</summary><label><input type="checkbox" checked={item.carStored} onChange={(event) => updateHypeItem(item.id, { carStored: event.target.checked })} /> Usually kept in car</label><input aria-label={`${item.label} personal note`} maxLength={140} placeholder="Optional personal note" value={item.note} onChange={(event) => updateHypeItem(item.id, { note: event.target.value })} /></details>
+          </section>
+        </> : <section className="running-prep-card"><CheckCircle2 /><h1>Packing done</h1><button className="button primary full" onClick={() => showPrepPhase("travel")}>Continue to travel <ArrowRight /></button></section>}
+        <details className="running-gear-add"><summary>Add your own equipment</summary><form className="running-hype-add" onSubmit={(event) => { event.preventDefault(); addHypeItem(); }}><input aria-label="Add equipment" maxLength={60} placeholder="Name one item" value={newHypeItem} onChange={(event) => setNewHypeItem(event.target.value)} /><button type="submit"><Plus /> Add</button></form></details>
+        {toast ? <div className="running-toast">{toast}</div> : null}
+      </div>
+    );
+  }
+
+  if (view === "travel" && session) {
+    const checklist = hypeChecklist?.sessionId === session.id ? hypeChecklist : createRunHypeChecklist(session.id);
     const estimatedFinish = now + (checklist.travelMinutes + session.plannedMinutes) * 60_000;
     const teatime = new Date(now);
     teatime.setHours(18, 0, 0, 0);
     const yunaSelected = session.companionIds.includes("yuna");
-    const yunaReminder = yunaSelected && now <= teatime.getTime() && estimatedFinish >= teatime.getTime();
-    const allReady = () => {
-      const next = { ...checklist, statusByItem: Object.fromEntries(visibleItems.map((item) => [item.id, item.id.includes("torch") ? checklist.statusByItem[item.id] ?? "outstanding" : "ready"])) as Record<string, RunHypeStatus> };
-      saveHype(next);
-    };
-
     return (
-      <div className="screen-stack running-mode running-packing running-hype-list">
-        <button className="running-inline-back" onClick={() => setView("prep")}>← Back to preparation step {session.prepStepIndex + 1}</button>
-        <section className="running-hype-intro">
-          <span className="running-prep-icon"><ListChecks /></span>
-          <span className="eyebrow">Optional · {runModeLabel(session.mode)}</span>
-          <h1>Equipment checklist</h1>
-          <p>Check anything useful for this run, then return to your preparation step. Your preparation and stretches earn XP as you complete them.</p>
-          <button className="button secondary" onClick={allReady}><CheckCircle2 /> I have these already</button>
-        </section>
-        <RunCompanionPicker companionIds={session.companionIds} onChange={updateActiveRunCompanions} compact />
-        <CircuitCoachSelector style={zenCoachProfile.coachStyle} onChange={updateCoachStyle} compact />
-        <section className="running-hype-items" aria-label="Run equipment checklist">
-          {visibleItems.map((item, index) => {
-            const status = checklist.statusByItem[item.id] ?? "outstanding";
-            return <article className={`running-hype-item ${item.id === "towel" ? "essential" : ""}`} key={item.id}>
-              <div className="running-hype-item-heading"><span><strong>{item.label}</strong>{item.id === "towel" ? <b>PERSONAL ESSENTIAL</b> : null}</span><div className="running-hype-order"><button aria-label={`Move ${item.label} up`} disabled={index === 0} onClick={() => reorderHypeItem(index, -1)}><ArrowUp /></button><button aria-label={`Move ${item.label} down`} disabled={index === visibleItems.length - 1} onClick={() => reorderHypeItem(index, 1)}><ArrowDown /></button></div></div>
-              {item.note ? <small className="running-hype-note">{item.note}</small> : null}
-              {item.id.includes("torch") ? <small className="running-hype-note">The app cannot read battery charge. Packed / ready means you checked it manually today.</small> : null}
-              {item.id.includes("torch") && item.carStored && (!item.lastCheckedAt || now - item.lastCheckedAt > 30 * 24 * 60 * 60_000) ? <small className="running-hype-charge-due">Manual car torch charge check is due. “Kept in car” does not mean charged today.</small> : null}
-              <div className="running-hype-status" role="group" aria-label={`${item.label} status`}>
-                {(["ready", "not-needed", "outstanding"] as RunHypeStatus[]).map((option) => <button type="button" key={option} className={status === option ? "selected" : ""} aria-pressed={status === option} onClick={() => setHypeItemStatus(item.id, option)}>{hypeStatusLabel(option)}</button>)}
-              </div>
-              <details className="running-hype-customize"><summary>Personal note and storage</summary><label><input type="checkbox" checked={item.carStored} onChange={(event) => updateHypeItem(item.id, { carStored: event.target.checked })} /> Usually kept in car</label><input aria-label={`${item.label} personal note`} maxLength={140} placeholder="Optional personal note" value={item.note} onChange={(event) => updateHypeItem(item.id, { note: event.target.value })} /></details>
-            </article>;
-          })}
-        </section>
-        <form className="running-hype-add" onSubmit={(event) => { event.preventDefault(); addHypeItem(); }}>
-          <input aria-label="Add equipment to the Hype List" maxLength={60} placeholder="Add your own equipment" value={newHypeItem} onChange={(event) => setNewHypeItem(event.target.value)} />
-          <button type="submit" aria-label="Add equipment"><Plus /> Add</button>
-        </form>
-        <section className="running-hype-arrival">
-          <span className="eyebrow">Start point</span>
-          <strong>{checklist.homePrepDone ? "Home / car prep saved. Travel when you are ready." : "At home? Sort car and departure logistics before travelling."}</strong>
-          <label><input type="number" min="0" max="240" step="5" value={checklist.travelMinutes} onChange={(event) => saveHype({ ...checklist, travelMinutes: Number(event.target.value) || 0 })} /> Estimated journey minutes</label>
+      <div className="screen-stack running-mode running-prep running-prep-steps running-travel-step">
+        <button className="running-inline-back" onClick={() => showPrepPhase("packing")}>← Packing</button>
+        <section className="running-prep-card">
+          <span className="running-prep-icon"><CarFront /></span>
+          <span className="eyebrow">Next, the journey</span>
+          <h1>Getting to your start point</h1>
+          <p>Sort the journey now. Your clothes, shoes and guided stretches follow as separate steps.</p>
+          <label>Estimated journey minutes<input type="number" min="0" max="240" step="5" value={checklist.travelMinutes} onChange={(event) => saveHype({ ...checklist, travelMinutes: Number(event.target.value) || 0 })} /></label>
           <label className="running-hype-wooded"><input type="checkbox" checked={checklist.woodedRoute} onChange={(event) => saveHype({ ...checklist, woodedRoute: event.target.checked })} /> This route is wooded or poorly lit</label>
           {checklist.woodedRoute ? <label>Earlier darkness buffer (minutes)<input type="number" min="0" max="90" step="5" value={checklist.darknessBufferMinutes} onChange={(event) => saveHype({ ...checklist, darknessBufferMinutes: Number(event.target.value) || 0 })} /></label> : null}
-          {yunaSelected ? <p className="running-context-reminder">Yuna’s usual dinner is around 18:00. Check her feeding plan before setting off.</p> : null}
-          {yunaReminder ? <p className="running-context-reminder">Your journey plus this run may overlap Yuna’s usual dinner. Plan feeding first or choose a shorter outing.</p> : null}
-          <button type="button" className="button secondary full" onClick={() => saveHype({ ...checklist, homePrepDone: true })}>{checklist.homePrepDone ? "Home / car logistics saved" : "Home and car logistics are done — I’m travelling"} <CarFront /></button>
-          <button type="button" className="button primary full" onClick={() => setView("prep")}>Return to step {session.prepStepIndex + 1} <ArrowRight /></button>
-          <small>Guided stretches and the GPS warm-up follow your preparation steps.</small>
+          {yunaSelected ? <p className="running-companion-tip">Yuna’s dinner is usually around 18:00. Check her feeding plan before setting off.</p> : null}
+          {yunaSelected && now <= teatime.getTime() && estimatedFinish >= teatime.getTime() ? <p className="running-companion-tip">Your journey and run may overlap dinner. Plan Yuna’s food first or choose a shorter outing.</p> : null}
+          {session.companionIds.includes("runkeeper") ? <p className="running-companion-tip">Remember to start Runkeeper separately at your start point.</p> : null}
+          <button className="button primary full" onClick={() => finishTravelStep(true)}>Journey sorted{session.prepAwards.travel === undefined ? " · +2 XP" : ""} <ArrowRight /></button>
+          <button className="button secondary full" onClick={() => finishTravelStep(false)}>Skip travel details</button>
         </section>
-        <section className="running-rescue-card" aria-label="Rescue My Workout">
-          <span className="eyebrow">Circumstances changed?</span><h2>Rescue My Workout</h2><p>Keep the prep you have done. This app has no verified live routing, so it will never invent a safe shortcut or a lit alternative.</p>
-          <div><button type="button" onClick={() => rescuePrepPlan("short")}>I only have 20 min</button><button type="button" onClick={() => rescuePrepPlan("dark")}>It’s too dark</button>{yunaSelected ? <button type="button" onClick={() => rescuePrepPlan("yuna")}>Yuna needs to stop</button> : null}<button type="button" onClick={() => rescuePrepPlan("rest")}>Not today</button></div>
-        </section>
+        <details className="running-coach-optional"><summary>Circuit voice (optional)</summary><CircuitCoachSelector style={zenCoachProfile.coachStyle} onChange={updateCoachStyle} /></details>
+        <button className="button ghost full" onClick={() => setView("rescue")}>Plans changed? Rescue this workout</button>
         {toast ? <div className="running-toast">{toast}</div> : null}
       </div>
     );
+  }
+
+  if (view === "rescue" && session) {
+    return <div className="screen-stack running-mode running-prep running-prep-steps"><button className="running-inline-back" onClick={() => setView("travel")}>← Journey</button><section className="running-rescue-card" aria-label="Rescue My Workout"><span className="eyebrow">Circumstances changed?</span><h1>Rescue My Workout</h1><p>Keep the prep you have done. This app has no verified live routing, so it will never invent a safe shortcut or a lit alternative.</p><div><button type="button" onClick={() => rescuePrepPlan("short")}>I only have 20 min</button><button type="button" onClick={() => rescuePrepPlan("dark")}>It’s too dark</button>{session.companionIds.includes("yuna") ? <button type="button" onClick={() => rescuePrepPlan("yuna")}>Yuna needs to stop</button> : null}<button type="button" onClick={() => rescuePrepPlan("rest")}>Not today</button></div></section>{toast ? <div className="running-toast">{toast}</div> : null}</div>;
   }
 
   if (view === "warmup" && session) {
@@ -1674,6 +1746,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           "--round": `${particle.round}px`
         } as CSSProperties} />)}</div>
         <section className="running-summary-hero"><span className="running-summary-check"><Check /></span><span className="eyebrow">{session.mode === "story" ? "Mission complete" : "Run complete"}</span><h1>RUN BANKED!</h1><div className="running-summary-reward-row"><strong>+{totalXp} XP</strong><strong>+{totalZenPoints} ZP</strong></div><p>{session.mode === "just" ? "No directions. No planned route. Every tracked metre still counted." : "You went out and did it. The run and every reward are safely banked."}</p></section>
+        <button className="button primary full running-summary-done" onClick={resetRun}><Check /> Done</button>
         {levelsGained > 0 ? <section className="running-level-up-banner"><Sparkles /><div><span className="eyebrow">Level up{levelsGained > 1 ? ` ×${levelsGained}` : ""}</span><strong>LEVEL {session.completionLevelAfter}</strong><small>New level reached. Keep the momentum moving.</small></div><Trophy /></section> : null}
         <section className="card running-results-card">
           <span className="eyebrow">Here’s how you did</span>
@@ -1699,7 +1772,6 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           <section className="running-insight-section"><div className="section-heading"><div><span className="eyebrow">Kilometre by kilometre</span><h2>Pace laps</h2></div><Clock3 /></div><div className="running-split-list">{record.splits.map((split) => <div key={split.index}><strong>{split.index} km</strong><span>{formatRunClock(split.durationSeconds)}</span><small>{formatRunPace(split.paceSecondsPerKm)}</small></div>)}</div></section>
         ) : null}
           <section className="card running-xp-breakdown"><span><small>Prep + readiness</small><strong>+{session.prepXp} XP</strong></span><span><small>Run + checkpoints</small><strong>+{session.runXp} XP</strong></span><span><small><Coins size={14} /> Distance rewards</small><strong>+{session.distanceZenPoints} ZP</strong></span>{session.firstRunOfDayZenPoints ? <span><small>First run today</small><strong>+{session.firstRunOfDayZenPoints} ZP</strong></span> : null}<span><small><Dices size={14} /> Runner dice</small><strong>+{session.checkpointDice}</strong></span></section>
-        <button className="button primary full" onClick={resetRun}><Check /> Done</button>
         <button className="button ghost full" onClick={() => setView("history")}><History /> Run history</button>
       </div>
     );

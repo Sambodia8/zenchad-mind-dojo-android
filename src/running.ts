@@ -4,7 +4,7 @@ import { STORY_CHAPTER_IDS, type StoryChapterId } from "./runningStoryChapters";
 
 export type RunMode = "quick" | "story" | "just";
 export type RunStage = "briefing" | "prep" | "warmup" | "active" | "complete";
-export type RunCompanionId = "katie" | "hana" | "rtr" | "yuna";
+export type RunCompanionId = "katie" | "hana" | "rtr" | "yuna" | "runkeeper";
 
 export interface RunCompanionDefinition {
   id: RunCompanionId;
@@ -17,7 +17,8 @@ export const RUN_COMPANIONS: readonly RunCompanionDefinition[] = [
   { id: "katie", tag: "@Katie", name: "Katie", detail: "Running buddy" },
   { id: "hana", tag: "@Hana", name: "Hana", detail: "Running buddy" },
   { id: "rtr", tag: "@RTR", name: "Run Talk Run", detail: "Running group" },
-  { id: "yuna", tag: "@Yuna", name: "Yuna", detail: "Pet dog" }
+  { id: "yuna", tag: "@Yuna", name: "Yuna", detail: "Pet dog" },
+  { id: "runkeeper", tag: "Runkeeper", name: "Runkeeper", detail: "Track separately in Runkeeper" }
 ] as const;
 
 const RUN_COMPANION_IDS = new Set<RunCompanionId>(RUN_COMPANIONS.map((companion) => companion.id));
@@ -25,6 +26,8 @@ export type RunPrepStepId =
   | "phone"
   | "headphones"
   | "clothes"
+  | "shirt"
+  | "socks"
   | "water"
   | "stretches"
   | "shoes"
@@ -60,7 +63,7 @@ export interface RunBestEffort {
 }
 
 export interface RunSession {
-  version: 5;
+  version: 6;
   id: string;
   mode: RunMode;
   plannedMinutes: number;
@@ -223,13 +226,35 @@ export const RUN_PREP_STEPS: RunPrepStep[] = [
   },
   {
     id: "clothes",
-    title: "Getting Dressed",
-    instruction: "Get changed into the outfit you actually want to run in. Don't forget socks.",
-    targetSeconds: 4 * 60,
-    graceSeconds: 4 * 60,
-    baseXp: 4,
-    bonusXp: 2,
-    buttonLabel: "Dressed",
+    title: "Running shorts",
+    instruction: "Put on the shorts or bottoms you want to run in. One piece at a time.",
+    targetSeconds: 2 * 60,
+    graceSeconds: 2 * 60,
+    baseXp: 2,
+    bonusXp: 1,
+    buttonLabel: "Shorts on",
+    speedBonus: true
+  },
+  {
+    id: "shirt",
+    title: "Running top",
+    instruction: "Put on your T-shirt or running top. Add a layer if the weather calls for it.",
+    targetSeconds: 2 * 60,
+    graceSeconds: 2 * 60,
+    baseXp: 2,
+    bonusXp: 1,
+    buttonLabel: "Top on",
+    speedBonus: true
+  },
+  {
+    id: "socks",
+    title: "Running socks",
+    instruction: "Put on comfortable socks before your shoes.",
+    targetSeconds: 90,
+    graceSeconds: 90,
+    baseXp: 2,
+    bonusXp: 1,
+    buttonLabel: "Socks on",
     speedBonus: true
   },
   {
@@ -295,7 +320,7 @@ export function createRunSession(
   playerLevelAtStart = levelForXp(playerXpAtStart)
 ): RunSession {
   return {
-    version: 5,
+    version: 6,
     id: `${now}-${Math.random().toString(36).slice(2, 8)}`,
     mode,
     plannedMinutes,
@@ -370,11 +395,13 @@ export function loadRunSession(): RunSession | null {
     return {
       ...defaults,
       ...parsed,
-      version: 5,
+      version: 6,
       plannedMinutes: Math.max(1, finiteNonNegative(parsed.plannedMinutes, 30)),
       createdAt: finiteNonNegative(parsed.createdAt, defaults.createdAt),
       stepStartedAt: finiteNonNegative(parsed.stepStartedAt, defaults.stepStartedAt),
-      prepStepIndex: Math.min(RUN_PREP_STEPS.length - 1, Math.floor(finiteNonNegative(parsed.prepStepIndex))),
+      prepStepIndex: Math.min(RUN_PREP_STEPS.length - 1, parsed.version === 6
+        ? Math.floor(finiteNonNegative(parsed.prepStepIndex))
+        : [0, 1, 2, 5, 6, 7, 8][Math.min(6, Math.floor(finiteNonNegative(parsed.prepStepIndex)))]),
       prepAwards: parsed.prepAwards && typeof parsed.prepAwards === "object" ? parsed.prepAwards : {},
       prepXp: finiteNonNegative(parsed.prepXp),
       runStartedAt: finiteNonNegative(parsed.runStartedAt) || null,

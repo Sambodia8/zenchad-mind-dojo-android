@@ -1,3 +1,5 @@
+import { App as CapacitorApp } from "@capacitor/app";
+
 type ShowerChoice = "quick" | "full" | "skip";
 
 interface ShowerRecord {
@@ -22,11 +24,6 @@ interface BikeQuestSnapshot {
   awards?: Record<string, number>;
 }
 
-interface RunningSessionSnapshot {
-  id?: string;
-  stage?: string;
-}
-
 interface RewardBonusSnapshot {
   runId: string;
   streakDays: number;
@@ -47,19 +44,26 @@ interface PendingBikeShower {
   createdAt: number;
 }
 
+interface PendingRunShower {
+  contextKey: string;
+  createdAt: number;
+}
+
 const SHOWER_STORE_KEY = "zenchad_post_activity_shower_v1";
 const BIKE_QUEST_KEY = "zenchad_bike_quest_v1";
-const RUN_SESSION_KEY = "zenchad_running_session_v1";
+const RUNNING_PROFILE_KEY = "zenchad_running_profile_v1";
 const RUNNING_BONUS_KEY = "zenchad_running_reward_bonus_v1";
 const RUNNING_BONUS_EVENT = "zenchad:running-bonus-queued";
 const BRIDGE_PREFIX = "post-activity-shower|";
-const RUN_PANEL_ID = "zenchad-post-run-shower";
 const PENDING_BIKE_SHOWER_KEY = "zenchad_pending_bike_shower_v1";
+const PENDING_RUN_SHOWER_KEY = "zenchad_pending_run_shower_v1";
 const DEFERRED_PANEL_ID = "zenchad-deferred-bike-shower";
+const DEFERRED_RUN_PANEL_ID = "zenchad-deferred-run-shower";
 const BIKE_SHOWER_UPDATED_EVENT = "zenchad:bike-shower-updated";
-const APP_LAUNCHED_AT = Date.now();
+let appLaunchedAt = Date.now();
 
 let started = false;
+let runShowerSnoozedThisLaunch = false;
 
 function readJson<T>(key: string): T | null {
   try {
@@ -104,6 +108,27 @@ function saveChoice(contextKey: string, record: ShowerRecord) {
 
 function recordFor(contextKey: string): ShowerRecord | null {
   return loadShowerStore().choices[contextKey] ?? null;
+}
+
+function pendingRunShowers(): PendingRunShower[] {
+  const saved = readJson<PendingRunShower[]>(PENDING_RUN_SHOWER_KEY);
+  return Array.isArray(saved) ? saved.filter((entry) =>
+    entry && typeof entry.contextKey === "string" && entry.contextKey.startsWith("run:") && Number.isFinite(entry.createdAt)
+  ) : [];
+}
+
+function savePendingRunShowers(pending: PendingRunShower[]) {
+  writeJson(PENDING_RUN_SHOWER_KEY, pending.slice(-20));
+}
+
+export function queueRunShowerFollowUp(runId: string, completedAt = Date.now()) {
+  if (!runId) return;
+  const contextKey = `run:${runId}`;
+  if (recordFor(contextKey)) return;
+  const pending = pendingRunShowers();
+  if (!pending.some((entry) => entry.contextKey === contextKey)) {
+    savePendingRunShowers([...pending, { contextKey, createdAt: completedAt }]);
+  }
 }
 
 function bridgeId(contextKey: string) {
@@ -303,7 +328,7 @@ function selectBikeShower(contextKey: string, choice: ShowerChoice) {
 function renderDeferredBikeShower() {
   const pending = readJson<PendingBikeShower>(PENDING_BIKE_SHOWER_KEY);
   const existing = document.getElementById(DEFERRED_PANEL_ID);
-  if (!pending || pending.createdAt >= APP_LAUNCHED_AT) {
+  if (!pending || pending.createdAt >= appLaunchedAt) {
     existing?.remove();
     return;
   }
@@ -313,7 +338,7 @@ function renderDeferredBikeShower() {
     existing?.remove();
     return;
   }
-  if (existing) return;
+  if (existing || document.getElementById(DEFERRED_RUN_PANEL_ID)) return;
 
   const overlay = document.createElement("div");
   overlay.id = DEFERRED_PANEL_ID;
@@ -341,6 +366,60 @@ function renderDeferredBikeShower() {
       }
       selectBikeShower(pending.contextKey, choice);
       overlay.remove();
+    });
+  });
+  document.body.appendChild(overlay);
+}
+
+function renderDeferredRunShower() {
+  const existing = document.getElementById(DEFERRED_RUN_PANEL_ID);
+  if (runShowerSnoozedThisLaunch) {
+    existing?.remove();
+    return;
+  }
+  const history = readJson<{ history?: Array<{ id?: string }> }>(RUNNING_PROFILE_KEY)?.history ?? [];
+  const completedIds = new Set(Array.isArray(history) ? history.map((run) => run.id) : []);
+  const pending = pendingRunShowers().filter((entry) => completedIds.has(entry.contextKey.slice(4)) && !recordFor(entry.contextKey));
+  if (pending.length !== pendingRunShowers().length) savePendingRunShowers(pending);
+  const due = pending.find((entry) => entry.createdAt < appLaunchedAt);
+  if (!due || document.getElementById(DEFERRED_PANEL_ID) || document.querySelector(".running-mode.running-summary, .running-mode.running-active")) {
+    existing?.remove();
+    return;
+  }
+  if (existing?.dataset.showerContext === due.contextKey) return;
+  existing?.remove();
+
+  const overlay = document.createElement("div");
+  overlay.id = DEFERRED_RUN_PANEL_ID;
+  overlay.dataset.showerContext = due.contextKey;
+  overlay.className = "post-activity-shower-deferred-backdrop";
+  overlay.innerHTML = `
+    <section class="post-activity-shower-deferred" role="dialog" aria-modal="true" aria-labelledby="post-run-shower-title">
+      <span class="eyebrow">After your run</span>
+      <h2 id="post-run-shower-title">Did you shower after your run?</h2>
+      <p>Your run and its XP were banked when you finished. Tell us what happened afterwards for a separate bonus.</p>
+      <div class="post-activity-shower-grid">
+        <button type="button" data-deferred-run-choice="quick"><span>Quick shower</span><small>+30 XP</small></button>
+        <button type="button" data-deferred-run-choice="full"><span>Full shower</span><small>+60 XP</small></button>
+      </div>
+      <button type="button" data-deferred-run-choice="later">Ask me later</button>
+      <button type="button" class="post-activity-shower-deferred-skip" data-deferred-run-choice="skip">I didn't shower</button>
+    </section>
+  `;
+  overlay.querySelectorAll<HTMLButtonElement>("[data-deferred-run-choice]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const choice = button.dataset.deferredRunChoice as ShowerChoice | "later";
+      runShowerSnoozedThisLaunch = true;
+      if (choice === "later") {
+        // Keep this run pending without interrupting the current app session.
+      } else {
+        const xp = showerXp(choice);
+        saveChoice(due.contextKey, makeRecord(choice, xp, xp));
+        savePendingRunShowers(pending.filter((entry) => entry.contextKey !== due.contextKey));
+        if (xp > 0) ensureGlobalXp(due.contextKey);
+      }
+      overlay.remove();
+      queueMicrotask(tick);
     });
   });
   document.body.appendChild(overlay);
@@ -385,46 +464,10 @@ function renderBikeShower() {
   patchBikeQuestHud(readJson<BikeQuestSnapshot>(BIKE_QUEST_KEY) ?? quest);
 }
 
-function renderRunningShower() {
-  const summary = document.querySelector<HTMLElement>(".running-mode.running-summary");
-  if (!summary) {
-    document.getElementById(RUN_PANEL_ID)?.remove();
-    return;
-  }
-
-  const session = readJson<RunningSessionSnapshot>(RUN_SESSION_KEY);
-  if (!session?.id || session.stage !== "complete") return;
-  const anchor = summary.querySelector<HTMLElement>(".running-xp-breakdown");
-  if (!anchor) return;
-
-  const contextKey = `run:${session.id}`;
-  let panel = document.getElementById(RUN_PANEL_ID);
-  if (panel?.dataset.showerContext !== contextKey) {
-    panel?.remove();
-    panel = null;
-  }
-
-  const record = recordFor(contextKey);
-  if (!panel) {
-    panel = createChooser(contextKey, record, (choice) => {
-      const xp = showerXp(choice);
-      saveChoice(contextKey, makeRecord(choice, xp, xp));
-      if (xp > 0) ensureGlobalXp(contextKey);
-    });
-    panel.id = RUN_PANEL_ID;
-    panel.classList.add("post-activity-shower-running");
-    anchor.insertAdjacentElement("afterend", panel);
-  }
-
-  const latest = recordFor(contextKey);
-  updateChooser(panel, latest);
-  if (latest && !latest.globalXpApplied) ensureGlobalXp(contextKey);
-}
-
 function tick() {
   cleanupAppliedBridgeBonuses();
   renderBikeShower();
-  renderRunningShower();
+  renderDeferredRunShower();
   renderDeferredBikeShower();
 }
 
@@ -436,5 +479,16 @@ export function startPostActivityShowerRuntime() {
   observer.observe(document.documentElement, { childList: true, subtree: true });
   window.addEventListener("storage", tick);
   window.setInterval(tick, 1600);
+  const onReturn = () => {
+    appLaunchedAt = Date.now();
+    runShowerSnoozedThisLaunch = false;
+    tick();
+  };
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") onReturn();
+  });
+  void CapacitorApp.addListener("appStateChange", ({ isActive }) => {
+    if (isActive) onReturn();
+  }).catch(() => {});
   queueMicrotask(tick);
 }
