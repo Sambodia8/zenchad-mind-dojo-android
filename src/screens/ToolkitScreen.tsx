@@ -3,7 +3,9 @@ import {
   ExternalLink,
   ListMusic,
   Play,
-  Search
+  Search,
+  Timer,
+  Sparkles
 } from "lucide-react";
 import { MEDITATIONS } from "../data";
 import { GUIDED_MEDIA_CATEGORIES } from "../guidedMedia";
@@ -95,6 +97,10 @@ export default function ToolkitScreen({
 
       {tab === "meditations" && (
         <>
+          <div className="practice-launchers">
+            <button onClick={()=>navigate({name:"meditation-timer",preset:"free"})}><Timer size={25}/><span><strong>Meditation timer</strong><small>Your time · countdown or stopwatch · earn XP</small></span></button>
+            <button onClick={()=>navigate({name:"meditation-timer",preset:"focus-refocus"})}><Sparkles size={25}/><span><strong>Focus & refocus · 13 minutes</strong><small>A gentle return to attention · optional eight-week goal</small></span></button>
+          </div>
           <label className="search-box">
             <Search size={18} />
             <input

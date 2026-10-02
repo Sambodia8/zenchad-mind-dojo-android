@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "test:meditation-practice": "node --experimental-strip-types --experimental-loader ./scripts/ts-loader.mjs scripts/test-meditation-practice.mjs",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "test:sync": "node --experimental-strip-types --experimental-loader ./scripts/ts-loader.mjs scripts/test-sync.mjs",

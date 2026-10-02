@@ -2,6 +2,15 @@
 
 This is the current feature backlog for Codex. Keep changes incremental and preserve the existing local-first architecture unless a task genuinely requires otherwise.
 
+## Meditation timer and focus practice (2026-10-02)
+
+- [x] Add immersive countdown/custom-duration and stopwatch practice, live XP estimate, pause/resume, hidden clock, and gentle local bowls.
+- [x] Add the source-linked 13-minute focus/refocus adaptation and optional eight-week daily goal.
+- [x] Add native monotonic timing, persisted recovery, exact ending alarms, permission handling and idempotent reward receipts.
+- [x] Verify focused tests, rendered phone UI/contrast and Android packaging; build 2.23/code 34.
+- [ ] Complete the background Drive upload and verify its file metadata.
+- [ ] Verify physical-device locked-screen sound and recovery when an Android device is available.
+
 ## Explicitly out of scope
 
 - [ ] **DO NOT implement Beacon / live location sharing.** The Strava-style safety beacon idea has been deliberately scrapped because it adds too much backend/cloud complexity.

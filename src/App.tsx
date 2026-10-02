@@ -31,6 +31,9 @@ import HomeScreen from "./screens/HomeScreen";
 import ToolkitScreen from "./screens/ToolkitScreen";
 import RouletteScreen from "./screens/RouletteScreen";
 import TimerScreen from "./screens/TimerScreen";
+import MeditationPracticeScreen from "./screens/MeditationPracticeScreen";
+import { practiceBridge } from "./meditationPracticeBridge";
+import { recordPracticeCompletion } from "./storage";
 import YogaScreen from "./screens/YogaScreen";
 import YogaPoseScreen from "./screens/YogaPoseScreen";
 import YogaClassScreen from "./screens/YogaClassScreen";
@@ -71,6 +74,7 @@ const titleFor = (route: Route) => {
     case "zen-coach-atlas": return "Adventure Atlas";
     case "mystery-challenge": return "The Quiet Sequence";
     case "timer": return "Meditation";
+    case "meditation-timer": return "Meditation timer";
     case "journal": return "Meditation Journal";
     case "progress": return "Progress";
     case "guide": return "Live Zen Guide";
@@ -91,6 +95,26 @@ export default function App() {
     logoVariants[Math.floor(Math.random() * logoVariants.length)]
   );
   const dataRef = useRef<AppData>(data);
+  useEffect(() => {
+    let disposed = false;
+    const recover = async (initial = false) => {
+      try {
+        const state = await practiceBridge.getState();
+        if (!state || disposed) return;
+        if (state.status === "completed") setData(current => {
+          const next = recordPracticeCompletion(current, state);
+          saveData(next);
+          return next;
+        });
+        if (initial) setRoute({ name: "meditation-timer", preset: state.preset, sessionId: state.status === "completed" ? state.id : undefined });
+      } catch (error) { console.warn("Meditation recovery will retry when the timer opens", error); }
+    };
+    void recover(true);
+    const visible = () => { if (document.visibilityState === "visible") void recover(); };
+    document.addEventListener("visibilitychange", visible);
+    window.addEventListener("focus", visible);
+    return () => { disposed = true; document.removeEventListener("visibilitychange", visible); window.removeEventListener("focus", visible); };
+  }, []);
   const routeRef = useRef<Route>(route);
   const routeHistoryRef = useRef<Route[]>([]);
   const previousXpRef = useRef(data.stats.xp);
@@ -324,6 +348,7 @@ export default function App() {
   const screen = useMemo(() => {
     switch (route.name) {
       case "home": return <HomeScreen navigate={navigate} />;
+      case "meditation-timer": return <MeditationPracticeScreen preset={route.preset} sessionId={route.sessionId} data={data} setData={setData} navigate={navigate} />;
       case "library": return <ToolkitScreen initialTab={route.tab} data={data} setData={setData} navigate={navigate} />;
       case "toolkit": return <ToolkitHubScreen navigate={navigate} />;
       case "roulette": return <RouletteScreen key={route.spinKey ?? "roulette"} autoSpin={route.autoSpin} uiSoundsEnabled={data.preferences.uiSoundsEnabled} setData={setData} navigate={navigate} />;
@@ -392,7 +417,7 @@ export default function App() {
     { route: { name: "toolkit" } as Route, label: "Toolkit", icon: Grid2X2 }
   ];
 
-  const activeName = route.name === "timer"
+  const activeName = route.name === "timer" || route.name === "meditation-timer"
     ? "library"
     : route.name === "yoga-pose" || route.name === "yoga-class" || route.name === "yoga-builder"
       ? "yoga"

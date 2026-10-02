@@ -12,7 +12,8 @@ import {
   Palette,
   Settings,
   ShoppingBag,
-  Sparkles
+  Sparkles,
+  Timer
 } from "lucide-react";
 import type { Route } from "../types";
 
@@ -27,6 +28,7 @@ const tools: Array<{
   icon: typeof Award;
   tone: string;
 }> = [
+  { title: "Meditation timer", copy: "Countdown, stopwatch and quiet focus practice", route: { name: "meditation-timer", preset: "free" }, icon: Timer, tone: "lavender" },
   { title: "Live Zen Guide", copy: "A warm recommendation for right now", route: { name: "guide" }, icon: MessageCircleHeart, tone: "sage" },
   { title: "Meditation journal", copy: "Private reflections kept on this device", route: { name: "journal" }, icon: BookOpen, tone: "lavender" },
   { title: "Weekly quests & badges", copy: "Collect gentle milestones without pressure", route: { name: "rewards" }, icon: Award, tone: "gold" },

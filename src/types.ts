@@ -1,3 +1,5 @@
+import type { PracticePreferences, PracticeSession, FocusGoal, PracticePreset } from "./meditationPractice";
+
 export type MeditationCategory =
   | "Focus"
   | "Relaxation"
@@ -246,6 +248,9 @@ export interface GuidedMediaCategory {
 }
 
 export interface AppData {
+  practicePreferences: PracticePreferences;
+  practiceSessions: PracticeSession[];
+  focusGoal: FocusGoal | null;
   stats: Stats;
   zenPoints: number;
   lifetimeZenPoints: number;
@@ -279,6 +284,7 @@ export interface ShopPurchase {
 }
 
 export type Route =
+  | { name: "meditation-timer"; preset: PracticePreset; sessionId?: string }
   | { name: "home" }
   | { name: "library"; tab?: "meditations" | "guided" | "emotional" }
   | { name: "toolkit" }

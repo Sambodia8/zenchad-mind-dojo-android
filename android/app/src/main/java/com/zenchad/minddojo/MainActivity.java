@@ -20,6 +20,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(RunningPhotosPlugin.class);
         registerPlugin(ZenChadSyncPlugin.class);
         registerPlugin(MeditationOverlayPlugin.class);
+        registerPlugin(MeditationPracticePlugin.class);
         super.onCreate(savedInstanceState);
     }
 }

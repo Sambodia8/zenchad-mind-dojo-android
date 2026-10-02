@@ -54,6 +54,7 @@ import { XP_COLLECTION_DURATION } from "../components/XpCollectionAnimation";
 import ZenPointsRewardFeedback from "../components/ZenPointsRewardFeedback";
 import { zenPointsForMeditation } from "../zenPoints";
 import { fiveMinuteMeditation } from "../meditationDuration";
+import { practiceBridge } from "../meditationPracticeBridge";
 import { BINAURAL_PLAYLISTS, hasMeditationOverlay, MeditationOverlay } from "../meditationOverlay";
 import BreathingGuidanceCard from "../components/BreathingGuidanceCard";
 
@@ -170,8 +171,19 @@ function restoreTimer(meditation: Meditation): PersistedTimer {
 }
 
 export default function TimerScreen(props: Props) {
+  const [practiceChecked, setPracticeChecked] = useState(false);
+  useEffect(() => {
+    let disposed = false;
+    void practiceBridge.getState().then(state => {
+      if(disposed)return;
+      if(state)props.navigate({name:"meditation-timer",preset:state.preset});
+      else setPracticeChecked(true);
+    }).catch(()=>{if(!disposed)setPracticeChecked(true);});
+    return()=>{disposed=true;};
+  },[]);
   const key = `zenchad_duration_${props.meditationId}`;
   const [shortSession, setShortSession] = useState(() => localStorage.getItem(key) === "5");
+  if(!practiceChecked)return <p role="status">Opening your practice…</p>;
   return <MeditationTimer key={`${props.meditationId}-${shortSession}`} {...props}
     shortSession={shortSession} onDurationChange={(short) => {
       localStorage.removeItem(ACTIVE_TIMER_KEY);

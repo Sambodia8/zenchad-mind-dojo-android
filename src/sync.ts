@@ -53,6 +53,7 @@ export interface SyncStorageLike {
 }
 
 const TRANSIENT_KEYS = new Set([
+  "zenchad_active_practice_v1",
   "zenchad_active_timer_v1",
   "zenchad_running_session_v1",
   "zenchad_running_route_v1",
@@ -256,6 +257,9 @@ function mergeData(local: AppData, incoming: AppData, incomingIsNewer: boolean, 
   return {
     ...local,
     stats: mergeStats(local.stats, incoming.stats),
+    practiceSessions: mergeArray("practiceSessions", local.practiceSessions ?? [], incoming.practiceSessions ?? []),
+    practicePreferences: (incomingIsNewer ? incoming.practicePreferences : local.practicePreferences) ?? local.practicePreferences,
+    focusGoal: [local.focusGoal, incoming.focusGoal].filter((g): g is NonNullable<AppData["focusGoal"]> => Boolean(g)).sort((a,b) => Date.parse(b.updatedAt)-Date.parse(a.updatedAt))[0] ?? null,
     zenPoints: incomingIsNewer ? incoming.zenPoints : local.zenPoints,
     lifetimeZenPoints: Math.max(local.lifetimeZenPoints ?? 0, incoming.lifetimeZenPoints ?? 0),
     moods: mergeArray<MoodEntry>("moods", local.moods, incoming.moods),

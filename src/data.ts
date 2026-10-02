@@ -369,6 +369,8 @@ export const MEDITATIONS: Meditation[] = [
 ];
 
 export const MEDITATION_SKILL_MAPPING: Record<string, { primary: ZenStatId; secondary: ZenStatId }> = {
+  "free-practice": { primary: "presence", secondary: "calm" },
+  "focus-refocus": { primary: "focus", secondary: "discipline" },
   metta: { primary: "compassion", secondary: "equanimity" },
   binaural: { primary: "focus", secondary: "calm" },
   pratyahara: { primary: "intuition", secondary: "calm" },

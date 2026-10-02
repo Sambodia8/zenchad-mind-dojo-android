@@ -1,3 +1,14 @@
+# Zen Chad 2.23 — meditation timer and focus practice (2026-10-03)
+
+- Added an immersive countdown and stopwatch, exact custom durations from one minute to three hours, pause/resume, hidden clock and XP, and remembered settings. Library and Toolkit shortcuts open the new timer; existing guided playback is retained.
+- Added a silent 13-minute Focus & refocus adaptation, source-linked evidence wording, a dated optional eight-week goal, weekly totals and an in-app encouragement preference. Only a full focus-preset session counts toward a goal day; shorter practice still earns ordinary rewards.
+- Android persists monotonic active time, schedules exact countdown alarms, restores sessions after process recreation, and recovers a reboot as interrupted. Permission guidance offers screen-awake operation. A bundled bowl follows Android sound settings; completion receipts and rewards save together to prevent duplicate awards.
+- Timer, reward boundary, pause, early finish, recovery, duplicate completion, midnight goal, older-data migration and sync checks passed, along with progression, ZenPoints, guided-music, Running and theme checks. Three native clock unit tests, TypeScript/Vite, Capacitor sync and Gradle assembly passed.
+- Rendered setup, active, paused, hidden-clock, finish, completion, focus and goal states were checked at 412 × 915. Final measured new-text contrast is at least 8.53:1, including selected and disabled controls. Reduced-motion rendering was verified. The current app exposes dark appearance only. OS text-scale emulation did not enlarge fixed-pixel text; actual Android font scaling still needs a device check.
+- No Android device was connected. Locked-screen sound, background/process and reboot recovery, denied permission transitions, alarm cancellation and a single audible completion cue remain physical-device follow-ups.
+- Version 2.23/code 34; package `com.zenchad.minddojo`; APK `ZenChad-2.23-Meditation-Timer-Focus.apk`. v1/v2 signatures verify with the same certificate as 2.22. Both bundled bowl copies and the landscape match source hashes; all five NSDR narrations and both NSDR music tracks are unchanged from 2.22.
+- Size: 407,933,933 bytes; SHA-256: `6ECD9B01ED25F78370DF2884726F66107E8639E2740F772B80EF5D0B58D0B07E`. The 453,298-byte increase is the two local bowl copies plus the timer's web/native code; existing offline media were retained. The numbered local APK is ready; the background upload to the established ZenChad Drive folder is pending.
+
 # Zen Chad 2.20 — step-by-step run preparation and readability (2026-09-30)
 
 - Restored the seven-step rewarded Quick/Story run preparation, including the guided Before Running stretches. Equipment and travel planning remains available separately and cannot bypass the steps by accident.

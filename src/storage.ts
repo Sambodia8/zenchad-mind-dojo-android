@@ -28,6 +28,7 @@ import {
 } from "./streakFreeze";
 
 const STORAGE_KEY = "zenchad_app_data_v1";
+import { DEFAULT_PRACTICE_PREFERENCES, creditedPracticeSeconds, practiceXp, migratePracticePreferences, migratePracticeSessions, migrateFocusGoal, type PracticeState } from "./meditationPractice";
 export const JOURNAL_XP = 20;
 
 const emptyStats: Stats = {
@@ -172,6 +173,9 @@ export const starterEmotionalTools: EmotionalTool[] = [
 ];
 
 export const defaultData: AppData = {
+  practicePreferences: DEFAULT_PRACTICE_PREFERENCES,
+  practiceSessions: [],
+  focusGoal: null,
   stats: emptyStats,
   zenPoints: 0,
   lifetimeZenPoints: 0,
@@ -226,6 +230,9 @@ export function loadData(): AppData {
           }));
     const migratedXp = migratedBalance(parsed.stats?.xp);
     return {
+      practicePreferences: migratePracticePreferences(parsed.practicePreferences),
+      practiceSessions: migratePracticeSessions(parsed.practiceSessions),
+      focusGoal: migrateFocusGoal(parsed.focusGoal),
       stats: {
         ...emptyStats,
         ...parsed.stats,
@@ -437,6 +444,21 @@ export function recordMeditationCompletion(
   sessionDate = new Date()
 ): AppData {
   return recordMeditationCompletionWithResult(data, meditationId, seconds, sessionDate).data;
+}
+
+// The receipt and rewards share one AppData write. Native completion remains
+// pending until this receipt exists, making recovery safe after a process exit.
+export function recordPracticeCompletion(data: AppData, state: PracticeState): AppData {
+  if (state.status !== "completed" || data.practiceSessions.some(s => s.id === state.id)) return data;
+  const seconds = creditedPracticeSeconds(state);
+  const completedAt = state.completedAt ?? new Date().toISOString();
+  const date = new Date(completedAt);
+  if (!Number.isFinite(date.getTime())) return data;
+  const rewarded = seconds >= 60;
+  const next = rewarded ? recordMeditationCompletion(data, state.preset === "free" ? "free-practice" : "focus-refocus", seconds, date) : data;
+  return { ...next, practiceSessions: [{ id: state.id, preset: state.preset, mode: state.mode,
+    targetSeconds: state.targetSeconds, activeSeconds: seconds, completedAt, practiceDay: localDateKey(date),
+    xp: practiceXp(seconds), zenPoints: rewarded ? zenPointsForMeditation(seconds) : 0 }, ...data.practiceSessions] };
 }
 
 export function recordMeditationCompletionWithResult(
