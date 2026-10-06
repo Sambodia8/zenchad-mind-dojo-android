@@ -1,5 +1,6 @@
 import type {
   AppData,
+  ActivitySession,
   AppPreferences,
   EmotionalTool,
   EmotionalToolAttempt,
@@ -30,6 +31,31 @@ import {
 const STORAGE_KEY = "zenchad_app_data_v1";
 import { DEFAULT_PRACTICE_PREFERENCES, creditedPracticeSeconds, practiceXp, migratePracticePreferences, migratePracticeSessions, migrateFocusGoal, type PracticeState } from "./meditationPractice";
 export const JOURNAL_XP = 20;
+
+export function migrateActivitySessions(value: unknown): ActivitySession[] {
+  if (!Array.isArray(value)) return [];
+  const seen = new Set<string>();
+  return value.filter((entry): entry is ActivitySession => {
+    if (!entry || typeof entry !== "object" || typeof entry.id !== "string" || !entry.id.trim()
+      || !["meditation", "yoga", "run", "bike"].includes(entry.kind)
+      || typeof entry.completedAt !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})$/.test(entry.completedAt)
+      || !Number.isFinite(Date.parse(entry.completedAt))
+      || typeof entry.seconds !== "number" || !Number.isFinite(entry.seconds) || entry.seconds < 0) return false;
+    const day = entry.completedAt.slice(0, 10);
+    if (new Date(`${day}T00:00:00Z`).toISOString().slice(0, 10) !== day) return false;
+    const key = JSON.stringify([entry.kind, entry.id]);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).map(({ id, kind, completedAt, seconds }) => ({ id, kind, completedAt, seconds }));
+}
+
+export function appendActivitySession(data: AppData, receipt: ActivitySession): AppData {
+  const sessions = data.activitySessions ?? [];
+  if (sessions.some(entry => entry.kind === receipt.kind && entry.id === receipt.id)
+    || !migrateActivitySessions([receipt]).length) return data;
+  return { ...data, activitySessions: [receipt, ...sessions] };
+}
 
 const emptyStats: Stats = {
   xp: 0,
@@ -173,6 +199,7 @@ export const starterEmotionalTools: EmotionalTool[] = [
 ];
 
 export const defaultData: AppData = {
+  activitySessions: [],
   practicePreferences: DEFAULT_PRACTICE_PREFERENCES,
   practiceSessions: [],
   focusGoal: null,
@@ -232,6 +259,7 @@ export function loadData(): AppData {
     return {
       practicePreferences: migratePracticePreferences(parsed.practicePreferences),
       practiceSessions: migratePracticeSessions(parsed.practiceSessions),
+      activitySessions: migrateActivitySessions(parsed.activitySessions),
       focusGoal: migrateFocusGoal(parsed.focusGoal),
       stats: {
         ...emptyStats,
@@ -441,9 +469,10 @@ export function recordMeditationCompletion(
   data: AppData,
   meditationId: string,
   seconds: number,
-  sessionDate = new Date()
+  sessionDate = new Date(),
+  sessionId?: string | null
 ): AppData {
-  return recordMeditationCompletionWithResult(data, meditationId, seconds, sessionDate).data;
+  return recordMeditationCompletionWithResult(data, meditationId, seconds, sessionDate, sessionId).data;
 }
 
 // The receipt and rewards share one AppData write. Native completion remains
@@ -455,7 +484,7 @@ export function recordPracticeCompletion(data: AppData, state: PracticeState): A
   const date = new Date(completedAt);
   if (!Number.isFinite(date.getTime())) return data;
   const rewarded = seconds >= 60;
-  const next = rewarded ? recordMeditationCompletion(data, state.preset === "free" ? "free-practice" : "focus-refocus", seconds, date) : data;
+  const next = rewarded ? recordMeditationCompletion(data, state.preset === "free" ? "free-practice" : "focus-refocus", seconds, date, null) : data;
   return { ...next, practiceSessions: [{ id: state.id, preset: state.preset, mode: state.mode,
     targetSeconds: state.targetSeconds, activeSeconds: seconds, completedAt, practiceDay: localDateKey(date),
     xp: practiceXp(seconds), zenPoints: rewarded ? zenPointsForMeditation(seconds) : 0 }, ...data.practiceSessions] };
@@ -465,8 +494,12 @@ export function recordMeditationCompletionWithResult(
   data: AppData,
   meditationId: string,
   seconds: number,
-  sessionDate = new Date()
+  sessionDate = new Date(),
+  sessionId: string | null = crypto.randomUUID()
 ) {
+  if (sessionId !== null && data.activitySessions?.some(entry => entry.kind === "meditation" && entry.id === sessionId)) {
+    return { data, streakFreezeUse: undefined };
+  }
   const ownedFreezes = Math.max(0, Math.floor(data.shopInventory[STREAK_FREEZE_ITEM_ID] ?? 0));
   const freezeDecision = decideStreakFreeze(data.stats.lastSessionDate, sessionDate, ownedFreezes);
   const nextData = awardZenPoints(data, zenPointsForMeditation(seconds));
@@ -486,7 +519,9 @@ export function recordMeditationCompletionWithResult(
       freezeDecision.consumed
     )
   };
-  return { data: completedData, streakFreezeUse: freezeDecision.notice };
+  return { data: sessionId === null ? completedData : appendActivitySession(completedData, {
+    id: sessionId, kind: "meditation", completedAt: sessionDate.toISOString(), seconds
+  }), streakFreezeUse: freezeDecision.notice };
 }
 
 export function makeMood(stage: "before" | "after", value: number, note: string): MoodEntry {

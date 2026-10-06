@@ -13,7 +13,6 @@ import {
   Award,
   Bell,
   BellOff,
-  BookOpen,
   Check,
   ChevronRight,
   Music2,
@@ -70,6 +69,7 @@ interface Props {
 type AlertSound = "reverse-chime" | "bell" | "gong" | "digital" | "none";
 
 interface PersistedTimer {
+  sessionId?: string;
   meditationId: string;
   guidedAudioId?: string;
   meditationMusicId?: string;
@@ -246,7 +246,7 @@ function MeditationTimer({
   const [audioUnavailable, setAudioUnavailable] = useState(false);
   const [musicUnavailable, setMusicUnavailable] = useState(false);
   const [musicReady, setMusicReady] = useState(false);
-  const [completionDestination, setCompletionDestination] = useState<"progress" | "journal" | null>(null);
+  const [collectingReward, setCollectingReward] = useState(false);
   const elapsedRef = useRef(restored.elapsedSeconds);
   const deadlineRef = useRef<number | null>(restored.deadline);
   const lastClockReadRef = useRef(Date.now());
@@ -255,11 +255,12 @@ function MeditationTimer({
   const meditationMusicRef = useRef<StreamingMusicPlaylist | null>(null);
   const namasteAudioRef = useRef<HTMLAudioElement | null>(null);
   const completionSavedRef = useRef(false);
+  const completionSessionIdRef = useRef(restored.sessionId);
+  completionSessionIdRef.current ??= crypto.randomUUID();
   const completionNavigationTimerRef = useRef<number | null>(null);
   const musicCycleClaimedRef = useRef(
     restored.started || Boolean(restored.meditationMusicQueueIds?.length)
   );
-  const mysteryMode = Boolean(mysteryCategory && mysteryRunId);
   const currentPhase = meditation.phases[phaseIndex];
   const totalDuration = sessionDuration;
   const elapsedBefore = meditation.phases
@@ -534,6 +535,7 @@ function MeditationTimer({
   useEffect(() => {
     if (!started || completed) return;
     const state: PersistedTimer = {
+      sessionId: completionSessionIdRef.current,
       meditationId: meditation.id,
       guidedAudioId: guidedAudio?.id,
       meditationMusicQueueIds,
@@ -619,6 +621,7 @@ function MeditationTimer({
   };
 
   const reset = () => {
+    completionSessionIdRef.current = crypto.randomUUID();
     if (hasMeditationOverlay) void MeditationOverlay.hide().catch(() => {});
     setRunning(false);
     setStarted(false);
@@ -668,6 +671,7 @@ function MeditationTimer({
       // Persist before switching apps: the WebView may immediately suspend its effects.
       localStorage.setItem(ACTIVE_TIMER_KEY, JSON.stringify({
         meditationId: meditation.id, phaseIndex, remaining, running: true, started: true,
+        sessionId: completionSessionIdRef.current,
         completed: false, deadline: deadlineRef.current, elapsedSeconds: elapsedRef.current, savedAt: Date.now()
       }));
       await MeditationOverlay.open({ url: playlist, deadline });
@@ -703,13 +707,17 @@ function MeditationTimer({
     if (running) void scheduleTimerNotifications(buildNotificationTimeline(phaseIndex, remaining));
   };
 
-  const saveCompletion = (destination: "progress" | "journal" = "progress") => {
+  const saveCompletion = () => {
     if (completionSavedRef.current) return;
     completionSavedRef.current = true;
     const creditedSeconds = Math.max(60, Math.round(elapsedRef.current));
+    const completedAt = new Date();
+    const sessionId = completionSessionIdRef.current;
     setData((current) => {
+      const completedData = recordMeditationCompletion(current, meditation.id, creditedSeconds, completedAt, sessionId);
+      if (completedData === current) return current;
       const next = {
-        ...recordMeditationCompletion(current, meditation.id, creditedSeconds),
+        ...completedData,
         moods: [makeMood("after", afterMood, `After ${meditation.name}`), ...current.moods]
       };
       if (mysteryCategory && mysteryRunId) {
@@ -721,20 +729,10 @@ function MeditationTimer({
       }
       return next;
     });
-    setCompletionDestination(destination);
+    setCollectingReward(true);
     completionNavigationTimerRef.current = window.setTimeout(
-      () => finishCompletionNavigation(destination),
+      () => navigate(mysteryCategory && mysteryRunId ? { name: "mystery-challenge" } : { name: "home" }),
       data.preferences.reducedMotion ? 300 : XP_COLLECTION_DURATION
-    );
-  };
-
-  const finishCompletionNavigation = (destination = completionDestination ?? "progress") => {
-    navigate(
-      mysteryMode
-        ? { name: "mystery-challenge" }
-        : destination === "journal"
-          ? { name: "journal", draftMeditation: meditation.name }
-          : { name: "progress" }
     );
   };
 
@@ -749,16 +747,16 @@ function MeditationTimer({
     const completionXp = 50 + Math.max(1, Math.floor(creditedSeconds / 6));
     const completionZenPoints = zenPointsForMeditation(creditedSeconds);
     return (
-      <section className="completion-screen">
+      <section className="completion-screen guided-meditation-completion">
         <span className="completion-mark"><Check /></span>
         <span className="eyebrow">Session complete</span>
-        <h1>Mind reps logged.</h1>
-        <p>{meditation.name} · {Math.ceil(totalDuration / 60)} minutes</p>
+        <h1>Meditation complete</h1>
+        <p>{meditation.name} · {formatClock(creditedSeconds)} practised</p>
         <div className="completion-reward-burst">
           <Award />
           <span><strong>+{completionXp} XP</strong><small>Ready to collect</small></span>
         </div>
-        {completionDestination !== null && (
+        {collectingReward && (
           <ZenPointsRewardFeedback
             amount={completionZenPoints}
             reducedMotion={data.preferences.reducedMotion}
@@ -780,13 +778,9 @@ function MeditationTimer({
           />
           <strong className="current-mood">{afterMood}/10</strong>
         </div>
-        <button className="button primary full" onClick={() => saveCompletion("progress")} disabled={completionDestination !== null}>
-          {mysteryMode ? "Mark meditation complete" : "Save session & view progress"}
+        <button className="button primary full" onClick={saveCompletion} disabled={collectingReward}>
+          {mysteryCategory && mysteryRunId ? "Continue sequence" : "Done"}
         </button>
-        <button className="button secondary full" onClick={() => saveCompletion("journal")} disabled={completionDestination !== null}>
-          <BookOpen size={17} /> {mysteryMode ? "Return to the sequence" : "Save session & journal it"}
-        </button>
-        <button className="button ghost full" onClick={reset} disabled={completionDestination !== null}><RotateCcw size={17} /> Do it again</button>
       </section>
     );
   }

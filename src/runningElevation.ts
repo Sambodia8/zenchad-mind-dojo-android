@@ -47,6 +47,17 @@ export function loadRunElevation(runId: string) {
   return loadStore().byRunId[runId] ?? null;
 }
 
+function saveUnavailableElevation(runId: string): RunElevationInsight {
+  const unavailable: RunElevationInsight = {
+    runId, status: "unavailable", updatedAt: Date.now(),
+    gainMeters: 0, lossMeters: 0, minMeters: 0, maxMeters: 0, samples: []
+  };
+  const store = loadStore();
+  store.byRunId[runId] = unavailable;
+  saveStore(store);
+  return unavailable;
+}
+
 function sampleInputPoints(points: RunPoint[], maxPoints = 100) {
   if (points.length <= maxPoints) return points;
   const result: RunPoint[] = [];
@@ -91,7 +102,9 @@ export async function enrichRunElevation(
   const existing = loadRunElevation(record.id);
   if (existing?.status === "ready") return existing;
   const points = sampleInputPoints(record.points);
-  if (points.length < 2) return null;
+  // Persist this terminal result so completion rendering does not immediately retry
+  // an untrackable run in a promise/mutation-observer loop.
+  if (points.length < 2) return existing ?? saveUnavailableElevation(record.id);
 
   try {
     const response = await fetch(`${baseUrl.replace(/\/$/, "")}/height`, {
@@ -113,20 +126,7 @@ export async function enrichRunElevation(
     saveStore(store);
     return insight;
   } catch {
-    const unavailable: RunElevationInsight = {
-      runId: record.id,
-      status: "unavailable",
-      updatedAt: Date.now(),
-      gainMeters: 0,
-      lossMeters: 0,
-      minMeters: 0,
-      maxMeters: 0,
-      samples: []
-    };
-    const store = loadStore();
-    store.byRunId[record.id] = unavailable;
-    saveStore(store);
-    return unavailable;
+    return saveUnavailableElevation(record.id);
   }
 }
 

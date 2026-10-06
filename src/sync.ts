@@ -1,5 +1,5 @@
 import type { AppData, AppPreferences, JournalEntry, MoodEntry, EmotionalToolAttempt, YogaClass } from "./types";
-import { defaultData, loadData, migrateProgressionData, saveData } from "./storage";
+import { defaultData, loadData, migrateActivitySessions, migrateProgressionData, saveData } from "./storage";
 import { statLevelForXp } from "./progression";
 
 export const SYNC_FILE_NAME = "zenchad-sync.json";
@@ -168,7 +168,8 @@ function mergeIdentifiedArrays<T>(local: T[], incoming: T[], collection: string,
   const merged = new Map<string, T>();
   const fallback: T[] = [];
   for (const item of [...local, ...incoming]) {
-    const id = itemId(item);
+    const rawId = itemId(item);
+    const id = collection === "activitySessions" && isRecord(item) ? JSON.stringify([item.kind, rawId]) : rawId;
     if (!id) {
       fallback.push(item);
       continue;
@@ -258,6 +259,7 @@ function mergeData(local: AppData, incoming: AppData, incomingIsNewer: boolean, 
     ...local,
     stats: mergeStats(local.stats, incoming.stats),
     practiceSessions: mergeArray("practiceSessions", local.practiceSessions ?? [], incoming.practiceSessions ?? []),
+    activitySessions: mergeArray("activitySessions", migrateActivitySessions(local.activitySessions), migrateActivitySessions(incoming.activitySessions)),
     practicePreferences: (incomingIsNewer ? incoming.practicePreferences : local.practicePreferences) ?? local.practicePreferences,
     focusGoal: [local.focusGoal, incoming.focusGoal].filter((g): g is NonNullable<AppData["focusGoal"]> => Boolean(g)).sort((a,b) => Date.parse(b.updatedAt)-Date.parse(a.updatedAt))[0] ?? null,
     zenPoints: incomingIsNewer ? incoming.zenPoints : local.zenPoints,
@@ -342,6 +344,7 @@ export function parseSyncEnvelope(raw: string): ZenChadSyncEnvelope {
     data: {
       ...defaultData,
       ...parsed.data,
+      activitySessions: migrateActivitySessions(parsed.data.activitySessions),
       progression: migrateProgressionData(parsed.data.progression)
     },
     durableStores: isRecord(parsed.durableStores) ? parsed.durableStores : {},

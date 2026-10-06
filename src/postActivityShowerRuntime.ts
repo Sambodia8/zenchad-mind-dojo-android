@@ -1,4 +1,5 @@
 import { App as CapacitorApp } from "@capacitor/app";
+import { recordCompletedBikeRide } from "./bikeQuestHistory";
 
 type ShowerChoice = "quick" | "full" | "skip";
 
@@ -22,6 +23,8 @@ interface BikeQuestSnapshot {
   showerSkipped?: boolean;
   totalQuestXp?: number;
   awards?: Record<string, number>;
+  rideEndedAt?: number;
+  rideSeconds?: number;
 }
 
 interface RewardBonusSnapshot {
@@ -318,6 +321,10 @@ function selectBikeShower(contextKey: string, choice: ShowerChoice) {
   quest.showerSkipped = false;
   writeJson(BIKE_QUEST_KEY, quest);
 
+  if (quest.startedAt && quest.rideEndedAt && quest.rideSeconds) {
+    recordCompletedBikeRide({ id: String(quest.startedAt), completedAt: quest.rideEndedAt, rideSeconds: quest.rideSeconds, questXp: quest.totalQuestXp });
+  }
+
   saveChoice(contextKey, makeRecord(choice, finalXp, delta));
   localStorage.removeItem(PENDING_BIKE_SHOWER_KEY);
   patchBikeQuestHud(quest);
@@ -426,11 +433,11 @@ function renderDeferredRunShower() {
 }
 
 function renderBikeShower() {
-  const recovery = document.querySelector<HTMLElement>(".bike-quest.recovery");
+  const recovery = document.querySelector<HTMLElement>(".bike-quest.recovery, .bike-quest.complete");
   if (!recovery) return;
 
   const quest = readJson<BikeQuestSnapshot>(BIKE_QUEST_KEY);
-  if (!quest || quest.step !== "recovery") return;
+  if (!quest || (quest.step !== "recovery" && quest.step !== "complete")) return;
   const contextKey = bikeContextKey(quest);
   if (!contextKey) return;
 

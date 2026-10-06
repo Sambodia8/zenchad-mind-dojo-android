@@ -1,0 +1,77 @@
+/* Final contrast overrides for completion and warm-up controls. */
+.yoga-route .routine-evidence a { color: #a0ebd2; }
+html[data-appearance="light"] .yoga-route .routine-evidence a { color: #20583f; }
+html[data-appearance="light"] .yoga-route .mode-picker button:not(.active) { color: #344156; }
+html[data-appearance="light"] .yoga-route .player-setting-action { color: #20583f; }
+html[data-appearance] .yoga-route .yoga-completion {
+  --yoga-title: #38362f;
+  --yoga-copy: #38362f;
+  --yoga-accent: #123d2a;
+  --ink: #38362f;
+  --muted: #38362f;
+  --accent-text: #123d2a;
+  color: #38362f;
+}
+.yoga-completion .completion-reward-burst strong { color: #684315; }
+.completion-screen .completion-reward-burst small { color: #604b2f; }
+.yoga-completion .button.primary { color: #fff; background: #225c45; border-color: #225c45; }
+.yoga-completion .button.primary:disabled { opacity: 1; color: #fff; background: #3e5e50; }
+html[data-appearance="light"] .yoga-route .back-link { color: #4f3d9a; }
+html[data-appearance="light"] .yoga-route .yoga-ready-meta,
+html[data-appearance="light"] .yoga-route .routine-evidence summary { color: #20583f; }
+html[data-appearance="light"] .yoga-route .music-choice small,
+html[data-appearance="light"] .yoga-route .volume-control { color: #525d73; }
+html[data-appearance] .yoga-route button.yoga-start-button { color: #fff; background: #225c45; border-color: #225c45; }
+html[data-appearance="light"] .yoga-route .yoga-ready-meta > span { color: #20583f; }
+html[data-appearance="light"] .yoga-route .stretch-track-picker small,
+html[data-appearance="light"] .yoga-route .stretch-music-controls label { color: #525d73; }
+html[data-appearance="light"] .yoga-route .stretch-volume-row > label { color: #525d73; }
+.bike-step-card .bike-timer-ring strong { color: #f8fafc; }
+.bike-step-card .bike-timer-ring::after { background: #172136; }
+.bike-step-card .bike-momentum > div:last-child span { color: #cbd5e1; }
+html[data-appearance] .bike-quest-final > .eyebrow { color: #3c315f; }
+html[data-appearance] .bike-quest-final > p { color: #38362f; }
+html[data-appearance] .bike-optional-recovery .bike-bonus-card h2,
+html[data-appearance] .bike-optional-recovery .bike-bonus-card .eyebrow,
+html[data-appearance] .bike-optional-recovery .bike-shower-choice span,
+html[data-appearance] .bike-optional-recovery .bike-shower-choice small { color: #f8fafc; }
+html[data-appearance] .bike-optional-recovery .button.secondary { color: #f8fafc; background: #364964; }
+html[data-appearance] .bike-optional-recovery .button.ghost { color: #f8fafc; background: #273349; }
+
+html[data-appearance] .guided-meditation-completion > .eyebrow { color: #3c315f; }
+html[data-appearance] .guided-meditation-completion > p { color: #38362f; }
+html[data-appearance] .guided-meditation-completion .after-mood {
+  color: #38362f;
+  background: #fffaf0;
+  border-color: #b0a58e;
+}
+html[data-appearance] .guided-meditation-completion .after-mood h3,
+html[data-appearance] .guided-meditation-completion .current-mood { color: #38362f; }
+html[data-appearance] .guided-meditation-completion .mood-labels { color: #585348; }
+html[data-appearance] .guided-meditation-completion > .button.primary {
+  color: #fff;
+  background: #225c45;
+  border-color: #225c45;
+}
+html[data-appearance] .guided-meditation-completion > .button.primary:disabled { opacity: 1; color: #fff; background: #3e5e50; }
+
+html[data-appearance] .running-summary .running-level-up-banner .eyebrow { color: #5d3900; }
+html[data-appearance] .running-summary .running-name-display button,
+html[data-appearance] .running-summary .running-name-editor button,
+html[data-appearance] .running-summary .running-debrief summary { color: #b9b0ff; }
+html[data-appearance="light"] .running-summary .running-name-display button,
+html[data-appearance="light"] .running-summary .running-name-editor button,
+html[data-appearance="light"] .running-summary .running-debrief summary { color: #4f3d9a; }
+html[data-appearance] .running-summary .running-milestones span.done { color: #20583f; }
+html[data-appearance="light"] .running-summary .running-achievement-unlock small { opacity: 1; color: #585348; }
+html[data-appearance="light"] .running-summary .running-result-grid small,
+html[data-appearance="light"] .running-summary .running-milestones span:not(.done) { color: #585348; }
+html[data-appearance="light"] .running-summary .running-xp-breakdown strong { color: #20583f; }
+html[data-appearance] .bike-optional-recovery button span,
+html[data-appearance] .bike-optional-recovery .post-activity-shower-choice small { color: #f8fafc; }
+.bike-reward-burst > strong,
+.bike-reward-burst > span,
+.bike-reward-burst > b { background: #172136; border-radius: 0.5rem; padding: 0.12rem 0.45rem; }
+html[data-appearance] .home-route .home-movement-choice-grid strong { color: #fff; }
+html[data-appearance="light"] .bike-resume-banner { background: #172136; }
+html[data-appearance] .bike-step-card .eyebrow { color: #f6c86b; }

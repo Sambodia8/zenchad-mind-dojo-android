@@ -74,15 +74,16 @@ assert.deepEqual(
     ["front-back-leg-swings", 10],
     ["lateral-leg-swings", 10],
     ["hamstring-sweeps", 15],
-    ["calf-rocks-heel-raises", 20],
-    ["calf-raises", 20],
+    ["wall-calf-stretch", 15],
+    ["standing-quad-stretch", 15],
     ["squat-to-forward-fold", 20],
     ["alternating-reverse-lunges", 15]
   ],
   "Before Running uses a short dynamic sequence without a duplicated forward fold"
 );
 assert.equal(beforeRun.steps.filter((step) => step.movementId === "forward-fold").length, 0, "Forward Fold is already part of Squat to Forward Fold");
-assert.equal(expandYogaClassSlides(beforeRun).length, 15, "per-side leg and calf movements expand to a guided sequence");
+assert.equal(expandYogaClassSlides(beforeRun).length, 17, "per-side leg, calf and quad movements expand to a guided sequence");
+assert.equal(getYogaClassDuration(beforeRun), 325, "pre-run duration includes both sides and five-second transitions");
 assert.ok(getYogaClassDuration(beforeRun) <= 360, "the pre-run movement sequence stays under six minutes");
 assert.equal(beforeRun.sourceUrl, "https://www.nhs.uk/live-well/exercise/how-to-warm-up-before-exercising/");
 assert.ok(beforeRun.focusMuscles.includes("Quadriceps"));
@@ -96,12 +97,24 @@ assert.deepEqual(
     ["front-back-leg-swings", 15],
     ["lateral-leg-swings", 15],
     ["ankle-circles", 15],
-    ["calf-raises", 30],
+    ["wall-calf-stretch", 20],
+    ["standing-quad-stretch", 20],
     ["alternating-reverse-lunges", 30],
     ["knee-bends", 30]
   ],
-  "Before Cycling remains unchanged after moving its records into canonical data"
+  "Before Cycling includes separate calf and quad stretches"
 );
+assert.equal(expandYogaClassSlides(beforeCycling).length, 14);
+assert.equal(getYogaClassDuration(beforeCycling), 355, "pre-bike duration includes both sides and transitions");
+for (const [yogaClass, seconds] of [[beforeRun, 15], [beforeCycling, 20]]) {
+  for (const movementId of ["wall-calf-stretch", "standing-quad-stretch"]) {
+    assert.deepEqual(expandYogaClassSlides(yogaClass).filter((slide) => slide.movement.id === movementId)
+      .map((slide) => [slide.side, slide.seconds]), [[1, seconds], [2, seconds]], `${yogaClass.id} guides both sides of ${movementId}`);
+  }
+}
+const legacyCustomClass = { ...beforeCycling, id: "custom-legacy", steps: [{ movementId: "calf-raises", seconds: 18 }] };
+assert.deepEqual(expandYogaClassSlides(legacyCustomClass).map((slide) => [slide.movement.id, slide.side, slide.seconds]),
+  [["wall-calf-stretch", 1, 18], ["wall-calf-stretch", 2, 18]], "saved custom calf-raises steps resolve to the corrected bilateral stretch");
 
 const animatedMovementIds = [
   "ankle-inversion-eversion",
@@ -116,21 +129,42 @@ const animatedMovementIds = [
   "controlled-spinal-roll"
 ];
 
-const pngDimensions = (assetPath) => {
+const pngDimensions = (assetPath, requireAlpha = true) => {
   const buffer = fs.readFileSync(new URL(`../public/${assetPath}`, import.meta.url));
   assert.deepEqual([...buffer.subarray(1, 4)], [80, 78, 71], `${assetPath} is a PNG`);
-  assert.ok([4, 6].includes(buffer[25]), `${assetPath} preserves an alpha channel`);
+  if (requireAlpha) assert.ok([4, 6].includes(buffer[25]), `${assetPath} preserves an alpha channel`);
   return [buffer.readUInt32BE(16), buffer.readUInt32BE(20)];
 };
 
 animatedMovementIds.forEach((movementId) => {
   const movement = MOVEMENTS.find((candidate) => candidate.id === movementId);
   assert.ok(movement, `${movementId} exists in canonical movement data`);
-  assert.ok(movement.visualFrames?.length >= 2, `${movementId} has an animated Mark frame set`);
-  const dimensions = movement.visualFrames.map(pngDimensions);
-  dimensions.forEach((size) => assert.deepEqual(size, dimensions[0], `${movementId} frames share one canvas size`));
+  assert.ok(movement.visualAtlas || movement.visualFrames?.length >= 2, `${movementId} has an animation source`);
+  if (movement.visualFrames) {
+    const dimensions = movement.visualFrames.map(pngDimensions);
+    dimensions.forEach((size) => assert.deepEqual(size, dimensions[0], `${movementId} frames share one canvas size`));
+  }
   assert.ok(fs.existsSync(new URL(`../public/${movement.image}`, import.meta.url)), `${movementId} representative image exists`);
 });
+
+// Structural asset checks establish playable sprites, not anatomical accuracy.
+for (const [movementId, columns, sequence, frameMs] of [
+  ["knee-lifts", 3, [0, 1, 0, 2], 800],
+  ["knee-bends", 2, [0, 1, 1, 0], 750],
+  ["alternating-reverse-lunges", 3, [0, 1, 0, 2], 1100]
+]) {
+  const movement = MOVEMENTS.find((candidate) => candidate.id === movementId);
+  assert.deepEqual(movement?.visualAtlas, { columns, sequence, frameMs }, `${movementId} has its intended pose order and timing`);
+}
+for (const movement of MOVEMENTS.filter((candidate) => candidate.visualAtlas)) {
+  const { columns, sequence, frameMs } = movement.visualAtlas;
+  const [width, height] = pngDimensions(movement.image, false);
+  assert.ok(Number.isInteger(columns) && columns >= 2);
+  assert.ok(width >= columns && height > 0, `${movement.id} atlas can be divided into its configured pose cells`);
+  assert.ok(sequence.length >= 2 && new Set(sequence).size >= 2, `${movement.id} plays multiple poses`);
+  assert.ok(sequence.every((cell) => Number.isInteger(cell) && cell >= 0 && cell < columns), `${movement.id} pose indices stay inside the atlas`);
+  assert.ok(Number.isFinite(frameMs) && frameMs > 0 && frameMs <= 5000, `${movement.id} has usable frame timing`);
+}
 
 const correctedWarmupVisuals = [
   ["ankle-inversion-eversion", "Ankle Inversion and Eversion", "assets/stretches/generated/pre-run-v3/"],

@@ -1745,9 +1745,9 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           "--flutter": `${particle.flutter}s`,
           "--round": `${particle.round}px`
         } as CSSProperties} />)}</div>
-        <section className="running-summary-hero"><span className="running-summary-check"><Check /></span><span className="eyebrow">{session.mode === "story" ? "Mission complete" : "Run complete"}</span><h1>RUN BANKED!</h1><div className="running-summary-reward-row"><strong>+{totalXp} XP</strong><strong>+{totalZenPoints} ZP</strong></div><p>{session.mode === "just" ? "No directions. No planned route. Every tracked metre still counted." : "You went out and did it. The run and every reward are safely banked."}</p></section>
-        <button className="button primary full running-summary-done" onClick={resetRun}><Check /> Done</button>
-        {levelsGained > 0 ? <section className="running-level-up-banner"><Sparkles /><div><span className="eyebrow">Level up{levelsGained > 1 ? ` ×${levelsGained}` : ""}</span><strong>LEVEL {session.completionLevelAfter}</strong><small>New level reached. Keep the momentum moving.</small></div><Trophy /></section> : null}
+        <section className="running-summary-hero"><span className="running-summary-check"><Check /></span><span className="eyebrow">{session.mode === "story" ? "Mission complete" : "Run complete"}</span><h1>RUN BANKED!</h1><div className="running-summary-reward-row"><strong>+{totalXp} XP</strong><strong>+{totalZenPoints} ZP</strong></div></section>
+        <button className="button primary full running-summary-done" onClick={() => { resetRun(); navigate({ name: "home" }); }}><Check /> Done</button>
+        {levelsGained > 0 ? <section className="running-level-up-banner"><Sparkles /><div><span className="eyebrow">Level up{levelsGained > 1 ? ` ×${levelsGained}` : ""}</span><strong>LEVEL {session.completionLevelAfter}</strong></div><Trophy /></section> : null}
         <section className="card running-results-card">
           <span className="eyebrow">Here’s how you did</span>
           {record ? <RunNameEditor record={record} onSave={(name) => renameRun(record.id, name)} /> : null}
@@ -1758,7 +1758,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
         </section>
 
         <section className="running-debrief" aria-label="Quick run feedback">
-          <div><span className="eyebrow">Two-second check-in</span><h2>How was that?</h2><p>Optional. Your answers help future suggestions stay grounded in what you actually enjoyed.</p></div>
+          <div><span className="eyebrow">Optional feedback</span><h2>How was that?</h2></div>
           <div className="running-debrief-row"><strong>Enjoyment</strong><div role="group" aria-label="Run enjoyment">{([['loved', 'Loved it'], ['good', 'Good'], ['okay', 'Okay'], ['not-for-me', 'Not for me']] as [RunEnjoyment, string][]).map(([value, label]) => <button type="button" key={value} className={debrief?.enjoyment === value ? "selected" : ""} aria-pressed={debrief?.enjoyment === value} onClick={() => updateRunDebrief(session.id, { enjoyment: value })}>{label}</button>)}</div></div>
           <div className="running-debrief-row"><strong>Effort</strong><div role="group" aria-label="Run effort">{([['easy', 'Easy'], ['moderate', 'Moderate'], ['hard', 'Hard'], ['too-hard', 'Too hard']] as [RunEffort, string][]).map(([value, label]) => <button type="button" key={value} className={debrief?.effort === value ? "selected" : ""} aria-pressed={debrief?.effort === value} onClick={() => updateRunDebrief(session.id, { effort: value })}>{label}</button>)}</div></div>
           <details><summary>Optional reason</summary><div className="running-debrief-reasons" role="group" aria-label="Run feedback reason">{([['great-scenery', 'Great scenery'], ['inconvenient-travel', 'Travel'], ['repetitive', 'Repetitive'], ['tired', 'Tired'], ['discomfort', 'Discomfort'], ['yuna-enjoyed', 'Yuna enjoyed it'], ['another', 'Another reason']] as [RunFeedbackReason, string][]).map(([value, label]) => <button type="button" key={value} className={debrief?.reason === value ? "selected" : ""} aria-pressed={debrief?.reason === value} onClick={() => updateRunDebrief(session.id, { reason: value })}>{label}</button>)}</div></details>
@@ -1836,10 +1836,9 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
   return (
     <div className="screen-stack running-mode">
       <button className="running-inline-back" onClick={() => setView("hub")}>← Running hub</button>
-      <section className="page-intro"><span className="eyebrow">Progress without punishment</span><h1>Runner progress</h1><p>What you have accumulated. Nothing here tells you what you “should” have done.</p></section>
+      <section className="page-intro"><h1>Runner progress</h1></section>
       <div className="running-progress-grid"><article><strong>{totals.runs}</strong><span>runs</span></article><article><strong>{formatRunDistance(totals.distance)}</strong><span>distance</span></article><article><strong>{formatRunClock(totals.seconds)}</strong><span>time outside</span></article><article><strong>{totals.storyRuns}</strong><span>story runs</span></article><article><strong>{totals.xp}</strong><span>running XP earned</span></article><article><strong>{profile.credits}</strong><span>credits available</span></article><article><strong>{profile.dice}</strong><span>runner dice</span></article></div>
       {totals.bestEfforts.length ? <BestEffortList efforts={totals.bestEfforts} personalBestKeys={totals.bestEfforts.map((effort) => effort.key)} /> : null}
-      <section className="card running-principle"><Trophy /><div><strong>Next progression pass</strong><p>Runner Sectors, achievements, streak multipliers and watch/heart-rate data plug in here next.</p></div></section>
     </div>
   );
 }

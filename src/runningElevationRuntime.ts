@@ -28,13 +28,14 @@ function renderCurrentRun() {
   panel.id = PANEL_ID;
   panel.className = "card running-elevation-panel";
 
+  let markup: string;
   if (!elevation) {
-    panel.innerHTML = `<span class="eyebrow">Terrain</span><strong>Reading the hills…</strong><small>The run is already banked. Elevation is being added afterwards.</small>`;
+    markup = `<span class="eyebrow">Terrain</span><strong>Reading the hills…</strong><small>The run is already banked. Elevation is being added afterwards.</small>`;
   } else if (elevation.status !== "ready") {
-    panel.innerHTML = `<span class="eyebrow">Terrain</span><strong>Elevation unavailable</strong><small>No problem — the recorded run and GPS trace are still saved.</small>`;
+    markup = `<span class="eyebrow">Terrain</span><strong>Elevation unavailable</strong><small>Your run is saved.</small>`;
   } else {
     const trace = elevationProfilePoints(elevation.samples);
-    panel.innerHTML = `
+    markup = `
       <div class="section-heading"><div><span class="eyebrow">Terrain</span><h2>Elevation</h2></div><strong>+${Math.round(elevation.gainMeters)} m</strong></div>
       <div class="running-chart-legend"><span><i class="running-chart-line"></i>Elevation profile</span><small>Horizontal: route distance · Vertical: metres</small></div>
       <svg class="running-elevation-chart" viewBox="0 0 100 100" role="img" aria-label="Elevation profile: elevation in metres across the recorded route distance"><polyline points="${trace}"></polyline></svg>
@@ -46,6 +47,8 @@ function renderCurrentRun() {
       </div>
     `;
   }
+
+  if (panel.innerHTML !== markup) panel.innerHTML = markup;
 
   if (!existing) results.insertAdjacentElement("afterend", panel);
 }

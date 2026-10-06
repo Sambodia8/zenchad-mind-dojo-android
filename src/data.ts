@@ -646,13 +646,15 @@ export const STRETCHES: Movement[] = [
   ),
   stretch(
     "standing-quad-stretch",
-    "Standing Knee Flexion Stretch",
+    "Standing Quad Stretch",
     35,
-    "Bend one knee, bring the heel gently toward the seat, keep the knees close, and use a wall for balance.",
+    "Stand on one leg and hold the other ankle behind you, gently drawing that heel toward your seat. Keep both knees close and pointing down, your trunk tall, and use support for balance if needed. Change legs when prompted.",
     ["Quadriceps", "Hip flexors"],
     "Along the front of the lifted thigh and hip.",
     [area(63, 62, 10, 20, -10)],
-    true
+    true,
+    "stretch",
+    "assets/stretches/standing-quad-stretch-v2.png"
   ),
   stretch(
     "supine-twist",
@@ -881,7 +883,7 @@ const warmupMovement = (
   sensationCue: string,
   bodyAreas: BodyArea[],
   kind: Movement["kind"] = "dynamic-warmup",
-  options: Partial<Pick<Movement, "sides" | "image" | "visualFrames">> = {}
+  options: Partial<Pick<Movement, "sides" | "image" | "visualFrames" | "visualAtlas">> = {}
 ): Movement => ({
   id,
   name,
@@ -894,7 +896,8 @@ const warmupMovement = (
   sensationCue,
   bodyAreas,
   ...(options.sides ? { sides: true } : {}),
-  ...(options.visualFrames ? { visualFrames: options.visualFrames } : {})
+  ...(options.visualFrames ? { visualFrames: options.visualFrames } : {}),
+  ...(options.visualAtlas ? { visualAtlas: options.visualAtlas } : {})
 });
 
 const repeatFramePair = (first: string, second: string, cycles: number) =>
@@ -923,19 +926,23 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
     "knee-lifts",
     "Alternating Knee Lifts",
     30,
-    "Stand tall and lift alternate knees toward your hands while keeping your trunk steady.",
+    "Stand tall, lift one knee, lower that foot to the floor, then lift the opposite knee. Keep your trunk steady and repeat at a comfortable pace.",
     ["Hip flexors", "Core", "Glutes"],
     "The front of the lifting hip and trunk should feel active.",
-    [area(49, 48, 13, 16), area(54, 66, 11, 14, -10)]
+    [area(49, 48, 13, 16), area(54, 66, 11, 14, -10)],
+    "dynamic-warmup",
+    { image: "assets/stretches/generated/bike-warmup/knee-lifts-atlas.png", visualAtlas: { columns: 3, sequence: [0, 1, 0, 2], frameMs: 800 } }
   ),
   warmupMovement(
     "knee-bends",
     "Shallow Knee Bends",
     45,
-    "Keep the knees tracking with the toes and lower only a short distance.",
+    "Stand with feet shoulder-width apart. Bend both knees to lower no more than about 10 cm, keep your heels down and knees tracking with your toes, then return to standing and repeat.",
     ["Quadriceps", "Glutes", "Calves"],
     "The thighs and buttocks should feel active without knee pain.",
-    [area(42, 67, 11, 18, -5), area(60, 67, 11, 18, 5)]
+    [area(42, 67, 11, 18, -5), area(60, 67, 11, 18, 5)],
+    "dynamic-warmup",
+    { image: "assets/stretches/generated/bike-warmup/knee-bends-atlas.png", visualAtlas: { columns: 2, sequence: [0, 1, 1, 0], frameMs: 750 } }
   ),
   warmupMovement(
     "hip-circles",
@@ -946,7 +953,7 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
     "A loose, moving sensation around the hips and pelvis without pinching.",
     [area(50, 59, 20, 11)],
     "dynamic-warmup",
-    { image: "assets/stretches/generated/hip-circles.png" }
+    { image: "assets/stretches/generated/bike-warmup/hip-circles-atlas.png", visualAtlas: { columns: 4, sequence: [0, 1, 2, 3], frameMs: 850 } }
   ),
   warmupMovement(
     "front-back-leg-swings",
@@ -959,13 +966,8 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
     "dynamic-warmup",
     {
       sides: true,
-      image: "assets/stretches/generated/pre-run-v2/front-back-leg-swings-01.png",
-      visualFrames: [
-        "assets/stretches/generated/pre-run-v2/front-back-leg-swings-01.png",
-        "assets/stretches/generated/pre-run-v2/front-back-leg-swings-02.png",
-        "assets/stretches/generated/pre-run-v2/front-back-leg-swings-03.png",
-        "assets/stretches/generated/pre-run-v2/front-back-leg-swings-02.png"
-      ]
+      image: "assets/stretches/generated/bike-warmup/front-back-leg-swings-atlas.png",
+      visualAtlas: { columns: 3, sequence: [0, 1, 2, 1], frameMs: 850 }
     }
   ),
   warmupMovement(
@@ -979,13 +981,8 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
     "dynamic-warmup",
     {
       sides: true,
-      image: "assets/stretches/generated/pre-run-v2/lateral-leg-swings-01.png",
-      visualFrames: [
-        "assets/stretches/generated/pre-run-v2/lateral-leg-swings-01.png",
-        "assets/stretches/generated/pre-run-v2/lateral-leg-swings-02.png",
-        "assets/stretches/generated/pre-run-v2/lateral-leg-swings-03.png",
-        "assets/stretches/generated/pre-run-v2/lateral-leg-swings-02.png"
-      ]
+      image: "assets/stretches/generated/bike-warmup/lateral-leg-swings-atlas.png",
+      visualAtlas: { columns: 3, sequence: [0, 1, 2, 1], frameMs: 850 }
     }
   ),
   warmupMovement(
@@ -1021,21 +1018,8 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
     "dynamic-warmup",
     {
       sides: true,
-      image: "assets/stretches/generated/pre-run-v2/ankle-circles-01.png",
-      visualFrames: [
-        "assets/stretches/generated/pre-run-v2/ankle-circles-01.png",
-        "assets/stretches/generated/pre-run-v2/ankle-circles-02.png",
-        "assets/stretches/generated/pre-run-v2/ankle-circles-03.png",
-        "assets/stretches/generated/pre-run-v2/ankle-circles-04.png",
-        "assets/stretches/generated/pre-run-v2/ankle-circles-01.png",
-        "assets/stretches/generated/pre-run-v2/ankle-circles-02.png",
-        "assets/stretches/generated/pre-run-v2/ankle-circles-03.png",
-        "assets/stretches/generated/pre-run-v2/ankle-circles-04.png",
-        "assets/stretches/generated/pre-run-v2/ankle-circles-01.png",
-        "assets/stretches/generated/pre-run-v2/ankle-circles-04.png",
-        "assets/stretches/generated/pre-run-v2/ankle-circles-03.png",
-        "assets/stretches/generated/pre-run-v2/ankle-circles-02.png"
-      ]
+      image: "assets/stretches/generated/bike-warmup/ankle-circles-atlas.png",
+      visualAtlas: { columns: 4, sequence: [0, 1, 2, 3, 0, 3, 2, 1], frameMs: 700 }
     }
   ),
   warmupMovement(
@@ -1096,17 +1080,6 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
         "assets/stretches/generated/pre-run-v3/hip-flexion-torso-rotation-03.png"
       ]
     }
-  ),
-  warmupMovement(
-    "calf-raises",
-    "Calf Raises",
-    30,
-    "Keep the knees straight for 6 controlled raises to load the gastrocnemius, then soften the knees and do 6 more for the soleus. Use a wall for balance and lower slowly.",
-    ["Gastrocnemius", "Soleus", "Ankles"],
-    "The calves should feel warm and active rather than stretched.",
-    [area(42, 72, 10, 18), area(60, 72, 10, 18)],
-    "dynamic-warmup",
-    { image: "assets/stretches/generated/calf-raises.png" }
   ),
   warmupMovement(
     "hamstring-sweeps",
@@ -1211,20 +1184,20 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
     "alternating-reverse-lunges",
     "Alternating Reverse Lunges",
     30,
-    "Step one foot back into a comfortable lunge, return to standing, then alternate sides without holding the bottom position.",
+    "From standing, step one foot backwards and bend both knees a little, keeping the front heel grounded and the rear knee off the floor. Return both feet to standing, then step the other foot back. Keep the movement shallow and controlled.",
     ["Quadriceps", "Glutes", "Hip flexors"],
     "The thighs and glutes should feel active while the hips move through a comfortable range.",
     [area(39, 64, 11, 19, -15), area(64, 69, 10, 19, 15)],
     "dynamic-warmup",
-    { image: "assets/stretches/generated/alternating-reverse-lunges.png" }
+    { image: "assets/stretches/generated/bike-warmup/reverse-lunges-atlas.png", visualAtlas: { columns: 3, sequence: [0, 1, 0, 2], frameMs: 1100 } }
   ),
   {
     id: "wall-calf-stretch",
-    name: "Wall Calf Stretch",
-    image: displayStretchAsset("assets/stretches/generated/wall-calf-stretch.png"),
+    name: "Standing Calf Stretch",
+    image: "assets/stretches/generated/bike-warmup/standing-calf-stretch.png",
     seconds: 20,
     sides: true,
-    cue: "Keep the back heel down and point both feet forward.",
+    cue: "Place your hands on a wall, step one foot back and keep that leg straight with its heel down. Bend the front knee gently and point both feet forward. Hold comfortably, then change legs when prompted.",
     kind: "static-stretch",
     sensationKind: "stretch",
     muscleGroups: ["Gastrocnemius", "Soleus", "Achilles region"],
@@ -1245,6 +1218,8 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
 
 export const MOVEMENTS: Movement[] = [...STRETCHES, ...ROUTINE_ONLY_MOVEMENTS];
 const MOVEMENT_BY_ID = new Map(MOVEMENTS.map((movement) => [movement.id, movement]));
+// Previously saved custom warm-ups use this ID. Resolve it to the corrected stretch.
+MOVEMENT_BY_ID.set("calf-raises", MOVEMENT_BY_ID.get("wall-calf-stretch")!);
 
 export const YOGA_TRANSITION_SECONDS = 5;
 
@@ -1474,8 +1449,8 @@ export const YOGA_CLASSES: YogaClass[] = [
       { movementId: "front-back-leg-swings", seconds: 10 },
       { movementId: "lateral-leg-swings", seconds: 10 },
       { movementId: "hamstring-sweeps", seconds: 15 },
-      { movementId: "calf-rocks-heel-raises", seconds: 20 },
-      { movementId: "calf-raises", seconds: 20 },
+      { movementId: "wall-calf-stretch", seconds: 15 },
+      { movementId: "standing-quad-stretch", seconds: 15 },
       { movementId: "squat-to-forward-fold", seconds: 20 },
       { movementId: "alternating-reverse-lunges", seconds: 15 }
     ]
@@ -1484,19 +1459,20 @@ export const YOGA_CLASSES: YogaClass[] = [
     id: "before-cycling",
     name: "Before Cycling",
     timing: "Before cycling",
-    description: "A short dynamic off-bike warm-up for the ankles, hips, glutes and thighs before you start pedalling.",
+    description: "Off-bike mobility and brief calf and quad stretches before you start pedalling.",
     evidence:
       "Use this mobility sequence to get the joints and cycling muscles moving, then build cadence and resistance progressively once you are on the bike.",
     sourceUrl: "https://www.britishcycling.org.uk/knowledge/bike-kit/article/20251022-Set-up-Why-a-bike-fit-is-essential-for-indoor-training-0",
     focusMuscles: ["Quadriceps", "Hip flexors", "Glutes", "Calves", "Ankles"],
-    image: "assets/stretches/generated/indoor-cycling.png",
+    image: "assets/stretches/display/standing-quad-stretch-v2.png",
     steps: [
       { movementId: "knee-lifts", seconds: 30 },
       { movementId: "hip-circles", seconds: 30 },
       { movementId: "front-back-leg-swings", seconds: 15 },
       { movementId: "lateral-leg-swings", seconds: 15 },
       { movementId: "ankle-circles", seconds: 15 },
-      { movementId: "calf-raises", seconds: 30 },
+      { movementId: "wall-calf-stretch", seconds: 20 },
+      { movementId: "standing-quad-stretch", seconds: 20 },
       { movementId: "alternating-reverse-lunges", seconds: 30 },
       { movementId: "knee-bends", seconds: 30 }
     ]

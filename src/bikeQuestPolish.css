@@ -66,6 +66,38 @@
   background: #c9f0dc;
 }
 
+.bike-quest-final {
+  color: #29271f;
+}
+.bike-quest-final h1,
+.bike-quest-final .bike-completion-xp { color: #29271f; }
+.bike-quest-final > p,
+.bike-quest-final > .eyebrow { color: #5c564a; }
+.bike-completion-xp { display: block; font-size: 1.25rem; margin: 0.4rem 0 1rem; }
+.bike-quest-final .bike-completion-done {
+  color: #fff;
+  background: #225c45;
+  border-color: #225c45;
+  margin-top: 0.75rem;
+}
+.bike-quest-final .bike-completion-done:disabled { opacity: 1; color: #fff; background: #3e5e50; }
+.bike-quest-final .bike-completion-saved { margin: 0.7rem 0 0; }
+.bike-optional-recovery {
+  border: 1px solid #617082;
+  border-radius: 1rem;
+  color: #f8fafc;
+  background: #172136;
+}
+.bike-optional-recovery > summary { padding: 1rem; cursor: pointer; font-weight: 700; }
+.bike-optional-recovery > div { display: grid; gap: 0.75rem; padding: 0 0.75rem 0.75rem; }
+.bike-bonus-actions .button.secondary {
+  color: #f8fafc;
+  background: #364964;
+  border-color: #8696ac;
+}
+.bike-bonus-actions .button.ghost,
+.bike-bonus-card > .button.ghost { color: #f8fafc; background: #273349; }
+
 /* Focus mode is synchronised by bikeQuestRuntime.ts. It applies to Bike Quest itself and
    the cycling Yoga classes launched from the quest. */
 html.bike-quest-focus-mode .bottom-nav {

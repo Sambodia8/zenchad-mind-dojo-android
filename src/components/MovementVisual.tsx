@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import type { Movement } from "../types";
+import "../movementAnimation.css";
 
 interface Props {
   movement: Movement;
@@ -16,7 +17,11 @@ export default function MovementVisual({
   paused = false, reducedMotion = false
 }: Props) {
   const frames = movement.visualFrames;
-  const frameKey = JSON.stringify([movement.id, frames]);
+  const atlas = movement.visualAtlas;
+  const frameKey = JSON.stringify([movement.id, movement.image, frames, atlas]);
+  const sources = useMemo(() => atlas ? [movement.image] : [...new Set(frames ?? [])], [frameKey]);
+  const frameCount = atlas?.sequence.length ?? frames?.length ?? 0;
+  const [atlasSize, setAtlasSize] = useState({ key: "", aspect: 0.6 });
   const [loadedKey, setLoadedKey] = useState<string | null>(null);
   const [failedKey, setFailedKey] = useState<string | null>(null);
   const [frame, setFrame] = useState({ key: frameKey, index: 0 });
@@ -36,14 +41,17 @@ export default function MovementVisual({
     setFrame({ key: frameKey, index: 0 });
   }, [frameKey, playback, mirrored]);
 
-  const canAnimate = playback && !compact && !reducedMotion && !systemReducedMotion && (frames?.length ?? 0) > 1;
+  const canAnimate = playback && !compact && !reducedMotion && !systemReducedMotion && frameCount > 1;
   useEffect(() => {
-    if (!canAnimate || !frames || failedKey === frameKey || loadedKey === frameKey) return;
+    if ((!canAnimate && !atlas) || !sources.length || failedKey === frameKey || loadedKey === frameKey) return;
     let cancelled = false;
-    const images = [...new Set(frames)].map((src) => {
+    const images = sources.map((src) => {
       const image = new Image();
       const ready = new Promise<void>((resolve, reject) => {
-        image.onload = () => resolve();
+        image.onload = () => {
+          if (!cancelled && atlas) setAtlasSize({ key: frameKey, aspect: image.naturalWidth / atlas.columns / image.naturalHeight });
+          resolve();
+        };
         image.onerror = () => reject(new Error("Movement frame unavailable"));
       });
       image.src = src;
@@ -58,24 +66,32 @@ export default function MovementVisual({
       cancelled = true;
       images.forEach(({ image }) => { image.onload = null; image.onerror = null; });
     };
-  }, [canAnimate, frameKey, frames, failedKey, loadedKey]);
+  }, [canAnimate, frameKey, sources, atlas, failedKey, loadedKey]);
 
   const showFrames = canAnimate && loadedKey === frameKey && failedKey !== frameKey;
   useEffect(() => {
-    if (!showFrames || paused || !frames) return;
+    if (!showFrames || paused) return;
     const timer = window.setInterval(() => setFrame((current) => ({
       key: frameKey,
-      index: ((current.key === frameKey ? current.index : 0) + 1) % frames.length
-    })), 700);
+      index: ((current.key === frameKey ? current.index : 0) + 1) % frameCount
+    })), atlas?.frameMs ?? 700);
     return () => window.clearInterval(timer);
-  }, [showFrames, paused, frameKey, frames]);
+  }, [showFrames, paused, frameKey, frameCount, atlas]);
 
   const source = showFrames && frames ? frames[frame.key === frameKey ? frame.index : 0] : movement.image;
+  const poseCell = atlas?.sequence[showFrames && frame.key === frameKey ? frame.index : 0] ?? 0;
+  const aspect = atlasSize.key === frameKey ? atlasSize.aspect : 0.6;
   return (
     <div
-      className={`movement-visual ${compact ? "compact" : ""} ${mirrored ? "mirrored" : ""}`}
+      className={`movement-visual ${atlas ? "has-atlas" : ""} ${compact ? "compact" : ""} ${mirrored ? "mirrored" : ""}`}
+      style={atlas ? { "--frame-aspect": aspect } as CSSProperties : undefined}
     >
-      {source ? (
+      {atlas ? (
+        <div className="movement-pose-cell" role="img" aria-label={`Visual guide for ${movement.name}`}
+          data-pose-cell={poseCell} data-animation-playing={showFrames && !paused}
+          style={{ backgroundImage: `url("${movement.image}")`, backgroundSize: `${atlas.columns * 100}% 100%`,
+            backgroundPosition: `${atlas.columns > 1 ? poseCell / (atlas.columns - 1) * 100 : 0}% 0` }} />
+      ) : source ? (
         <img
           src={source}
           alt={`Visual guide for ${movement.name}`}

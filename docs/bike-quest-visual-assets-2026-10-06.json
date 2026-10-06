@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-06",
+  "generator": "Built-in ImageGen",
+  "references": [
+    "public/assets/yoga/mark-hero-v2.png",
+    "public/assets/stretches/display/kneeling-lunge.png",
+    "User-supplied standing quad stretch photograph (quad asset only; bench excluded)"
+  ],
+  "assets": [
+    {
+      "name": "clothes",
+      "prompt": "Use case: identity-preserve. Production ZenChad exercise illustration. Use both references as canonical Mark: same dark wavy side-swept hair, black rectangular glasses, brown eyes, short dark beard, face and adult proportions. Same illustrated detailed ink/painterly style as the second reference, charcoal short-sleeved t-shirt, olive green joggers, dark trainers. No lettering, captions, symbols or watermark. New single full-body illustration of Mark getting dressed for exercise: already wearing olive athletic joggers, pulling the hem of his charcoal exercise T-shirt down over his waist, elbows slightly out, fully clothed, natural standing pose. Clean cutout on transparent background with subtle ground shadow. Center subject, generous clearance around entire body.",
+      "path": "public/assets/bike-quest/exercise-clothes.png"
+    },
+    {
+      "name": "shoes",
+      "prompt": "Use case: identity-preserve. Production ZenChad exercise illustration. Use both references as canonical Mark: same dark wavy side-swept hair, black rectangular glasses, brown eyes, short dark beard, face and adult proportions. Same illustrated detailed ink/painterly style as the second reference, charcoal short-sleeved t-shirt, olive green joggers, dark trainers. No lettering, captions, symbols or watermark. New single full-body illustration of Mark seated on a simple low bench, leaning down to tie the laces of his dark running trainer. Both feet and hands visible, recognizable Mark face and clothing. Transparent background, only bench and character, no scenery. Center composition with no cropped body parts.",
+      "path": "public/assets/bike-quest/exercise-shoes.png"
+    },
+    {
+      "name": "knee-lifts",
+      "prompt": "Use case: identity-preserve. Production ZenChad exercise illustration. Use both references as canonical Mark: same dark wavy side-swept hair, black rectangular glasses, brown eyes, short dark beard, face and adult proportions. Same illustrated detailed ink/painterly style as the second reference, charcoal short-sleeved t-shirt, olive green joggers, dark trainers. No lettering, captions, symbols or watermark. Create a NEW exercise animation SPRITE SHEET, one wide canvas with exactly THREE equal-width vertical cells from left to right. Plain opaque WHITE background. Each cell contains one entire Mark at identical camera angle, identical body scale, anchored to same floor baseline, no grid lines. Camera front three-quarter, both legs clearly separated. CELL 1: standing tall feet hip-width flat on floor, hands relaxed in front. CELL 2: anatomical LEFT knee lifted to hip height, thigh near horizontal, left foot fully OFF floor, right leg remains straight with foot flat. CELL 3: anatomical RIGHT knee lifted to hip height, thigh near horizontal, right foot fully OFF floor, LEFT foot flat. The opposite knees MUST truly alternate; do not draw the same knee in cells 2 and 3. This atlas will play 1,2,1,3,1 continuously. Full body in each cell with margins, no cell overlap, same Mark face and outfit in all three.",
+      "path": "public/assets/stretches/generated/bike-warmup/knee-lifts-atlas.png"
+    },
+    {
+      "name": "knee-bends",
+      "prompt": "Use case: identity-preserve. Production ZenChad exercise illustration. Use both references as canonical Mark: same dark wavy side-swept hair, black rectangular glasses, brown eyes, short dark beard, face and adult proportions. Same illustrated detailed ink/painterly style as the second reference, charcoal short-sleeved t-shirt, olive green joggers, dark trainers. No lettering, captions, symbols or watermark. Create a NEW exercise animation SPRITE SHEET, wide canvas with exactly TWO equal-width vertical cells. Plain opaque WHITE background; no grid lines. Entire Mark in each cell at identical scale, camera front three-quarter, fixed baseline, full feet and head with margins. CELL 1 standing upright feet hip-width, arms loosely forward. CELL 2 a SHALLOW knee bend: only 20-30 degrees knee flexion, pelvis lowers only a small distance, chest upright, heels on floor, knees track toes. Absolutely no deep squat, thighs remain almost vertical, hips WELL ABOVE knees. Same character and camera, stable feet, no overlap. This will loop standing,bend,standing.",
+      "path": "public/assets/stretches/generated/bike-warmup/knee-bends-atlas.png"
+    },
+    {
+      "name": "reverse-lunges",
+      "prompt": "Use case: identity-preserve. Production ZenChad exercise illustration. Use both references as canonical Mark: same dark wavy side-swept hair, black rectangular glasses, brown eyes, short dark beard, face and adult proportions. Same illustrated detailed ink/painterly style as the second reference, charcoal short-sleeved t-shirt, olive green joggers, dark trainers. No lettering, captions, symbols or watermark. Create a NEW exercise animation SPRITE SHEET on wide WHITE canvas, exactly THREE equal-width vertical cells, no grid lines or text. Camera front three-quarter identical viewpoint, body scale and floor baseline. Entire Mark in each cell, generous margins without overlap. CELL 1 standing tall feet hip-width hands hips. CELL 2 Mark steps anatomical LEFT foot BACK into a controlled shallow reverse lunge; RIGHT foot stays forward flat on ground, right knee flexed, left heel lifted and left toes grounded BEHIND body, rear knee bends but HOVERS well above floor. CELL 3 opposite: anatomical RIGHT foot steps BACK, LEFT foot planted forward, right heel up, rear knee hovering. Same face outfit silhouette scale. NOT kneeling, not a forward lunge, not the same side twice. Will loop standing,left back,standing,right back.",
+      "path": "public/assets/stretches/generated/bike-warmup/reverse-lunges-atlas.png"
+    },
+    {
+      "name": "calf-stretch",
+      "prompt": "Use case: identity-preserve. Production ZenChad exercise illustration. Use both references as canonical Mark: same dark wavy side-swept hair, black rectangular glasses, brown eyes, short dark beard, face and adult proportions. Same illustrated detailed ink/painterly style as the second reference, charcoal short-sleeved t-shirt, olive green joggers, dark trainers. No lettering, captions, symbols or watermark. New single full-body visual demonstrating a standing calf stretch. Mark side view facing left, palms on a simple vertical support/wall at left. Front knee gently bent, rear leg straight extended backwards, BOTH heels firmly DOWN on floor, especially rear heel. Rear toes point forward. Torso straight inclined toward wall. Same recognizable Mark face, outfit, accurate anatomy. Plain opaque WHITE background to match in-app stretch artwork, ample margins, entire feet visible. NOT a calf raise; do not lift either heel.",
+      "path": "public/assets/stretches/generated/bike-warmup/standing-calf-stretch.png"
+    },
+    {
+      "name": "quad-stretch",
+      "prompt": "Use case: identity-preserve. Production ZenChad exercise illustration. Use both references as canonical Mark: same dark wavy side-swept hair, black rectangular glasses, brown eyes, short dark beard, face and adult proportions. Same illustrated detailed ink/painterly style as the second reference, charcoal short-sleeved t-shirt, olive green joggers, dark trainers. No lettering, captions, symbols or watermark. New single full-body illustration: Standing Quad Stretch. THIRD reference photo is the exact pose reference, not character identity: reproduce its standing heel-to-seat action and framing as clear exercise illustration using Mark's face/outfit from refs 1/2. Mark stands on one straight leg, opposite knee bends so heel comes back toward seat, SAME-side hand gently holds ankle behind, knees close together pointing down, pelvis neutral and trunk upright. Free hand can rest lightly on a simple support for balance. Do not force knee back or twist torso. Whole body incl head and planted shoe visible. Charcoal t-shirt, olive joggers, dark trainers; canonical Mark glasses/hair/beard. Plain WHITE opaque background. No scenery, captions or symbols.",
+      "path": "public/assets/stretches/display/standing-quad-stretch-v2.png"
+    },
+    {
+      "name": "hip-circles",
+      "prompt": "Use canonical Mark from these references: dark wavy side-swept hair, black glasses, short dark beard, same face/body, charcoal T-shirt, olive athletic joggers, dark trainers. Same detailed illustrated style. Production exercise animation atlas, wide WHITE canvas, equal-width vertical cells, no grid/text, one full character in each cell same camera, scale and floor baseline, generous margins. Exactly FOUR cells, all facing front with hands hips, feet remain grounded shoulder-width, shoulders steady and knees softly bent: cell1 pelvis shifted gently LEFT, cell2 pelvis gently FORWARD, cell3 pelvis RIGHT, cell4 pelvis BACK. Small comfortable hip circle, no twisting knees. Same character in all cells.",
+      "path": "public/assets/stretches/generated/bike-warmup/hip-circles-atlas.png"
+    },
+    {
+      "name": "front-back-leg-swings",
+      "prompt": "Use canonical Mark from these references: dark wavy side-swept hair, black glasses, short dark beard, same face/body, charcoal T-shirt, olive athletic joggers, dark trainers. Same detailed illustrated style. Production exercise animation atlas, wide WHITE canvas, equal-width vertical cells, no grid/text, one full character in each cell same camera, scale and floor baseline, generous margins. Exactly THREE cells, SIDE view facing LEFT with one hand lightly resting on a slim fixed support. LEFT leg is always working leg, RIGHT foot stays flat grounded at exactly same location. Cell1 working leg extended gently forward toward viewer LEFT. Cell2 working leg hangs below hip, foot just above floor. Cell3 working leg gently extended BACK toward viewer RIGHT. Trunk upright, leg straight but knee soft, amplitude modest, no kneeling or knee lift. Same Mark outfit, full feet visible.",
+      "path": "public/assets/stretches/generated/bike-warmup/front-back-leg-swings-atlas.png"
+    },
+    {
+      "name": "lateral-leg-swings",
+      "prompt": "Use canonical Mark from these references: dark wavy side-swept hair, black glasses, short dark beard, same face/body, charcoal T-shirt, olive athletic joggers, dark trainers. Same detailed illustrated style. Production exercise animation atlas, wide WHITE canvas, equal-width vertical cells, no grid/text, one full character in each cell same camera, scale and floor baseline, generous margins. Exactly THREE cells, front view, one hand resting lightly on a stable slim support beside him. The character's LEFT leg (VIEWER RIGHT) always works; RIGHT foot remains planted same spot. Cell1 working leg extends out to VIEWER RIGHT. Cell2 working leg returns under hip slightly off floor. Cell3 working leg crosses gently IN FRONT of planted leg toward VIEWER LEFT. Gentle small range, torso upright, no leg detaches from hip, same Mark outfit, full feet visible.",
+      "path": "public/assets/stretches/generated/bike-warmup/lateral-leg-swings-atlas.png"
+    },
+    {
+      "name": "ankle-circles",
+      "prompt": "Use canonical Mark from these references: dark wavy side-swept hair, black glasses, short dark beard, same face/body, charcoal T-shirt, olive athletic joggers, dark trainers. Same detailed illustrated style. Production exercise animation atlas, wide WHITE canvas, equal-width vertical cells, no grid/text, one full character in each cell same camera, scale and floor baseline, generous margins. Exactly FOUR cells, front-three-quarter camera, one hand resting on a slim stable support. Character LEFT knee slightly flexed, LEFT foot held a little off floor, RIGHT foot remains flat grounded same spot, leg stays still as ankle rotates. Cell1 left toes point DOWN, cell2 left toes turn IN toward other leg, cell3 toes point UP, cell4 toes turn OUT. Foot stays attached to ankle, motion small and plausible, no knee bends or leg swings. Full body, same character.",
+      "path": "public/assets/stretches/generated/bike-warmup/ankle-circles-atlas.png"
+    }
+  ],
+  "corrections": [
+    {
+      "name": "knee-lifts",
+      "prompt": "Edit this knee-lift sprite sheet, change ONLY the THIRD/rightmost cell. First and second cells must stay unchanged. The second cell currently lifts the leg on the VIEWER'S RIGHT. THIRD CELL MUST INSTEAD LIFT THE LEG ON THE VIEWER'S LEFT, with that thigh going upward/outward to VIEWER LEFT, its foot visibly off the ground toward viewer LEFT. The other foot on viewer RIGHT is now planted. Mirror the limb arrangement of the second cell horizontally to make the lifted knee obviously on the other side, but keep Mark's front-three-quarter chest and face and identical outfit/style/scale. Third cell hip centered in its same cell; feet and head full visible. Match the white background and maintain exactly THREE equal-width cells and same wide canvas size. Do not lift the viewer-right leg in third cell. Do not add text.",
+      "verified": "Third cell lifts the opposite knee; rendered loop 0,1,0,2,0 at 800 ms."
+    },
+    {
+      "name": "reverse-lunges",
+      "verified": "Regenerated opposite-leg cell after initial sheet repeated one leg; rendered loop 0,1,0,2,0 at 1100 ms. Rear knees remain off the floor."
+    },
+    {
+      "name": "knee-bends",
+      "verified": "Shallow bend sheet uses 0,1,1,0 at 750 ms; no deep squat."
+    }
+  ],
+  "treatment": "Gear cutouts have transparent backgrounds. Quad/calf illustrations and animation atlases have light or white backgrounds matching the exercise artwork stage. Atlases use equal-width cells. Actual raster files are bundled as production assets."
+}

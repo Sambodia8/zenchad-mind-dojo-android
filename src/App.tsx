@@ -106,7 +106,11 @@ export default function App() {
           saveData(next);
           return next;
         });
-        if (initial) setRoute({ name: "meditation-timer", preset: state.preset, sessionId: state.status === "completed" ? state.id : undefined });
+        if (initial) {
+          const recovered: Route = { name: "meditation-timer", preset: state.preset, sessionId: state.status === "completed" ? state.id : undefined };
+          routeRef.current = recovered;
+          setRoute(recovered);
+        }
       } catch (error) { console.warn("Meditation recovery will retry when the timer opens", error); }
     };
     void recover(true);
@@ -246,12 +250,29 @@ export default function App() {
     const current = routeRef.current;
     const next = typeof nextRoute === "function" ? nextRoute(current) : nextRoute;
     if (JSON.stringify(current) === JSON.stringify(next)) return;
-    routeHistoryRef.current.push(current);
+    if (next.name === "home") {
+      routeHistoryRef.current = [];
+    } else if (current.name === "yoga-class" &&
+      ((current.returnToBikeQuest && next.name === "bike-quest") ||
+       (current.returnToRunningPreparation && next.name === "running"))) {
+      routeHistoryRef.current = routeHistoryRef.current.filter((entry) =>
+        entry.name !== "yoga-class" && entry.name !== next.name);
+    } else {
+      routeHistoryRef.current.push(current);
+    }
     routeRef.current = next;
     setRoute(next);
   }, []);
 
   const goBack = useCallback(() => {
+    const current = routeRef.current;
+    if (current.name === "yoga-class" && (current.returnToBikeQuest || current.returnToRunningPreparation)) {
+      const parent: Route = current.returnToBikeQuest ? { name: "bike-quest" } : { name: "running" };
+      routeHistoryRef.current = routeHistoryRef.current.filter((entry) => entry.name !== "yoga-class" && entry.name !== parent.name);
+      routeRef.current = parent;
+      setRoute(parent);
+      return true;
+    }
     const previous = routeHistoryRef.current.pop();
     if (previous) {
       routeRef.current = previous;
@@ -347,7 +368,7 @@ export default function App() {
 
   const screen = useMemo(() => {
     switch (route.name) {
-      case "home": return <HomeScreen navigate={navigate} />;
+      case "home": return <HomeScreen data={data} navigate={navigate} />;
       case "meditation-timer": return <MeditationPracticeScreen preset={route.preset} sessionId={route.sessionId} data={data} setData={setData} navigate={navigate} />;
       case "library": return <ToolkitScreen initialTab={route.tab} data={data} setData={setData} navigate={navigate} />;
       case "toolkit": return <ToolkitHubScreen navigate={navigate} />;
@@ -365,8 +386,8 @@ export default function App() {
           if (resolved.name === "yoga") {
             navigate(
               route.returnToBikeQuest
-                ? { name: "bike-quest", resume: route.returnToBikeQuest }
-                : resolved
+                ? { name: "bike-quest" }
+                : { name: "running" }
             );
             return;
           }

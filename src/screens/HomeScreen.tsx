@@ -9,7 +9,11 @@ import {
   PersonStanding,
   type LucideIcon
 } from "lucide-react";
-import type { Route } from "../types";
+import type { AppData, Route } from "../types";
+import { getActivityProgress } from "../activityProgress";
+import { loadRunningProfile } from "../running";
+import { loadCompletedBikeRides } from "../bikeQuestHistory";
+import "../activityProgress.css";
 import { refreshZenCoachNotification } from "../zenCoachNotifications";
 import {
   getDailyZenCoachRecommendation,
@@ -22,6 +26,7 @@ import {
 
 interface Props {
   navigate: Dispatch<SetStateAction<Route>>;
+  data: AppData;
 }
 
 interface HomePath {
@@ -64,13 +69,20 @@ const homePaths: HomePath[] = [
   },
 ];
 
-export default function HomeScreen({ navigate }: Props) {
+export default function HomeScreen({ navigate, data }: Props) {
   const [movementChoiceOpen, setMovementChoiceOpen] = useState(false);
   const [adventureOptionsOpen, setAdventureOptionsOpen] = useState(false);
   const [restAcknowledged, setRestAcknowledged] = useState(false);
   const [snoozed, setSnoozed] = useState(false);
   const [recommendation] = useState(() => getDailyZenCoachRecommendation());
   const coachVisible = loadZenCoachProfile().coachStyle !== "off";
+  const progress = getActivityProgress({
+    sessions: data.activitySessions,
+    practices: data.practiceSessions,
+    runs: loadRunningProfile().history,
+    rides: loadCompletedBikeRides(),
+    weeklyMovementTarget: loadZenCoachProfile().weeklyTarget
+  });
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
@@ -106,6 +118,21 @@ export default function HomeScreen({ navigate }: Props) {
         </div>
       </section>
 
+      {progress.sessions > 0 || progress.movementTargetMet ? (
+        <section className="home-positive-progress" aria-labelledby="home-positive-progress-title">
+          <h2 id="home-positive-progress-title">Last 7 days</h2>
+          {progress.sessions > 0 ? (
+            <dl>
+              <div><dt>{progress.sessions === 1 ? "Session completed" : "Sessions completed"}</dt><dd>{progress.sessions}</dd></div>
+              <div><dt>{progress.activeDays === 1 ? "Active day" : "Active days"}</dt><dd>{progress.activeDays}</dd></div>
+            </dl>
+          ) : null}
+          {progress.movementTargetMet ? (
+            <p>Movement target met · {progress.movementSessions} {progress.movementSessions === 1 ? "run or ride" : "runs and rides"} in the past week</p>
+          ) : null}
+        </section>
+      ) : null}
+
       <section className="home-adventure-card" aria-labelledby="home-adventure-title">
         <div className="home-adventure-heading">
           <span className={`home-adventure-mark${coachVisible ? "" : " off"}`} aria-hidden="true" />
@@ -113,22 +140,9 @@ export default function HomeScreen({ navigate }: Props) {
             <span className="home-adventure-eyebrow">{coachVisible ? "Circuit's pick" : "Today's adventure"}</span>
             <h2 id="home-adventure-title">{restAcknowledged ? snoozed ? "We'll leave it for tomorrow" : "Rest is part of the plan" : recommendation.primary.title}</h2>
           </div>
-          <span className="home-adventure-progress" aria-label={`${recommendation.weekly.completed} of ${recommendation.weekly.target} sessions this rolling week`}>
-            {recommendation.weekly.completed}/{recommendation.weekly.target}
-          </span>
         </div>
 
-        <div className="home-adventure-progress-track" aria-hidden="true">
-          {Array.from({ length: recommendation.weekly.target }, (_, index) => (
-            <span key={index} className={index < recommendation.weekly.completed ? "is-complete" : ""} />
-          ))}
-        </div>
-
-        {restAcknowledged ? (
-          <p className="home-adventure-reason">{snoozed ? "Reminders are paused until tomorrow. Open the app whenever you choose." : "No catch-up required. Come back when movement feels useful."}</p>
-        ) : (
-          <p className="home-adventure-reason"><strong>Why this:</strong> {recommendation.primary.reason}</p>
-        )}
+        {restAcknowledged && snoozed ? <p className="home-adventure-reason">Reminders paused until tomorrow.</p> : null}
 
         {!restAcknowledged ? (
           <div className="home-adventure-actions">
@@ -183,7 +197,6 @@ export default function HomeScreen({ navigate }: Props) {
             </button>
             <div>
               <h2 id="movement-choice-title">How do you want to move?</h2>
-              <p>Choose a run or a ride. Stretching has its own space on Home.</p>
             </div>
             <div className="home-movement-choice-grid">
               <button type="button" onClick={() => navigate({ name: "running" })}>

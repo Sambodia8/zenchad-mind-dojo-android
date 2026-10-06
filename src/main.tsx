@@ -48,6 +48,8 @@ import "./runningHealth.css";
 import "./runningDiagnostics.css";
 import "./zenCoachSettings.css";
 import "./theme.css";
+import "./movementAnimation.css";
+import "./activityCompletion.css";
 
 startBikeQuestRuntime();
 startRunningNativeGeolocationBridge();

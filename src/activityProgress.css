@@ -1,0 +1,31 @@
+.home-positive-progress {
+  display: grid;
+  gap: .55rem;
+  padding: .8rem .9rem;
+  border: 1px solid #b9cdc4;
+  border-radius: 1.05rem;
+  color: #183c30;
+  background: #edf6f0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.home-positive-progress h2 {
+  margin: 0;
+  color: inherit;
+  font-size: .85rem;
+  font-weight: 750;
+}
+.home-positive-progress dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .5rem;
+  margin: 0;
+}
+.home-positive-progress dl > div { display: grid; gap: .1rem; }
+.home-positive-progress dt { order: 1; font-size: .75rem; }
+.home-positive-progress dd { margin: 0; font-size: 1.35rem; font-weight: 800; line-height: 1.1; }
+.home-positive-progress p { margin: 0; color: inherit; font-size: .75rem; line-height: 1.4; }
+:root[data-appearance="dark"] .home-positive-progress {
+  border-color: #36584c;
+  color: #d8f5e8;
+  background: #142c23;
+}

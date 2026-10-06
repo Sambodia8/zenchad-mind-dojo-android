@@ -1,3 +1,15 @@
+# Zen Chad 2.24 — Bike Quest warm-up and activity completion (2026-10-06)
+
+- Bike Quest warm-up saves its position, resumes paused, and returns through Continue Bike Quest. Finishing cycling opens the optional enjoyment/effort check-in; Done saves and returns Home. Partial feedback, history and one-time rewards survive reload.
+- Created 11 Mark assets: exercise clothes, tying trainers, standing quad stretch based on the supplied photo, standing calf stretch, and animated frame sheets for knee lifts, shallow knee bends, reverse lunges, hip circles, front/back and lateral leg swings, and ankle circles. Knee lifts and lunges visibly alternate. Calf raises are replaced; saved old routines retain a compatible movement alias.
+- Meditation, silent practice, independent yoga and Running completion finish at Home. Guided meditations within an existing mystery sequence continue that sequence. Warm-ups are excluded from standalone activity counts.
+- Home shows genuine completed sessions and active days across today plus the previous six local dates, with movement target achievements calculated across seven elapsed days. Duplicate history/receipt records count once; empty indicators remain hidden.
+- Fixed paused/reopened yoga time inflating XP, understated yoga completion XP, recovered silent-practice Done navigation, and a Running results freeze when elevation had insufficient GPS points.
+- Checked actual completion/navigation, saved feedback, reload reward protection, animation playback and asset loading at 412 × 915. Rendered dark and forced-light text/selected states were inspected and contrast corrected. The product currently exposes dark appearance only. Focused progression, Running, yoga/timing, receipt migration/sync, progress and Bike completion tests passed. No connected Android device was available.
+- APK: `ZenChad-2.24-Bike-Quest-Completion.apk`, version 2.24/code 35, package `com.zenchad.minddojo`; 425,948,004 bytes. SHA-256: `63B2FB07524EB6CDA63E7CD62762F9FF3B8B488E1AC7A3EFC07D0091E7A437FA`.
+- Verified APK v1/v2 signatures and the unchanged 2.23 signing certificate. All 11 packaged new assets match source hashes; seven NSDR audio/music files match 2.23. Growth of 18,014,071 bytes is principally the new raster artwork plus regenerated UI/packaging.
+- Local release: `S:\zENcHAD\ZenChadAndroid\releases\ZenChad-2.24-Bike-Quest-Completion.apk`. After the direct Drive upload timed out, Sam requested local delivery and instructed that Drive remain paused. No cloud copy is claimed or pending.
+
 # Zen Chad 2.23 — meditation timer and focus practice (2026-10-03)
 
 - Added an immersive countdown and stopwatch, exact custom durations from one minute to three hours, pause/resume, hidden clock and XP, and remembered settings. Library and Toolkit shortcuts open the new timer; existing guided playback is retained.

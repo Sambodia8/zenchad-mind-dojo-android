@@ -57,6 +57,8 @@ export interface Movement {
   seconds: number;
   /** Ordered, pre-aligned key poses; the representative image remains the still fallback. */
   visualFrames?: string[];
+  /** Equal-width cells of a generated pose atlas, played in this explicit order. */
+  visualAtlas?: { columns: number; sequence: number[]; frameMs: number };
   sides?: boolean;
   cue: string;
   kind: MovementKind;
@@ -247,7 +249,15 @@ export interface GuidedMediaCategory {
   importNote?: string;
 }
 
+export interface ActivitySession {
+  id: string;
+  kind: "meditation" | "yoga" | "run" | "bike";
+  completedAt: string;
+  seconds: number;
+}
+
 export interface AppData {
+  activitySessions: ActivitySession[];
   practicePreferences: PracticePreferences;
   practiceSessions: PracticeSession[];
   focusGoal: FocusGoal | null;

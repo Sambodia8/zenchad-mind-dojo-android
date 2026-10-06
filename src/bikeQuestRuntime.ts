@@ -7,6 +7,7 @@ interface PersistedBikeQuest {
   step?: string;
   rideStartedAt?: number | null;
   rideEndedAt?: number | null;
+  completionDismissed?: boolean;
 }
 
 function loadQuest(): PersistedBikeQuest | null {
@@ -39,7 +40,7 @@ function runningIsVisible() {
 }
 
 function cyclingYogaIsVisible(quest: PersistedBikeQuest | null) {
-  if (!quest || !["pre-stretch", "recovery"].includes(quest.step ?? "")) return false;
+  if (!quest || quest.completionDismissed || !["pre-stretch", "recovery", "complete"].includes(quest.step ?? "")) return false;
   return Boolean(document.querySelector(".yoga-ready, .yoga-player, .yoga-completion"));
 }
 
@@ -166,7 +167,7 @@ function syncBikeQuestChrome() {
   const quest = activeQuest();
   scheduleActiveRideAutoResume(quest);
   syncResumeBannerState(quest);
-  const focusMode = bikeQuestIsVisible() || cyclingYogaIsVisible(quest);
+  const focusMode = bikeQuestIsVisible() || cyclingYogaIsVisible(loadQuest());
   document.documentElement.classList.toggle("bike-quest-focus-mode", focusMode);
   updateResumeDock(quest, focusMode);
 }

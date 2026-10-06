@@ -1,0 +1,22 @@
+import assert from "node:assert/strict";
+import { restoredYogaActiveSeconds, updateYogaActiveClock } from "../src/yogaSessionClock.ts";
+
+let clock = { elapsedMs: 0, activeAt: null };
+clock = updateYogaActiveClock(clock, true, 1000);
+clock = updateYogaActiveClock(clock, true, 61000);
+assert.equal(clock.elapsedMs, 60000, "running exercise accrues active time");
+clock = updateYogaActiveClock(clock, false, 66000);
+clock = updateYogaActiveClock(clock, false, 7200000);
+assert.equal(clock.elapsedMs, 65000, "a two-hour pause cannot earn XP time");
+clock = updateYogaActiveClock(clock, true, 7200000);
+clock = updateYogaActiveClock(clock, false, 7205000);
+assert.equal(clock.elapsedMs, 70000, "running transitions count while active");
+const checkpoint = JSON.parse(JSON.stringify({ activeSeconds: clock.elapsedMs / 1000 }));
+clock = { elapsedMs: restoredYogaActiveSeconds(checkpoint.activeSeconds) * 1000, activeAt: null };
+clock = updateYogaActiveClock(clock, false, 100);
+assert.equal(clock.elapsedMs, 70000, "reopening uses a new monotonic clock without counting absence");
+clock = updateYogaActiveClock(clock, true, 100);
+clock = updateYogaActiveClock(clock, false, 1100);
+assert.equal(clock.elapsedMs, 71000);
+for (const value of [undefined, null, -1, NaN, Infinity, "600"]) assert.equal(restoredYogaActiveSeconds(value), 0);
+console.log("Yoga active timing, pause, transition, reopen and legacy checkpoint checks passed.");

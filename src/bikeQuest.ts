@@ -13,6 +13,11 @@ export type BikeQuestStepId =
 export type BikeQuestResume = "pre-stretch-complete" | "post-stretch-complete";
 export type BikeVrChoice = "vr" | "no-vr";
 
+export interface BikeQuestFeedback {
+  enjoyment?: "loved" | "good" | "okay" | "not-for-me";
+  effort?: "easy" | "moderate" | "hard" | "too-hard";
+}
+
 export interface BikeQuestState {
   version: 1;
   startedAt: number;
@@ -31,6 +36,8 @@ export interface BikeQuestState {
   showerSkipped: boolean;
   totalQuestXp: number;
   awards: Record<string, number>;
+  feedback?: BikeQuestFeedback;
+  completionDismissed?: boolean;
 }
 
 export interface TimedStepConfig {
@@ -50,6 +57,7 @@ export const BIKE_TIMED_STEPS: Record<"gear" | "shoes" | "water" | "mount", Time
   gear: {
     title: "Gear up",
     instruction: "Go to your exercise drawer and put your exercise clothes on.",
+    image: "assets/bike-quest/exercise-clothes.png",
     targetSeconds: 4 * 60,
     graceSeconds: 4 * 60,
     baseXp: 20,
@@ -58,8 +66,8 @@ export const BIKE_TIMED_STEPS: Record<"gear" | "shoes" | "water" | "mount", Time
   },
   shoes: {
     title: "Shoes on",
-    instruction: "Put on the black slip-on bike shoes.",
-    image: "assets/bike-quest/shoes.webp",
+    instruction: "Put on your exercise shoes.",
+    image: "assets/bike-quest/exercise-shoes.png",
     targetSeconds: 90,
     graceSeconds: 90,
     baseXp: 20,
@@ -166,4 +174,21 @@ export function immediateBonusXp(
 
 export function projectedRideXp(seconds: number) {
   return 50 + Math.max(1, Math.floor(Math.max(1, seconds) / 6));
+}
+
+/** A saved ride award is the receipt: repeat finish actions cannot award again. */
+export function completeBikeRide(current: BikeQuestState, endedAt = Date.now()): BikeQuestState | null {
+  if (!current.rideStartedAt || current.step !== "ride" || current.awards.ride !== undefined) return null;
+  const seconds = Math.max(1, Math.round((endedAt - current.rideStartedAt) / 1000));
+  const xp = projectedRideXp(seconds);
+  return {
+    ...current,
+    rideEndedAt: endedAt,
+    rideSeconds: seconds,
+    step: "complete",
+    stepStartedAt: endedAt,
+    completionDismissed: false,
+    awards: { ...current.awards, ride: xp },
+    totalQuestXp: current.totalQuestXp + xp
+  };
 }

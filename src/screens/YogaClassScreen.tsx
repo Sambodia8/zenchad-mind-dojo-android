@@ -17,7 +17,6 @@ import {
   Clock3,
   EllipsisVertical,
   ExternalLink,
-  Footprints,
   Info,
   Music2,
   Pause,
@@ -35,11 +34,12 @@ import {
   YOGA_TRANSITION_SECONDS
 } from "../data";
 import { allowScreenSleep, keepScreenAwake } from "../native";
-import { addCompletedSession } from "../storage";
+import { addCompletedSession, appendActivitySession, saveData } from "../storage";
 import type { AppData, Route } from "../types";
-import type { BikeQuestResume } from "../bikeQuest";
+import { loadBikeQuestState, type BikeQuestResume } from "../bikeQuest";
 import MovementVisual from "../components/MovementVisual";
 import { playUiSfx } from "../uiSfx";
+import { restoredYogaActiveSeconds, updateYogaActiveClock, type YogaActiveClock } from "../yogaSessionClock";
 import {
   addRunningXp,
   completeRunPrepStep,
@@ -120,21 +120,52 @@ export default function YogaClassScreen({
     return getYogaClass(classId);
   }, [classId, data.customYogaClasses]);
   const slides = useMemo(() => expandYogaClassSlides(yogaClass), [yogaClass]);
-  const [phase, setPhase] = useState<PlayerPhase>("ready");
-  const [index, setIndex] = useState(0);
-  const [secondsLeft, setSecondsLeft] = useState(slides[0].seconds);
+  const [sessionId] = useState(() => {
+    const quest = returnToBikeQuest ? loadBikeQuestState() : null;
+    const run = returnToRunningPreparation ? loadRunSession() : null;
+    return quest ? `yoga-substep:bike:${quest.startedAt}:${returnToBikeQuest}:${classId}`
+      : run ? `yoga-substep:run:${run.id}:${classId}` : `yoga:${crypto.randomUUID()}`;
+  });
+  const contextual = sessionId.startsWith("yoga-substep:");
+  const checkpointKey = `zenchad_yoga_player_v1:${sessionId}`;
+  const [restored] = useState(() => {
+    if (!contextual) return null;
+    try {
+      const saved = JSON.parse(localStorage.getItem(checkpointKey) ?? "null");
+      if (saved?.sessionId !== sessionId || !["ready", "pose", "transition", "finished"].includes(saved.phase)
+        || !Number.isInteger(saved.index) || saved.index < 0 || saved.index >= slides.length
+        || (saved.phase === "transition" && saved.index >= slides.length - 1)
+        || !Number.isFinite(saved.secondsLeft) || saved.secondsLeft < 0
+        || saved.secondsLeft > (saved.phase === "transition" ? YOGA_TRANSITION_SECONDS : slides[saved.index].seconds)
+        || !Number.isFinite(saved.startedAt) || saved.startedAt <= 0
+        || !Number.isFinite(saved.earnedXp) || saved.earnedXp < 0) return null;
+      return { ...saved, activeSeconds: restoredYogaActiveSeconds(saved.activeSeconds) } as { phase: PlayerPhase; index: number; secondsLeft: number; startedAt: number; earnedXp: number; activeSeconds: number };
+    } catch { return null; }
+  });
+  const completionReceipt = data.activitySessions.find(receipt => receipt.kind === "yoga" && receipt.id === sessionId);
+  const [phase, setPhase] = useState<PlayerPhase>(completionReceipt ? "finished" : restored?.phase === "finished" ? "pose" : restored?.phase ?? "ready");
+  const [index, setIndex] = useState(restored?.index ?? 0);
+  const [secondsLeft, setSecondsLeft] = useState(restored?.secondsLeft ?? slides[0].seconds);
   const [running, setRunning] = useState(false);
   const [mode, setMode] = useState<AdvanceMode>("timed");
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [guidanceOpen, setGuidanceOpen] = useState(false);
-  const [earnedXp, setEarnedXp] = useState(0);
+  const [earnedXp, setEarnedXp] = useState(() => {
+    if (!completionReceipt) return 0;
+    const poseXp = data.activitySessions.filter(receipt => receipt.kind === "yoga" && receipt.id.startsWith(`yoga-reward:${sessionId}:slide:`)).length * POSE_XP;
+    const prepXp = returnToRunningPreparation ? loadRunSession()?.prepAwards.stretches ?? 0 : 0;
+    const stats = addRunningXp(addCompletedSession(data.stats, completionReceipt.seconds), prepXp + 10 + Math.floor(completionReceipt.seconds / 60));
+    return poseXp + stats.xp - data.stats.xp;
+  });
   const [poseReward, setPoseReward] = useState<{ amount: number; key: number } | null>(null);
   const [recoveryConfirmed, setRecoveryConfirmed] = useState(false);
   const pointerStart = useRef<PointerStart | null>(null);
   const lastTapAdvance = useRef(0);
-  const startedAt = useRef<number | null>(null);
-  const completed = useRef(false);
-  const awardedSlides = useRef<Set<number>>(new Set());
+  const startedAt = useRef<number | null>(restored?.startedAt ?? null);
+  const activeClock = useRef<YogaActiveClock>({ elapsedMs: (restored?.activeSeconds ?? 0) * 1000, activeAt: null });
+  const completed = useRef(Boolean(completionReceipt));
+  const awardedSlides = useRef<Set<number>>(new Set(slides.map((_, slideIndex) => slideIndex).filter(slideIndex =>
+    data.activitySessions.some(receipt => receipt.kind === "yoga" && receipt.id === `yoga-reward:${sessionId}:slide:${slideIndex}`))));
   const poseRewardTimer = useRef<number | null>(null);
   const autoStarted = useRef(false);
   const audioContext = useRef<AudioContext | null>(null);
@@ -153,6 +184,28 @@ export default function YogaClassScreen({
     next?.side === 2 &&
     current.movement.id === next.movement.id;
   const guidanceSlide = phase === "transition" && next ? next : current;
+
+  useEffect(() => {
+    activeClock.current = updateYogaActiveClock(activeClock.current, running && (phase === "pose" || phase === "transition"), performance.now());
+    return () => {
+      activeClock.current = updateYogaActiveClock(activeClock.current, false, performance.now());
+      if (contextual && startedAt.current) {
+        try {
+          const saved = JSON.parse(localStorage.getItem(checkpointKey) ?? "null");
+          if (saved?.sessionId === sessionId) localStorage.setItem(checkpointKey, JSON.stringify({ ...saved, activeSeconds: activeClock.current.elapsedMs / 1000 }));
+        } catch {
+          // A malformed older checkpoint must not interrupt the current class.
+        }
+      }
+    };
+  }, [checkpointKey, contextual, phase, running, sessionId]);
+
+  useEffect(() => {
+    if (!contextual || !startedAt.current) return;
+    activeClock.current = updateYogaActiveClock(activeClock.current, activeClock.current.activeAt !== null, performance.now());
+    localStorage.setItem(checkpointKey, JSON.stringify({ sessionId, phase, index, secondsLeft,
+      startedAt: startedAt.current, earnedXp, activeSeconds: activeClock.current.elapsedMs / 1000, awardedSlides: [...awardedSlides.current] }));
+  }, [checkpointKey, contextual, earnedXp, index, phase, secondsLeft, sessionId]);
 
   useEffect(() => {
     onImmersiveStateChange?.(phase === "pose" || phase === "transition");
@@ -243,25 +296,27 @@ export default function YogaClassScreen({
   const awardPoseXp = useCallback((slideIndex: number) => {
     if (awardedSlides.current.has(slideIndex)) return;
     awardedSlides.current.add(slideIndex);
-    setData((currentData) => ({
-      ...currentData,
-      stats: addRunningXp(currentData.stats, POSE_XP)
-    }));
+    const receipt = { id: `yoga-reward:${sessionId}:slide:${slideIndex}`, kind: "yoga" as const, completedAt: new Date().toISOString(), seconds: 0 };
+    setData((currentData) => {
+      if (currentData.activitySessions.some(entry => entry.kind === "yoga" && entry.id === receipt.id)) return currentData;
+      const nextData = { ...currentData, stats: addRunningXp(currentData.stats, POSE_XP) };
+      const saved = appendActivitySession(nextData, receipt);
+      saveData(saved);
+      return saved;
+    });
     setPoseReward({ amount: POSE_XP, key: slideIndex });
     if (poseRewardTimer.current) window.clearTimeout(poseRewardTimer.current);
     poseRewardTimer.current = window.setTimeout(() => setPoseReward(null), 1300);
     if (data.preferences.uiSoundsEnabled && soundEnabled) playUiSfx("xpGain");
-  }, [data.preferences.uiSoundsEnabled, setData, soundEnabled]);
+  }, [data.preferences.uiSoundsEnabled, sessionId, setData, soundEnabled]);
 
   const finish = useCallback(() => {
     if (completed.current) return;
     completed.current = true;
-    const elapsed = Math.max(
-      1,
-      Math.round((Date.now() - (startedAt.current ?? Date.now())) / 1000)
-    );
+    activeClock.current = updateYogaActiveClock(activeClock.current, false, performance.now());
+    const elapsed = Math.max(1, Math.round(activeClock.current.elapsedMs / 1000));
     const completionXp = 10 + Math.max(0, Math.floor(elapsed / 60));
-    setEarnedXp(slides.length * POSE_XP + completionXp);
+    const completedAt = new Date().toISOString();
     setRunning(false);
     setPhase("finished");
     let runningPrepXp = 0;
@@ -275,22 +330,27 @@ export default function YogaClassScreen({
         }
       }
     }
+    const awardedStats = addRunningXp(addCompletedSession(data.stats, elapsed), runningPrepXp + completionXp);
+    setEarnedXp(awardedSlides.current.size * POSE_XP + awardedStats.xp - data.stats.xp);
     setData((currentData) => {
+      if (currentData.activitySessions.some(receipt => receipt.kind === "yoga" && receipt.id === sessionId)) return currentData;
       const completedStats = addCompletedSession(currentData.stats, elapsed);
       const statsWithRunningPrep = addRunningXp(completedStats, runningPrepXp + completionXp);
-      return {
+      const nextData = appendActivitySession({
         ...currentData,
         stats: {
           ...statsWithRunningPrep,
           yogaSessions: statsWithRunningPrep.yogaSessions + 1
         }
-      };
+      }, { id: sessionId, kind: "yoga", completedAt, seconds: elapsed });
+      saveData(nextData);
+      return nextData;
     });
     navigator.vibrate?.([60, 50, 100]);
     if (data.preferences.uiSoundsEnabled) {
       playUiSfx("victory");
     }
-  }, [data.preferences.uiSoundsEnabled, returnToRunningPreparation, setData, slides.length]);
+  }, [data.preferences.uiSoundsEnabled, data.stats, returnToRunningPreparation, sessionId, setData]);
 
   const beginTransition = useCallback(() => {
     if (phase !== "pose") return;
@@ -410,15 +470,16 @@ export default function YogaClassScreen({
   ]);
 
   const startClass = useCallback(() => {
+    if (completed.current || phase !== "ready") return;
     if (yogaClass.safetyGate && !recoveryConfirmed) return;
     completed.current = false;
-    awardedSlides.current.clear();
+    if (!contextual) awardedSlides.current.clear();
     setPoseReward(null);
     startedAt.current = Date.now();
     void ensureAudio();
     startSlide(0);
     window.scrollTo({ top: 0, behavior: "auto" });
-  }, [ensureAudio, recoveryConfirmed, startSlide, yogaClass.safetyGate]);
+  }, [contextual, ensureAudio, phase, recoveryConfirmed, startSlide, yogaClass.safetyGate]);
 
   const skipBeforeRunWarmup = useCallback(() => {
     if (!isBeforeRunning) return;
@@ -658,66 +719,20 @@ export default function YogaClassScreen({
     return (
       <section className="completion-screen yoga-completion">
         <span className="completion-mark"><Check /></span>
-        <span className="eyebrow">Yoga class complete</span>
+        <span className="eyebrow">{returnToBikeQuest === "pre-stretch-complete" || returnToRunningPreparation ? "Warm-up complete" : returnToBikeQuest === "post-stretch-complete" ? "Cool-down complete" : "Yoga class complete"}</span>
         <h1>{yogaClass.name} logged.</h1>
-        <p>
-          {isBeforeRunning
-            ? returnToRunningPreparation
-              ? `${slides.length} guided movements added to your progress. Your whole body is warm and the next preparation step is ready.`
-              : `${slides.length} guided movements added to your progress. Your whole body is warm. Choose a run, or browse another running class.`
-            : `${slides.length} guided poses added to your progress. Your session is logged — choose what you want to do next.`}
-        </p>
+        <p>{slides.length} {isBeforeRunning ? "movements" : "poses"} completed</p>
         <div className="completion-reward-burst">
           <Award />
-          <span><strong>+{earnedXp} XP</strong><small>Quest progress updated</small></span>
+          <span><strong>+{earnedXp} XP</strong><small>Saved</small></span>
         </div>
         <div className="completion-next-actions">
-          {returnToRunningPreparation ? (
-            <button
-              className="button primary full"
-              onClick={() => navigate({ name: "running" })}
-            >
-              Continue run preparation
-            </button>
-          ) : null}
-          {isBeforeRunning ? (
-            <>
-              <button
-                className={`button ${returnToRunningPreparation ? "secondary" : "primary"} full`}
-                onClick={() => navigate({ name: "running", startMode: "just" })}
-              >
-                <Footprints size={18} /> Start Just Run
-              </button>
-              <button
-                className="button ghost full"
-                onClick={() => navigate({ name: "yoga", mode: "classes" })}
-              >
-                Browse running classes
-              </button>
-            </>
-          ) : null}
-          {!returnToRunningPreparation && !isBeforeRunning ? (
-            <>
-              <button
-                className="button primary full"
-                onClick={() => navigate({ name: "yoga", mode: "classes" })}
-              >
-                Browse yoga classes
-              </button>
-              <button
-                className="button ghost full"
-                onClick={() =>
-                  navigate(
-                    returnToBikeQuest
-                      ? { name: "bike-quest", resume: returnToBikeQuest }
-                      : { name: "home" }
-                  )
-                }
-              >
-                {returnToBikeQuest ? "Continue Bike Quest" : "Done for now"}
-              </button>
-            </>
-          ) : null}
+          <button className="button primary full" disabled={!completionReceipt} onClick={() => navigate(
+            returnToBikeQuest ? { name: "bike-quest", resume: returnToBikeQuest }
+              : returnToRunningPreparation ? { name: "running" } : { name: "home" }
+          )}>
+            {returnToBikeQuest ? "Continue Bike Quest" : returnToRunningPreparation ? "Continue run preparation" : "Done"}
+          </button>
         </div>
       </section>
     );
@@ -869,7 +884,9 @@ export default function YogaClassScreen({
               <div className="pose-name-line">
                 <h1>{current.movement.name}</h1>
                 {current.label || current.side ? (
-                  <span>{current.label ?? `Side ${current.side} of 2`}</span>
+                  <span>{current.label ?? (["standing-quad-stretch", "wall-calf-stretch"].includes(current.movement.id)
+                    ? current.side === 1 ? "Left leg" : "Right leg"
+                    : `Side ${current.side} of 2`)}</span>
                 ) : null}
               </div>
               <strong className="pose-clock" aria-label={`${secondsLeft} seconds remaining`}>
