@@ -6,7 +6,7 @@
 - Added mandatory Google Drive APK delivery instructions to the workspace and canonical app AGENTS.md files. Delivery target: `D:\My Drive\ZenChad`, cloud folder `1xbd93biF2K7tvGhpA_9NMpk-W60sblmh`.
 - APK: `ZenChad-2.27-Complete-Eleven-v4.apk`, version2.27/code38, package `com.zenchad.minddojo`;545,111,418 bytes. SHA-256: `E045C40B7EACA4A7CDDAEA335AD89724140D6022D84B2C080180AB1410D1B57C`. Bundle and Capacitor sync passed; after cached AAPT2 failed to start, packaging passed using installed SDK35 AAPT2. v1/v2 signatures verify with the unchanged certificate.
 - Verified all53 packaged narration/metadata hashes and all four new endings; only the final NSDR narration and four endings changed from2.26. APK growth4,212,085 bytes; updated audio accounts for4,211,332 bytes. Retained previous releases and source backups.
-- Copied the identical numbered APK to `D:\My Drive\ZenChad\ZenChad-2.27-Complete-Eleven-v4.apk`; source and Drive-folder SHA-256 hashes match. Drive desktop currently has `pause_syncing_option: true`; the cloud folder does not yet contain this release. File is queued for sync; asked Sam before resuming Drive because that also resumes unrelated queued files.
+- Copied the identical numbered APK to `D:\My Drive\ZenChad\ZenChad-2.27-Complete-Eleven-v4.apk`; source and Drive-folder SHA-256 hashes match. Sam explicitly chose "Keep paused; APK remains queued" on2026-10-08. Leave Drive syncing paused; cloud delivery is awaiting sync. Do not ask again or resume it for this release without a new instruction.
 
 # Zen Chad 2.26 — meditation alternate takes (2026-10-07)
 
