@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "pratyahara-v1-qda-v3-eleven-v4-zfk",
+  "meditationId": "pratyahara",
+  "title": "The Quiet Side of the Signal",
+  "scriptRevision": "pratyahara-night-sky-v1-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/catalogue/pratyahara-v1-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/pratyahara-v1-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 314259,
+  "maxApprovedCharacters": 2340,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [quiet cabin ventilation hum] [softly] Find a position that can remain easy for a while. Let your eyes close if that feels comfortable, and imagine you are seated inside a quiet craft travelling without hurry."
+    },
+    {
+      "startSeconds": 60,
+      "text": "[soft, slow, warm voice] Begin with the furthest sound you can detect. Perhaps traffic, wind, pipes, or a room beyond this one. Let the outer instruments receive the signal without chasing its source."
+    },
+    {
+      "startSeconds": 110,
+      "text": "[soft, slow, warm voice] Now notice sounds closer to you... the room itself... clothing shifting... the small machinery of breathing. Nothing needs to disappear. You are simply changing which dial receives your attention."
+    },
+    {
+      "startSeconds": 160,
+      "text": "[soft, slow, warm voice] Notice light and darkness behind the eyelids. Colours may flicker like distant panels. Allow the visual channel to dim by itself, without squeezing the eyes or pushing anything away."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[soft, slow, warm voice] Notice temperature where air touches the skin. Then feel the quieter information beneath it: pressure, weight, and the steady contact of the surface supporting you."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[soft, slow, warm voice] [thoughtfully] Pratyahara is not a locked door. The senses may keep sending messages. Imagine placing those messages on a gentle night mode, while attention turns toward the cabin within."
+    },
+    {
+      "startSeconds": 310,
+      "text": "[soft, slow, warm voice] Rest with the breath as sensation rather than sound. Feel a small movement at the nostrils, chest, or belly. Choose whichever signal asks the least effort from you."
+    },
+    {
+      "startSeconds": 360,
+      "text": "[soft, slow, warm voice] If an outer sound becomes bright again, let it arrive. There is no failed withdrawal. Notice it... allow it... then return to the quietest inner coordinate you can find."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[soft, slow, warm voice] Imagine the craft crossing a region where the stars are hidden, yet navigation continues. For a few breaths, let simple inner sensation be enough to guide you."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[soft, slow, warm voice] [reassuringly] You do not have to become empty or perfectly still. Thoughts, sounds, and feelings can remain in the background while you rest nearer to the centre of experience."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[soft, slow, warm voice] Begin turning the outer instruments up again. Include the room, the air, the sounds, and the shape of your body as one complete field."
+    },
+    {
+      "startSeconds": 570,
+      "text": "[soft, slow, warm voice] [softly] Move your hands and feet. Let the eyes open when ready, bringing a little of the quiet side of the signal with you."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/catalogue/pratyahara-v1-qda-v3.json",
+  "sourceId": "pratyahara-v1-qda-v3",
+  "targetAppAudioId": "pratyahara-v1-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

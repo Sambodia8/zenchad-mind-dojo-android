@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "grounding-v2-qda-v3-eleven-v4-zfk",
+  "meditationId": "grounding",
+  "title": "The Campsite Check-In",
+  "scriptRevision": "grounding-campsite-v2-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/grounding-v2-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/grounding-v2-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 502200,
+  "maxApprovedCharacters": 1391,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [soft wind rustling tent fabric] [softly] Keep your eyes open or softly lowered. Imagine checking the coordinates of a calm campsite after dark."
+    },
+    {
+      "startSeconds": 65,
+      "text": "[soft, slow, warm voice] Find five things you can see. Colour, edge, shadow, texture, light. Let each become a marker around the tent."
+    },
+    {
+      "startSeconds": 115,
+      "text": "[soft, slow, warm voice] One... two... three... four... five... You are here, in this particular place."
+    },
+    {
+      "startSeconds": 165,
+      "text": "[soft, slow, warm voice] [soft fabric rustling] Notice four things you can feel: feet, clothing, seat, air, hands, or warmth."
+    },
+    {
+      "startSeconds": 215,
+      "text": "[soft, slow, warm voice] Let contact points become tent pegs holding attention close to the ground."
+    },
+    {
+      "startSeconds": 265,
+      "text": "[soft, slow, warm voice] Find three sounds. Perhaps one is distant, one is near, and one belongs to your body."
+    },
+    {
+      "startSeconds": 315,
+      "text": "[soft, slow, warm voice] Notice two scents or two qualities of the air. Faint and neutral both count."
+    },
+    {
+      "startSeconds": 365,
+      "text": "[soft, slow, warm voice] Notice one taste. Let the smallest ordinary sensation complete the campsite map."
+    },
+    {
+      "startSeconds": 415,
+      "text": "[soft, slow, warm voice] [reassuringly] Thoughts can remain beyond the firelight. They are not the only coordinates available."
+    },
+    {
+      "startSeconds": 465,
+      "text": "[soft, slow, warm voice] Rest with the strongest physical contact point for several breaths."
+    },
+    {
+      "startSeconds": 515,
+      "text": "[soft, slow, warm voice] Look around and name where you are, the approximate time, and one gentle next action."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[soft, slow, warm voice] [softly] Pack only what you need. Leave the campsite slowly and return to the ordinary room."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/variants/grounding-v2-qda-v3.json",
+  "sourceId": "grounding-v2-qda-v3",
+  "targetAppAudioId": "grounding-v2-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

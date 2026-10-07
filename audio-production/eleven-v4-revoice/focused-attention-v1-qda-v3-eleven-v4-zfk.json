@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "focused-attention-v1-qda-v3-eleven-v4-zfk",
+  "meditationId": "focused-attention",
+  "title": "A Small Satellite Comes Home",
+  "scriptRevision": "focused-attention-night-sky-v1-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/catalogue/focused-attention-v1-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/focused-attention-v1-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 314959,
+  "maxApprovedCharacters": 1989,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [softly] Find a steady position and let the body be comfortable enough to fade into the background. Choose the feeling of breathing at the nostrils, chest, or belly as your anchor."
+    },
+    {
+      "startSeconds": 60,
+      "text": "[soft, slow, warm voice] Notice one inhale from beginning to end... then one exhale. You do not need to improve either one. Your only task is to know when the breath is here."
+    },
+    {
+      "startSeconds": 110,
+      "text": "[soft, slow, warm voice] Imagine attention as a small satellite entering an easy orbit around the breath. It does not need a perfect circle. It only needs somewhere to return."
+    },
+    {
+      "startSeconds": 160,
+      "text": "[soft, slow, warm voice] Sooner or later, attention will wander. When you notice, quietly name what carried it: thinking... sound... feeling... planning. Then guide the satellite home."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[soft, slow, warm voice] [reassuringly] The moment of noticing is not a mistake. It is the exact moment the practice becomes alive. Return without scolding the mind for travelling."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[soft, slow, warm voice] Stay with the next three breaths. One... arriving and leaving... Two... arriving and leaving... Three... arriving and leaving."
+    },
+    {
+      "startSeconds": 310,
+      "text": "[soft, slow, warm voice] Let go of counting. Feel the most vivid part of the breath, even if it is only a tiny coolness, movement, or pressure."
+    },
+    {
+      "startSeconds": 360,
+      "text": "[soft, slow, warm voice] If restlessness appears, include it for one moment. Feel where it lives in the body, then return to the breath without beginning an argument."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[soft, slow, warm voice] [thoughtfully] Attention may leave a hundred times. A hundred gentle returns are not a broken meditation; they are a sky full of successful homecomings."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[soft, slow, warm voice] Rest with fewer words now. Breath... wandering... noticing... returning. Let the simple orbit continue."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[soft, slow, warm voice] Begin widening attention beyond the breath. Include the whole body, the sounds around you, and the space of the room."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[soft, slow, warm voice] [softly] Let the satellite roam. Move your hands and feet, open your eyes when ready, and carry the skill of returning into the next thing."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/catalogue/focused-attention-v1-qda-v3.json",
+  "sourceId": "focused-attention-v1-qda-v3",
+  "targetAppAudioId": "focused-attention-v1-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

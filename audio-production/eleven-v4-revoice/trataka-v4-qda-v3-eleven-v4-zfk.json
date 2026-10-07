@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "id": "trataka-v4-qda-v3-eleven-v4-zfk",
+  "meditationId": "trataka",
+  "title": "The Lantern in the Crystal Cave",
+  "scriptRevision": "trataka-crystal-cave-v4-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/trataka-v4-qda-v3-draft.md",
+  "durationSeconds": 740,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/trataka-v4-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 600900,
+  "maxApprovedCharacters": 2125,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [softly] Place a real candle on a stable surface at a comfortable distance, away from anything flammable. Sit upright without becoming rigid."
+    },
+    {
+      "startSeconds": 40,
+      "text": "[soft, slow, warm voice] If you have an eye condition, recent eye surgery, migraine sensitivity, or discomfort, skip the flame and use a gentle non-bright point instead."
+    },
+    {
+      "startSeconds": 90,
+      "text": "[soft, slow, warm voice] [faint cave air sounds] Let the gaze rest near the brightest part of the flame. Imagine it standing inside a quiet crystal cave."
+    },
+    {
+      "startSeconds": 140,
+      "text": "[soft, slow, warm voice] Keep the eyes soft. Reflections may shimmer, but the central lantern remains your simple place of return."
+    },
+    {
+      "startSeconds": 185,
+      "text": "[soft, slow, warm voice] Blink whenever needed. This is attention training, not a contest with your eyelids."
+    },
+    {
+      "startSeconds": 205,
+      "text": "[soft, slow, warm voice] Notice the flame's colour, shape, and tiny movements while the body stays broad and relaxed around seeing."
+    },
+    {
+      "startSeconds": 255,
+      "text": "[soft, slow, warm voice] When thought carries you down another tunnel, acknowledge it and come back to the lantern."
+    },
+    {
+      "startSeconds": 305,
+      "text": "[soft, slow, warm voice] Let the breath move naturally. The flame does not need your breathing to remain alive."
+    },
+    {
+      "startSeconds": 355,
+      "text": "[soft, slow, warm voice] [softly] Close the eyes now and notice any after-image floating behind the lids."
+    },
+    {
+      "startSeconds": 385,
+      "text": "[soft, slow, warm voice] Rest attention on the inner light while it changes colour, moves, fades, or disappears completely."
+    },
+    {
+      "startSeconds": 435,
+      "text": "[soft, slow, warm voice] Open the eyes and return to the real flame. Let the outer lantern become clear again."
+    },
+    {
+      "startSeconds": 485,
+      "text": "[soft, slow, warm voice] Stay for another gentle interval, blinking freely and relaxing the muscles around the eyes."
+    },
+    {
+      "startSeconds": 535,
+      "text": "[soft, slow, warm voice] Notice that steadiness does not mean stillness. The flame dances while attention learns to remain."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[soft, slow, warm voice] [softly] Close the eyes once more. Receive the after-image without trying to pin it in place."
+    },
+    {
+      "startSeconds": 620,
+      "text": "[soft, slow, warm voice] Release even the inner image. Rest in the dark cave of awareness for a few quiet breaths."
+    },
+    {
+      "startSeconds": 675,
+      "text": "[soft, slow, warm voice] Open your eyes, look away from the flame, and let ordinary shapes and colours return."
+    },
+    {
+      "startSeconds": 710,
+      "text": "[soft, slow, warm voice] [reassuringly] Extinguish the candle safely. Carry the practice as a calm return, never as strain."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/fourth-variants/trataka-v4-qda-v3.json",
+  "sourceId": "trataka-v4-qda-v3",
+  "targetAppAudioId": "trataka-v4-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

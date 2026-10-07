@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "batchNumber": 6,
+  "manifests": [
+    "audio-production/eleven-v4-revoice/acceptance-v4-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/nsdr-protocol-v1-qda-v3-eleven-v4-zfk.json"
+  ]
+}

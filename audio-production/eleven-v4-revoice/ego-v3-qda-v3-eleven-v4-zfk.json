@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "id": "ego-v3-qda-v3-eleven-v4-zfk",
+  "meditationId": "ego",
+  "title": "The Name Tags in the Cloud Archive",
+  "scriptRevision": "ego-cloud-archive-v3-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/ego-v3-qda-v3-draft.md",
+  "durationSeconds": 540,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/ego-v3-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 500900,
+  "maxApprovedCharacters": 1548,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [quiet archive room ambience] [softly] Rest comfortably and imagine a quiet archive floating above the city, storing every label the mind has collected."
+    },
+    {
+      "startSeconds": 60,
+      "text": "[soft, slow, warm voice] Let your name appear on a small glowing tag. Notice that the name is known. What is aware of knowing it?"
+    },
+    {
+      "startSeconds": 110,
+      "text": "[soft, slow, warm voice] Add another label: successful... awkward... tired... kind... too much... not enough. Watch the archive receive it."
+    },
+    {
+      "startSeconds": 160,
+      "text": "[soft, slow, warm voice] Ask gently: am I the label, or am I also the space in which the label is read? No final answer is needed."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[soft, slow, warm voice] Notice a thought uploading itself. Then notice the tiny gap before the next thought arrives."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[soft, slow, warm voice] Feel an emotion as data in the body: warmth, pressure, movement. What notices the signal before naming it?"
+    },
+    {
+      "startSeconds": 310,
+      "text": "[soft, slow, warm voice] [thoughtfully] The archive is useful. Memory and identity help you navigate. Yet the present awareness cannot be fully compressed into a folder."
+    },
+    {
+      "startSeconds": 360,
+      "text": "[soft, slow, warm voice] Let all labels float at once without selecting one as the final truth. Rest in the capacity to notice them."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[soft, slow, warm voice] If confusion appears, notice confusion. If spaciousness appears, notice spaciousness. Neither receives administrator privileges."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[soft, slow, warm voice] Return to the ordinary body, with its history, needs, and name. Inquiry can make identity lighter without deleting it."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[soft, slow, warm voice] [softly] Let the archive drift into the clouds. Open your eyes and return to the useful world of names."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/variants/ego-v3-qda-v3.json",
+  "sourceId": "ego-v3-qda-v3",
+  "targetAppAudioId": "ego-v3-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

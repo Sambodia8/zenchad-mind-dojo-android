@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "id": "nsdr-v4-qda-v3-eleven-v4-zfk",
+  "meditationId": "nsdr",
+  "title": "The Observatory Closes for Dawn",
+  "scriptRevision": "nsdr-observatory-v4-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/nsdr-v4-qda-v3-draft.md",
+  "durationSeconds": 780,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/nsdr-v4-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 600300,
+  "maxApprovedCharacters": 2115,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [quiet observatory room ambience] [softly] Lie down and let the surface beneath you take the full assignment of holding your weight. Imagine an observatory finishing its long night shift."
+    },
+    {
+      "startSeconds": 65,
+      "text": "[soft, slow, warm voice] The great telescope stops turning. Feel the right foot, then the left... heels, arches, toes... each small instrument becoming still."
+    },
+    {
+      "startSeconds": 120,
+      "text": "[soft, slow, warm voice] Let both calves and knees grow heavy. The metal stairs inside the observatory no longer need to carry anyone upward."
+    },
+    {
+      "startSeconds": 175,
+      "text": "[soft, slow, warm voice] [soft mechanical click] Soften the thighs and hips. A circular platform settles onto its resting locks with a quiet, dependable click."
+    },
+    {
+      "startSeconds": 230,
+      "text": "[soft, slow, warm voice] Feel the lower back, middle back, and shoulder blades spreading across the support beneath you."
+    },
+    {
+      "startSeconds": 285,
+      "text": "[soft, slow, warm voice] Let the belly move without supervision. The chest can rise and fall like the observatory dome breathing with the last dark hour."
+    },
+    {
+      "startSeconds": 340,
+      "text": "[soft, slow, warm voice] Notice the right hand and arm... then the left. Fingers uncurl as control panels turn their small lights from green to blue."
+    },
+    {
+      "startSeconds": 395,
+      "text": "[soft, slow, warm voice] Release the shoulders away from the ears. Let the throat remain open and uncomplicated."
+    },
+    {
+      "startSeconds": 450,
+      "text": "[soft, slow, warm voice] Soften the jaw, lips, tongue, cheeks, eyelids, brow, and forehead. Even the astronomer of the mind may stop searching."
+    },
+    {
+      "startSeconds": 505,
+      "text": "[soft, slow, warm voice] [reassuringly] Nothing needs to be solved during this interval. Thoughts can cross the dome like satellites and continue beyond the horizon."
+    },
+    {
+      "startSeconds": 560,
+      "text": "[soft, slow, warm voice] Feel the whole body at once, a quiet building beneath an enormous sky. Rest is happening even if sleep does not."
+    },
+    {
+      "startSeconds": 620,
+      "text": "[soft, slow, warm voice] [quiet distant dawn birdsong] Remain here while dawn gathers beyond the shutters. There is nowhere else your attention must report."
+    },
+    {
+      "startSeconds": 685,
+      "text": "[soft, slow, warm voice] Begin to notice breath with a little more clarity. Invite movement into the fingers and toes, as softly as morning light entering."
+    },
+    {
+      "startSeconds": 745,
+      "text": "[soft, slow, warm voice] [softly] Stretch if that feels welcome. Open your eyes when ready; the observatory can reopen slowly, one bright window at a time."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/fourth-variants/nsdr-v4-qda-v3.json",
+  "sourceId": "nsdr-v4-qda-v3",
+  "targetAppAudioId": "nsdr-v4-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

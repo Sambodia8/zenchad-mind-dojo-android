@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "batchNumber": 3,
+  "manifests": [
+    "audio-production/eleven-v4-revoice/urge-surfing-v2-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/ego-v3-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/ajna-v3-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/sound-awareness-v1-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/ego-v2-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/trataka-v3-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/acceptance-v2-story-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/trataka-v2-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/ajna-v2-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/pratyahara-v3-qda-v3-eleven-v4-zfk.json"
+  ]
+}

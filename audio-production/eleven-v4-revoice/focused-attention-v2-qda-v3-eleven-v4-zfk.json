@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "focused-attention-v2-qda-v3-eleven-v4-zfk",
+  "meditationId": "focused-attention",
+  "title": "The Moth Finds the Porch Light",
+  "scriptRevision": "focus-moth-v2-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/focused-attention-v2-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/focused-attention-v2-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 502000,
+  "maxApprovedCharacters": 1281,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [softly] Choose one comfortable breath sensation as your porch light: nostrils, chest, or belly."
+    },
+    {
+      "startSeconds": 65,
+      "text": "[soft, slow, warm voice] Feel one inhale and one exhale. Let attention rest near the small warm signal."
+    },
+    {
+      "startSeconds": 115,
+      "text": "[soft, slow, warm voice] [faint night breeze rustling] Imagine the mind as a moth circling through the dark. Wandering is what minds do."
+    },
+    {
+      "startSeconds": 165,
+      "text": "[soft, slow, warm voice] When you notice thought, sound, or feeling has carried attention away, name it lightly and return to the porch light."
+    },
+    {
+      "startSeconds": 215,
+      "text": "[soft, slow, warm voice] [reassuringly] The return is the practice. No flight path needs to be erased."
+    },
+    {
+      "startSeconds": 265,
+      "text": "[soft, slow, warm voice] Stay with three breaths: one... two... three... feeling each from beginning to end."
+    },
+    {
+      "startSeconds": 315,
+      "text": "[soft, slow, warm voice] Release counting and notice the most vivid detail of breathing."
+    },
+    {
+      "startSeconds": 365,
+      "text": "[soft, slow, warm voice] If restlessness appears, feel it for one moment, then return without argument."
+    },
+    {
+      "startSeconds": 415,
+      "text": "[soft, slow, warm voice] Again and again, the moth discovers the light. Each discovery is new."
+    },
+    {
+      "startSeconds": 465,
+      "text": "[soft, slow, warm voice] Rest with fewer words now: breathing... wandering... noticing... home."
+    },
+    {
+      "startSeconds": 515,
+      "text": "[soft, slow, warm voice] Widen attention to include the whole body and room."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[soft, slow, warm voice] [softly] Open your eyes. Let attention fly freely, remembering that it knows a way back."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/variants/focused-attention-v2-qda-v3.json",
+  "sourceId": "focused-attention-v2-qda-v3",
+  "targetAppAudioId": "focused-attention-v2-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

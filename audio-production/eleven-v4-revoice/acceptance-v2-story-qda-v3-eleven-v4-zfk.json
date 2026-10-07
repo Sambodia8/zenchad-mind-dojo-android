@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "acceptance-v2-story-qda-v3-eleven-v4-zfk",
+  "meditationId": "acceptance",
+  "title": "The Museum of Unfinished Things",
+  "scriptRevision": "acceptance-museum-v2-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/acceptance-v2-story-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/acceptance-v2-story-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 501400,
+  "maxApprovedCharacters": 1690,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [quiet museum room ambience] [softly] Settle and imagine entering a museum after closing, where unfinished feelings and unanswered questions are allowed to remain on display."
+    },
+    {
+      "startSeconds": 65,
+      "text": "[soft, slow, warm voice] Notice what is present now. Perhaps tension, sadness, restlessness, numbness, or something without a name."
+    },
+    {
+      "startSeconds": 115,
+      "text": "[soft, slow, warm voice] Imagine placing the experience on a simple pedestal. Acceptance does not call it beautiful or permanent. It only stops hiding it in the basement."
+    },
+    {
+      "startSeconds": 165,
+      "text": "[soft, slow, warm voice] Feel where the exhibit appears in the body. Notice shape, pressure, temperature, and movement."
+    },
+    {
+      "startSeconds": 215,
+      "text": "[soft, slow, warm voice] The mind may arrive with tools and warning signs. Let the repair crew sit on a bench for a little while."
+    },
+    {
+      "startSeconds": 265,
+      "text": "[soft, slow, warm voice] Quietly say: this is part of the room right now. It does not have to become the entire museum."
+    },
+    {
+      "startSeconds": 315,
+      "text": "[soft, slow, warm voice] [reassuringly] If resistance appears, give it a small display card too. The wish not to feel this is also something being felt."
+    },
+    {
+      "startSeconds": 365,
+      "text": "[soft, slow, warm voice] Broaden attention to sounds, breath, hands, feet, and the surface beneath you. More than one exhibit can exist at once."
+    },
+    {
+      "startSeconds": 415,
+      "text": "[soft, slow, warm voice] For several breaths, allow the unfinished thing to remain without completing its story."
+    },
+    {
+      "startSeconds": 465,
+      "text": "[soft, slow, warm voice] [thoughtfully] Acceptance is not permission for harm and not a contract with forever. It is honest admission to the room you are already in."
+    },
+    {
+      "startSeconds": 515,
+      "text": "[soft, slow, warm voice] Imagine the gallery lights softening. The exhibit can stay while you walk toward the exit."
+    },
+    {
+      "startSeconds": 570,
+      "text": "[soft, slow, warm voice] [softly] Move gently and open your eyes. Leave the museum without needing to take every unfinished thing home."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/variants/acceptance-v2-story-qda-v3.json",
+  "sourceId": "acceptance-v2-story-qda-v3",
+  "targetAppAudioId": "acceptance-v2-story-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

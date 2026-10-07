@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "id": "nsdr-v3-qda-v3-eleven-v4-zfk",
+  "meditationId": "nsdr",
+  "title": "The Seaside Hotel Turns Down the Lights",
+  "scriptRevision": "nsdr-seaside-hotel-v3-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/nsdr-v3-qda-v3-draft.md",
+  "durationSeconds": 780,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/nsdr-v3-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 500500,
+  "maxApprovedCharacters": 2007,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [softly] Lie down comfortably and let the surface receive you. This practice offers deep rest while leaving sleep to do its own important work."
+    },
+    {
+      "startSeconds": 65,
+      "text": "[soft, slow, warm voice] [soft distant waves lapping] Imagine a seaside hotel after midnight. Begin at the left toes, foot, ankle, calf, knee, and thigh as rooms along the west wing go dark."
+    },
+    {
+      "startSeconds": 125,
+      "text": "[soft, slow, warm voice] [soft curtain fabric rustling] Feel the right toes, foot, ankle, calf, knee, and thigh. Curtains close softly along the east wing."
+    },
+    {
+      "startSeconds": 185,
+      "text": "[soft, slow, warm voice] Notice both legs and the pelvis. Let their weight sink like luggage finally placed on the floor."
+    },
+    {
+      "startSeconds": 245,
+      "text": "[soft, slow, warm voice] Move through lower belly, lower back, ribs, chest, and upper back. The lift stops humming; the lobby clock keeps time alone."
+    },
+    {
+      "startSeconds": 305,
+      "text": "[soft, slow, warm voice] Feel left fingers, hand, wrist, forearm, elbow, upper arm, and shoulder. Let every key be returned to the desk."
+    },
+    {
+      "startSeconds": 365,
+      "text": "[soft, slow, warm voice] Now right fingers, hand, wrist, forearm, elbow, upper arm, and shoulder. Both arms can be entirely off duty."
+    },
+    {
+      "startSeconds": 425,
+      "text": "[soft, slow, warm voice] Notice throat and neck... jaw... lips... tongue... cheeks. Let the face become an unoccupied room."
+    },
+    {
+      "startSeconds": 485,
+      "text": "[soft, slow, warm voice] Feel the eyelids, space around the eyes, brow, forehead, temples, ears, back of the head, and scalp."
+    },
+    {
+      "startSeconds": 545,
+      "text": "[soft, slow, warm voice] [faint distant surf] Hear any distant sound as surf beyond the hotel windows. It can roll in and out without requiring attention."
+    },
+    {
+      "startSeconds": 605,
+      "text": "[soft, slow, warm voice] Sense the whole body at once, from scalp to toes. The building rests beside the ocean and breathing continues like a quiet tide."
+    },
+    {
+      "startSeconds": 665,
+      "text": "[soft, slow, warm voice] [thoughtfully] Nothing has to feel heavy. Nothing has to disappear. Let rest be the absence of another assignment."
+    },
+    {
+      "startSeconds": 715,
+      "text": "[soft, slow, warm voice] Remain here for several breaths while the hotel keeps its patient watch beside the dark water."
+    },
+    {
+      "startSeconds": 745,
+      "text": "[soft, slow, warm voice] [softly] Invite movement back into hands and feet. Open your eyes slowly, as though morning has reached the curtains."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/variants/nsdr-v3-qda-v3.json",
+  "sourceId": "nsdr-v3-qda-v3",
+  "targetAppAudioId": "nsdr-v3-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

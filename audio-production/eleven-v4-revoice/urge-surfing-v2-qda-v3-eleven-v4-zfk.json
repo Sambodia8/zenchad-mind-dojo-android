@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "id": "urge-surfing-v2-qda-v3-eleven-v4-zfk",
+  "meditationId": "urge-surfing",
+  "title": "A Comet Does Not Need Chasing",
+  "scriptRevision": "urge-comet-v2-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/urge-surfing-v2-qda-v3-draft.md",
+  "durationSeconds": 540,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/urge-surfing-v2-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 501200,
+  "maxApprovedCharacters": 1481,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [softly] Pause somewhere safe. This is for observing an ordinary urge, not replacing help in an immediate safety or medical situation."
+    },
+    {
+      "startSeconds": 60,
+      "text": "[soft, slow, warm voice] Name what is here: craving... pulling... wanting. Imagine it as a comet entering the edge of your sky."
+    },
+    {
+      "startSeconds": 110,
+      "text": "[soft, slow, warm voice] Locate the urge in the body. Notice pressure, heat, tightness, movement, or restless energy."
+    },
+    {
+      "startSeconds": 160,
+      "text": "[soft, slow, warm voice] The comet can be bright without giving instructions. Watch its tail, speed, and changing shape."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[soft, slow, warm voice] Notice any thought that says now, always, or impossible. Let the words travel behind the comet rather than steering your body."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[soft, slow, warm voice] [reassuringly] Intensity may rise. A brighter moment does not mean you must chase it or make it disappear."
+    },
+    {
+      "startSeconds": 310,
+      "text": "[soft, slow, warm voice] Rate the urge from zero to ten, then check again after several breaths. Observe change without demanding reduction."
+    },
+    {
+      "startSeconds": 360,
+      "text": "[soft, slow, warm voice] Feel the body beneath the sky: feet, seat, hands, breath. You are more than the streak of light passing through."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[soft, slow, warm voice] Notice whether the urge has moved, sharpened, faded, or stayed. All are useful observations."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[soft, slow, warm voice] [thoughtfully] Choice can wait until the comet is no longer filling the whole window. Remain here for a few more breaths."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[soft, slow, warm voice] [softly] Let the comet continue beyond the horizon. Return to the room and choose the next action deliberately."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/variants/urge-surfing-v2-qda-v3.json",
+  "sourceId": "urge-surfing-v2-qda-v3",
+  "targetAppAudioId": "urge-surfing-v2-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

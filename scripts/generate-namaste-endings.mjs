@@ -5,8 +5,12 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const manifestPath = path.join(projectRoot, "audio-production", "namaste-endings.json");
-const keyFile = "D:\\My Drive\\ZenChad\\api key.txt";
+function argumentValue(name) {
+  const index = process.argv.indexOf(name);
+  return index === -1 ? undefined : process.argv[index + 1];
+}
+const manifestPath = path.resolve(projectRoot, argumentValue("--manifest") || "audio-production/namaste-endings.json");
+const keyFile = argumentValue("--key-file") || "D:\\My Drive\\AI Apps\\Zen Chat (ZenChad)\\api key.txt";
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -145,7 +149,7 @@ async function main() {
   await writeFile(path.join(outputDirectory, "generation.json"), `${JSON.stringify({
     schemaVersion: 1,
     generatedAt,
-    manifest: "audio-production/namaste-endings.json",
+    manifest: path.relative(projectRoot, manifestPath).replaceAll("\\", "/"),
     outputFormat: manifest.outputFormat,
     voiceSettings: manifest.voiceSettings,
     requestCount: results.length,

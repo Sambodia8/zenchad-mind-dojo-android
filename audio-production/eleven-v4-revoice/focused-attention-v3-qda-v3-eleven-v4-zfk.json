@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "focused-attention-v3-qda-v3-eleven-v4-zfk",
+  "meditationId": "focused-attention",
+  "title": "One Clear Frequency",
+  "scriptRevision": "focus-frequency-v3-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/focused-attention-v3-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/focused-attention-v3-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 502100,
+  "maxApprovedCharacters": 1251,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [softly] Settle and choose the breath as one clear frequency. Feel it where the signal is easiest to detect."
+    },
+    {
+      "startSeconds": 65,
+      "text": "[soft, slow, warm voice] Listen with the body to one full inhale... one full exhale."
+    },
+    {
+      "startSeconds": 115,
+      "text": "[soft, slow, warm voice] Thoughts may produce static, music, headlines, and weather reports. Notice the broadcast."
+    },
+    {
+      "startSeconds": 165,
+      "text": "[soft, slow, warm voice] Turn the dial gently back to breathing. No need to smash the radio."
+    },
+    {
+      "startSeconds": 215,
+      "text": "[soft, slow, warm voice] When sound distracts you, name hearing. When thought distracts you, name thinking. Then tune back."
+    },
+    {
+      "startSeconds": 265,
+      "text": "[soft, slow, warm voice] [reassuringly] Every noticed distraction proves awareness is working."
+    },
+    {
+      "startSeconds": 315,
+      "text": "[soft, slow, warm voice] Count five breaths if useful. One... two... three... four... five... then release the numbers."
+    },
+    {
+      "startSeconds": 365,
+      "text": "[soft, slow, warm voice] Stay near the smallest breath detail you can feel without straining."
+    },
+    {
+      "startSeconds": 415,
+      "text": "[soft, slow, warm voice] Let static rise and fall around the signal. You do not need perfect reception."
+    },
+    {
+      "startSeconds": 465,
+      "text": "[soft, slow, warm voice] Rest in the repeated movement of losing and finding the frequency."
+    },
+    {
+      "startSeconds": 515,
+      "text": "[soft, slow, warm voice] Expand hearing to every channel in the room while keeping a faint sense of breath."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[soft, slow, warm voice] [softly] Open your eyes and carry one clear frequency into the next task."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/variants/focused-attention-v3-qda-v3.json",
+  "sourceId": "focused-attention-v3-qda-v3",
+  "targetAppAudioId": "focused-attention-v3-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

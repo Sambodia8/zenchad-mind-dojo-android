@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "id": "ego-v2-qda-v3-eleven-v4-zfk",
+  "meditationId": "ego",
+  "title": "The Museum of Borrowed Costumes",
+  "scriptRevision": "ego-costume-museum-v2-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/ego-v2-qda-v3-draft.md",
+  "durationSeconds": 540,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/ego-v2-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 500800,
+  "maxApprovedCharacters": 1618,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [quiet museum room ambience] [softly] Settle and let breathing become ordinary. Imagine walking through a museum where every role you have worn is displayed as a costume."
+    },
+    {
+      "startSeconds": 60,
+      "text": "[soft, slow, warm voice] Notice one role: friend, worker, child, helper, outsider, expert. See it hanging beneath a small museum light."
+    },
+    {
+      "startSeconds": 110,
+      "text": "[soft, slow, warm voice] Quietly ask: what notices this role? Wait without replacing the question with a clever answer."
+    },
+    {
+      "startSeconds": 160,
+      "text": "[soft, slow, warm voice] [soft fabric rustling] A memory appears like an old coat. It belongs to your history, yet it can also be observed from here."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[soft, slow, warm voice] A judgment appears: I am this kind of person. Place that sentence beside the costume and notice the space around both."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[soft, slow, warm voice] [thoughtfully] Roles are not false; they are useful clothing for particular rooms. The inquiry asks whether the wearer is larger than any single outfit."
+    },
+    {
+      "startSeconds": 310,
+      "text": "[soft, slow, warm voice] Notice a sound, a sensation, and a thought. Each becomes an exhibit inside awareness. What is the open museum that contains them?"
+    },
+    {
+      "startSeconds": 360,
+      "text": "[soft, slow, warm voice] If the mind produces an answer, display that answer too. Let it stand beneath glass for a moment."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[soft, slow, warm voice] Drop the question and rest as simple noticing. Costumes remain, stories remain, and the room around them stays spacious."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[soft, slow, warm voice] [reassuringly] You do not need to lose identity. You can wear your name gently without sewing it to the sky."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[soft, slow, warm voice] [softly] Feel the body here. Leave the museum wearing whatever role the next moment needs, and open your eyes when ready."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/variants/ego-v2-qda-v3.json",
+  "sourceId": "ego-v2-qda-v3",
+  "targetAppAudioId": "ego-v2-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

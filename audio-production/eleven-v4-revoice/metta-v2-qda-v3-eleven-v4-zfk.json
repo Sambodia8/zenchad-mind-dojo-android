@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "metta-v2-qda-v3-eleven-v4-zfk",
+  "meditationId": "metta",
+  "title": "The Firefly Post Office",
+  "scriptRevision": "metta-firefly-v2-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/metta-v2-qda-v3-draft.md",
+  "durationSeconds": 570,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/metta-v2-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 500000,
+  "maxApprovedCharacters": 2083,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [softly] Settle into a position that feels kind enough for today. Imagine a tiny post office opening after sunset, staffed by patient fireflies."
+    },
+    {
+      "startSeconds": 60,
+      "text": "[soft, slow, warm voice] Begin with a message addressed to you. May I be safe... may I be cared for... may I have moments of ease. Let the words glow without demanding that you believe them perfectly."
+    },
+    {
+      "startSeconds": 110,
+      "text": "[soft, slow, warm voice] A firefly lifts the message gently and carries it around the quiet rooms of your body. Perhaps warmth arrives. Perhaps awkwardness does. Both can receive mail here."
+    },
+    {
+      "startSeconds": 160,
+      "text": "[soft, slow, warm voice] [soft paper rustling] Now picture someone easy to wish well. Place their name on another small envelope. May you be safe... may you be cared for... may you have moments of ease."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[soft, slow, warm voice] [faint wind rustling leaves] Watch that light travel across gardens, rooftops, and sleeping streets. You do not need to know how the message lands."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[soft, slow, warm voice] Bring to mind a familiar stranger... someone seen on a bus, in a shop, or through a neighbouring window. Their life contains rooms you have never entered."
+    },
+    {
+      "startSeconds": 310,
+      "text": "[soft, slow, warm voice] May you be safe... may you be cared for... may you have moments of ease. Another firefly rises into the common dark."
+    },
+    {
+      "startSeconds": 360,
+      "text": "[soft, slow, warm voice] [thoughtfully] Include someone difficult only if that feels workable. You can offer a modest wish without approving their actions: may wisdom and kindness become more possible."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[soft, slow, warm voice] Let the post office grow busy now. Thousands of small lights carry wishes toward animals, strangers, friends, and people awake beneath unfamiliar skies."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[soft, slow, warm voice] May we be safe... may we be cared for... may we have moments of ease. Let the sentence be a direction of the heart, not a promise about the world."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[soft, slow, warm voice] Release the words and feel the body breathing. The fireflies can continue their work without your supervision."
+    },
+    {
+      "startSeconds": 540,
+      "text": "[soft, slow, warm voice] [softly] Return to the room. Open your eyes when ready, carrying one small undelivered kindness into the rest of your day."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/variants/metta-v2-qda-v3.json",
+  "sourceId": "metta-v2-qda-v3",
+  "targetAppAudioId": "metta-v2-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

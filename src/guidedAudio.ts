@@ -7,18 +7,77 @@ export interface GuidedAudioTrack {
   modelId: string;
 }
 
+const ELEVEN_V4_REVOICED_TRACK_IDS = new Set([
+  "acceptance-v2-story-qda-v3",
+  "acceptance-v3-story-qda-v3",
+  "acceptance-v4-qda-v3",
+  "acceptance-v4-story-qda-v3",
+  "ajna-v1-qda-v3",
+  "ajna-v2-qda-v3",
+  "ajna-v3-qda-v3",
+  "ajna-v4-qda-v3",
+  "diaphragmatic-breathing-v1-qda-v3",
+  "diaphragmatic-breathing-v2-qda-v3",
+  "diaphragmatic-breathing-v3-qda-v3",
+  "diaphragmatic-breathing-v4-qda-v3",
+  "ego-v1-qda-v3",
+  "ego-v2-qda-v3",
+  "ego-v3-qda-v3",
+  "ego-v4-qda-v3",
+  "focused-attention-v1-qda-v3",
+  "focused-attention-v2-qda-v3",
+  "focused-attention-v3-qda-v3",
+  "focused-attention-v4-qda-v3",
+  "grounding-v1-qda-v3",
+  "grounding-v2-qda-v3",
+  "grounding-v3-qda-v3",
+  "grounding-v4-qda-v3",
+  "metta-v1-qda-v3",
+  "metta-v2-qda-v3",
+  "metta-v3-qda-v3",
+  "metta-v4-qda-v3",
+  "nsdr-protocol-v1-qda-v3",
+  "nsdr-v1-qda-v3",
+  "nsdr-v2-qda-v3",
+  "nsdr-v3-qda-v3",
+  "nsdr-v4-qda-v3",
+  "pratyahara-v1-qda-v3",
+  "pratyahara-v2-qda-v3",
+  "pratyahara-v3-qda-v3",
+  "pratyahara-v4-qda-v3",
+  "sound-awareness-v1-qda-v3",
+  "sound-awareness-v2-qda-v3",
+  "sound-awareness-v3-qda-v3",
+  "sound-awareness-v4-qda-v3",
+  "trataka-v1-qda-v3",
+  "trataka-v2-qda-v3",
+  "trataka-v3-qda-v3",
+  "trataka-v4-qda-v3",
+  "urge-surfing-v1-qda-v3",
+  "urge-surfing-v2-qda-v3",
+  "urge-surfing-v3-qda-v3",
+  "urge-surfing-v4-qda-v3",
+  "yoga-nidra-v1-qda-v3",
+  "yoga-nidra-v2-qda-v3",
+  "yoga-nidra-v3-qda-v3",
+  "yoga-nidra-v4-qda-v3",
+]);
+
 const track = (
   id: string,
   title: string,
   durationSeconds: number
-): GuidedAudioTrack => ({
-  id,
-  src: `assets/audio/meditations/${id}.ogg`,
-  title,
-  durationSeconds,
-  voiceName: "adam owls soothing v2",
-  modelId: "eleven_v3"
-});
+): GuidedAudioTrack => {
+  const revoiced = ELEVEN_V4_REVOICED_TRACK_IDS.has(id);
+  return {
+    id,
+    src: `assets/audio/meditations/${id}.ogg`,
+    title,
+    durationSeconds,
+    voiceName: revoiced ? "Adam soothing owls" : "adam owls soothing v2",
+    modelId: revoiced ? "eleven_v4" : "eleven_v3"
+  };
+};
 
 export const GUIDED_AUDIO_BY_MEDITATION: Record<string, GuidedAudioTrack[]> = {
   metta: [

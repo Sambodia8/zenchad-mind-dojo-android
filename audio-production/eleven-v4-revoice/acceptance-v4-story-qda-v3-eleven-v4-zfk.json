@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "acceptance-v4-story-qda-v3-eleven-v4-zfk",
+  "meditationId": "acceptance",
+  "title": "The Repair Shop for Bent Constellations",
+  "scriptRevision": "acceptance-constellation-shop-v4-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/acceptance-v4-story-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/acceptance-v4-story-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 600800,
+  "maxApprovedCharacters": 1808,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [quiet workshop room ambience] [softly] Let yourself arrive without improving the moment first. Imagine a repair shop open at midnight for constellations that have become bent or incomplete."
+    },
+    {
+      "startSeconds": 65,
+      "text": "[soft, slow, warm voice] Notice what is present in you now: tension, sadness, impatience, numbness, calm, or something without a name."
+    },
+    {
+      "startSeconds": 115,
+      "text": "[soft, slow, warm voice] Place the experience gently on the workbench. Say inwardly: this is what is here right now."
+    },
+    {
+      "startSeconds": 165,
+      "text": "[soft, slow, warm voice] Acceptance does not declare the damage beautiful or permanent. It simply turns on the lamp so you can see what you are actually holding."
+    },
+    {
+      "startSeconds": 215,
+      "text": "[soft, slow, warm voice] Find the feeling in the body. Give it room around the edges, as though the workbench were wider than the object resting there."
+    },
+    {
+      "startSeconds": 265,
+      "text": "[soft, slow, warm voice] Breathe beside it. You do not need to breathe into it, through it, or away from it. Company is enough."
+    },
+    {
+      "startSeconds": 315,
+      "text": "[soft, slow, warm voice] Thoughts may arrive with urgent repair instructions. Thank the mind for trying, then return to the plain fact of this sensation."
+    },
+    {
+      "startSeconds": 365,
+      "text": "[soft, slow, warm voice] [reassuringly] If the experience feels too large, look around the real room, feel your feet, and choose a smaller piece to meet."
+    },
+    {
+      "startSeconds": 415,
+      "text": "[soft, slow, warm voice] Imagine the constellation still shining while one point is missing. Wholeness can include a gap without pretending the gap is not there."
+    },
+    {
+      "startSeconds": 465,
+      "text": "[soft, slow, warm voice] Repeat softly: this belongs to the current sky... I do not have to like it... I can stop arguing with its presence for one breath."
+    },
+    {
+      "startSeconds": 515,
+      "text": "[soft, slow, warm voice] Let the workbench, tools, and midnight windows fade. Feel the larger awareness holding every imperfect star."
+    },
+    {
+      "startSeconds": 570,
+      "text": "[soft, slow, warm voice] [softly] Return to the room. Take the next kind and practical step, leaving the universe unfinished enough to keep becoming."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/fourth-variants/acceptance-v4-story-qda-v3.json",
+  "sourceId": "acceptance-v4-story-qda-v3",
+  "targetAppAudioId": "acceptance-v4-story-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

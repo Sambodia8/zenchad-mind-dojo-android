@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "ajna-v4-qda-v3-eleven-v4-zfk",
+  "meditationId": "ajna",
+  "title": "The Planetarium's Violet Lens",
+  "scriptRevision": "ajna-planetarium-v4-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/ajna-v4-qda-v3-draft.md",
+  "durationSeconds": 720,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/ajna-v4-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 600600,
+  "maxApprovedCharacters": 1899,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [quiet planetarium ventilation hum] [softly] Sit or lie comfortably. Let the eyes rest behind closed lids and imagine entering a small planetarium after dark."
+    },
+    {
+      "startSeconds": 65,
+      "text": "[soft, slow, warm voice] Feel the body supported first... feet, seat, hands, and the natural movement of breath. Grounding is the floor beneath every constellation."
+    },
+    {
+      "startSeconds": 120,
+      "text": "[soft, slow, warm voice] Bring gentle attention to the space between the eyebrows. Keep the physical eyes soft and level, without trying to look upward."
+    },
+    {
+      "startSeconds": 175,
+      "text": "[soft, slow, warm voice] Imagine a violet lens there, no larger than a coin. It does not burn or push; it simply gathers scattered light."
+    },
+    {
+      "startSeconds": 230,
+      "text": "[soft, slow, warm voice] With each easy inhale, the lens becomes clear. With each exhale, unnecessary effort falls away like dust from a projector."
+    },
+    {
+      "startSeconds": 285,
+      "text": "[soft, slow, warm voice] A thought may paint a comet across the dome. Notice it, then return to the quiet lens at the centre."
+    },
+    {
+      "startSeconds": 340,
+      "text": "[soft, slow, warm voice] If you see darkness, colour, patterns, or nothing in particular, all are acceptable. The practice is attention, not special effects."
+    },
+    {
+      "startSeconds": 395,
+      "text": "[soft, slow, warm voice] Rest with the point of focus while the rest of the face remains spacious... jaw loose, tongue resting, forehead smooth."
+    },
+    {
+      "startSeconds": 450,
+      "text": "[soft, slow, warm voice] [reassuringly] If pressure or strain appears, widen attention to the whole head or open the eyes. Comfort is more important than intensity."
+    },
+    {
+      "startSeconds": 505,
+      "text": "[soft, slow, warm voice] Let the violet lens float in a much larger field of awareness, like one friendly planet among uncountable dark miles."
+    },
+    {
+      "startSeconds": 560,
+      "text": "[soft, slow, warm voice] Release the image. Keep only the calm precision of returning whenever the mind wandered."
+    },
+    {
+      "startSeconds": 615,
+      "text": "[soft, slow, warm voice] Feel the hands and feet again. Notice the room as the planetarium slowly raises its ordinary lights."
+    },
+    {
+      "startSeconds": 680,
+      "text": "[soft, slow, warm voice] [softly] Open your eyes when ready. Carry the lens as a metaphor for clear attention, not something you must keep seeing."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/fourth-variants/ajna-v4-qda-v3.json",
+  "sourceId": "ajna-v4-qda-v3",
+  "targetAppAudioId": "ajna-v4-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

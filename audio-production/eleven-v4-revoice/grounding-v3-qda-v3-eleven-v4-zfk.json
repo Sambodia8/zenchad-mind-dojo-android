@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "grounding-v3-qda-v3-eleven-v4-zfk",
+  "meditationId": "grounding",
+  "title": "A Small Kitchen at Dawn",
+  "scriptRevision": "grounding-kitchen-v3-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/grounding-v3-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/grounding-v3-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 502300,
+  "maxApprovedCharacters": 1363,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [quiet kitchen appliance hum] [softly] Let the eyes stay open. Imagine attention arriving in a small kitchen just before sunrise."
+    },
+    {
+      "startSeconds": 65,
+      "text": "[soft, slow, warm voice] Notice five visible details as though morning light has found them for the first time."
+    },
+    {
+      "startSeconds": 115,
+      "text": "[soft, slow, warm voice] Shape... colour... pattern... reflection... shadow. Let seeing return you to this room."
+    },
+    {
+      "startSeconds": 165,
+      "text": "[soft, slow, warm voice] [soft fabric rustling] Find four touch sensations: fabric, floor, chair, temperature, weight, or the meeting of hands."
+    },
+    {
+      "startSeconds": 215,
+      "text": "[soft, slow, warm voice] Notice three sounds, including the quiet mechanical sounds a home makes by itself."
+    },
+    {
+      "startSeconds": 265,
+      "text": "[soft, slow, warm voice] Find two scents or air qualities. Perhaps clean, warm, cool, dry, familiar, or almost absent."
+    },
+    {
+      "startSeconds": 315,
+      "text": "[soft, slow, warm voice] Notice one taste. Neutral is still a taste and ordinary is still present."
+    },
+    {
+      "startSeconds": 365,
+      "text": "[soft, slow, warm voice] [thoughtfully] Let all five senses share one countertop of awareness. Nothing needs to dominate."
+    },
+    {
+      "startSeconds": 415,
+      "text": "[soft, slow, warm voice] Feel both feet or the back of the body as one dependable surface."
+    },
+    {
+      "startSeconds": 465,
+      "text": "[soft, slow, warm voice] Name the day, the place, and one thing you can do next without rushing."
+    },
+    {
+      "startSeconds": 515,
+      "text": "[soft, slow, warm voice] Look around again and notice one detail that feels pleasant or simply okay."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[soft, slow, warm voice] [softly] Let morning continue. Move into the next moment with the room still around you."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/variants/grounding-v3-qda-v3.json",
+  "sourceId": "grounding-v3-qda-v3",
+  "targetAppAudioId": "grounding-v3-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

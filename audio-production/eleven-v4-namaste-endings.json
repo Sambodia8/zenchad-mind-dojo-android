@@ -6,7 +6,7 @@
   "voiceName": "Adam soothing owls",
   "modelId": "eleven_v4",
   "outputFormat": "opus_48000_192",
-  "outputDirectory": "public/assets/audio/endings",
+  "outputDirectory": "output/eleven-v4-revoice/namaste-endings",
   "maxGenerations": 4,
   "maxApprovedCharacters": 180.0,
   "voiceSettings": {

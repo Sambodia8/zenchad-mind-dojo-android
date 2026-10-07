@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "diaphragmatic-breathing-v3-qda-v3-eleven-v4-zfk",
+  "meditationId": "diaphragmatic-breathing",
+  "title": "The Cave That Breathes with the Tide",
+  "scriptRevision": "breathing-tide-cave-v3-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/diaphragmatic-breathing-v3-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/diaphragmatic-breathing-v3-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 501900,
+  "maxApprovedCharacters": 1454,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [softly] Find an easy position and let the breath arrive as it is. One hand may rest on the belly and one on the chest."
+    },
+    {
+      "startSeconds": 65,
+      "text": "[soft, slow, warm voice] On an inhale, invite gentle movement beneath the lower hand. On the exhale, let the belly settle without pushing."
+    },
+    {
+      "startSeconds": 115,
+      "text": "[soft, slow, warm voice] [gentle waves lapping] Imagine the lower ribs as a cave beside the sea. Water enters quietly and the walls make a little space."
+    },
+    {
+      "startSeconds": 165,
+      "text": "[soft, slow, warm voice] The tide leaves in its own time. Keep every breath smaller than strain."
+    },
+    {
+      "startSeconds": 215,
+      "text": "[soft, slow, warm voice] Notice expansion toward the front, sides, and back... a three-dimensional room rather than a balloon forced outward."
+    },
+    {
+      "startSeconds": 265,
+      "text": "[soft, slow, warm voice] Let several breaths follow their own tide with no counting."
+    },
+    {
+      "startSeconds": 315,
+      "text": "[soft, slow, warm voice] [reassuringly] If you feel dizzy, tingly, or uncomfortable, return to ordinary breathing immediately."
+    },
+    {
+      "startSeconds": 365,
+      "text": "[soft, slow, warm voice] Try a soft count only if it helps: in one... two... three... out one... two... three."
+    },
+    {
+      "startSeconds": 415,
+      "text": "[soft, slow, warm voice] Release the count and listen for the quiet point between waves, without holding the breath there."
+    },
+    {
+      "startSeconds": 465,
+      "text": "[soft, slow, warm voice] Allow shoulders, throat, and jaw to remain unhelpfully relaxed while the diaphragm does less dramatic work."
+    },
+    {
+      "startSeconds": 515,
+      "text": "[soft, slow, warm voice] Let the hands grow light and trust the body to continue breathing."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[soft, slow, warm voice] [softly] Leave the cave beside the tide. Feel the room and breathe however feels natural now."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/variants/diaphragmatic-breathing-v3-qda-v3.json",
+  "sourceId": "diaphragmatic-breathing-v3-qda-v3",
+  "targetAppAudioId": "diaphragmatic-breathing-v3-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

@@ -7,6 +7,11 @@
 - **Desktop is explicit-only**: Keep `electron/` functional, but do not alter or package desktop behavior unless the user specifically requests the desktop app.
 - **Native completion**: After UI/source changes, use Android-focused checks. Run `npm run android:sync` only when native assets need updating or the user requests a build/check that requires it.
 
+## APK delivery to Google Drive
+- Every completed APK build includes a copy to `D:\My Drive\ZenChad` as well as `releases/`, unless Sam explicitly opts out for that build. Use the same numbered filename and keep previous releases.
+- The corresponding cloud release folder is `https://drive.google.com/drive/folders/1xbd93biF2K7tvGhpA_9NMpk-W60sblmh`. Verify local copy hashes and confirm cloud delivery when sync is available. If Drive is paused, use the connected upload or report awaiting sync; never claim cloud delivery without evidence.
+- Sam's 2026-10-08 instruction supersedes the previous temporary pause in APK delivery. For slow transfers, start a hidden background process with a progress log and check it later.
+
 ## GitHub completion
 - After any meaningful Zen Chad change, once the relevant checks pass, commit the changes and push the commit to GitHub unless the user explicitly says not to push.
 

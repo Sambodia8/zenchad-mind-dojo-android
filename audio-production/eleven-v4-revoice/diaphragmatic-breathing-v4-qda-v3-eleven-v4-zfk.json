@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "diaphragmatic-breathing-v4-qda-v3-eleven-v4-zfk",
+  "meditationId": "diaphragmatic-breathing",
+  "title": "The Jellyfish Bell",
+  "scriptRevision": "diaphragmatic-jellyfish-v4-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/diaphragmatic-breathing-v4-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/diaphragmatic-breathing-v4-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 601000,
+  "maxApprovedCharacters": 1637,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [faint water movement] [softly] Sit or lie comfortably and let the first breaths be entirely ordinary. Imagine calm blue water beneath the lower ribs."
+    },
+    {
+      "startSeconds": 65,
+      "text": "[soft, slow, warm voice] Place one hand on the upper chest and one around the belly or lower ribs, if touch feels helpful."
+    },
+    {
+      "startSeconds": 115,
+      "text": "[soft, slow, warm voice] As air arrives, invite the lower hand to move a little. Picture a luminous jellyfish bell widening without hurry."
+    },
+    {
+      "startSeconds": 165,
+      "text": "[soft, slow, warm voice] As air leaves, the bell gathers inward. Do not squeeze it empty; let the water complete the motion."
+    },
+    {
+      "startSeconds": 215,
+      "text": "[soft, slow, warm voice] Feel expansion around the sides and back of the lower ribs as well as the front. The whole soft ring may participate."
+    },
+    {
+      "startSeconds": 265,
+      "text": "[soft, slow, warm voice] [reassuringly] Keep each breath comfortable. If you feel light-headed, short of breath, or strained, return immediately to natural breathing."
+    },
+    {
+      "startSeconds": 315,
+      "text": "[soft, slow, warm voice] Continue with an easy rhythm: widening... gathering... widening... gathering. No number needs to govern the sea."
+    },
+    {
+      "startSeconds": 365,
+      "text": "[soft, slow, warm voice] Let the shoulders remain quiet while the deeper movement does less visible work below."
+    },
+    {
+      "startSeconds": 415,
+      "text": "[soft, slow, warm voice] Notice whether the breath can become smoother rather than bigger. A small jellyfish still travels perfectly well."
+    },
+    {
+      "startSeconds": 465,
+      "text": "[soft, slow, warm voice] Release the image and feel the actual body breathing, supported by muscles that already know the route."
+    },
+    {
+      "startSeconds": 515,
+      "text": "[soft, slow, warm voice] Take several unshaped breaths. Observe what continues by itself when you stop helping."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[soft, slow, warm voice] [softly] Let the hands rest. Return to the room with the lower ribs spacious and the breath free to choose its own tide."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/fourth-variants/diaphragmatic-breathing-v4-qda-v3.json",
+  "sourceId": "diaphragmatic-breathing-v4-qda-v3",
+  "targetAppAudioId": "diaphragmatic-breathing-v4-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

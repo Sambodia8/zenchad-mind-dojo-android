@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "pratyahara-v4-qda-v3-eleven-v4-zfk",
+  "meditationId": "pratyahara",
+  "title": "The Moon Garden Folds Its Petals",
+  "scriptRevision": "pratyahara-moon-garden-v4-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/pratyahara-v4-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/pratyahara-v4-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 600200,
+  "maxApprovedCharacters": 1764,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [faint night wind rustling leaves] [softly] Imagine sitting in a garden that blooms only beneath the moon. You do not need to silence the world; simply let the garden meet it gently."
+    },
+    {
+      "startSeconds": 60,
+      "text": "[soft, slow, warm voice] Notice the furthest sound. A night flower receives it on one wide petal, then slowly folds the petal inward."
+    },
+    {
+      "startSeconds": 110,
+      "text": "[soft, slow, warm voice] Notice nearer sounds... the room, your clothing, the breath. Another petal closes without rejecting anything it touched."
+    },
+    {
+      "startSeconds": 160,
+      "text": "[soft, slow, warm voice] Behind closed eyes, colours and after-images may shimmer. Let them dim like greenhouse lamps switching off one row at a time."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[soft, slow, warm voice] Feel temperature along the skin. Imagine the garden drawing its delicate leaves closer, keeping warmth near the stem."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[soft, slow, warm voice] Taste and scent may be vivid, faint, or absent. Let those pathways curl inward like silver vines returning to a trellis."
+    },
+    {
+      "startSeconds": 310,
+      "text": "[soft, slow, warm voice] Now include the whole outer world as weather beyond a glass roof. It can continue while you rest beneath it."
+    },
+    {
+      "startSeconds": 360,
+      "text": "[soft, slow, warm voice] Turn toward an inner sensation: the pulse in a fingertip, movement in the belly, or the quiet weight of your hands."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[soft, slow, warm voice] [reassuringly] If a strong sensation asks for attention, respond kindly. Pratyahara is not disappearance; it is choosing where to place the lantern."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[soft, slow, warm voice] Rest at the centre of the folded flower. Sounds and sensations remain at the edges, softened by layers of patient petals."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[soft, slow, warm voice] For a few breaths, enjoy the inward garden without trying to make it perfectly still."
+    },
+    {
+      "startSeconds": 570,
+      "text": "[soft, slow, warm voice] [softly] Let each petal open again. Hear the room, feel the air, and return carrying a little moonlit quiet inside."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/fourth-variants/pratyahara-v4-qda-v3.json",
+  "sourceId": "pratyahara-v4-qda-v3",
+  "targetAppAudioId": "pratyahara-v4-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

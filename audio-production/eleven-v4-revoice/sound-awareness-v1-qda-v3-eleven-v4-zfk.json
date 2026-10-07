@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "sound-awareness-v1-qda-v3-eleven-v4-zfk",
+  "meditationId": "sound-awareness",
+  "title": "Radio Constellations",
+  "scriptRevision": "sound-awareness-night-sky-v1-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/catalogue/sound-awareness-v1-qda-v3-draft.md",
+  "durationSeconds": 405,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/sound-awareness-v1-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 314659,
+  "maxApprovedCharacters": 1554,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [softly] Settle and let the eyes close if that makes listening easier. Imagine an old radio whose dial can travel across the entire night."
+    },
+    {
+      "startSeconds": 55,
+      "text": "[soft, slow, warm voice] First, open hearing to everything at once. Sounds do not need names. Let them appear as bright points in a changing constellation."
+    },
+    {
+      "startSeconds": 95,
+      "text": "[soft, slow, warm voice] Turn the dial toward the furthest sound you can detect. Rest there without leaning or searching too hard. Let distance reveal itself."
+    },
+    {
+      "startSeconds": 135,
+      "text": "[soft, slow, warm voice] If another sound interrupts, include it briefly, then return to the far edge of hearing... the quiet transmission beyond the nearest walls."
+    },
+    {
+      "startSeconds": 175,
+      "text": "[soft, slow, warm voice] [soft fabric rustling] Now tune toward the closest sound... breathing... fabric... a tiny movement in the room. Receive the near signal without making it louder."
+    },
+    {
+      "startSeconds": 215,
+      "text": "[soft, slow, warm voice] Shift slowly between far and near. Far... near... Each return is a small turn of the dial, not a test of concentration."
+    },
+    {
+      "startSeconds": 255,
+      "text": "[soft, slow, warm voice] [thoughtfully] Notice the spaces between sounds. Silence may not be empty; it can feel like the dark thread connecting each radio star."
+    },
+    {
+      "startSeconds": 300,
+      "text": "[soft, slow, warm voice] Release the dial and hear the whole field together. Near and far signals share one wide sky, arriving and disappearing by themselves."
+    },
+    {
+      "startSeconds": 345,
+      "text": "[soft, slow, warm voice] Include the feeling of your body listening. Sound, silence, and sensation can all belong to this single moment."
+    },
+    {
+      "startSeconds": 375,
+      "text": "[soft, slow, warm voice] [softly] Let your eyes open when ready. Keep the radio wide for one more breath, then return to the room."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/catalogue/sound-awareness-v1-qda-v3.json",
+  "sourceId": "sound-awareness-v1-qda-v3",
+  "targetAppAudioId": "sound-awareness-v1-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

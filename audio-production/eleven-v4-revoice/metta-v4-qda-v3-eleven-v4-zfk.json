@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "metta-v4-qda-v3-eleven-v4-zfk",
+  "meditationId": "metta",
+  "title": "The Weather Balloon Dispatch",
+  "scriptRevision": "metta-weather-balloon-v4-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/metta-v4-qda-v3-draft.md",
+  "durationSeconds": 570,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/metta-v4-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 600100,
+  "maxApprovedCharacters": 1916,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [soft evening wind] [softly] Settle where you are and imagine a small weather station waking beneath a lavender evening. A silver balloon waits beside you, light enough to trust the sky."
+    },
+    {
+      "startSeconds": 60,
+      "text": "[soft, slow, warm voice] Tie a message to its string for yourself: may I be safe enough to soften... may I befriend this life... may I find one pocket of ease today."
+    },
+    {
+      "startSeconds": 110,
+      "text": "[soft, slow, warm voice] The balloon rises without asking whether you have earned the message. Watch it carry your words above chimneys and telephone wires."
+    },
+    {
+      "startSeconds": 160,
+      "text": "[soft, slow, warm voice] Prepare another dispatch for someone whose happiness comes easily to mind. May you be protected... may you feel loved... may rest find your address."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[soft, slow, warm voice] Their balloon joins yours in the high blue quiet. Kindness can travel beside kindness without either one becoming smaller."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[soft, slow, warm voice] Now think of a person you barely know. They have private forecasts, sudden storms, and mornings when the sun surprises them too."
+    },
+    {
+      "startSeconds": 310,
+      "text": "[soft, slow, warm voice] May you be safe enough to soften... may you know companionship... may there be ease among your unknown hours."
+    },
+    {
+      "startSeconds": 360,
+      "text": "[soft, slow, warm voice] If it feels safe, include a difficult person at a great and comfortable distance. Wish only that confusion and harm lose some of their weather."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[soft, slow, warm voice] [reassuringly] You never need to invite anyone closer. Boundaries can be kind fences around a garden that is still learning how to grow."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[soft, slow, warm voice] Picture hundreds of luminous balloons crossing the night between hospitals, houses, oceans, and lonely windows. May all beings receive some kindness."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[soft, slow, warm voice] Let the dispatches travel beyond your view. Feel the ordinary breath and the body that launched them."
+    },
+    {
+      "startSeconds": 540,
+      "text": "[soft, slow, warm voice] [softly] Return to the room. Perhaps carry one simple wish into the next conversation, like a folded map of better weather."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/fourth-variants/metta-v4-qda-v3.json",
+  "sourceId": "metta-v4-qda-v3",
+  "targetAppAudioId": "metta-v4-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

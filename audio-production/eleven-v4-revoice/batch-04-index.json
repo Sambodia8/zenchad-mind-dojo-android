@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "batchNumber": 4,
+  "manifests": [
+    "audio-production/eleven-v4-revoice/pratyahara-v2-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/nsdr-v3-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/metta-v3-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/nsdr-v2-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/grounding-v1-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/urge-surfing-v1-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/trataka-v4-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/nsdr-v4-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/focused-attention-v1-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/ego-v1-qda-v3-eleven-v4-zfk.json"
+  ]
+}

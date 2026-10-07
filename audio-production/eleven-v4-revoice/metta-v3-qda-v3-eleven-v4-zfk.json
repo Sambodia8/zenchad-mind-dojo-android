@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "metta-v3-qda-v3-eleven-v4-zfk",
+  "meditationId": "metta",
+  "title": "Paper Boats Under the Moon",
+  "scriptRevision": "metta-paper-boats-v3-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/metta-v3-qda-v3-draft.md",
+  "durationSeconds": 570,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/metta-v3-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 500100,
+  "maxApprovedCharacters": 1967,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [gentle canal water lapping] [softly] Let the body be supported. Imagine a moonlit canal beside you, smooth enough to carry a small paper boat."
+    },
+    {
+      "startSeconds": 60,
+      "text": "[soft, slow, warm voice] Write a wish for yourself on the first boat: may I be protected from unnecessary harm... may I know friendship... may I rest when rest is needed."
+    },
+    {
+      "startSeconds": 110,
+      "text": "[soft, slow, warm voice] Set the boat on the water. If self-kindness feels difficult, let the canal hold the wish until you are ready to receive it."
+    },
+    {
+      "startSeconds": 160,
+      "text": "[soft, slow, warm voice] [soft paper folding] Fold another boat for someone you love. Picture their ordinary face, including the details that make them human rather than perfect."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[soft, slow, warm voice] May you be protected from unnecessary harm... may you know friendship... may you rest when rest is needed. Watch their boat join yours."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[soft, slow, warm voice] Now choose a person who usually stays at the edge of your attention. A stranger has a whole weather system of memories too."
+    },
+    {
+      "startSeconds": 310,
+      "text": "[soft, slow, warm voice] Offer the same wishes and let a third boat drift into the silver current. No emotion is required; intention is enough for this moment."
+    },
+    {
+      "startSeconds": 360,
+      "text": "[soft, slow, warm voice] If it feels possible, include someone with whom life is complicated. Keep your boundaries. Simply wish that suffering and confusion do not keep multiplying."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[soft, slow, warm voice] [reassuringly] You may skip anyone who makes the practice unsafe. Loving kindness includes the person sitting here, and that person is allowed to choose distance."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[soft, slow, warm voice] [faint river flowing] Imagine the canal widening into a river filled with paper lights. May all of us find safety... connection... and enough gentleness for the next step."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[soft, slow, warm voice] Let the river travel beyond imagination. Feel your hands, your breathing, and the quiet place where the boats began."
+    },
+    {
+      "startSeconds": 540,
+      "text": "[soft, slow, warm voice] [softly] Open your eyes when ready. Keep one blank boat nearby for a kindness you have not thought of yet."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/variants/metta-v3-qda-v3.json",
+  "sourceId": "metta-v3-qda-v3",
+  "targetAppAudioId": "metta-v3-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "id": "ego-v4-qda-v3-eleven-v4-zfk",
+  "meditationId": "ego",
+  "title": "The Theatre After the Applause",
+  "scriptRevision": "ego-theatre-v4-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/ego-v4-qda-v3-draft.md",
+  "durationSeconds": 540,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/ego-v4-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 600500,
+  "maxApprovedCharacters": 1689,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [quiet empty theatre room ambience] [softly] Settle into breathing and imagine a theatre after the audience has gone home. The stage remains, but nobody needs to perform."
+    },
+    {
+      "startSeconds": 60,
+      "text": "[soft, slow, warm voice] Notice a familiar role you play: helper, achiever, outsider, expert, troublemaker, or something else. See it as a costume resting on a chair."
+    },
+    {
+      "startSeconds": 110,
+      "text": "[soft, slow, warm voice] The costume may be useful and meaningful. Still, ask quietly: when I am not wearing this role, what notices its absence?"
+    },
+    {
+      "startSeconds": 160,
+      "text": "[soft, slow, warm voice] A thought enters like an actor rehearsing one last line. Who hears the thought? Do not answer in words too quickly."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[soft, slow, warm voice] An emotion may cross the stage with dramatic lighting. What is aware of the lighting, the feeling, and the wish for it to change?"
+    },
+    {
+      "startSeconds": 260,
+      "text": "[soft, slow, warm voice] Notice the body breathing in the front row. Is awareness located in one exact seat, or is that another idea appearing?"
+    },
+    {
+      "startSeconds": 310,
+      "text": "[soft, slow, warm voice] [thoughtfully] Let the question remain open. This is curiosity, not an attempt to erase your history, personality, or practical self."
+    },
+    {
+      "startSeconds": 360,
+      "text": "[soft, slow, warm voice] Imagine the stage lights dimming. Names, opinions, memories, and plans can rest backstage without being destroyed."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[soft, slow, warm voice] For a few breaths, experience simple noticing before the next line is spoken. Nothing needs to claim ownership of the silence."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[soft, slow, warm voice] Now allow your ordinary identity to return, like a favourite coat chosen consciously rather than mistaken for the whole sky."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[soft, slow, warm voice] [softly] Hear the room around you. The theatre is not empty; it is spacious enough for every role and the quiet behind them."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/fourth-variants/ego-v4-qda-v3.json",
+  "sourceId": "ego-v4-qda-v3",
+  "targetAppAudioId": "ego-v4-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

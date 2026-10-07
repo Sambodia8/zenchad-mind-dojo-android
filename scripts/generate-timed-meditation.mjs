@@ -5,7 +5,7 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const defaultKeyFile = "D:\\My Drive\\ZenChad\\api key.txt";
+const defaultKeyFile = "D:\\My Drive\\AI Apps\\Zen Chat (ZenChad)\\api key.txt";
 
 function argumentValue(name) {
   const index = process.argv.indexOf(name);
@@ -65,8 +65,18 @@ function probe(filePath) {
 function validateManifest(manifest, outputPath) {
   assert(manifest.schemaVersion === 1, "Unsupported manifest schemaVersion.");
   assert(manifest.approved === true, "Manifest must be explicitly approved.");
-  assert(manifest.modelId === "eleven_v3", "Production meditation manifests must use Eleven v3.");
-  assert(manifest.voiceId === "qDaEJf74mtxsdGvyyq8t", "Production meditation manifests must use voice #3.");
+  const approvedV4Revoice =
+    manifest.modelId === "eleven_v4" &&
+    manifest.voiceId === "zFkVchYwoYAFyxBrr2oH" &&
+    manifest.generationProfile === "user-authorized-eleven-v4-revoice";
+  assert(
+    approvedV4Revoice || manifest.modelId === "eleven_v3",
+    "Production meditation manifests must use Eleven v3 unless they are explicitly approved for Eleven v4 revoicing."
+  );
+  assert(
+    approvedV4Revoice || manifest.voiceId === "qDaEJf74mtxsdGvyyq8t",
+    "Production meditation manifests must use voice #3 unless they are explicitly approved for Eleven v4 revoicing."
+  );
   assert(Number.isInteger(manifest.durationSeconds) && manifest.durationSeconds > 0, "durationSeconds is required.");
   assert(manifest.openingSilenceSeconds === 15, "Production tracks require exactly 15 seconds of opening silence.");
   assert(manifest.closingSilenceSeconds >= 8, "Production tracks require at least 8 seconds of closing silence.");
@@ -136,7 +146,8 @@ async function main() {
   const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
   const outputPath = path.resolve(projectRoot, manifest.outputPath);
   const totalCharacters = validateManifest(manifest, outputPath);
-  const generate = process.argv.includes("--generate");
+  const assembleOnly = process.argv.includes("--assemble-only");
+  const generate = process.argv.includes("--generate") || assembleOnly;
 
   console.log("Manifest: " + path.relative(projectRoot, manifestPath));
   console.log("Approved timed cues: " + manifest.segments.length);
@@ -148,9 +159,12 @@ async function main() {
   }
   assert(!(await fileExists(outputPath)), "Refusing to overwrite existing output: " + outputPath);
 
-  const keyFile = path.resolve(argumentValue("--key-file") || defaultKeyFile);
-  const apiKey = (await readFile(keyFile, "utf8")).trim();
-  assert(apiKey.length > 0, "The external ElevenLabs API key file is empty.");
+  let apiKey;
+  if (!assembleOnly) {
+    const keyFile = path.resolve(argumentValue("--key-file") || defaultKeyFile);
+    apiKey = (await readFile(keyFile, "utf8")).trim();
+    assert(apiKey.length > 0, "The external ElevenLabs API key file is empty.");
+  }
   await mkdir(path.dirname(outputPath), { recursive: true });
   const workDirectory = path.resolve(projectRoot, "output", "elevenlabs-working", manifest.id);
   await mkdir(workDirectory, { recursive: true });
@@ -163,7 +177,7 @@ async function main() {
     endpoint.searchParams.set("output_format", manifest.segmentOutputFormat);
     const segmentExtension = manifest.segmentOutputFormat.startsWith("opus_") ? ".ogg" : ".mp3";
     const segmentPath = path.join(workDirectory, String(order).padStart(2, "0") + segmentExtension);
-    if (process.argv.includes("--resume") && await fileExists(segmentPath)) {
+    if ((assembleOnly || process.argv.includes("--resume")) && await fileExists(segmentPath)) {
       console.log("Reusing existing cue " + order + "/" + manifest.segments.length + " at " + segment.startSeconds + "s");
       segmentFiles.push(segmentPath);
       segmentResults.push({
@@ -176,6 +190,7 @@ async function main() {
       continue;
     }
 
+    assert(!assembleOnly, "Local assembly requires an existing cue: " + segmentPath);
     console.log("Generating cue " + order + "/" + manifest.segments.length + " at " + segment.startSeconds + "s");
     const response = await fetch(endpoint, {
       method: "POST",
@@ -217,6 +232,7 @@ async function main() {
     manifest: path.relative(projectRoot, manifestPath).replaceAll("\\\\", "/"),
     output: path.relative(projectRoot, outputPath).replaceAll("\\\\", "/"),
     automaticRetries: 0,
+    assemblyOnly: assembleOnly,
     totalCharacters,
     voiceId: manifest.voiceId,
     voiceName: manifest.voiceName,

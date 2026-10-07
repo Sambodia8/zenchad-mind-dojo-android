@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "focused-attention-v4-qda-v3-eleven-v4-zfk",
+  "meditationId": "focused-attention",
+  "title": "The Telescope Chooses One Star",
+  "scriptRevision": "focus-telescope-v4-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/focused-attention-v4-qda-v3-draft.md",
+  "durationSeconds": 600,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/focused-attention-v4-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 601100,
+  "maxApprovedCharacters": 1541,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [softly] Settle into a stable position and choose one place where breathing is easy to feel. This will be your single star."
+    },
+    {
+      "startSeconds": 65,
+      "text": "[soft, slow, warm voice] Imagine a small telescope turning toward that sensation: nostrils, chest, belly, or another clear point."
+    },
+    {
+      "startSeconds": 115,
+      "text": "[soft, slow, warm voice] Follow one inhale from beginning to end... then one exhale. Let the telescope remain light in your hands."
+    },
+    {
+      "startSeconds": 165,
+      "text": "[soft, slow, warm voice] Attention will discover other constellations: plans, sounds, memories, and interesting mistakes. Notice where it went."
+    },
+    {
+      "startSeconds": 215,
+      "text": "[soft, slow, warm voice] Name the distraction softly if useful... thinking... hearing... feeling... then turn back to the chosen star."
+    },
+    {
+      "startSeconds": 265,
+      "text": "[soft, slow, warm voice] [reassuringly] The return is the exercise. Wandering does not cancel the meditation; it creates another repetition."
+    },
+    {
+      "startSeconds": 315,
+      "text": "[soft, slow, warm voice] Stay with three natural breaths... one... two... three... and begin again whenever counting is lost."
+    },
+    {
+      "startSeconds": 365,
+      "text": "[soft, slow, warm voice] Notice the exact instant an inhale appears and the instant it becomes an exhale."
+    },
+    {
+      "startSeconds": 415,
+      "text": "[soft, slow, warm voice] Let effort soften. Clear focus can be interested and awake without becoming narrow or severe."
+    },
+    {
+      "startSeconds": 465,
+      "text": "[soft, slow, warm voice] For a little longer, keep choosing the same star. Each return polishes the lens."
+    },
+    {
+      "startSeconds": 515,
+      "text": "[soft, slow, warm voice] Now widen attention to include the whole breathing body while the original point remains somewhere within it."
+    },
+    {
+      "startSeconds": 565,
+      "text": "[soft, slow, warm voice] [softly] Open your eyes when ready. Carry the skill of returning, not a demand to remain perfectly fixed."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/fourth-variants/focused-attention-v4-qda-v3.json",
+  "sourceId": "focused-attention-v4-qda-v3",
+  "targetAppAudioId": "focused-attention-v4-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

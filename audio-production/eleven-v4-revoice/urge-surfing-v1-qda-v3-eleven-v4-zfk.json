@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "id": "urge-surfing-v1-qda-v3-eleven-v4-zfk",
+  "meditationId": "urge-surfing",
+  "title": "The Tide Does Not Give Orders",
+  "scriptRevision": "urge-surfing-night-sky-v1-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/catalogue/urge-surfing-v1-qda-v3-draft.md",
+  "durationSeconds": 540,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/urge-surfing-v1-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 314759,
+  "maxApprovedCharacters": 1969,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [softly] Settle somewhere safe enough to pause. This practice is for observing an ordinary urge or craving. If there is an immediate safety or medical concern, seek appropriate help rather than relying on meditation."
+    },
+    {
+      "startSeconds": 60,
+      "text": "[soft, slow, warm voice] Name the urge quietly without turning it into an instruction. Wanting is here... pulling is here... a wave is beginning to gather."
+    },
+    {
+      "startSeconds": 110,
+      "text": "[soft, slow, warm voice] Where does it appear in the body? Perhaps the mouth, hands, chest, belly, or a restless electricity in the legs. Choose one place to observe."
+    },
+    {
+      "startSeconds": 160,
+      "text": "[soft, slow, warm voice] Notice its shape... temperature... pressure... and movement. You are studying the water, not wrestling the ocean."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[soft, slow, warm voice] [gentle waves beneath a pier] Imagine the urge as a luminous tide beneath a midnight pier. It can rise without becoming a command. A wave is an event, not a captain."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[soft, slow, warm voice] [reassuringly] If the urge feels stronger for a moment, that does not mean the practice is failing. Crests are part of waves. Let breathing remain ordinary while you watch."
+    },
+    {
+      "startSeconds": 310,
+      "text": "[soft, slow, warm voice] Rate the intensity gently from zero to ten... then become curious about whether the number stays fixed. No need to force it downward."
+    },
+    {
+      "startSeconds": 360,
+      "text": "[soft, slow, warm voice] Notice any thought that bargains, predicts, or demands. Hear it like a radio from a boat offshore. The message can play without steering your hands."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[soft, slow, warm voice] Look again at the body sensation. Has an edge softened, moved, spread, sharpened, or stayed the same? Change can be subtle, and staying the same is also information."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[soft, slow, warm voice] [thoughtfully] You are allowed to choose your next action after the wave, rather than from its loudest point. For now, remain on the pier for a few more breaths."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[soft, slow, warm voice] [softly] Feel your feet or the surface beneath you. Let the tide continue without supervision, and return to the room one steady coordinate at a time."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/catalogue/urge-surfing-v1-qda-v3.json",
+  "sourceId": "urge-surfing-v1-qda-v3",
+  "targetAppAudioId": "urge-surfing-v1-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

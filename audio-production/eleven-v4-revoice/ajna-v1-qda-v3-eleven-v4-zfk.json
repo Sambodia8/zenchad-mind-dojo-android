@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "id": "ajna-v1-qda-v3-eleven-v4-zfk",
+  "meditationId": "ajna",
+  "title": "The Indigo Lighthouse",
+  "scriptRevision": "ajna-night-sky-v1-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/catalogue/ajna-v1-qda-v3-draft.md",
+  "durationSeconds": 720,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/ajna-v1-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 314559,
+  "maxApprovedCharacters": 2454,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [softly] Sit in a way that lets the spine feel tall without becoming rigid. Soften the jaw and the small muscles around the eyes."
+    },
+    {
+      "startSeconds": 60,
+      "text": "[soft, slow, warm voice] Bring gentle attention to the space between the eyebrows. There is no need to cross the eyes, strain, or search for a special sensation."
+    },
+    {
+      "startSeconds": 110,
+      "text": "[soft, slow, warm voice] [soft distant waves lapping] If imagery helps, imagine an indigo lighthouse resting behind the forehead. Its beam turns slowly across a quiet inner sea, asking nothing from the horizon."
+    },
+    {
+      "startSeconds": 160,
+      "text": "[soft, slow, warm voice] Feel one natural inhale... and one natural exhale. Let the point of attention remain light, as though a feather could land there without being held."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[soft, slow, warm voice] Thoughts may cross the beam like birds at night. There is no need to follow them or frighten them away. Notice the crossing, then return to the lighthouse."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[soft, slow, warm voice] [thoughtfully] The Ajna point is being used here as a focus for attention and imagination. You do not need to see colours, feel energy, or make anything happen."
+    },
+    {
+      "startSeconds": 310,
+      "text": "[soft, slow, warm voice] Notice the darkness behind the eyelids. Perhaps it is flat, grainy, colourful, or changing. Let the indigo image remain optional within that wider space."
+    },
+    {
+      "startSeconds": 360,
+      "text": "[soft, slow, warm voice] If pressure builds in the forehead, broaden attention to the whole face. Relax the eyes, feel the breath, then return only if the focus feels comfortable."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[soft, slow, warm voice] [faint distant waves lapping] For a little while, rest with the small point and the wide darkness together... a lighthouse with plenty of ocean around it."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[soft, slow, warm voice] When attention wanders, let the return be unremarkable. No alarm, no self-criticism. The beam simply completes another quiet circle."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[soft, slow, warm voice] [reassuringly] You may notice clarity, sleepiness, restlessness, or nothing in particular. The practice is the gentle returning, not the production of an experience."
+    },
+    {
+      "startSeconds": 560,
+      "text": "[soft, slow, warm voice] Begin widening attention. Include the forehead... the face... the throat... the chest... and the contact points beneath your body."
+    },
+    {
+      "startSeconds": 620,
+      "text": "[soft, slow, warm voice] Let the imagined lighthouse grow distant while sounds in the room become clear again. Notice how inner focus and ordinary surroundings can share the same map."
+    },
+    {
+      "startSeconds": 680,
+      "text": "[soft, slow, warm voice] [softly] Take an easy breath. Move your hands, soften your gaze, and open your eyes when ready. Let the small blue light remain only as a memory."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/catalogue/ajna-v1-qda-v3.json",
+  "sourceId": "ajna-v1-qda-v3",
+  "targetAppAudioId": "ajna-v1-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

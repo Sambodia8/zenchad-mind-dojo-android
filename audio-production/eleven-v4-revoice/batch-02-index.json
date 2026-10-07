@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "batchNumber": 2,
+  "manifests": [
+    "audio-production/eleven-v4-revoice/sound-awareness-v2-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/focused-attention-v2-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/focused-attention-v3-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/sound-awareness-v3-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/grounding-v3-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/grounding-v2-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/diaphragmatic-breathing-v2-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/diaphragmatic-breathing-v3-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/urge-surfing-v3-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/acceptance-v3-story-qda-v3-eleven-v4-zfk.json"
+  ]
+}

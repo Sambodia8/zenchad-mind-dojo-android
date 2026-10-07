@@ -1,3 +1,30 @@
+# Zen Chad 2.27 — complete Eleven v4 meditation audio (2026-10-08)
+
+- Finished the final original meditation, When the City Powers Down, with voice `zFkVchYwoYAFyxBrr2oH` and `eleven_v4`. Generated its15 original passages plus its existing breathing passage:16 cues,3341 tagged prompt characters. Preserved the current ten-minute app duration, delivery tags, breathing text and quiet imagery; added one gentle city sound prompt.
+- Regenerated all four shared Namaste endings in the same v4 voice (180 tagged characters). All53 guided meditation tracks and all four shared endings now have complete v4 audio. The12 missing alternate takes were not generated; their complete first takes remain in the app.
+- Made20 successful API requests with no retries, within the user's explicitly authorized final-track/endings scope. API allowance fell from100,007 to99,653 credits (354 used). Retained the previous narration and endings as local backups. No narration overlaps or final-cue truncation; no phone playback check performed.
+- Added mandatory Google Drive APK delivery instructions to the workspace and canonical app AGENTS.md files. Delivery target: `D:\My Drive\ZenChad`, cloud folder `1xbd93biF2K7tvGhpA_9NMpk-W60sblmh`.
+- APK: `ZenChad-2.27-Complete-Eleven-v4.apk`, version2.27/code38, package `com.zenchad.minddojo`;545,111,418 bytes. SHA-256: `E045C40B7EACA4A7CDDAEA335AD89724140D6022D84B2C080180AB1410D1B57C`. Bundle and Capacitor sync passed; after cached AAPT2 failed to start, packaging passed using installed SDK35 AAPT2. v1/v2 signatures verify with the unchanged certificate.
+- Verified all53 packaged narration/metadata hashes and all four new endings; only the final NSDR narration and four endings changed from2.26. APK growth4,212,085 bytes; updated audio accounts for4,211,332 bytes. Retained previous releases and source backups.
+- Copied the identical numbered APK to `D:\My Drive\ZenChad\ZenChad-2.27-Complete-Eleven-v4.apk`; source and Drive-folder SHA-256 hashes match. Drive desktop currently has `pause_syncing_option: true`; the cloud folder does not yet contain this release. File is queued for sync; asked Sam before resuming Drive because that also resumes unrelated queued files.
+
+# Zen Chad 2.26 — meditation alternate takes (2026-10-07)
+
+- Integrated the 40 complete alternate Eleven v4 performances (488 cues) into the existing meditation entries, preserving their scripts, bracketed delivery/SFX prompts, cue positions and track lengths. The other 12 upgraded entries retain their complete first performances. First-take audio and sidecars are backed up locally.
+- Completeness audit: 52 of 53 bundled meditations have complete v4 narrations (674 cues); no partially regenerated meditation. The legacy `nsdr-v1-qda-v3` (When the City Powers Down) remains on its previous narration. Twelve of the 52 upgraded tracks have no alternate performance yet (186 cues).
+- Assembled existing downloads locally without API requests or additional ElevenLabs credits. Verified all 40 track lengths and clip boundaries, all 53 packaged narration/sidecar hashes, and retained first-take backups. No device installation or listening check was performed. Drive remains paused.
+- APK: `ZenChad-2.26-Meditation-Alternate-Takes.apk`, version2.26/code37, package `com.zenchad.minddojo`; 540,899,333 bytes. SHA-256: `7FAB42F850ABB75B4D1E66D306CCB6031BEF14F2354CED870AD8695D3149B2E2`. Production bundle, Capacitor sync and JDK21 Gradle assembly passed. APK v1/v2 signatures verify with the same certificate as2.25.
+- Compared with2.25, 40 alternate narrations add2,103,008 bytes of uncompressed audio; total APK growth is1,353,107 bytes after packaging/compression and metadata changes. Exactly one numbered local release was created;2.25 is retained for rollback.
+
+# Zen Chad 2.25 — Eleven v4 meditation re-voice (2026-10-07)
+
+- Re-voiced 52 approved guided meditation tracks with Adam soothing owls (`zFkVchYwoYAFyxBrr2oH`) and Eleven v4. All 674 timed segments retain their spoken words and positions, with `[soft, slow, warm voice]` guidance on each. Added 63 subtle scene-matched sound-effect cues across 42 tracks; ten abstract practices remain free of environmental effects.
+- Preserved existing emotion and delivery cues, track lengths, output settings, and source audio backups. Forty alternate sets of cue MP3s are staged locally under ignored `output/eleven-v4-revoice/ui-downloads/sfx-v4-alternates/`; they are not bundled. The legacy `nsdr-v1-qda-v3` app track was outside the approved manifest set and remains unchanged.
+- APK: `ZenChad-2.25-Eleven-v4-Meditation-Revoice.apk`, version 2.25/code 36, package `com.zenchad.minddojo`; 539,546,226 bytes. SHA-256: `EC6C4BD4EA6F15FEEA21329EBBD644DC68127D555352CDAAF669EAAFA1EE2718`.
+- Verified v1/v2 APK signatures and the same signing certificate as 2.24. All 52 refreshed audio assets in the APK match their source hashes. Compared with 2.24, the APK grew by 113,598,222 bytes; those 52 narration files account for 113,155,343 bytes of growth.
+- The signed-in UI changed from showing a free promotional balance to `100,007 credits remaining`; generation stopped after that switch. The final 10-track alternate batch exceeded the last displayed promotional balance by about 2,500 prompt characters, so a small crossover into the regular balance may have occurred; the UI history does not show the exact debit.
+- Local release: `S:\zENcHAD\ZenChadAndroid\releases\ZenChad-2.25-Eleven-v4-Meditation-Revoice.apk`. Drive upload remains paused per Sam's earlier instruction.
+
 # Zen Chad 2.24 — Bike Quest warm-up and activity completion (2026-10-06)
 
 - Bike Quest warm-up saves its position, resumes paused, and returns through Continue Bike Quest. Finishing cycling opens the optional enjoyment/effort check-in; Done saves and returns Home. Partial feedback, history and one-time rewards survive reload.

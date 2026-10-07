@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "id": "urge-surfing-v3-qda-v3-eleven-v4-zfk",
+  "meditationId": "urge-surfing",
+  "title": "The Train Can Leave Without You",
+  "scriptRevision": "urge-train-v3-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/variants/urge-surfing-v3-qda-v3-draft.md",
+  "durationSeconds": 540,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/urge-surfing-v3-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 501300,
+  "maxApprovedCharacters": 1525,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [faint distant train rumble] [softly] Find a safe pause. Imagine standing on a quiet platform while an ordinary urge approaches like a train in the distance."
+    },
+    {
+      "startSeconds": 60,
+      "text": "[soft, slow, warm voice] Name the urge without boarding it. Wanting is here... impatience is here... a train is arriving."
+    },
+    {
+      "startSeconds": 110,
+      "text": "[soft, slow, warm voice] Feel where arrival happens in the body: hands, mouth, chest, belly, legs. Notice the first vibration on the rails."
+    },
+    {
+      "startSeconds": 160,
+      "text": "[soft, slow, warm voice] The train grows louder. Observe colour, pressure, temperature, and movement without stepping toward the door."
+    },
+    {
+      "startSeconds": 210,
+      "text": "[soft, slow, warm voice] Thoughts may advertise the destination. Hear the announcement and remain on the platform."
+    },
+    {
+      "startSeconds": 260,
+      "text": "[soft, slow, warm voice] [reassuringly] You do not need to fight the train. Let it be present at full size while breathing remains natural."
+    },
+    {
+      "startSeconds": 310,
+      "text": "[soft, slow, warm voice] Notice the crest: perhaps urgency peaks, flickers, or changes location. Keep both feet connected to the ground."
+    },
+    {
+      "startSeconds": 360,
+      "text": "[soft, slow, warm voice] [soft distant train rumble fading] Listen for the first sign of departure. It may be subtle: one loosened muscle, one quieter sentence, one second of space."
+    },
+    {
+      "startSeconds": 410,
+      "text": "[soft, slow, warm voice] The train may linger or another may follow. Urges can repeat without becoming permanent orders."
+    },
+    {
+      "startSeconds": 460,
+      "text": "[soft, slow, warm voice] [thoughtfully] Let your next choice come from the person on the platform, not from the loudspeaker."
+    },
+    {
+      "startSeconds": 510,
+      "text": "[soft, slow, warm voice] [softly] Watch the red lights travel away. Feel the room around you and decide the next step in your own time."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/variants/urge-surfing-v3-qda-v3.json",
+  "sourceId": "urge-surfing-v3-qda-v3",
+  "targetAppAudioId": "urge-surfing-v3-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

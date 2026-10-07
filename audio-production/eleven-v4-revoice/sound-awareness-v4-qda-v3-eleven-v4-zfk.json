@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "sound-awareness-v4-qda-v3-eleven-v4-zfk",
+  "meditationId": "sound-awareness",
+  "title": "The Harbour of Listening Lights",
+  "scriptRevision": "sound-harbour-v4-eleven-v4-zfk-2026-10-06",
+  "approved": true,
+  "approvedBy": "Sam",
+  "sourceDraft": "audio-production/fourth-variants/sound-awareness-v4-qda-v3-draft.md",
+  "durationSeconds": 405,
+  "openingSilenceSeconds": 15,
+  "closingSilenceSeconds": 10,
+  "outputPath": "output/eleven-v4-revoice/generated/sound-awareness-v4-qda-v3-eleven-v4-zfk.ogg",
+  "segmentOutputFormat": "opus_48000_192",
+  "finalOutputFormat": "opus_48000_192",
+  "voiceName": "Adam soothing owls",
+  "voiceId": "zFkVchYwoYAFyxBrr2oH",
+  "modelId": "eleven_v4",
+  "seed": 600400,
+  "maxApprovedCharacters": 1361,
+  "voiceSettings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0,
+    "use_speaker_boost": true,
+    "speed": 1
+  },
+  "segments": [
+    {
+      "startSeconds": 15,
+      "text": "[soft, slow, warm voice] [soft harbour water lapping] [softly] Let hearing open like a dark harbour at night. You do not need to identify every vessel; simply notice where each light appears."
+    },
+    {
+      "startSeconds": 55,
+      "text": "[soft, slow, warm voice] Find the furthest sound available. Let it blink at the horizon, faint but complete."
+    },
+    {
+      "startSeconds": 95,
+      "text": "[soft, slow, warm voice] Move to a sound in the middle distance. Notice its texture, rhythm, and the silence around it."
+    },
+    {
+      "startSeconds": 135,
+      "text": "[soft, slow, warm voice] [soft fabric rustling] Now hear something close: breath, fabric, a tiny mechanical hum. This is the lamp beside the dock."
+    },
+    {
+      "startSeconds": 175,
+      "text": "[soft, slow, warm voice] Choose one sound and stay with it for a while. When attention sails away, guide it back by the same small beacon."
+    },
+    {
+      "startSeconds": 215,
+      "text": "[soft, slow, warm voice] Let that sound go and choose another. Attention can turn gracefully without declaring the first sound wrong."
+    },
+    {
+      "startSeconds": 255,
+      "text": "[soft, slow, warm voice] Notice sounds arriving from the left... then the right... ahead... and behind, if those directions are available."
+    },
+    {
+      "startSeconds": 300,
+      "text": "[soft, slow, warm voice] Open to the entire harbour. Loud and quiet sounds share one field, appearing and disappearing by themselves."
+    },
+    {
+      "startSeconds": 345,
+      "text": "[soft, slow, warm voice] [reassuringly] There is no perfect listening state. Even distraction is another brief signal noticed by awareness."
+    },
+    {
+      "startSeconds": 375,
+      "text": "[soft, slow, warm voice] [softly] Feel the body in the room and let the harbour remain open as you return to seeing."
+    }
+  ],
+  "approvalReference": "User-authorized Eleven v4 narration revoice, 2026-10-06",
+  "generationProfile": "user-authorized-eleven-v4-revoice",
+  "sourceManifest": "audio-production/fourth-variants/sound-awareness-v4-qda-v3.json",
+  "sourceId": "sound-awareness-v4-qda-v3",
+  "targetAppAudioId": "sound-awareness-v4-qda-v3",
+  "sourceVoiceId": "qDaEJf74mtxsdGvyyq8t",
+  "sourceModelId": "eleven_v3"
+}

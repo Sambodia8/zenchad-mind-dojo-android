@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "batchNumber": 5,
+  "manifests": [
+    "audio-production/eleven-v4-revoice/metta-v2-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/diaphragmatic-breathing-v1-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/pratyahara-v1-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/ajna-v1-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/trataka-v1-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/yoga-nidra-v2-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/yoga-nidra-v3-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/metta-v1-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/yoga-nidra-v1-qda-v3-eleven-v4-zfk.json",
+    "audio-production/eleven-v4-revoice/yoga-nidra-v4-qda-v3-eleven-v4-zfk.json"
+  ]
+}
