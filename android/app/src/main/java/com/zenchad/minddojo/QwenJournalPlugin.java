@@ -66,7 +66,7 @@ public class QwenJournalPlugin extends Plugin {
             }
 
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(MODEL_URL));
-            request.setTitle("Zen Chad Qwen 4B model");
+            request.setTitle("Neural Fantasy Qwen 4B model");
             request.setDescription("Downloading the offline journal organiser once");
             request.setMimeType("application/octet-stream");
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);

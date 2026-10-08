@@ -79,7 +79,7 @@ public class WhisperJournalPlugin extends Plugin {
             }
 
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(MODEL_URL));
-            request.setTitle("Zen Chad Whisper model");
+            request.setTitle("Neural Fantasy Whisper model");
             request.setDescription("Downloading the offline voice transcription model once");
             request.setMimeType("application/octet-stream");
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);

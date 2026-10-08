@@ -46,7 +46,7 @@ function PanelTitle({ children }: { children: string }) {
 
 function CharacterPanel({ data }: Props) {
   return (
-    <section className="status-character-panel" aria-label="ZenChad avatar">
+    <section className="status-character-panel" aria-label="Neural Fantasy avatar">
       <PaperDollCharacter data={data} />
     </section>
   );
@@ -182,7 +182,7 @@ function WardrobeDialog({ slot, data, setData, onClose }: WardrobeDialogProps) {
       <section className="wardrobe-dialog" role="dialog" aria-modal="true" aria-labelledby="wardrobe-title">
         <header className="wardrobe-heading">
           <div><span>Wardrobe</span><h2 id="wardrobe-title">Choose {slotLabel}</h2></div>
-          <div className="wardrobe-balance"><Coins size={16} /><strong>{data.zenPoints} ZP</strong></div>
+          <div className="wardrobe-balance"><Coins size={16} /><strong>{data.zenPoints} FP</strong></div>
           <button type="button" className="wardrobe-close" onClick={onClose} aria-label="Close wardrobe"><X /></button>
         </header>
         <div className="wardrobe-options">
@@ -198,7 +198,7 @@ function WardrobeDialog({ slot, data, setData, onClose }: WardrobeDialogProps) {
                 <div className="wardrobe-option-copy">
                   <h3>{item.name}</h3>
                   <p>{item.description}</p>
-                  <small>{item.starter ? "Starter item" : owned ? "Owned" : `${item.shopPrice} ZP`}</small>
+                  <small>{item.starter ? "Starter item" : owned ? "Owned" : `${item.shopPrice} FP`}</small>
                 </div>
                 {equipped && !item.starter ? (
                   <button type="button" onClick={() => unequip(item.id)}>Unequip</button>
@@ -208,7 +208,7 @@ function WardrobeDialog({ slot, data, setData, onClose }: WardrobeDialogProps) {
                   <button type="button" onClick={() => equip(item.id)}>Equip</button>
                 ) : (
                   <button type="button" className="buy" onClick={() => buy(item.id)} disabled={!canAfford}>
-                    <LockKeyhole size={14} /> {canAfford ? `Buy · ${item.shopPrice} ZP` : `Need ${item.shopPrice} ZP`}
+                    <LockKeyhole size={14} /> {canAfford ? `Buy · ${item.shopPrice} FP` : `Need ${item.shopPrice} FP`}
                   </button>
                 )}
               </article>

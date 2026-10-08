@@ -567,7 +567,7 @@ export default function JournalScreen({ data, setData, draftMeditation, mysteryR
           <label>
             What did you do?
             <select value={selectedMeditation} onChange={(event) => setSelectedMeditation(event.target.value)}>
-              <option value="">Choose a Zen Chad practice</option>
+              <option value="">Choose a Neural Fantasy practice</option>
               {MEDITATIONS.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
               <option value="custom">Something else</option>
             </select>

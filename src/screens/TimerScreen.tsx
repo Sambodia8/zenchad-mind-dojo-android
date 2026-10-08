@@ -661,7 +661,7 @@ function MeditationTimer({
       }
       const { granted } = await MeditationOverlay.permission();
       if (!granted) {
-        setYoutubeMessage("Allow ZenChad to display over other apps, then return and tap Open YouTube again.");
+        setYoutubeMessage("Allow Neural Fantasy to display over other apps, then return and tap Open YouTube again.");
         await MeditationOverlay.requestPermission();
         return;
       }
@@ -812,7 +812,7 @@ function MeditationTimer({
               {BINAURAL_PLAYLISTS.map((item) => <option key={item.url} value={item.url}>{item.name}</option>)}
             </select>
           </label>
-          <p className="setting-note">Use stereo headphones. Open YouTube, choose Play there, and keep your countdown floating above it. Drag the timer to move it; tap Return to pause or finish in ZenChad. Internet required.</p>
+          <p className="setting-note">Use stereo headphones. Open YouTube, choose Play there, and keep your countdown floating above it. Drag the timer to move it; tap Return to pause or finish in Neural Fantasy. Internet required.</p>
           <button className="button primary full" disabled={openingYoutube} onClick={() => void openYoutube()}>{openingYoutube ? "Opening…" : "Open YouTube + floating timer"}</button>
           <p className="setting-note">The timer starts when YouTube opens. YouTube playback and ads are controlled by YouTube; finishing the timer does not stop the music.</p>
           {youtubeMessage && <p role="status" className="status-message">{youtubeMessage}</p>}

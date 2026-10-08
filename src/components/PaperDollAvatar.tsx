@@ -61,7 +61,7 @@ export default function PaperDollAvatar({ equipped, portrait = false }: { equipp
     <svg className={portrait ? "status-face-portrait" : "status-avatar-stack"}
       viewBox={portrait ? "420 112 240 246" : "0 0 1086 1448"}
       preserveAspectRatio={portrait ? "xMidYMid meet" : "xMidYMid slice"}
-      role="img" aria-label={portrait ? "Sam's equipped hairstyle portrait" : "Sam, ZenChad avatar"}
+      role="img" aria-label={portrait ? "Sam's equipped hairstyle portrait" : "Sam, Neural Fantasy avatar"}
       data-paper-doll-items={ids.join(",")}>
       <defs>
         {replacementHead ? (

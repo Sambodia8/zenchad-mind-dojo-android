@@ -22,11 +22,11 @@ export default function ZenShopScreen({ data, setData }: Props) {
   return (
     <div className="screen-stack zen-shop-screen">
       <section className="screen-heading">
-        <span className="eyebrow"><ShoppingBag size={15} /> Zen Shop</span>
+        <span className="eyebrow"><ShoppingBag size={15} /> Fantasy Shop</span>
         <h1>Spend your calm wisely.</h1>
         <p>Unlock cosmetics and gentle tools. New cosmetics stay unequipped until you choose them on Status.</p>
       </section>
-      <div className="shop-balance"><Coins size={18} /><strong>{data.zenPoints} ZP</strong><span>available</span></div>
+      <div className="shop-balance"><Coins size={18} /><strong>{data.zenPoints} FP</strong><span>available</span></div>
       <section className="shop-catalogue" aria-label="Shop catalogue">
         {SHOP_CATALOGUE.map((item) => {
           const owned = data.shopInventory[item.id] ?? 0;
@@ -43,7 +43,7 @@ export default function ZenShopScreen({ data, setData }: Props) {
                 <small>{item.kind === "unique" ? (uniqueOwned ? "Owned" : "Permanent unlock") : `Owned: ${owned}`}</small>
               </div>
               <button className="button primary" onClick={() => buy(item.id)} disabled={uniqueOwned || data.zenPoints < item.price}>
-                {uniqueOwned ? "Owned" : <><Coins size={15} /> {item.price} ZP</>}
+                {uniqueOwned ? "Owned" : <><Coins size={15} /> {item.price} FP</>}
               </button>
             </article>
           );

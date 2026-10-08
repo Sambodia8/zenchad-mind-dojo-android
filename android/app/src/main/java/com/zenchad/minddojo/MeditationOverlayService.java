@@ -44,8 +44,8 @@ public class MeditationOverlayService extends Service {
         PendingIntent back = PendingIntent.getActivity(this, 7310, returnIntent(), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL)
             .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
-            .setContentTitle(complete ? "Meditation complete" : "ZenChad meditation timer")
-            .setContentText(complete ? "Return to ZenChad to save your session." : "Tap to return. YouTube controls the music.")
+            .setContentTitle(complete ? "Meditation complete" : "Neural Fantasy meditation timer")
+            .setContentText(complete ? "Return to Neural Fantasy to save your session." : "Tap to return. YouTube controls the music.")
             .setContentIntent(back).setOngoing(!complete).setOnlyAlertOnce(true);
         if (!complete) builder.setWhen(deadline).setUsesChronometer(true).setChronometerCountDown(true);
         return builder.build();
@@ -87,7 +87,7 @@ public class MeditationOverlayService extends Service {
         background.setStroke(dp(1), Color.rgb(126, 175, 227));
         panel.setBackground(background);
         TextView title = new TextView(this);
-        title.setText("ZenChad · drag to move");
+        title.setText("Neural Fantasy · drag to move");
         title.setTextSize(11);
         title.setTextColor(Color.LTGRAY);
         panel.addView(title);
@@ -98,7 +98,7 @@ public class MeditationOverlayService extends Service {
         panel.addView(clock);
         Button back = new Button(this);
         back.setText("Return");
-        back.setContentDescription("Return to ZenChad timer");
+        back.setContentDescription("Return to Neural Fantasy timer");
         back.setOnClickListener(view -> { startActivity(returnIntent()); stopSelf(); });
         panel.addView(back, new LinearLayout.LayoutParams(-1, dp(48)));
         int type = Build.VERSION.SDK_INT >= 26 ? WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY : WindowManager.LayoutParams.TYPE_PHONE;

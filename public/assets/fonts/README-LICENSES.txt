@@ -1,4 +1,4 @@
-Font provenance for the Zen Chad personal build
+Font provenance for the Neural Fantasy personal build
 
 Needleteeth Font Suite
 - Author: Chad Savage / Sinister Fonts

@@ -23,7 +23,7 @@ public class HealthPermissionsRationaleActivity extends Activity {
         content.setBackgroundColor(Color.rgb(250, 248, 244));
 
         TextView title = new TextView(this);
-        title.setText("Zenchad + Health Connect");
+        title.setText("Neural Fantasy + Health Connect");
         title.setTextSize(25f);
         title.setTextColor(Color.rgb(31, 35, 38));
         title.setTypeface(title.getTypeface(), android.graphics.Typeface.BOLD);
@@ -34,12 +34,12 @@ public class HealthPermissionsRationaleActivity extends Activity {
 
         TextView body = new TextView(this);
         body.setText(
-            "Health Connect is optional in Zenchad. When you choose Add Watch Stats after a completed run, " +
-            "Zenchad can read heart-rate and step/cadence records that overlap that run.\n\n" +
-            "The imported run metrics and a compact set of samples are stored in Zenchad's local app storage so " +
+            "Health Connect is optional in Neural Fantasy. When you choose Add Watch Stats after a completed run, " +
+            "Neural Fantasy can read heart-rate and step/cadence records that overlap that run.\n\n" +
+            "The imported run metrics and a compact set of samples are stored in Neural Fantasy's local app storage so " +
             "they can appear in your run summary and history. They are not used to decide Story chase outcomes, " +
             "and granting Health Connect access is never required to track a run or earn XP.\n\n" +
-            "You can decline access or revoke it later from Health Connect settings. Zenchad will continue to work " +
+            "You can decline access or revoke it later from Health Connect settings. Neural Fantasy will continue to work " +
             "without these watch statistics."
         );
         body.setTextSize(17f);

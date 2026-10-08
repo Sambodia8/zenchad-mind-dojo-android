@@ -281,7 +281,7 @@ export async function scheduleRunningReminder(startedAt: number, plannedMinutes:
         {
           id: RUNNING_REMINDER_NOTIFICATION_ID,
           title: "Is your run finished?",
-          body: "Your run is still active. Open ZenChad to finish and bank it when you are ready.",
+          body: "Your run is still active. Open Neural Fantasy to finish and bank it when you are ready.",
           channelId: "running-reminders",
           schedule: { at: reminderAt, allowWhileIdle: true },
           extra: { kind: "running-reminder" }
@@ -312,7 +312,7 @@ export async function showBikeRideRunningNotification(): Promise<NativeActionRes
         {
           id: BIKE_RIDE_NOTIFICATION_ID,
           title: "Bike Quest is running 🚲",
-          body: "Your ride timer is still running. Open Zenchad when you finish pedalling.",
+          body: "Your ride timer is still running. Open Neural Fantasy when you finish pedalling.",
           channelId: "bike-quest",
           ongoing: true,
           autoCancel: false,

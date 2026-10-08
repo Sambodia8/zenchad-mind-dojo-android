@@ -120,7 +120,7 @@ async function refresh(forceBackground = false): Promise<ZenCoachNotificationRes
     const recommendation = getDailyZenCoachRecommendation({ now: at });
     await LocalNotifications.createChannel({
       id: CHANNEL_ID,
-      name: "Zen Coach",
+      name: "Adventure Coach",
       description: "Optional suggestions based on completed workouts.",
       importance: 2,
       vibration: false,
@@ -129,14 +129,14 @@ async function refresh(forceBackground = false): Promise<ZenCoachNotificationRes
     await LocalNotifications.schedule({ notifications: [{
       id: NOTIFICATION_ID,
       title: "Today's adventure is ready",
-      body: `${recommendation.primary.title} · around ${recommendation.primary.minutes} min. Open ZenChad when it suits you.`,
+      body: `${recommendation.primary.title} · around ${recommendation.primary.minutes} min. Open Neural Fantasy when it suits you.`,
       channelId: CHANNEL_ID,
       schedule: { at: new Date(at), allowWhileIdle: true },
       extra: { kind: "zen-coach-reminder" }
     }] });
     return { ok: true, nextReminderAt: at };
   } catch {
-    return { ok: false, reason: "Android could not update the Zen Coach reminder." };
+    return { ok: false, reason: "Android could not update the Adventure Coach reminder." };
   }
 }
 
@@ -152,7 +152,7 @@ export function cancelZenCoachNotification(): Promise<ZenCoachNotificationResult
       await LocalNotifications.cancel({ notifications: [{ id: NOTIFICATION_ID }] });
       return { ok: true, nextReminderAt: null };
     } catch {
-      return { ok: false, reason: "Android could not clear the Zen Coach reminder." };
+      return { ok: false, reason: "Android could not clear the Adventure Coach reminder." };
     }
   });
 }

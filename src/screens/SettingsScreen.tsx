@@ -96,6 +96,8 @@ export default function SettingsScreen({ data, setData }: Props) {
         <p>Calm defaults, clear choices, and no attention traps.</p>
       </section>
 
+      <section className="card settings-brand" aria-label="About Neural Fantasy"><img src="assets/branding/neural-fantasy/emblem.png" alt="" /><div><h2>Neural Fantasy</h2><p>Version 2.28</p></div></section>
+
       <section className="card settings-sheet">
         <div className="setting-row illustrated-setting">
           <span>
@@ -117,7 +119,7 @@ export default function SettingsScreen({ data, setData }: Props) {
           <button type="button" className="button primary" onClick={handleExport} disabled={syncBusy}><Upload size={16} /> Export data</button>
           <button type="button" className="button secondary" onClick={handleImport} disabled={syncBusy}><Download size={16} /> Import data</button>
         </div>
-        <p className="setting-note">Export data opens “Save as”. Choose Downloads or a Drive folder, then tap Save. Import data lets you choose an existing ZenChad backup. No “all files access” permission is needed.</p>
+        <p className="setting-note">Export data opens “Save as”. Choose Downloads or a Drive folder, then tap Save. Import data lets you choose an existing Neural Fantasy backup. No “all files access” permission is needed.</p>
         {syncBusy && <p className="status-message" role="status">Choose a file location in the Android picker to continue, or cancel to return.</p>}
         {message && <p className="status-message" role="status">{message}</p>}
         {syncStatus.lastSuccessAt ? <small className="status-message"><Check /> Last successful backup or restore {new Date(syncStatus.lastSuccessAt).toLocaleString()}</small> : null}
@@ -156,7 +158,7 @@ export default function SettingsScreen({ data, setData }: Props) {
 
       <section className="card settings-sheet zen-coach-settings" aria-labelledby="zen-coach-settings-title">
         <div className="setting-row illustrated-setting">
-          <span><Gauge /><span><strong id="zen-coach-settings-title">Zen Coach</strong><small>Local suggestions based on completed workouts</small></span></span>
+          <span><Gauge /><span><strong id="zen-coach-settings-title">Adventure Coach</strong><small>Local suggestions based on completed workouts</small></span></span>
         </div>
         <label className="setting-input">
           Sessions in a rolling week
@@ -200,7 +202,7 @@ export default function SettingsScreen({ data, setData }: Props) {
       <section className="card settings-sheet zen-coach-settings" aria-labelledby="zen-coach-reminder-title">
         <div className="setting-row illustrated-setting">
           <span>{coachNotifications.enabled ? <Bell /> : <BellOff />}<span><strong id="zen-coach-reminder-title">Adventure reminder</strong><small>One specific local suggestion when a session is due</small></span></span>
-          <button type="button" className={`toggle ${coachNotifications.enabled ? "on" : ""}`} onClick={() => void toggleCoachNotifications()} aria-label="Toggle Zen Coach adventure reminder" aria-pressed={coachNotifications.enabled}><span /></button>
+          <button type="button" className={`toggle ${coachNotifications.enabled ? "on" : ""}`} onClick={() => void toggleCoachNotifications()} aria-label="Toggle Adventure Coach adventure reminder" aria-pressed={coachNotifications.enabled}><span /></button>
         </div>
         <label className="setting-input">Preferred time
           <input type="time" value={coachNotifications.time} onChange={(event) => void changeCoachNotificationSettings({ time: event.target.value })} />

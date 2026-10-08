@@ -125,7 +125,7 @@ export default function MeditationPracticeScreen({preset,sessionId,data,setData,
       {completed ? <div className="practice-completion">
         <div className="practice-completion-mark"><Check size={36}/></div><h2>Practice saved</h2>
         <p>{formatPracticeTime(receipt?.activeSeconds ?? elapsed)} practised</p>
-        <div className="practice-rewards"><strong>+{receipt?.xp ?? practiceXp(elapsed)} XP</strong><span>+{receipt?.zenPoints ?? 0} ZenPoints</span></div>
+        <div className="practice-rewards"><strong>+{receipt?.xp ?? practiceXp(elapsed)} XP</strong><span>+{receipt?.zenPoints ?? 0} Fantasy Points</span></div>
         {(receipt?.activeSeconds ?? elapsed)<60 && <p>Sessions under a minute are recorded without rewards.</p>}
         <button className="button primary full" disabled={busy || !receipt} onClick={()=>navigate({name:"home"})}>Done</button>
       </div> : state ? <>
@@ -151,7 +151,7 @@ export default function MeditationPracticeScreen({preset,sessionId,data,setData,
       </>}
     </section>
     {focus && !state && !completed && goal}
-    {focus && !state && !completed && <details className="practice-evidence"><summary>About the practice & evidence</summary><p>This silent ZenChad practice adapts Andrew Huberman's focus and refocus instructions. It is not the guided recording used in the study and is not affiliated with Huberman Lab.</p><p>Basso and colleagues studied daily 13-minute guided meditation in new meditators. Compared with podcast listening, improvements in attention, memory, mood and stress-related anxiety were observed after eight weeks, but not four. Results are not guaranteed for this adaptation.</p><a href="https://www.hubermanlab.com/episode/focus-toolkit-tools-to-improve-your-focus-and-concentration" target="_blank" rel="noreferrer">Huberman's focus toolkit ↗</a><a href="https://scholars.mssm.edu/en/publications/brief-daily-meditation-enhances-attention-memory-mood-and-emotion-2/" target="_blank" rel="noreferrer">Basso et al. study ↗</a></details>}
+    {focus && !state && !completed && <details className="practice-evidence"><summary>About the practice & evidence</summary><p>This silent Neural Fantasy practice adapts Andrew Huberman's focus and refocus instructions. It is not the guided recording used in the study and is not affiliated with Huberman Lab.</p><p>Basso and colleagues studied daily 13-minute guided meditation in new meditators. Compared with podcast listening, improvements in attention, memory, mood and stress-related anxiety were observed after eight weeks, but not four. Results are not guaranteed for this adaptation.</p><a href="https://www.hubermanlab.com/episode/focus-toolkit-tools-to-improve-your-focus-and-concentration" target="_blank" rel="noreferrer">Huberman's focus toolkit ↗</a><a href="https://scholars.mssm.edu/en/publications/brief-daily-meditation-enhances-attention-memory-mood-and-emotion-2/" target="_blank" rel="noreferrer">Basso et al. study ↗</a></details>}
     {!state && !completed && data.practiceSessions.length>0 && <details className="practice-evidence"><summary>Recent timer practices</summary><ul>{data.practiceSessions.slice(0,7).map(s=><li key={s.id}>{dateLabel(s.practiceDay)} · {s.preset==="focus-refocus"?"Focus & refocus":"Free practice"} · {formatPracticeTime(s.activeSeconds)} · +{s.xp} XP</li>)}</ul></details>}
   </div>;
 }

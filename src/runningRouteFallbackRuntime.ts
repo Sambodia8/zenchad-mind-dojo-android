@@ -23,8 +23,8 @@ function briefingFallback() {
   if (strong) strong.textContent = "Route unavailable — your run is not cancelled";
   if (small) {
     small.textContent = session.mode === "story"
-      ? "GPS, time, XP and kilometre rewards still work. Zenchad will keep trying the route service; Story navigation and location set-pieces can join if it recovers."
-      : "GPS, time, XP and kilometre rewards still work. Zenchad will keep trying the route service while you get ready or run.";
+      ? "GPS, time, XP and kilometre rewards still work. Neural Fantasy will keep trying the route service; Story navigation and location set-pieces can join if it recovers."
+      : "GPS, time, XP and kilometre rewards still work. Neural Fantasy will keep trying the route service while you get ready or run.";
   }
 
   let actions = existing;

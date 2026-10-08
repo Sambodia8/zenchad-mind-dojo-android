@@ -233,7 +233,7 @@ async function fetchCandidate(
   });
 
   if (!response.ok) {
-    if (response.status === 429) throw new Error("Routing service is busy. Zenchad will retry shortly.");
+    if (response.status === 429) throw new Error("Routing service is busy. Neural Fantasy will retry shortly.");
     throw new Error(`Routing server returned ${response.status}`);
   }
   const payload = await response.json() as ValhallaResponse;

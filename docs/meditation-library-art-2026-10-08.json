@@ -1,0 +1,14 @@
+{
+  "tool": "built-in image_gen",
+  "use_case": "stylized-concept",
+  "prompt_base": "Rich painterly atmospheric fantasy meditation illustration, portrait 2:3. Midnight navy, violet, delicate stars, layered mountains, reflective water. Subject lower right, dark uncluttered left for text. No lettering, UI, icons, people, borders or watermark.",
+  "scenes": {
+    "lotus": "Radiant golden and lavender lotus on a still twilight lake, pink glow and violet mountains.",
+    "moon": "Warm ivory full moon above a mountain lake, moonlight reflections and silhouetted pines.",
+    "sunset": "Glowing golden sun over a winding mountain river valley, layered navy mountains and pines.",
+    "celestial": "Violet and cyan sound wave ribbons over a celestial mountain lake, stars and crescent moon."
+  },
+  "assets": "public/assets/meditation-art/*.webp",
+  "optimisation": "480x720 WebP quality 82; 136090 bytes total",
+  "fallback": "Shared category illustrations for other meditations; the original catalogue is unchanged."
+}

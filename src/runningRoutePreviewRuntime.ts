@@ -104,7 +104,7 @@ function renderBriefingPreview(route: PlannedRunningRoute) {
   const trace = tracePoints(route);
   preview.innerHTML = `
     <div class="running-route-preview-copy">
-      <span class="eyebrow">Zenchad picked this route</span>
+      <span class="eyebrow">Neural Fantasy picked this route</span>
       <strong>${(route.distanceMeters / 1000).toFixed(1)} km · about ${Math.round(route.estimatedMinutes)} min</strong>
       <small>${route.reasons.slice(0, 2).join(" · ") || (route.mode === "story" ? "Built for Story Run opportunities" : "Balanced for a low-friction run")}</small>
     </div>

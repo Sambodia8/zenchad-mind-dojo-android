@@ -300,7 +300,7 @@ function mergeDurableStores(local: Record<string, unknown>, incoming: Record<str
 
 export function mergeSyncEnvelopes(local: ZenChadSyncEnvelope, incoming: ZenChadSyncEnvelope): SyncMergeResult {
   if (incoming.format !== "zenchad-sync" || incoming.schemaVersion !== SYNC_SCHEMA_VERSION) {
-    throw new Error("Unsupported ZenChad sync file format.");
+    throw new Error("Unsupported Neural Fantasy sync file format.");
   }
   const conflicts: string[] = [];
   const localTime = Date.parse(local.exportedAt) || 0;
@@ -333,7 +333,7 @@ export function mergeSyncEnvelopes(local: ZenChadSyncEnvelope, incoming: ZenChad
 export function parseSyncEnvelope(raw: string): ZenChadSyncEnvelope {
   const parsed = JSON.parse(raw) as Partial<ZenChadSyncEnvelope>;
   if (parsed.format !== "zenchad-sync" || parsed.schemaVersion !== SYNC_SCHEMA_VERSION || !parsed.data) {
-    throw new Error("This is not a supported ZenChad sync file.");
+    throw new Error("This is not a supported Neural Fantasy sync file.");
   }
   return {
     format: "zenchad-sync",

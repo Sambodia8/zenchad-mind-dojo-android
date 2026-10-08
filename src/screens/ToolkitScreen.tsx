@@ -5,13 +5,15 @@ import {
   Play,
   Search,
   Timer,
-  Sparkles
+  Sparkles,
+  SlidersHorizontal,
+  X
 } from "lucide-react";
 import { MEDITATIONS } from "../data";
 import { GUIDED_MEDIA_CATEGORIES } from "../guidedMedia";
 import type { AppData, Route } from "../types";
 import EmotionalToolbox from "./EmotionalToolbox";
-import MeditationIcon from "../components/MeditationIcon";
+import MeditationCard from "../components/MeditationCard";
 
 interface Props {
   initialTab?: "meditations" | "guided" | "emotional";
@@ -34,6 +36,8 @@ export default function ToolkitScreen({
 }: Props) {
   const [tab, setTab] = useState(initialTab);
   const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("All");
+  const [toolsOpen, setToolsOpen] = useState(false);
   const [online, setOnline] = useState(() => navigator.onLine);
 
   useEffect(() => {
@@ -48,17 +52,23 @@ export default function ToolkitScreen({
 
   const meditations = useMemo(() => {
     const normalized = query.toLowerCase().trim();
-    return MEDITATIONS.filter(
-      (item) =>
-        !normalized ||
-        `${item.name} ${item.description} ${item.benefit} ${item.tags.join(" ")}`
-          .toLowerCase()
-          .includes(normalized)
-    );
-  }, [query]);
+    return MEDITATIONS.filter((item) => {
+      const matchesCategory = category === "All"
+        || item.category === category
+        || (category === "Sleep" && item.tags.includes("sleep"))
+        || (category === "Breathwork" && item.tags.some(tag => /breath/i.test(tag)));
+      return matchesCategory && (!normalized ||
+        `${item.name} ${item.category} ${item.description} ${item.benefit} ${item.tags.join(" ")}`.toLowerCase().includes(normalized));
+    }).sort((a, b) => {
+      const featured = ["metta", "yoga-nidra", "diaphragmatic-breathing"];
+      const rank = (id: string) => featured.includes(id) ? featured.indexOf(id) : featured.length;
+      return rank(a.id) - rank(b.id);
+    });
+  }, [query, category]);
 
   return (
-    <div className="screen-stack">
+    <div className={`screen-stack meditation-library ${tab === "meditations" ? "" : "library-auxiliary"}`}>
+      {tab !== "meditations" && (
       <section className="page-intro">
         <span className="eyebrow">
           {tab === "emotional"
@@ -83,6 +93,8 @@ export default function ToolkitScreen({
         </p>
       </section>
 
+      )}
+      {(toolsOpen || tab !== "meditations") && <div id="library-tools" className="library-tools">
       <div className="segmented three">
         <button className={tab === "meditations" ? "active" : ""} onClick={() => setTab("meditations")}>
           Meditate
@@ -95,81 +107,27 @@ export default function ToolkitScreen({
         </button>
       </div>
 
-      {tab === "meditations" && (
-        <>
-          <div className="practice-launchers">
+      <div className="practice-launchers">
             <button onClick={()=>navigate({name:"meditation-timer",preset:"free"})}><Timer size={25}/><span><strong>Meditation timer</strong><small>Your time · countdown or stopwatch · earn XP</small></span></button>
             <button onClick={()=>navigate({name:"meditation-timer",preset:"focus-refocus"})}><Sparkles size={25}/><span><strong>Focus & refocus · 13 minutes</strong><small>A gentle return to attention · optional eight-week goal</small></span></button>
           </div>
-          <label className="search-box">
-            <Search size={18} />
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search by name, goal, or feeling"
-            />
-          </label>
-          <div className="meditation-list">
-            {meditations.map((meditation) => (
-              <article className="meditation-card" key={meditation.id}>
-                <span className="meditation-glyph">
-                  <MeditationIcon meditationId={meditation.id} />
-                </span>
-                <div className="meditation-copy">
-                  <div className="meta-row">
-                    <span>{meditation.category}</span>
-                    <span>
-                      {Math.ceil(
-                        meditation.phases.reduce((sum, item) => sum + item.duration, 0) / 60
-                      )}{" "}
-                      min
-                    </span>
-                  </div>
-                  <h3>{meditation.name}</h3>
-                  <strong style={{ color: meditation.color }}>{meditation.benefit}</strong>
-                  <p>{meditation.description}</p>
-                  {meditation.breathingGuidance && (
-                    <p className="meditation-breathing-summary">
-                      <strong>Breathing · {meditation.breathingGuidance.name}</strong>
-                      <span>{meditation.breathingGuidance.instruction}</span>
-                    </p>
-                  )}
-                  <div className="chip-row">
-                    {meditation.tags.map((tag) => (
-                      <span key={tag}>{tag}</span>
-                    ))}
-                  </div>
-                  <div className="card-actions">
-                    <button
-                      className="button primary"
-                      onClick={() => navigate({ name: "timer", meditationId: meditation.id })}
-                    >
-                      <Play size={17} /> Start
-                    </button>
-                    {meditation.id === "binaural" && (
-                      <button className="button ghost" onClick={() => navigate({ name: "timer", meditationId: meditation.id })}>
-                        <ExternalLink size={16} /> YouTube playlists
-                      </button>
-                    )}
-                    {meditation.youtubeQuery && meditation.id !== "binaural" && (
-                      <a
-                        className="button ghost"
-                        href={`https://www.youtube.com/results?search_query=${encodeURIComponent(
-                          meditation.youtubeQuery
-                        )}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <ExternalLink size={16} /> Guided
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </>
-      )}
+      </div>}
+      {tab === "meditations" && <>
+        <div className="library-search">
+          <Search size={22} aria-hidden="true" />
+          <input aria-label="Search meditations" value={query} onChange={event => setQuery(event.target.value)} placeholder="Search by name, goal, or feeling" />
+          {query && <button aria-label="Clear search" onClick={() => setQuery("")}><X size={18} /></button>}
+          <button aria-label="Library tools" aria-expanded={toolsOpen} aria-controls="library-tools" onClick={() => setToolsOpen(!toolsOpen)}><SlidersHorizontal size={21} /></button>
+        </div>
+        <div className="library-categories" aria-label="Meditation categories">
+          {["All", "Relaxation", "Sleep", "Breathwork", "Focus", "Emotional", "Sensory", "Spiritual"].map(item =>
+            <button key={item} aria-pressed={category === item} className={category === item ? "selected" : ""} onClick={() => setCategory(item)}>{item}</button>)}
+        </div>
+        <div className="library-card-list">
+          {meditations.map(meditation => <MeditationCard key={meditation.id} meditation={meditation} onStart={() => navigate({ name: "timer", meditationId: meditation.id })} />)}
+          {meditations.length === 0 && <div className="library-empty"><p>No meditations match your search.</p><button className="library-secondary" onClick={() => { setQuery(""); setCategory("All"); }}>Clear search and filters</button></div>}
+        </div>
+      </>}
 
       {tab === "guided" && (
         <div className="guided-library">

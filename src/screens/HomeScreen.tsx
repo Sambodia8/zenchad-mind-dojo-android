@@ -114,7 +114,7 @@ export default function HomeScreen({ navigate, data }: Props) {
         <p className="home-dojo-greeting">{greeting}, Sam</p>
         <div className="home-dojo-title-lockup">
           <span>Today in the</span>
-          <h1 id="home-dojo-title">Dojo</h1>
+          <h1 id="home-dojo-title">Realm</h1>
         </div>
       </section>
 

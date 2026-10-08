@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#080d1b" />
     <meta name="color-scheme" content="dark" />
-    <style id="appearance-bootstrap">html,body{background:#080d1b;color:#eef2ff}</style>
+    <style id="appearance-bootstrap">html,body{background:#080d1b;color:#eef2ff}.brand-loading{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;background:#080d1b;color:#eef2ff;font:16px system-ui}.brand-loading img{width:min(85vw,420px);height:auto}</style>
     <script>
       (() => {
         document.documentElement.dataset.appearance = "dark";
@@ -16,10 +16,10 @@
       })();
     </script>
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <title>Zen Chad — Your Wellness Adventure</title>
+    <title>Neural Fantasy</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div class="brand-loading" role="status"><img src="/assets/branding/neural-fantasy/full-title.png" alt="Neural Fantasy" /><span>Loading…</span></div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

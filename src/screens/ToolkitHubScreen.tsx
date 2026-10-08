@@ -29,10 +29,10 @@ const tools: Array<{
   tone: string;
 }> = [
   { title: "Meditation timer", copy: "Countdown, stopwatch and quiet focus practice", route: { name: "meditation-timer", preset: "free" }, icon: Timer, tone: "lavender" },
-  { title: "Live Zen Guide", copy: "A warm recommendation for right now", route: { name: "guide" }, icon: MessageCircleHeart, tone: "sage" },
+  { title: "Fantasy Guide", copy: "A warm recommendation for right now", route: { name: "guide" }, icon: MessageCircleHeart, tone: "sage" },
   { title: "Meditation journal", copy: "Private reflections kept on this device", route: { name: "journal" }, icon: BookOpen, tone: "lavender" },
   { title: "Weekly quests & badges", copy: "Collect gentle milestones without pressure", route: { name: "rewards" }, icon: Award, tone: "gold" },
-  { title: "Zen Shop", copy: "Spend ZenPoints on forgiving tools", route: { name: "shop" }, icon: ShoppingBag, tone: "gold" },
+  { title: "Fantasy Shop", copy: "Spend Fantasy Points on forgiving tools", route: { name: "shop" }, icon: ShoppingBag, tone: "gold" },
   { title: "Bike Quest", copy: "Turn bike prep, riding and recovery into XP", route: { name: "bike-quest" }, icon: Bike, tone: "gold" },
   { title: "Running", copy: "Quick runs, Story Runs, GPS progress and Runner XP", route: { name: "running" }, icon: Footprints, tone: "sage" },
   { title: "Soundscapes", copy: "Offline rain, water and focus textures", route: { name: "soundscapes" }, icon: Headphones, tone: "blue" },
@@ -70,7 +70,7 @@ export default function ToolkitHubScreen({ navigate }: Props) {
       <section className="card monk-note">
         <Sparkles />
         <div>
-          <strong>Zen Chad says</strong>
+          <strong>Your guide says</strong>
           <p>“Use the tool that helps. Ignore the one that sounds impressive.”</p>
         </div>
       </section>

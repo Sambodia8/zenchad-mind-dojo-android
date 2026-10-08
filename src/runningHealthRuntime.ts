@@ -113,7 +113,7 @@ function healthCard(record: RunRecord, compact = false) {
   return `
     <div class="running-health-card ${compact ? "compact" : ""}" data-health-run-id="${record.id}">
       <div class="running-health-heading"><div><span class="eyebrow">Optional watch stats</span><strong>Heart rate · steps · cadence</strong></div></div>
-      <p>Zenchad can add matching Health Connect records after the run. Running and Story Mode work normally without them.</p>
+      <p>Neural Fantasy can add matching Health Connect records after the run. Running and Story Mode work normally without them.</p>
       <button type="button" class="button secondary" data-health-import="${record.id}">${importInFlight.has(record.id) ? "READING…" : "ADD WATCH STATS"}</button>
       ${message ? `<small class="running-health-message">${message}</small>` : ""}
     </div>

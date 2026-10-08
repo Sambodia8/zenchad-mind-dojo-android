@@ -2,11 +2,11 @@ import { registerPlugin } from "@capacitor/core";
 
 /**
  * Run photos are deliberately references to the device library plus a small, app-private
- * thumbnail. ZenChad does not copy the original image, upload it, or read the library until
+ * thumbnail. Neural Fantasy does not copy the original image, upload it, or read the library until
  * the runner explicitly grants photo access. Deleting an app copy removes only that thumbnail.
  */
 export const RUN_PHOTO_PRIVACY_NOTE =
-  "Run photos stay on this device. ZenChad keeps an app-private thumbnail and a reference to the original; it never uploads or copies the full photo.";
+  "Run photos stay on this device. Neural Fantasy keeps an app-private thumbnail and a reference to the original; it never uploads or copies the full photo.";
 
 export type RunPhotoPermission = "full" | "limited" | "prompt" | "denied" | "unavailable";
 export type RunPhotoStatus = "ready" | "limited" | "permission-required" | "permission-denied" | "unavailable" | "error";
@@ -139,7 +139,7 @@ export async function moveRunPhotoAssociation(sourceRunId: string, targetRunId: 
   }
 }
 
-/** Deletes ZenChad's thumbnail(s), never the image in the system camera library. */
+/** Deletes Neural Fantasy's thumbnail(s), never the image in the system camera library. */
 export async function deleteRunPhotoAppCopy(runId: string, id?: string) {
   try {
     return await RunningPhotos.deleteAppCopy({ runId, id });

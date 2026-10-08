@@ -1,3 +1,13 @@
+# Neural Fantasy 2.28 — brand identity (2026-10-08)
+
+- Sam confirmed Neural Fantasy, matching the supplied artwork. Added the original full title, transparent mobile wordmark, separate celestial profile emblem, fitted launcher densities, monochrome themed star, favicon and navy splash/loading treatment. Removed the four random header logo variants.
+- Updated display labels, notifications, settings, guide, shop, coach and currency presentation. Kept application ID, signing certificate, all historical storage/native keys and schemas, backup formats/paths, avatar, audio and feature behavior. Repaired inherited dark-on-dark settings/shop/running labels and pale guide cards from rendered evidence.
+- Preserved the concurrently completed meditation library redesign in this working-tree APK; Sam authorized one combined release; the release commit includes both the rebrand and completed library source. Desktop configuration remains unchanged.
+- TypeScript/Vite build, Capacitor Android sync, JDK21 Android build, backup/merge, progression, shop, Running/native integration and coaching tests passed. Phone QA covers the changed screens at 412×915, selected/disabled controls, 320/360 header widths and light-system requests with the existing dark appearance. No connected phone: installation and on-device launch were not tested.
+- APK: NeuralFantasy-2.28-Rebrand.apk; version 2.28/code 39; package com.zenchad.minddojo; 545,156,682 bytes. SHA-256: 9B921F56F6655856C7A656A50BB39805C0882C50B33EE9CA4D2781BBA273B3AD. v1/v2 signatures verify with the same certificate as 2.27. All three branding assets match their sources; all 139 packaged offline meditation/soundscape files match 2.27.
+- Size change: +45,264 bytes overall. New branding and library artwork replace the former launcher/splash resources; the eleven old splash bitmaps are consolidated into one fitted drawable. No audio was removed.
+- Delivery: local and Drive-folder copies have identical verified SHA-256 hashes; cloud sync confirmation is pending. Previous releases retained.
+
 # Zen Chad 2.27 — complete Eleven v4 meditation audio (2026-10-08)
 
 - Finished the final original meditation, When the City Powers Down, with voice `zFkVchYwoYAFyxBrr2oH` and `eleven_v4`. Generated its15 original passages plus its existing breathing passage:16 cues,3341 tagged prompt characters. Preserved the current ten-minute app duration, delivery tags, breathing text and quiet imagery; added one gentle city sound prompt.

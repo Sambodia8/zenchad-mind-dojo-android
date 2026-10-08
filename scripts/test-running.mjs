@@ -47,7 +47,7 @@ assert.equal((runningScreenSource.match(/scheduleRunningReminder\(startedAt, nex
 assert.equal((runningScreenSource.match(/void cancelRunningReminder\(\)/g) ?? []).length, 4, "banking, resetting, replacing, and accepting a coached session should cancel the prior reminder");
 assert.match(source("src/native.ts"), /const RUNNING_REMINDER_NOTIFICATION_ID = 6201/);
 assert.match(source("src/native.ts"), /Math\.max\(1, plannedMinutes\) \+ 15/);
-assert.match(source("src/native.ts"), /Your run is still active\. Open ZenChad to finish and bank it when you are ready\./);
+assert.match(source("src/native.ts"), /Your run is still active\. Open Neural Fantasy to finish and bank it when you are ready\./);
 const homeSource = source("src/screens/HomeScreen.tsx");
 assert.match(homeSource, /label: "Move"[\s\S]*detail: "Run or ride"/);
 assert.match(homeSource, /label: "Stretch"[\s\S]*route: \{ name: "yoga" \}/);

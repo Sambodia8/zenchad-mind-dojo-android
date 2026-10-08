@@ -102,7 +102,7 @@ final class MeditationPracticeStore {
         boolean sound = s.optBoolean("endingBell") && !s.optBoolean("bellDelivered");
         NotificationCompat.Builder b = new NotificationCompat.Builder(c,sound ? BELL : SILENT)
             .setSmallIcon(c.getApplicationInfo().icon).setContentTitle("Meditation complete")
-            .setContentText("Take your time returning. Open ZenChad to see your practice.")
+            .setContentText("Take your time returning. Open Neural Fantasy to see your practice.")
             .setContentIntent(content).setAutoCancel(true).setOnlyAlertOnce(true).setPriority(sound ? NotificationCompat.PRIORITY_HIGH : NotificationCompat.PRIORITY_LOW);
         if(Build.VERSION.SDK_INT < 26 && sound) b.setSound(Uri.parse("android.resource://"+c.getPackageName()+"/raw/meditation_bowl"));
         NotificationManagerCompat.from(c).notify(ALARM_ID,b.build());

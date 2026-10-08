@@ -1,0 +1,98 @@
+/* Library-only surfaces keep their own contrast regardless of the legacy theme cascade. */
+:root[data-appearance] .library-route { background: #060914; color: #f8f5ff; }
+body:has(.library-route) { min-width: 0; }
+:root[data-appearance] .library-route .main-content { padding: calc(6rem + env(safe-area-inset-top)) .75rem calc(7.5rem + env(safe-area-inset-bottom)); }
+.meditation-library.screen-stack { gap: .7rem; }
+.meditation-library, .meditation-library button, .meditation-library input, .meditation-library strong { font-family: system-ui, sans-serif; }
+:root[data-appearance] .library-search input { color: #f8f5ff; background: transparent; border-radius: 0; }
+.library-search { display: flex; align-items: center; gap: .6rem; min-height: 52px; padding: .2rem .35rem .2rem .9rem; border: 1px solid #625086; border-radius: 16px; color: #d7cafa; background: linear-gradient(110deg, #151429, #0d1527); box-shadow: inset 0 1px 1px #a68ad42b; }
+.library-search input { width: 100%; min-width: 0; padding: .6rem 0; border: 0; outline-offset: 0; color: #f8f5ff; background: transparent; font: inherit; font-size: .88rem; }
+.library-search input::placeholder { color: #c2b6d8; opacity: 1; }
+.library-search > svg { flex-shrink: 0; }
+.library-search button { display: grid; place-items: center; flex: 0 0 44px; width: 44px; min-height: 44px; padding: 0; border: 0; color: #d7cafa; background: transparent; }
+.library-categories { display: flex; gap: .5rem; overflow-x: auto; padding: .25rem .25rem .55rem; margin-inline: -.25rem; scrollbar-width: none; }
+.library-categories::-webkit-scrollbar { display: none; }
+.library-categories button { flex-shrink: 0; min-height: 44px; padding: .5rem .9rem; border: 1px solid #423653; border-radius: 24px; color: #e3d9f6; background: linear-gradient(#1a1830, #0f1324); font-size: .85rem; }
+.library-categories button.selected { color: #fff; border-color: #cfadff; background: linear-gradient(#7352af, #50328b); box-shadow: 0 0 13px #9152eb80, inset 0 1px 4px #ecddff55; }
+.library-card-list { display: grid; gap: .75rem; }
+.library-card { position: relative; isolation: isolate; overflow: hidden; padding: .85rem .9rem .7rem; border: 1px solid #5a446b; border-radius: 19px; background: #0e1425; color: #fff; box-shadow: inset 0 1px 1px #cda7ee28; }
+.library-card-art { position: absolute; z-index: -2; inset: 0 0 0 auto; height: 100%; width: 65%; object-fit: cover; object-position: center 65%; }
+.library-card-moon .library-card-art, .library-card-sunset .library-card-art { object-position: center 38%; }
+.library-card::before { position: absolute; z-index: -1; inset: 0; content: ""; background: linear-gradient(90deg, #101323 0%, #101323f5 35%, #101323df 70%, #10132330 100%), linear-gradient(180deg, #101323a6, transparent 65%); pointer-events: none; }
+.library-card-heading { display: flex; align-items: center; gap: .75rem; }
+.library-medallion { position: relative; display: grid; place-items: center; flex: 0 0 62px; width: 62px; height: 62px; border: 2px solid #ffe3a0; border-radius: 50%; color: #e4bdff; background: radial-gradient(circle, #412646, #161629 70%); box-shadow: 0 0 0 4px #8b644844, 0 0 18px #f4b66050, inset 0 0 0 5px #171121, inset 0 0 0 7px #e5ba73; }
+.library-medallion svg { width: 30px; height: 30px; }
+.library-card-lotus .library-medallion svg { fill: #ce84ec; stroke: #e2b0ff; }
+.library-card-moon .library-medallion { color: #ffe6b5; }
+.library-card-moon .library-medallion svg { fill: #ffe6b5; }
+.library-card-sunset .library-medallion { color: #ffdc95; }
+.library-card-title { flex: 1; min-width: 0; }
+.library-card-meta { display: flex; gap: .4rem; align-items: center; justify-content: space-between; }
+.library-card-meta > span:first-child { color: #efb1d8; font-size: .65rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.library-card-moon .library-card-meta > span:first-child { color: #bbd6ff; }
+.library-card-sunset .library-card-meta > span:first-child { color: #ffe0a2; }
+.library-card-celestial .library-card-meta > span:first-child { color: #d5c3ff; }
+.library-duration { display: inline-flex; gap: .3rem; align-items: center; flex-shrink: 0; padding: .25rem .4rem; border: 1px solid #625175; border-radius: 18px; background: #121629; color: #f5edff; font-size: .7rem; white-space: nowrap; }
+.library-card h2 { margin: .35rem 0 0; color: #faf5ff; font-family: Georgia, "Times New Roman", serif; font-size: 1.28rem; line-height: 1.12; font-weight: 600; overflow-wrap: anywhere; }
+.library-card-description { max-width: 88%; margin: .6rem 0 .55rem; color: #f1edf7; font-family: system-ui, sans-serif; font-size: .875rem; line-height: 1.4; }
+.library-tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+.library-tags span { padding: .22rem .55rem; border: 1px solid #765080; border-radius: 20px; color: #f5dbf5; background: #43324f; font-size: .7rem; line-height: 1.3; text-transform: capitalize; }
+.library-card-moon .library-tags span { color: #deebff; background: #263d60; border-color: #46628d; }
+.library-card-sunset .library-tags span { color: #ffe4b8; background: #4b3b2c; border-color: #816546; }
+.library-card-actions { display: grid; grid-template-columns: 1.25fr 1fr; gap: .6rem; margin-top: .75rem; }
+.library-start, .library-secondary { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 46px; padding: .5rem .65rem; border: 1px solid #557ba0; border-radius: 12px; font-family: system-ui, sans-serif; font-size: .86rem; font-weight: 600; text-decoration: none; cursor: pointer; }
+.library-start { border-color: #55ab76; color: #fff; background: linear-gradient(120deg, #2c8050, #146138); font-size: 1rem; text-transform: uppercase; box-shadow: inset 0 1px 2px #9ce5b14d; }
+.library-secondary { border-color: #4d456d; color: #f0ebff; background: #151a30; }
+.library-start:active, .library-secondary:active { filter: brightness(.92); }
+.library-details-toggle { display: flex; align-items: center; justify-content: center; gap: .35rem; width: 100%; min-height: 44px; margin-bottom: -.5rem; padding: .3rem; border: 0; background: transparent; color: #ddd3f0; font-size: .74rem; }
+.library-card-details { margin-top: .6rem; padding: .8rem; border-top: 1px solid #625175; border-radius: 8px; color: #f5f1ff; background: #111728; font-size: .875rem; line-height: 1.5; }
+.library-card-details[hidden] { display: none; }
+.library-card-details > strong { color: #f1d2ff; }
+.library-card-details li strong { color: #f5f1ff; }
+.library-card-details h3 { margin: .75rem 0 .3rem; color: #f5f1ff; font: 600 .875rem/1.4 system-ui, sans-serif; }
+.library-card-details p { margin: .25rem 0 .6rem; color: #eee8f9; }
+.library-card-details ol { padding-left: 1.2rem; }
+.library-card-details li { margin-top: .75rem; }
+.library-tools { display: grid; gap: .6rem; }
+:root[data-appearance] .library-tools .segmented { background: #111528; }
+:root[data-appearance] .library-tools .segmented button { color: #eee7fa; background: transparent; min-height: 44px; }
+:root[data-appearance] .library-tools .segmented button.active { color: #fff; background: #51367d; }
+.library-tools .practice-launchers button { color: #fff; background: #20314b; border-color: #71819e; }
+.library-tools .practice-launchers strong { color: #fff7eb; }
+.library-tools .practice-launchers small { color: #dce3ef; }
+:root[data-appearance] .library-auxiliary .page-intro :is(h1, .eyebrow) { color: #f5efff; }
+:root[data-appearance] .library-auxiliary .page-intro p { color: #d6cbe8; }
+.library-tools .practice-launchers { margin: 0; }
+.library-empty { padding: 1rem; color: #f5f1ff; }
+.meditation-library :is(button, a, input):focus-visible { outline: 3px solid #d5b3ff; outline-offset: 3px; }
+/* Match the reference chrome only on the Library route. */
+@media (max-width: 899px) {
+  :root[data-appearance] .app-shell.library-route .topbar { min-height: 82px; padding: calc(.7rem + env(safe-area-inset-top)) .75rem .7rem; gap: .3rem; background: linear-gradient(100deg, #080b1deb, #170d2adb), url('/assets/meditation-art/celestial.webp') center 24% / cover; }
+  .library-route .topbar-leading { gap: .5rem; }
+  .library-route .brand-mark { width: 44px; height: 44px; flex-shrink: 0; }
+  .library-route .brand-wordmark { max-width: none; font-family: Georgia, serif; font-size: 1.14rem; font-weight: 600; text-transform: uppercase; letter-spacing: -.035em; transform: none; }
+  :root[data-appearance] .app-shell.library-route .brand small { display: block; margin-top: .3rem; color: #d0b3f1; font: 600 .72rem/1 system-ui, sans-serif; letter-spacing: .24em; text-transform: uppercase; }
+  .library-route .persistent-settings-trigger { position: static; transform: none; flex: 0 0 44px; color: #d0b3f1; background: #141429; border-color: #53406f; }
+  .library-route .topbar-actions { min-width: 0; }
+  .library-route .hud { gap: .3rem; }
+  :root[data-appearance] .app-shell.library-route .hud > button { min-height: 40px; padding: .3rem .45rem; border-radius: 15px; color: #f2ecff; background: #101125; border-color: #493859; font-size: .77rem; }
+  .library-route .hud-level { min-width: 4.1rem; }
+  .library-route .xp-glyph { color: #ffd891; }
+  :root[data-appearance] .app-shell.library-route .bottom-nav button { color: #b8aaca; font-size: .72rem; }
+  :root[data-appearance] .app-shell.library-route .bottom-nav button.active { color: #d0a3ff; }
+  .library-route .bottom-nav button.active::after { position: absolute; bottom: .1rem; width: 34px; height: 3px; background: #b775fc; border-radius: 4px; content: ""; box-shadow: 0 0 10px #ae65f7; }
+  .library-route .bottom-nav button { position: relative; }
+}
+@media (max-width: 370px) {
+  .library-route .brand-mark { width: 36px; height: 36px; }
+  .library-route .brand-wordmark { font-size: 1rem; }
+  .library-route .topbar-leading { gap: .3rem; }
+  :root[data-appearance] .app-shell.library-route .hud > button { padding-inline: .25rem; font-size: .7rem; }
+  .library-route .hud-level { min-width: 3.3rem; }
+  .library-card { padding-inline: .7rem; }
+  .library-medallion { flex-basis: 52px; width: 52px; height: 52px; }
+}
+@media (min-width: 900px) {
+  :root[data-appearance] .library-route .main-content { padding-top: calc(6rem + env(safe-area-inset-top)); }
+  .library-card-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

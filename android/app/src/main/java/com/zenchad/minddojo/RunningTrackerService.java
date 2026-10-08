@@ -357,7 +357,7 @@ public class RunningTrackerService extends Service implements LocationListener {
             : new Notification.Builder(this);
         return builder
             .setSmallIcon(android.R.drawable.ic_menu_mylocation)
-            .setContentTitle("Zenchad Run")
+            .setContentTitle("Neural Fantasy Run")
             .setContentText(distance + " · run still tracking")
             .setWhen(startedAt)
             .setUsesChronometer(true)

@@ -355,7 +355,7 @@
 }
 
 :root[data-appearance] .home-route .brand-mark img {
-  filter: grayscale(1) invert(1) sepia(0.2) hue-rotate(225deg) saturate(4) drop-shadow(0 0 0.35rem rgba(205, 148, 255, 0.8));
+  filter: none;
 }
 
 :root[data-appearance] .home-route .brand strong {
@@ -461,7 +461,7 @@
 }
 
 :root[data-appearance] .app-shell:not(.yoga-immersive) .brand-mark img {
-  filter: grayscale(1) invert(1) sepia(0.2) hue-rotate(225deg) saturate(4) drop-shadow(0 0 0.35rem rgba(205, 148, 255, 0.8));
+  filter: none;
 }
 
 :root[data-appearance] .app-shell:not(.yoga-immersive) .brand strong {
@@ -607,3 +607,36 @@
   background: linear-gradient(135deg, rgba(46, 28, 78, 0.72), rgba(10, 13, 31, 0.95));
   box-shadow: 0 0.85rem 2rem rgba(0, 0, 0, 0.22);
 }
+
+/* Neural Fantasy identity: preserve original art colors and shared chrome. */
+:root[data-appearance] .app-shell .brand-mark img { filter: none; }
+:root[data-appearance] .app-shell .brand strong { text-shadow: none; }
+:root[data-appearance] .app-shell .brand small { color: #c3bdd6; }
+:root[data-appearance] .app-shell .topbar-leading { min-width: 0; }
+:root[data-appearance] .app-shell .brand { min-width: 0; }
+:root[data-appearance] .app-shell .brand > span { min-width: 0; }
+@media (max-width: 390px) { .app-shell .brand-wordmark { width: 8rem; } }
+@media (max-width: 355px) { .app-shell .brand-wordmark { width: 6.7rem; } }
+.settings-brand { display: flex; align-items: center; gap: 1rem; }
+.settings-brand img { width: 3.5rem; height: 3.5rem; object-fit: contain; }
+.settings-brand h2 { margin: 0; color: var(--text, #eef2ff); }
+.settings-brand p { margin: .35rem 0 0; color: #c3bdd6; }
+:root[data-appearance="dark"] .settings-sheet .setting-row strong { color: #f4efff; }
+:root[data-appearance="dark"] .privacy-note strong,
+:root[data-appearance="dark"] .zen-shop-screen h1,
+:root[data-appearance="dark"] .zen-shop-screen .shop-balance strong,
+:root[data-appearance="dark"] .running-principle strong { color: #f4efff; }
+:root[data-appearance="dark"] .guide-screen .chat-bubble {
+  background: #141d34;
+  border: 1px solid #3e355e;
+  color: #eef2ff;
+}
+:root[data-appearance="dark"] .guide-screen .chat-bubble strong { color: #eef2ff; }
+:root[data-appearance="dark"] .guide-screen .chat-bubble p,
+:root[data-appearance="dark"] .guide-screen .chat-bubble small { color: #c9c3dc; }
+:root[data-appearance="dark"] .guide-screen .guide-status { background: #141d34; color: #d6f4e6; }
+
+/* Leave clear space for the centered settings button at phone widths. */
+.app-shell .brand-wordmark { width: clamp(7.75rem, calc(50vw - 84px), 11.25rem); }
+@media (max-width: 390px) { .app-shell .topbar-leading .brand-mark { display: none; } .app-shell .brand-wordmark { width: 8rem; } }
+@media (max-width: 355px) { .app-shell .brand-wordmark { width: 6.75rem; } }

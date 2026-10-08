@@ -867,7 +867,7 @@ export default function BikeQuestScreen({ data, setData, navigate, resume }: Pro
           </button>
           <button className="button primary full bike-end-ride" onClick={endRide}>END RIDE</button>
           <small className="bike-notification-note">
-            <Clock3 size={14} /> The pinned Android notification is restored if Zenchad reloads mid-ride.
+            <Clock3 size={14} /> The pinned Android notification is restored if Neural Fantasy reloads mid-ride.
           </small>
         </section>
         {celebration ? <RewardBurst celebration={celebration} /> : null}

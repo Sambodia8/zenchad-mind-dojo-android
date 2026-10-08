@@ -182,7 +182,7 @@ export async function collectRunningDiagnostics(): Promise<RunningDiagnosticsSna
 
 export function formatRunningDiagnostics(snapshot: RunningDiagnosticsSnapshot) {
   return [
-    "ZENCHAD RUNNING DIAGNOSTICS",
+    "Neural Fantasy RUNNING DIAGNOSTICS",
     `Generated: ${snapshot.generatedAt}`,
     `Platform: ${snapshot.platform}`,
     "",

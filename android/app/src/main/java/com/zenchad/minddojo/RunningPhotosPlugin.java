@@ -154,7 +154,7 @@ public class RunningPhotosPlugin extends Plugin {
             call.resolve(refreshResult(hasFullImagePermission() ? "ready" : "limited", imported,
                 hasFullImagePermission() ? null : "Only Android-selected photos were scanned. New camera photos may remain hidden."));
         } catch (Exception error) {
-            call.resolve(refreshResult("error", imported, "ZenChad could not read recent photos. Your run is still being tracked."));
+            call.resolve(refreshResult("error", imported, "Neural Fantasy could not read recent photos. Your run is still being tracked."));
         }
     }
 

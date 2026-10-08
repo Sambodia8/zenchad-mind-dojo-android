@@ -471,16 +471,16 @@ function RunPhotoEditor({
     <div className="running-photo-editor">
       <div className="running-photo-main">
         <RunPhotoThumbnail photo={photo} runId={runId} onOpen={onOpen} />
-        <div><strong>{runPhotoLabel(photo)}</strong><small>{photo.sourceAvailable ? "Original remains in your camera library" : "Original deleted; ZenChad's thumbnail is independent"}</small></div>
+        <div><strong>{runPhotoLabel(photo)}</strong><small>{photo.sourceAvailable ? "Original remains in your camera library" : "Original deleted; Neural Fantasy's thumbnail is independent"}</small></div>
       </div>
       <label>Optional caption<input value={caption} maxLength={80} onChange={(event) => setCaption(event.target.value)} placeholder="Add a friendly name" /></label>
       <button type="button" className="button secondary" disabled={busy || caption.trim() === (photo.caption ?? "").trim()} onClick={() => void saveCaption()}>Save caption</button>
       {targets.length ? <div className="running-photo-move"><label>Move to another completed run<select value={targetRunId} onChange={(event) => setTargetRunId(event.target.value)}><option value="">Choose a run</option>{targets.map((record) => <option value={record.id} key={record.id}>{record.routeName} · {new Date(record.startedAt).toLocaleDateString()}</option>)}</select></label><button type="button" className="button secondary" disabled={busy || !targetRunId} onClick={() => void movePhoto()}>Move photo</button></div> : null}
       <div className="running-photo-actions">
         <button type="button" onClick={() => void onRemove()} disabled={busy}>Remove from this run</button>
-        {photo.hasAppCopy ? <button type="button" onClick={() => void onDeleteCopy()} disabled={busy}>Delete ZenChad thumbnail</button> : null}
+        {photo.hasAppCopy ? <button type="button" onClick={() => void onDeleteCopy()} disabled={busy}>Delete Neural Fantasy thumbnail</button> : null}
       </div>
-      <small className="running-photo-delete-note">Removing the association also removes ZenChad's private thumbnail. Neither action deletes the original camera photo.</small>
+      <small className="running-photo-delete-note">Removing the association also removes Neural Fantasy's private thumbnail. Neither action deletes the original camera photo.</small>
     </div>
   );
 }
@@ -793,7 +793,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
     navigator.vibrate?.([42, 34, 42, 34, 125, 45]);
     if (data.preferences.uiSoundsEnabled) playUiSfx("reward", { overlap: true });
     const latest = rewards[rewards.length - 1];
-    showToast(`ZEN POINT! · ${latest.id} · +${amount} ZP`);
+    showToast(`FANTASY POINT! · ${latest.id} · +${amount} FP`);
   }, [data.preferences.uiSoundsEnabled, session?.distanceMeters, session?.distanceZenPointAwards, session?.stage, setData]);
 
   useEffect(() => {
@@ -1407,7 +1407,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           <span className="running-hero-icon"><Footprints /></span>
           <span className="eyebrow">Turn the outside world into the level</span>
           <h1>Running</h1>
-          <p>Choose the kind of run. Zenchad handles the next decision one step at a time.</p>
+          <p>Choose the kind of run. Neural Fantasy handles the next decision one step at a time.</p>
         </section>
 
         {session ? (
@@ -1505,7 +1505,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
     return (
       <div className="screen-stack running-mode">
         <button className="running-inline-back" onClick={() => setView("hub")}>← Running hub</button>
-        <section className="page-intro"><span className="eyebrow">{runModeLabel(selectedMode)}</span><h1>How long do you want to run?</h1><p>One decision. Zenchad adapts the suggestion from completed runs, never from a target you missed.</p></section>
+        <section className="page-intro"><span className="eyebrow">{runModeLabel(selectedMode)}</span><h1>How long do you want to run?</h1><p>One decision. Neural Fantasy adapts the suggestion from completed runs, never from a target you missed.</p></section>
         <section className="running-adaptive-plan"><Sparkles /><span><strong>{adaptivePlan.source === "history" ? `${adaptivePlan.recommendedMinutes} min looks sustainable today` : "Start with a friendly 20 min"}</strong><small>{adaptivePlan.expectedDistanceMeters ? `Based on your completed-run ability: roughly ${formatRunDistance(adaptivePlan.expectedDistanceMeters)} at your usual pace.` : "After a few completed runs, this will also estimate a comfortable distance."}</small></span></section>
         <div className="running-duration-grid">{DURATIONS.map((minutes) => <button className={minutes === adaptivePlan.recommendedMinutes ? "recommended" : ""} key={minutes} onClick={() => chooseDuration(minutes)}><strong>{minutes}</strong><span>{minutes === adaptivePlan.recommendedMinutes ? "minutes · suggested" : "minutes"}</span></button>)}</div>
       </div>
@@ -1585,7 +1585,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           <p>Choose everyone who is joining. Going solo counts too. This choice makes the next steps relevant to your run.</p>
           <RunCompanionPicker companionIds={session.companionIds} onChange={updateActiveRunCompanions} />
           {session.companionIds.includes("yuna") ? <p className="running-companion-tip">Yuna’s torch and dinner timing will appear in your preparation.</p> : null}
-          {session.companionIds.includes("runkeeper") ? <p className="running-companion-tip">Start Runkeeper separately when you reach the start point. ZenChad cannot control or sync it.</p> : null}
+          {session.companionIds.includes("runkeeper") ? <p className="running-companion-tip">Start Runkeeper separately when you reach the start point. Neural Fantasy cannot control or sync it.</p> : null}
           {session.companionIds.some((id) => id === "katie" || id === "hana" || id === "rtr") ? <p className="running-companion-tip">Check the meeting point and timing with your running people before leaving.</p> : null}
           <button className="button primary full" onClick={finishCompanionStep}>{session.companionIds.length ? "Companions set" : "I'm going solo"}{session.prepAwards.companions === undefined ? " · +2 XP" : ""} <ArrowRight /></button>
         </section>
@@ -1610,7 +1610,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
             <span className="eyebrow">One item at a time</span>
             <h1>{item.label}</h1>
             <p>{item.note || "Check this item before you move on."}</p>
-            {item.id.includes("torch") ? <p className="running-companion-tip">Check its charge yourself today. ZenChad cannot read a torch battery.</p> : null}
+            {item.id.includes("torch") ? <p className="running-companion-tip">Check its charge yourself today. Neural Fantasy cannot read a torch battery.</p> : null}
             {item.id.includes("torch") && item.carStored && (!item.lastCheckedAt || now - item.lastCheckedAt > 30 * 24 * 60 * 60_000) ? <p className="running-hype-charge-due">The torch kept in your car is due for a manual charge check.</p> : null}
             <div className="running-gear-actions" role="group" aria-label={`${item.label} status`}>
               <button className="button primary full" onClick={() => completeGearStep(item, index, visibleItems.length, "ready")}>Packed / ready{session.prepAwards[`gear:${item.id}`] === undefined ? " · +2 XP" : ""} <ArrowRight /></button>
@@ -1697,7 +1697,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
         <section className="running-live-hud">
           <div className="running-live-top"><span className="eyebrow">{runModeLabel(session.mode)}</span><span className={`running-gps ${gpsStatus.startsWith("GPS tracking") ? "locked" : ""}`}>{gpsStatus}</span></div>
            <div className="running-primary-stat"><span className="running-time-label">RUN TIME</span><strong className="running-time-value">{formatRunClock(elapsedRunSeconds)}</strong><span className="running-distance-value">{formatRunDistance(session.distanceMeters)} DISTANCE</span></div>
-          <div className="running-live-stats"><span><small>RECENT · 30s</small><b>{recentPace ? formatRunPace(recentPace) : "Paused / finding pace"}</b></span><span><small>AVG PACE</small><b>{formatRunPace(averagePace)}</b></span><span><small>{justRun ? "GUIDANCE" : "PLAN"}</small><b>{justRun ? "Off" : `${session.plannedMinutes} min`}</b></span><span><small>ZEN POINTS</small><b>+{session.distanceZenPoints} ZP</b></span></div>
+          <div className="running-live-stats"><span><small>RECENT · 30s</small><b>{recentPace ? formatRunPace(recentPace) : "Paused / finding pace"}</b></span><span><small>AVG PACE</small><b>{formatRunPace(averagePace)}</b></span><span><small>{justRun ? "GUIDANCE" : "PLAN"}</small><b>{justRun ? "Off" : `${session.plannedMinutes} min`}</b></span><span><small>Fantasy Points</small><b>+{session.distanceZenPoints} FP</b></span></div>
           {justRun ? (
             <section className="running-just-run-note"><Headphones /><div><strong>GPS on. Directions off.</strong><small>Your distance, pace and route are being recorded. No planned route or turn-by-turn prompts.</small></div></section>
           ) : <div className="running-progress-track active"><span style={{ width: `${plannedProgress * 100}%` }} /></div>}
@@ -1713,7 +1713,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           <div><strong>{photoStatus === "ready" ? "New run photos are watched" : photoStatus === "limited" ? "Selected photos only" : photoStatus === "permission-denied" ? "Run photos are off" : photoStatus === "permission-required" ? "Enable optional run photos" : "Run photos unavailable"}</strong><small>{photoStatus === "limited" ? "New Camera photos may be hidden. Manage access to allow all photos." : RUN_PHOTO_PRIVACY_NOTE}</small></div>
           {photoPermission === "full" || photoPermission === "unavailable" ? null : <button className="button ghost" onClick={() => void requestPhotoAccess()}>{photoPermission === "limited" ? "Manage access" : "Allow photos"}</button>}
         </section> : null}
-        <section className="running-checkpoint-strip"><Zap /><span><strong>{Object.keys(session.checkpointAwards).length}/4 progress checkpoints</strong><small>+{session.checkpointXp} XP · +{session.distanceZenPoints} distance ZP{session.checkpointDice ? ` · 🎲 ${session.checkpointDice}` : ""}</small></span></section>
+        <section className="running-checkpoint-strip"><Zap /><span><strong>{Object.keys(session.checkpointAwards).length}/4 progress checkpoints</strong><small>+{session.checkpointXp} XP · +{session.distanceZenPoints} distance FP{session.checkpointDice ? ` · 🎲 ${session.checkpointDice}` : ""}</small></span></section>
         <section className="running-rescue-card running-active-rescue" aria-label="Live rescue options"><span className="eyebrow">Need a change?</span><div><button type="button" onClick={() => rescueActiveRun("easy")}>Make it easier</button><button type="button" onClick={() => rescueActiveRun("head-back")}>Head back</button>{session.companionIds.includes("yuna") ? <button type="button" onClick={() => rescueActiveRun("yuna")}>Yuna needs a stop</button> : null}</div></section>
         <button disabled={finishBanking} className={`button full running-end-button ${confirmEnd ? "confirming" : ""}`} onClick={() => confirmEnd ? finishRun() : setConfirmEnd(true)}>{finishBanking ? "Banking run…" : confirmEnd ? "Tap again — bank this run" : justRun ? "Finish Just Run" : completionRatio < 1 ? "Finish run early" : "Finish & bank run"}</button>
         {confirmEnd ? <button className="button ghost full" onClick={() => setConfirmEnd(false)}>Keep running — no pressure</button> : null}
@@ -1745,7 +1745,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
           "--flutter": `${particle.flutter}s`,
           "--round": `${particle.round}px`
         } as CSSProperties} />)}</div>
-        <section className="running-summary-hero"><span className="running-summary-check"><Check /></span><span className="eyebrow">{session.mode === "story" ? "Mission complete" : "Run complete"}</span><h1>RUN BANKED!</h1><div className="running-summary-reward-row"><strong>+{totalXp} XP</strong><strong>+{totalZenPoints} ZP</strong></div></section>
+        <section className="running-summary-hero"><span className="running-summary-check"><Check /></span><span className="eyebrow">{session.mode === "story" ? "Mission complete" : "Run complete"}</span><h1>RUN BANKED!</h1><div className="running-summary-reward-row"><strong>+{totalXp} XP</strong><strong>+{totalZenPoints} FP</strong></div></section>
         <button className="button primary full running-summary-done" onClick={() => { resetRun(); navigate({ name: "home" }); }}><Check /> Done</button>
         {levelsGained > 0 ? <section className="running-level-up-banner"><Sparkles /><div><span className="eyebrow">Level up{levelsGained > 1 ? ` ×${levelsGained}` : ""}</span><strong>LEVEL {session.completionLevelAfter}</strong></div><Trophy /></section> : null}
         <section className="card running-results-card">
@@ -1771,7 +1771,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
         {record?.splits.length ? (
           <section className="running-insight-section"><div className="section-heading"><div><span className="eyebrow">Kilometre by kilometre</span><h2>Pace laps</h2></div><Clock3 /></div><div className="running-split-list">{record.splits.map((split) => <div key={split.index}><strong>{split.index} km</strong><span>{formatRunClock(split.durationSeconds)}</span><small>{formatRunPace(split.paceSecondsPerKm)}</small></div>)}</div></section>
         ) : null}
-          <section className="card running-xp-breakdown"><span><small>Prep + readiness</small><strong>+{session.prepXp} XP</strong></span><span><small>Run + checkpoints</small><strong>+{session.runXp} XP</strong></span><span><small><Coins size={14} /> Distance rewards</small><strong>+{session.distanceZenPoints} ZP</strong></span>{session.firstRunOfDayZenPoints ? <span><small>First run today</small><strong>+{session.firstRunOfDayZenPoints} ZP</strong></span> : null}<span><small><Dices size={14} /> Runner dice</small><strong>+{session.checkpointDice}</strong></span></section>
+          <section className="card running-xp-breakdown"><span><small>Prep + readiness</small><strong>+{session.prepXp} XP</strong></span><span><small>Run + checkpoints</small><strong>+{session.runXp} XP</strong></span><span><small><Coins size={14} /> Distance rewards</small><strong>+{session.distanceZenPoints} FP</strong></span>{session.firstRunOfDayZenPoints ? <span><small>First run today</small><strong>+{session.firstRunOfDayZenPoints} FP</strong></span> : null}<span><small><Dices size={14} /> Runner dice</small><strong>+{session.checkpointDice}</strong></span></section>
         <button className="button ghost full" onClick={() => setView("history")}><History /> Run history</button>
       </div>
     );
@@ -1825,7 +1825,7 @@ export default function RunningModeScreen({ data, setData, navigate, startMode }
     return (
       <div className="screen-stack running-mode">
         <button className="running-inline-back" onClick={() => setView("hub")}>← Running hub</button>
-        <section className="page-intro"><span className="eyebrow">Spend what running earned</span><h1>Runner store</h1><p>Lifetime Zenchad XP never decreases. Running also earns spendable Runner Credits.</p></section>
+        <section className="page-intro"><span className="eyebrow">Spend what running earned</span><h1>Runner store</h1><p>Lifetime Neural Fantasy XP never decreases. Running also earns spendable Runner Credits.</p></section>
         <div className="running-wallet"><Zap /><strong>{profile.credits}</strong><span>Runner Credits</span></div>
         <div className="running-store-grid">{STORE_ITEMS.map((item) => { const unlocked = profile.unlockedStoreIds.includes(item.id); return <button className={`running-store-card ${unlocked ? "unlocked" : ""}`} key={item.id} disabled={unlocked || profile.credits < item.price} onClick={() => buyStoreItem(item.id, item.price)}><ShoppingBag /><strong>{item.name}</strong><small>{item.note}</small><b>{unlocked ? "UNLOCKED" : `${item.price} credits`}</b></button>; })}</div>
         {toast ? <div className="running-toast">{toast}</div> : null}

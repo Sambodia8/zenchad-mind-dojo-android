@@ -1,6 +1,6 @@
-# ZenChad — The Mind Dojo
+# Neural Fantasy
 
-ZenChad is an Android meditation and wellbeing app built with React, Capacitor, and native Android
+Neural Fantasy is an Android meditation and wellbeing app built with React, Capacitor, and native Android
 extensions. The source in this repository is the Android app; the browser build is only the asset layer
 that Capacitor packages into the installed Android application.
 
@@ -43,8 +43,8 @@ cloud database, or embedded API key.
   four variants without immediately repeating the previous one; downloadable soundscapes remain
   to be produced
 - Final emotional-toolkit content and escalation resources
-- Final launcher logo and icons will be supplied by the user
-- Final visual branding, splash screen, badges, and unlockable rewards
+- Launcher, header and splash assets use Sam’s supplied Neural Fantasy identity
+- Additional badges and unlockable rewards
 - User-authored stretch ordering and pace
 
 ## Develop the Android app

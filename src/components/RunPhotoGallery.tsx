@@ -99,14 +99,14 @@ export default function RunPhotoGallery({ runId, photos, initialPhotoId, onClose
         onPointerUp={(event) => finishSwipe(event.clientX)}
         onPointerCancel={() => { pointerStartX.current = null; }}
       >
-        {loaded?.dataUrl ? <img src={loaded.dataUrl} alt={label} /> : loaded ? <div className="run-photo-gallery-missing"><Image /><strong>Photo unavailable</strong><span>The original and ZenChad thumbnail are no longer available.</span></div> : <div className="run-photo-gallery-loading" role="status">Loading photo…</div>}
+        {loaded?.dataUrl ? <img src={loaded.dataUrl} alt={label} /> : loaded ? <div className="run-photo-gallery-missing"><Image /><strong>Photo unavailable</strong><span>The original and Neural Fantasy thumbnail are no longer available.</span></div> : <div className="run-photo-gallery-loading" role="status">Loading photo…</div>}
       </div>
       <button type="button" className="run-photo-gallery-arrow previous" disabled={index === 0} onClick={() => setIndex((current) => Math.max(0, current - 1))} aria-label="Previous run photo"><ChevronLeft /></button>
       <button type="button" className="run-photo-gallery-arrow next" disabled={index === orderedPhotos.length - 1} onClick={() => setIndex((current) => Math.min(orderedPhotos.length - 1, current + 1))} aria-label="Next run photo"><ChevronRight /></button>
       <div className="run-photo-gallery-caption">
         <strong>{label}</strong>
         <span>{new Date(photo.capturedAt).toLocaleString()}</span>
-        {loaded?.source === "thumbnail" ? <small>Original unavailable · showing ZenChad’s saved thumbnail</small> : null}
+        {loaded?.source === "thumbnail" ? <small>Original unavailable · showing Neural Fantasy’s saved thumbnail</small> : null}
       </div>
     </div>
   );

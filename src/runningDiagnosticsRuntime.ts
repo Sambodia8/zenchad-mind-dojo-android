@@ -71,7 +71,7 @@ function render() {
         await navigator.clipboard.writeText(text);
         if (message) message.textContent = "Diagnostics copied. No coordinates included.";
       } catch {
-        if (message) message.textContent = "Clipboard was unavailable. Try again while Zenchad is in the foreground.";
+        if (message) message.textContent = "Clipboard was unavailable. Try again while Neural Fantasy is in the foreground.";
       }
     };
   }

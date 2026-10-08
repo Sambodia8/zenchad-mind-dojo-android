@@ -53,6 +53,6 @@ export function purchaseShopItem(data: AppData, itemId: string, purchasedAt = ne
 
 export function purchaseFailureMessage(reason: PurchaseFailure) {
   if (reason === "already-owned") return "You already have this unique item.";
-  if (reason === "insufficient-balance") return "Earn a few more ZenPoints first.";
+  if (reason === "insufficient-balance") return "Earn a few more Fantasy Points first.";
   return "That item is not available right now.";
 }

@@ -23,13 +23,13 @@ export default function GuideScreen({ navigate }: Props) {
   return (
     <div className="screen-stack guide-screen">
       <section className="guide-portrait">
-        <img src="assets/vision2/zen-chad-mascot.png" alt="Zen Chad, your meditation guide" />
+        <img src="assets/vision2/zen-chad-mascot.png" alt="Your meditation guide" />
         <span className="guide-status">Here with you</span>
       </section>
 
       <section className="chat-stack" aria-live="polite">
         <div className="chat-bubble guide">
-          <strong>Zen Chad</strong>
+          <strong>Your guide</strong>
           <p>No need to explain the whole day. What would feel helpful in the next few minutes?</p>
         </div>
         <div className="guide-choices">

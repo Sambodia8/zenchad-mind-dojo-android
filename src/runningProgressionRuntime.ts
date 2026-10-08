@@ -75,7 +75,7 @@ function syncProgressPanel(state: RunningProgressionState) {
       <div class="section-heading"><div><span class="eyebrow">Real places become game space</span><h2>Runner Sectors</h2></div><strong>${discovered.length}</strong></div>
       ${discovered.length ? `<div class="running-sector-list">${discovered.slice(0, 8).map((sector) => `
         <article><span>◆</span><div><strong>${escapeText(sector.label)}</strong><small>${sector.visits} visits · ${Math.round(sector.lengthMeters)} m</small></div><b>${formatRunClock(sector.bestDurationSeconds)}</b></article>
-      `).join("")}</div>` : `<div class="running-progression-empty">Run the same useful stretch twice and Zenchad can recognise it as a Sector.</div>`}
+      `).join("")}</div>` : `<div class="running-progression-empty">Run the same useful stretch twice and Neural Fantasy can recognise it as a Sector.</div>`}
     </section>
     <section class="running-progression-section">
       <div class="section-heading"><div><span class="eyebrow">Collected, never revoked</span><h2>Achievements</h2></div><strong>${state.achievements.length}</strong></div>

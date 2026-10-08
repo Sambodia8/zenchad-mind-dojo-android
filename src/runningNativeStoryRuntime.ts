@@ -136,7 +136,7 @@ function syncStorySettings(snapshot: NativeStorySnapshot) {
       <div class="running-story-audio-heading"><div><span class="eyebrow">Story audio</span><strong>Mix over your music</strong></div><button type="button" data-story-sfx-toggle class="${snapshot.sfxEnabled ? "active" : ""}">${snapshot.sfxEnabled ? "EFFECTS ON" : "EFFECTS MUTED"}</button></div>
       <label><span><strong>Effects</strong><small>Helicopter, gunfire, bullet passes and stingers</small></span><b data-story-sfx-value>${sfxPercent}%</b><input data-story-sfx-volume type="range" min="0" max="100" step="5" value="${sfxPercent}" ${snapshot.sfxEnabled ? "" : "disabled"}></label>
       <label><span><strong>Radio voice</strong><small>Story dialogue only — navigation stays separate</small></span><b data-story-voice-value>${voicePercent}%</b><input data-story-voice-volume type="range" min="0" max="100" step="5" value="${voicePercent}"></label>
-      <small class="running-story-audio-note">These controls affect Zenchad only. They do not change your external music volume.</small>
+      <small class="running-story-audio-note">These controls affect Neural Fantasy only. They do not change your external music volume.</small>
     </div>
   `;
 

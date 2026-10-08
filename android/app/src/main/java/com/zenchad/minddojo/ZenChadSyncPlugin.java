@@ -132,7 +132,7 @@ public class ZenChadSyncPlugin extends Plugin {
                 value.put("json", new String(output.toByteArray(), StandardCharsets.UTF_8));
                 call.resolve(value);
             } catch (Exception error) {
-                call.resolve(result(false, "The backup could not be read. Choose a ZenChad JSON backup under 32 MB."));
+                call.resolve(result(false, "The backup could not be read. Choose a Neural Fantasy JSON backup under 32 MB."));
             } finally { documentBusy = false; }
         });
     }

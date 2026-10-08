@@ -125,7 +125,7 @@ function validResponse(candidate: Partial<RunningDirectorResponse> | null): Runn
 function promptFor(context: RunningDirectorContext) {
   const features = (context.nearbyFeatures ?? []).slice(0, 6).join(", ") || "none supplied";
   return [
-    "You are a terse audio game director for Zenchad Story Run.",
+    "You are a terse audio game director for Neural Fantasy Story Run.",
     "The player is physically running. Never shame exercise performance. Never tell them to stop, inspect the phone, trespass, take a shortcut, cross a road, or suddenly accelerate.",
     "Navigation is handled separately. Do not give turn directions.",
     "Write ONE short radio line that preserves momentum and adapts the fiction.",

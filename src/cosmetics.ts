@@ -19,7 +19,7 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
   {
     id: "default-pink-hair",
     name: "Purple Spiky Hair",
-    description: "ZenChad's original short, layered purple-magenta spikes.",
+    description: "Neural Fantasy's original short, layered purple-magenta spikes.",
     slot: "hair",
     thumbnail: "/assets/status/generated/core/head-magenta-spiky-hair.png",
     paperDollLayer: "/assets/status/paper-doll/layers/hair/default-magenta-spikes-canonical-v3.png",
@@ -59,7 +59,7 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
   {
     id: "runner-top",
     name: "Charcoal Training Top",
-    description: "The original zip-front ZenChad training shirt.",
+    description: "The original zip-front Neural Fantasy training shirt.",
     slot: "top",
     thumbnail: "/assets/status/generated/core/top-charcoal-training-shirt.png",
     paperDollLayer: "/assets/status/paper-doll/layers/top/charcoal-training-shirt-canonical-v3.png",
@@ -119,7 +119,7 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
   {
     id: "runner-shorts",
     name: "Charcoal Training Shorts",
-    description: "The original lightweight ZenChad training shorts.",
+    description: "The original lightweight Neural Fantasy training shorts.",
     slot: "legs",
     thumbnail: "/assets/status/generated/core/legs-charcoal-training-shorts.png",
     paperDollLayer: "/assets/status/paper-doll/layers/legs/charcoal-training-shorts-canonical-v3.png",
@@ -159,7 +159,7 @@ export const COSMETIC_CATALOGUE: readonly CosmeticDefinition[] = [
   {
     id: "indigo-flow",
     name: "Indigo Flow Aura",
-    description: "The original indigo spiritual flame surrounding ZenChad.",
+    description: "The original indigo spiritual flame surrounding Neural Fantasy.",
     slot: "aura",
     thumbnail: "/assets/status/generated/effects/violet-spiritual-flame-aura.png",
     starter: true

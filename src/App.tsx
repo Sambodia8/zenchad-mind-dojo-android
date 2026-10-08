@@ -77,23 +77,18 @@ const titleFor = (route: Route) => {
     case "meditation-timer": return "Meditation timer";
     case "journal": return "Meditation Journal";
     case "progress": return "Progress";
-    case "guide": return "Live Zen Guide";
+    case "guide": return "Fantasy Guide";
     case "soundscapes": return "Soundscapes";
     case "rewards": return "Badges & Quests";
-    case "shop": return "Zen Shop";
+    case "shop": return "Fantasy Shop";
     case "themes": return "Watercolour Themes";
     case "settings": return "Settings";
   }
 };
 
-const logoVariants = ["logo-needleteeth", "logo-crowen", "logo-fort", "logo-ghostbum"] as const;
-
 export default function App() {
   const [route, setRoute] = useState<Route>({ name: "home" });
   const [data, setData] = useState<AppData>(() => loadData());
-  const [logoVariant] = useState<(typeof logoVariants)[number]>(() =>
-    logoVariants[Math.floor(Math.random() * logoVariants.length)]
-  );
   const dataRef = useRef<AppData>(data);
   useEffect(() => {
     let disposed = false;
@@ -476,7 +471,7 @@ export default function App() {
   );
 
   return (
-    <div className={`app-shell ${data.preferences.reducedMotion ? "reduce-motion" : ""} ${isStatusRoute ? "status-route" : ""} ${route.name === "home" ? "home-route" : ""} ${isYogaRoute ? "yoga-route" : ""} ${isYogaImmersive ? "yoga-immersive" : ""}`} data-theme={data.preferences.selectedTheme} onClickCapture={handleUiClick} onChangeCapture={handleUiChange}>
+    <div className={`app-shell ${data.preferences.reducedMotion ? "reduce-motion" : ""} ${isStatusRoute ? "status-route" : ""} ${route.name === "home" ? "home-route" : ""} ${route.name === "library" ? "library-route" : ""} ${isYogaRoute ? "yoga-route" : ""} ${isYogaImmersive ? "yoga-immersive" : ""}`} data-theme={data.preferences.selectedTheme} onClickCapture={handleUiClick} onChangeCapture={handleUiChange}>
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
       <header className="topbar">
@@ -488,10 +483,10 @@ export default function App() {
             aria-label="Go to Home"
             title="Home"
           >
-            <img src="assets/branding/eye-of-horus.png" alt="" />
+            <img src="assets/branding/neural-fantasy/emblem.png" alt="" />
           </button>
           <button className="brand" onClick={() => navigate({ name: "home" })} aria-label="Go to Home">
-            <span><strong className={`brand-wordmark ${logoVariant}`}>Zen Chad</strong><small>{titleFor(route)}</small></span>
+            <span><strong className="brand-wordmark"><img src="assets/branding/neural-fantasy/wordmark.png" alt="Neural Fantasy" /></strong><small>{titleFor(route)}</small></span>
           </button>
         </div>
         <button type="button" className="persistent-settings-trigger" onClick={() => navigate({ name: "settings" })} aria-label="Open Settings" title="Settings"><Settings aria-hidden="true" /></button>
