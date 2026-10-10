@@ -25,7 +25,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Set up Java
@@ -42,6 +42,9 @@ jobs:
 
       - name: Running logic tests
         run: npm run test:running
+
+      - name: Meditation music playback tests
+        run: npm run test:meditation-music && npm run test:streaming-music
 
       - name: Type-check and build
         run: npm run build
