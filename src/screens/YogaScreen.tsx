@@ -7,8 +7,9 @@ import {
   Play,
   Sparkles
 } from "lucide-react";
-import { getYogaClassDuration, YOGA_CLASSES } from "../data";
+import { expandYogaClassSlides, getYogaClassDuration, YOGA_CLASSES } from "../data";
 import type { AppData, Route, YogaClass } from "../types";
+import { getClassPresentation } from "../yogaPresentation";
 
 interface Props {
   data: AppData;
@@ -24,10 +25,7 @@ const formatDuration = (seconds: number) => {
   return `${minutes}:${String(remainder).padStart(2, "0")}`;
 };
 
-const classDuration = (yogaClass: YogaClass) =>
-  yogaClass.id.startsWith("custom-")
-    ? yogaClass.steps.reduce((total, step) => total + (step.seconds ?? 0), 0)
-    : getYogaClassDuration(yogaClass);
+const classDuration = getYogaClassDuration;
 
 interface ClassCardProps {
   yogaClass: YogaClass;
@@ -39,7 +37,7 @@ function YogaClassCard({ yogaClass, custom = false, onOpen }: ClassCardProps) {
   return (
     <article className="card yoga-class-card">
       <div className="yoga-class-art">
-        <img src={yogaClass.image} alt={`Mark teaching ${yogaClass.name}`} />
+        <img src={getClassPresentation(yogaClass).image} alt={getClassPresentation(yogaClass).imageAlt} />
         <span>{custom ? "Made by you" : "With Mark"}</span>
       </div>
       <div className="yoga-class-copy">
@@ -107,7 +105,7 @@ export default function YogaScreen({ data, navigate, initialMode = "choose" }: P
                 <div className="card saved-yoga-row" key={yogaClass.id}>
                   <div>
                     <strong>{yogaClass.name}</strong>
-                    <span>{yogaClass.steps.length} poses · {formatDuration(classDuration(yogaClass))}</span>
+                    <span>{expandYogaClassSlides(yogaClass).length} movements · {formatDuration(classDuration(yogaClass))}</span>
                   </div>
                   <button className="button secondary" onClick={() => navigate({ name: "yoga-class", classId: yogaClass.id })}>
                     <Play size={16} /> Start

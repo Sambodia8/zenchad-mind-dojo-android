@@ -1,3 +1,13 @@
+# Neural Fantasy 2.29 — guided class introductions (2026-10-10)
+
+- Redesigned every built-in guided class and saved custom flow through one shared celestial preparation layout. Thirteen new Mark-matched hero illustrations, accurate expanded duration/movement counts, actual exercise previews, expandable evidence, compact original soundtrack cards, persistent context-aware start actions and readable controls. Removed focus tags, repeated titles and audio-cue explanations.
+- Preserved exercise definitions/order/timings, audio, rewards, Running/Bike launch/return/skip behavior and Gentle Leg Recovery's required safety confirmation. Fixed Bike Quest resume-dock detection for the new intro. Custom artwork survives routine edits; custom library duration now includes sides and transitions.
+- All 13 classes and a repeated-pose custom routine passed browser checks at 412×915 in dark and forced legacy light styling; conservative rendered contrast minimum 6.88:1. Checked 320px layout, safety enabled/disabled states, soundtrack controls, Running prep/Just Run and Bike warm-up/recovery exits. Yoga, active-session timing, progression and Running/native tests, TypeScript/Vite, Capacitor sync and JDK21 Android assembly passed. No phone connected.
+- APK: NeuralFantasy-2.29-Guided-Class-Intros.apk; version 2.29/code40; com.zenchad.minddojo; 545802620 bytes. SHA-256: 30FCAA71DD6CDC2BA68B158605ADD30FB2E406D5DB7F7FC23EAF5441A1334694. v1/v2 signatures and previous signing certificate verified. All 13 hero hashes match source and all 248 existing offline audio files match 2.28.
+- Size change: +645938 bytes. New heroes add 5589598 bytes, mostly offset by reduced ZIP alignment/signature overhead; no audio removed. One numbered local APK; earlier releases retained.
+- Delivery: local and mounted Drive copies have identical verified SHA-256 hashes; cloud confirmation is pending. Connected upload rejected the APK because its 545802620 bytes exceed the 536870912-byte connector limit. Previous releases retained.
+- Evidence and QA matrix: docs/GUIDED_CLASS_INTRO_QA.md. Built-in image_gen prompt set and asset paths: docs/guided-class-art-prompts.json.
+
 # Neural Fantasy 2.28 — brand identity (2026-10-08)
 
 - Sam confirmed Neural Fantasy, matching the supplied artwork. Added the original full title, transparent mobile wordmark, separate celestial profile emblem, fitted launcher densities, monochrome themed star, favicon and navy splash/loading treatment. Removed the four random header logo variants.

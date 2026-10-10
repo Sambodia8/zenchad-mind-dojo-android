@@ -1,0 +1,74 @@
+{
+  "generator": "Built-in image_gen",
+  "references": [
+    "public/assets/yoga/mark-hero-v2.png",
+    "public/assets/stretches/display/standing-quad-stretch-v2.png"
+  ],
+  "assets": [
+    {
+      "id": "sun-salutation",
+      "asset": "public/assets/yoga/intros/sun-salutation.webp",
+      "prompt": "Mark in upward salute at celestial sunrise. Identity matched to references; full body, landscape 1536x1024, navy/cyan/violet cinematic painterly fantasy, no text or UI."
+    },
+    {
+      "id": "full-house",
+      "asset": "public/assets/yoga/intros/full-house.webp",
+      "prompt": "Use case: stylized-concept. ONE production hero illustration for Neural Fantasy Android class full-house. Input references define Mark's exact identity: adult man with medium wavy brown side-swept hair, dark rectangular glasses, short beard, average athletic build, charcoal t-shirt, olive camouflage joggers. Keep this appearance consistent. Mark in Warrior II pose, feet wide apart grounded, front knee bent over ankle, rear leg straight, arms horizontal in opposite directions, looking over front hand. Broad majestic purple nebula and blue stone terrace. Detailed cinematic painterly fantasy, dark navy celestial environment, cyan/violet/magenta rim lighting. Full body, all hands, head and feet visible, anatomically plausible limbs and fingers. Wide landscape 1536x1024, subject centred within middle 65 percent, body entirely inside frame with 10 percent margins. No text, UI, collage, logos, watermark. Yoga barefoot."
+    },
+    {
+      "id": "the-ogs",
+      "asset": "public/assets/yoga/intros/the-ogs.webp",
+      "prompt": "Use case: stylized-concept. ONE production hero illustration for Neural Fantasy Android class the-ogs. Input references define Mark's exact identity: adult man with medium wavy brown side-swept hair, dark rectangular glasses, short beard, average athletic build, charcoal t-shirt, olive camouflage joggers. Keep this appearance consistent. Mark in classic downward-facing dog, hands and bare feet grounded, hips high, straight long spine and comfortable slightly bent knees, side view. Indigo celestial garden with violet starlight. Detailed cinematic painterly fantasy, dark navy celestial environment, cyan/violet/magenta rim lighting. Full body, all hands, head and feet visible, anatomically plausible limbs and fingers. Wide landscape 1536x1024, subject centred within middle 65 percent, body entirely inside frame with 10 percent margins. No text, UI, collage, logos, watermark. Yoga barefoot."
+    },
+    {
+      "id": "standing-and-balance",
+      "asset": "public/assets/yoga/intros/standing-and-balance.webp",
+      "prompt": "Use case: stylized-concept. ONE production hero illustration for Neural Fantasy Android class standing-and-balance. Input references define Mark's exact identity: adult man with medium wavy brown side-swept hair, dark rectangular glasses, short beard, average athletic build, charcoal t-shirt, olive camouflage joggers. Keep this appearance consistent. Mark in anatomically plausible tree pose, standing on one leg, opposite foot resting on inner calf BELOW knee, hands together at chest, serene expression. Bright cyan cosmic mountain landscape. Detailed cinematic painterly fantasy, dark navy celestial environment, cyan/violet/magenta rim lighting. Full body, all hands, head and feet visible, anatomically plausible limbs and fingers. Wide landscape 1536x1024, subject centred within middle 65 percent, body entirely inside frame with 10 percent margins. No text, UI, collage, logos, watermark. Yoga barefoot."
+    },
+    {
+      "id": "hips-and-hamstrings",
+      "asset": "public/assets/yoga/intros/hips-and-hamstrings.webp",
+      "prompt": "Use case: stylized-concept. ONE production hero illustration for Neural Fantasy Android class hips-and-hamstrings. Reference images define Mark's exact identity: adult man, medium wavy brown side-swept hair, rectangular dark glasses, short beard, average athletic build, charcoal t-shirt, olive camouflage joggers. Preserve these features. Mark performing a low kneeling lunge, front foot flat and knee over ankle, rear knee on a padded mat, torso comfortably upright. Calm violet moonlit lake and distant indigo peaks. Full body and all limbs visible, plausible joints, yoga barefoot. Detailed cinematic painterly fantasy, dark celestial navy atmosphere with cyan/violet/magenta accents, gentle rim lighting. Landscape 1536x1024, centred figure inside middle 65 percent, at least 10 percent margins around body. No text, UI, collage, borders, logos or watermark."
+    },
+    {
+      "id": "floor-and-restore",
+      "asset": "public/assets/yoga/intros/floor-and-restore.webp",
+      "prompt": "Use case: stylized-concept. ONE production hero illustration for Neural Fantasy Android class floor-and-restore. Reference images define Mark's exact identity: adult man, medium wavy brown side-swept hair, rectangular dark glasses, short beard, average athletic build, charcoal t-shirt, olive camouflage joggers. Preserve these features. Mark performing child's pose side view, knees folded comfortably on a mat, hips towards heels, torso resting forward, arms extended along the mat, forehead down. Quiet celestial sanctuary with gentle blue and lavender light. Full body and all limbs visible, plausible joints, yoga barefoot. Detailed cinematic painterly fantasy, dark celestial navy atmosphere with cyan/violet/magenta accents, gentle rim lighting. Landscape 1536x1024, centred figure inside middle 65 percent, at least 10 percent margins around body. No text, UI, collage, borders, logos or watermark."
+    },
+    {
+      "id": "daily-reset",
+      "asset": "public/assets/yoga/intros/daily-reset.webp",
+      "prompt": "Use case: stylized-concept. ONE production hero illustration for Neural Fantasy Android class daily-reset. Reference images define Mark's exact identity: adult man, medium wavy brown side-swept hair, rectangular dark glasses, short beard, average athletic build, charcoal t-shirt, olive camouflage joggers. Preserve these features. Mark performing a gentle standing side stretch, feet grounded hip width, one arm overhead reaching slightly to one side, other hand resting on hip. Opal cyan celestial dawn and purple garden. Full body and all limbs visible, plausible joints, yoga barefoot. Detailed cinematic painterly fantasy, dark celestial navy atmosphere with cyan/violet/magenta accents, gentle rim lighting. Landscape 1536x1024, centred figure inside middle 65 percent, at least 10 percent margins around body. No text, UI, collage, borders, logos or watermark."
+    },
+    {
+      "id": "before-run",
+      "asset": "public/assets/yoga/intros/before-run.webp",
+      "prompt": "Use case: stylized-concept. ONE final production hero illustration for Neural Fantasy Android class before-run. Reference images define Mark's exact identity: adult man, medium wavy brown side-swept hair, dark rectangular glasses, short beard, average athletic build, charcoal t-shirt, olive camouflage joggers. Match these features. Mark performing a dynamic knee lift, one foot planted, opposite knee raised to hip height, relaxed running arm posture. Black trainers. Energetic luminous cyan celestial trail with violet mountains. Cinematic detailed painterly fantasy. Wide 1536x1024 landscape, subject centred within middle 65 percent, full head and all limbs and feet visible with generous margins, plausible anatomy, no text/UI/collage/borders/logos/watermark. Dark navy celestial environment with cyan, violet and subtle magenta light."
+    },
+    {
+      "id": "before-cycling",
+      "asset": "public/assets/yoga/intros/before-cycling.webp",
+      "prompt": "Use case: stylized-concept. ONE final production hero illustration for Neural Fantasy Android class before-cycling. Reference images define Mark's exact identity: adult man, medium wavy brown side-swept hair, dark rectangular glasses, short beard, average athletic build, charcoal t-shirt, olive camouflage joggers. Match these features. Mark performing a balanced standing quad stretch beside a clearly recognizable road bicycle, hand gently holding lifted ankle, opposite hand resting on bicycle saddle. Black trainers, plausible support and bicycle geometry. Electric indigo sunrise and violet cycling landscape. Cinematic detailed painterly fantasy. Wide 1536x1024 landscape, subject centred within middle 65 percent, full head and all limbs and feet visible with generous margins, plausible anatomy, no text/UI/collage/borders/logos/watermark. Dark navy celestial environment with cyan, violet and subtle magenta light."
+    },
+    {
+      "id": "after-run",
+      "asset": "public/assets/yoga/intros/after-run.webp",
+      "prompt": "Use case: stylized-concept. ONE final production hero illustration for Neural Fantasy Android class after-run. Reference images define Mark's exact identity: adult man, medium wavy brown side-swept hair, dark rectangular glasses, short beard, average athletic build, charcoal t-shirt, olive camouflage joggers. Match these features. Mark performing a comfortable post-run standing hamstring stretch, one heel supported on a low stone ledge, knee gently bent, long spine hinging slightly forward, hands resting comfortably on thigh. Black trainers. Calm moonlit cyan lake, indigo peaks, gentle lavender sky. Cinematic detailed painterly fantasy. Wide 1536x1024 landscape, subject centred within middle 65 percent, full head and all limbs and feet visible with generous margins, plausible anatomy, no text/UI/collage/borders/logos/watermark. Dark navy celestial environment with cyan, violet and subtle magenta light."
+    },
+    {
+      "id": "after-cycling",
+      "asset": "public/assets/yoga/intros/after-cycling.webp",
+      "prompt": "Use case: stylized-concept. ONE final production hero illustration for Neural Fantasy Android class after-cycling. References define Mark's exact identity: adult man with medium wavy brown side-swept hair, rectangular dark glasses, short beard, average athletic build, charcoal t-shirt and olive camouflage joggers. Preserve all features. Mark performing a relaxed seated spinal twist on a yoga mat, one leg comfortably extended and other bent crossed, tall relaxed spine, one hand on mat supporting behind torso. Clearly recognizable stationary indoor exercise bicycle beside him, flywheel and stable base. Celestial sanctuary with an open archway showing soft violet clouds and distant stars. Anatomically plausible yoga pose and hands, full body head feet limbs visible, generous margins. Cinematic detailed painterly fantasy, rich dark navy celestial atmosphere, restrained cyan/violet/magenta highlights. Landscape 1536x1024, entire figure centred within middle 65 percent, no cropped limbs, no text, UI, collage, borders, logos or watermark."
+    },
+    {
+      "id": "back-and-shoulders",
+      "asset": "public/assets/yoga/intros/back-and-shoulders.webp",
+      "prompt": "Use case: stylized-concept. ONE final production hero illustration for Neural Fantasy Android class back-and-shoulders. References define Mark's exact identity: adult man with medium wavy brown side-swept hair, rectangular dark glasses, short beard, average athletic build, charcoal t-shirt and olive camouflage joggers. Preserve all features. Mark kneeling upright on a mat, performing a gentle kneeling side stretch, one hand on mat beside hip, opposite arm overhead making a long relaxed arc, hips comfortably over heels. Indigo celestial observatory with gentle magenta and cyan rim light. Anatomically plausible yoga pose and hands, full body head feet limbs visible, generous margins. Cinematic detailed painterly fantasy, rich dark navy celestial atmosphere, restrained cyan/violet/magenta highlights. Landscape 1536x1024, entire figure centred within middle 65 percent, no cropped limbs, no text, UI, collage, borders, logos or watermark."
+    },
+    {
+      "id": "gentle-leg-recovery",
+      "asset": "public/assets/yoga/intros/gentle-leg-recovery.webp",
+      "prompt": "Use case: stylized-concept. ONE final production hero illustration for Neural Fantasy Android class gentle-leg-recovery. References define Mark's exact identity: adult man with medium wavy brown side-swept hair, rectangular dark glasses, short beard, average athletic build, charcoal t-shirt and olive camouflage joggers. Preserve all features. Mark doing a gentle supported seated hamstring stretch on a padded mat, one leg comfortably extended with a small bolster under the knee, other leg loosely bent, hands resting on extended thigh without pulling toes, long comfortable spine. Quiet moonlit celestial sanctuary with calm blue and lavender lighting, yoga barefoot. Anatomically plausible yoga pose and hands, full body head feet limbs visible, generous margins. Cinematic detailed painterly fantasy, rich dark navy celestial atmosphere, restrained cyan/violet/magenta highlights. Landscape 1536x1024, entire figure centred within middle 65 percent, no cropped limbs, no text, UI, collage, borders, logos or watermark."
+    }
+  ]
+}

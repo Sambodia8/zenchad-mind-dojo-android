@@ -14,9 +14,7 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
-  Clock3,
   EllipsisVertical,
-  ExternalLink,
   Info,
   Music2,
   Pause,
@@ -38,6 +36,7 @@ import { addCompletedSession, appendActivitySession, saveData } from "../storage
 import type { AppData, Route } from "../types";
 import { loadBikeQuestState, type BikeQuestResume } from "../bikeQuest";
 import MovementVisual from "../components/MovementVisual";
+import GuidedClassIntro from "../components/GuidedClassIntro";
 import { playUiSfx } from "../uiSfx";
 import { restoredYogaActiveSeconds, updateYogaActiveClock, type YogaActiveClock } from "../yogaSessionClock";
 import {
@@ -66,19 +65,19 @@ const STRETCH_MUSIC = [
   {
     id: "grounding",
     name: "Warm Grounding",
-    note: "Soft, earthy and unhurried",
+    artwork: "assets/meditation-art/sunset.webp",
     src: "/assets/audio/soundscapes/grounding-music-a.ogg"
   },
   {
     id: "lofi",
     name: "Lo-fi Limber",
-    note: "A gentle beat to move with",
+    artwork: "assets/meditation-art/celestial.webp",
     src: "/assets/audio/soundscapes/focused-attention-music-b.ogg"
   },
   {
     id: "sunrise",
     name: "Soft Sunrise",
-    note: "Airy, warm and melodic",
+    artwork: "assets/meditation-art/lotus.webp",
     src: "/assets/audio/soundscapes/metta-music-a.ogg"
   }
 ] as const;
@@ -585,133 +584,28 @@ export default function YogaClassScreen({
 
   if (phase === "ready") {
     return (
-      <div className="screen-stack yoga-ready">
-        <section className="yoga-ready-portrait yoga-class-cover">
-          <img src={yogaClass.image} alt={`Mark ready to teach ${yogaClass.name}`} />
-          <span>With Mark · {yogaClass.timing}</span>
-        </section>
-        <section className="card yoga-ready-copy">
-          <span className="eyebrow">{yogaClass.timing}</span>
-          <h1>{yogaClass.name}</h1>
-          <div className="yoga-ready-meta">
-            <span><Clock3 size={16} /> {formatDuration(getYogaClassDuration(yogaClass))}</span>
-            <span>{slides.length} guided {isBeforeRunning ? "movements" : "poses"}</span>
-          </div>
-          <p>{yogaClass.description}</p>
-          <div className="routine-focus" aria-label="Focus muscles">
-            {yogaClass.focusMuscles.map((muscle) => (
-              <span key={muscle}>{muscle}</span>
-            ))}
-          </div>
-          <details className="routine-evidence yoga-detail-evidence">
-            <summary>Why this class?</summary>
-            <p>{yogaClass.evidence}</p>
-            {yogaClass.sourceUrl ? (
-              <a href={yogaClass.sourceUrl} target="_blank" rel="noreferrer">
-                Read the guidance <ExternalLink size={13} />
-              </a>
-            ) : null}
-          </details>
-          <p className="yoga-audio-note">
-            A chime starts every {isBeforeRunning ? "movement" : "pose"}. Five quiet clock ticks give you time to move into the
-            next position.
-          </p>
-        </section>
-
-        <section className="card stretch-soundtrack-card">
-          <div className="section-row">
-            <div>
-              <span className="eyebrow">Your movement soundtrack</span>
-              <h2>Choose the energy</h2>
-            </div>
-            <Music2 />
-          </div>
-          <div className="stretch-track-picker" aria-label="Stretching soundtrack">
-            {STRETCH_MUSIC.map((track) => (
-              <button
-                key={track.id}
-                className={
-                  data.preferences.stretchMusicEnabled &&
-                  selectedMusic.id === track.id
-                    ? "active"
-                    : ""
-                }
-                onClick={() => chooseMusic(track.id)}
-              >
-                <Music2 size={17} />
-                <span>
-                  <strong>{track.name}</strong>
-                  <small>{track.note}</small>
-                </span>
-              </button>
-            ))}
-          </div>
-          <div className="stretch-volume-row">
-            <button className="button ghost" onClick={toggleMusic}>
-              {data.preferences.stretchMusicEnabled ? (
-                <><Volume2 size={17} /> Music on</>
-              ) : (
-                <><VolumeX size={17} /> Music off</>
-              )}
-            </button>
-            <label>
-              <span>Volume</span>
-              <input
-                type="range"
-                min="0"
-                max="70"
-                value={data.preferences.stretchMusicVolume}
-                onChange={(event) =>
-                  setData((currentData) => ({
-                    ...currentData,
-                    preferences: {
-                      ...currentData.preferences,
-                      stretchMusicVolume: Number(event.target.value)
-                    }
-                  }))
-                }
-                aria-label="Stretching music volume"
-              />
-            </label>
-          </div>
-        </section>
-
-        {yogaClass.safetyGate ? (
-          <section className="card recovery-gate" aria-labelledby="recovery-title">
-            <span className="eyebrow">Safety check</span>
-            <h2 id="recovery-title">This is not for a new or acute injury</h2>
-            <p>
-              Do not begin if you have severe or worsening pain, cannot bear weight, have
-              numbness, a changed shape or colour, or major swelling. Seek medical advice
-              instead.
-            </p>
-            <a href={yogaClass.sourceUrl} target="_blank" rel="noreferrer">
-              Read NHS sprain and strain guidance
-            </a>
-            <label>
-              <input
-                type="checkbox"
-                checked={recoveryConfirmed}
-                onChange={(event) => setRecoveryConfirmed(event.target.checked)}
-              />
-              <span>My soreness is mild, recovering, and comfortable enough for gentle movement.</span>
-            </label>
-          </section>
-        ) : null}
-
-        <button
-          className="button primary full yoga-start-button"
-          onClick={startClass}
-          disabled={Boolean(yogaClass.safetyGate && !recoveryConfirmed)}
-        >
-          <Play size={18} fill="currentColor" /> Start class with Mark
-        </button>
-        {isBeforeRunning ? (
-          <button className="button secondary full yoga-skip-before-run" onClick={skipBeforeRunWarmup}>
-            Skip warm-up {returnToRunningPreparation ? "and continue prep" : "and start Just Run"}
-          </button>
-        ) : null}
-      </div>
+      <GuidedClassIntro
+        yogaClass={yogaClass}
+        slides={slides}
+        tracks={STRETCH_MUSIC}
+        selectedTrack={selectedMusic.id}
+        musicEnabled={data.preferences.stretchMusicEnabled}
+        volume={data.preferences.stretchMusicVolume}
+        onTrack={trackId => {
+          const track = STRETCH_MUSIC.find(item => item.id === trackId);
+          if (track) chooseMusic(track.id);
+        }}
+        onToggleMusic={toggleMusic}
+        onVolume={volume => setData(currentData => ({
+          ...currentData,
+          preferences: { ...currentData.preferences, stretchMusicVolume: volume }
+        }))}
+        confirmed={recoveryConfirmed}
+        onConfirm={setRecoveryConfirmed}
+        onStart={startClass}
+        onSkip={isBeforeRunning ? skipBeforeRunWarmup : undefined}
+        skipLabel={`Skip warm-up ${returnToRunningPreparation ? "and continue prep" : "and start Just Run"}`}
+      />
     );
   }
 

@@ -1,0 +1,88 @@
+/* An intentionally celestial surface in either system appearance. All text has
+   explicit colours so shared light-theme card/button rules cannot override it. */
+:root[data-appearance] .yoga-route .guided-class-intro {
+  --class-accent: #cab5ff;
+  --class-border: #514775;
+  --class-glow: #8a45da;
+  --class-start: linear-gradient(105deg, #4932bb, #7623be 62%, #9d227f);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  color: #f5f0ff;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: radial-gradient(ellipse at 100% 40%, #19113a, transparent 60%), #080d20;
+  border: 1px solid var(--class-border);
+  border-radius: 24px;
+  box-shadow: 0 0 24px #552f9826;
+  isolation: isolate;
+}
+:root[data-appearance] .guided-class-intro[data-atmosphere="energy"] {
+  --class-accent: #91f5ff;
+  --class-border: #34697d;
+  --class-glow: #447cdc;
+}
+:root[data-appearance] .guided-class-intro[data-atmosphere="restore"] {
+  --class-accent: #a6e9ef;
+  --class-border: #38536a;
+  --class-glow: #287d97;
+  --class-start: linear-gradient(105deg, #164e83, #285398 60%, #315a99);
+}
+.guided-class-intro .class-intro-hero { position: relative; border-radius: 23px 23px 0 0; overflow: hidden; background: #10182c; }
+.guided-class-intro .class-intro-hero > img { display: block; width: 100%; height: 222px; object-fit: contain; }
+.guided-class-intro .class-intro-hero::after { position: absolute; inset: 0; content: ""; background: linear-gradient(transparent 68%, #080d20 82%); pointer-events: none; }
+.guided-class-intro .class-intro-heading { position: relative; z-index: 1; padding: 0 18px 10px; background: #080d20; }
+:root[data-appearance] .guided-class-intro .class-intro-context { color: var(--class-accent); font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+:root[data-appearance] .guided-class-intro h1 { margin: 5px 0 0; color: #f8f3ff; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.7rem, 7.5vw, 2.25rem); font-weight: 600; line-height: 1.1; overflow-wrap: anywhere; text-shadow: 0 0 15px #a088d955; }
+.guided-class-intro .class-intro-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 6px 17px 118px; min-width: 0; }
+.guided-class-intro .class-intro-body > * { min-width: 0; }
+.guided-class-intro:has(.class-intro-skip) .class-intro-body { padding-bottom: 162px; }
+.guided-class-intro button { font-family: inherit; }
+.guided-class-intro .class-intro-stats { display: flex; flex-wrap: wrap; gap: 10px; }
+.guided-class-intro .class-intro-stats > span { display: flex; align-items: center; gap: 8px; min-height: 34px; padding: 5px 13px; border: 1px solid var(--class-border); border-radius: 30px; background: #112538; color: var(--class-accent); font-size: .85rem; }
+:root[data-appearance] .guided-class-intro .class-intro-description { margin: 0; color: #e1def0; font-size: .9rem; line-height: 1.5; }
+:root[data-appearance] .guided-class-intro .class-intro-warning { margin: -5px 0 0; color: #ffd6b0; font-size: .8rem; line-height: 1.45; }
+.guided-class-intro .class-intro-evidence { padding: 0 12px; border: 1px solid var(--class-border); border-radius: 13px; background: #131a31; }
+:root[data-appearance] .guided-class-intro .class-intro-evidence summary { display: flex; align-items: center; gap: 10px; min-height: 44px; color: #d5d6ff; font-size: .8rem; font-weight: 600; cursor: pointer; list-style: none; }
+.guided-class-intro .class-intro-evidence summary::-webkit-details-marker { display: none; }
+.guided-class-intro .class-intro-evidence[open] summary svg { transform: rotate(180deg); }
+:root[data-appearance] .guided-class-intro .class-intro-evidence p { margin: 0 0 12px; color: #e1def0; font-size: .85rem; line-height: 1.5; }
+:root[data-appearance] .guided-class-intro a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: #aee9ff; font-size: .8rem; text-decoration: underline; }
+:root[data-appearance] .guided-class-intro h2 { margin: 0; color: var(--class-accent); font-family: inherit; font-size: .76rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.guided-class-intro .class-intro-carousel { display: flex; gap: 10px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-width: thin; scrollbar-color: #66588b transparent; padding: 3px 2px 8px; margin: 9px -2px 0; }
+.guided-class-intro .class-movement-carousel { list-style: none; }
+.guided-class-intro .class-movement-carousel li { flex: 0 0 82px; scroll-snap-align: start; min-width: 0; }
+.guided-class-intro .class-movement-art { height: 82px; padding: 4px; overflow: hidden; background: #e9edf3; border: 1px solid #6b6491; border-radius: 11px; }
+.guided-class-intro .class-movement-art .movement-visual { height: 100%; width: 100%; min-height: 0; }
+.guided-class-intro .class-movement-art .movement-visual img { width: 100%; height: 100%; object-fit: contain; }
+.guided-class-intro .class-movement-art .movement-pose-cell { height: 100%; width: auto; max-width: 100%; margin: auto; aspect-ratio: var(--frame-aspect); }
+:root[data-appearance] .guided-class-intro .class-movement-position { display: block; margin: 5px 0 3px; color: #bdc3de; font-size: .66rem; }
+:root[data-appearance] .guided-class-intro .class-movement-carousel strong { display: block; color: #eeebfb; font-size: .74rem; line-height: 1.3; overflow-wrap: anywhere; }
+.guided-class-intro .class-soundtrack-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+:root[data-appearance] .guided-class-intro .class-music-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 7px 10px; border: 1px solid #56517a; border-radius: 12px; background: #171c32; color: #e5dfff; font-size: .8rem; }
+:root[data-appearance] .guided-class-intro .class-track { flex: 1 0 98px; min-width: 0; padding: 0; border: 0; border-radius: 12px; background: transparent; color: #e2ddf7; scroll-snap-align: start; text-align: center; }
+.guided-class-intro .class-track-art { display: block; position: relative; height: 68px; border: 2px solid #464064; border-radius: 12px; overflow: hidden; }
+.guided-class-intro .class-track-art img { width: 100%; height: 100%; object-fit: cover; }
+.guided-class-intro .class-track[aria-pressed="true"] .class-track-art { border-color: #d196ff; box-shadow: 0 0 12px #a44de766; }
+.guided-class-intro .class-track-check { position: absolute; top: 5px; right: 5px; display: grid; place-items: center; width: 23px; height: 23px; border-radius: 50%; background: #1c1236; color: #fff; }
+:root[data-appearance] .guided-class-intro .class-track strong { display: block; margin-top: 7px; color: #e2ddf7; font-size: .74rem; line-height: 1.35; }
+:root[data-appearance] .guided-class-intro .class-track[aria-pressed="true"] strong { color: #ecd0ff; }
+:root[data-appearance] .guided-class-intro .class-intro-volume { display: flex; align-items: center; gap: 10px; min-height: 44px; color: #d4cee7; font-size: .8rem; }
+.guided-class-intro .class-intro-volume input { min-width: 0; flex: 1; height: 44px; accent-color: #c395ff; }
+.guided-class-intro .class-intro-volume output { min-width: 3ch; }
+.guided-class-intro .class-intro-actions { position: fixed; z-index: 45; bottom: calc(5.5rem + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: min(calc(100% - 32px), 748px); display: grid; gap: 5px; padding: 12px 15px; border: 1px solid var(--class-border); border-radius: 18px; background: #080d20f5; box-shadow: 0 -8px 20px #080d2099; }
+:root[data-appearance] .guided-class-intro .class-intro-start { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; min-height: 54px; padding: 12px 16px; border: 1px solid #d8b2ff; border-radius: 30px; background: var(--class-start); color: #fff; font-family: Georgia, serif; font-size: 1rem; font-weight: 700; letter-spacing: .025em; box-shadow: 0 0 7px #c081ee99, 0 0 20px color-mix(in srgb, var(--class-glow) 45%, transparent); cursor: pointer; }
+.guided-class-intro .class-intro-start > span { display: grid; place-items: center; margin-left: auto; width: 28px; height: 28px; border-radius: 50%; background: #10082288; font-family: sans-serif; font-size: 1.65rem; }
+.guided-class-intro .class-intro-start > svg { margin-right: auto; }
+:root[data-appearance] .guided-class-intro .class-intro-start:disabled { opacity: 1; color: #e3e0ed; background: #393b50; border-color: #79768f; box-shadow: none; cursor: not-allowed; }
+:root[data-appearance] .guided-class-intro .class-intro-actions > span { color: #ead3ba; font-size: .76rem; text-align: center; }
+:root[data-appearance] .guided-class-intro .class-intro-skip { min-height: 44px; padding: 7px; border: 0; border-radius: 10px; color: #d4cee7; background: transparent; font-size: .8rem; text-decoration: underline; }
+.guided-class-intro .class-intro-safety { padding: 13px; border: 1px solid #936858; border-radius: 13px; background: #291f2e; }
+:root[data-appearance] .guided-class-intro .class-intro-safety h2 { color: #ffdcba; letter-spacing: 0; text-transform: none; font-size: .95rem; }
+:root[data-appearance] .guided-class-intro .class-intro-safety p { margin: 9px 0 0; color: #f0e2dc; font-size: .85rem; line-height: 1.5; }
+:root[data-appearance] .guided-class-intro .class-intro-safety label { display: flex; align-items: center; gap: 10px; min-height: 44px; margin-top: 6px; color: #f8e9dc; font-size: .85rem; line-height: 1.4; cursor: pointer; }
+.guided-class-intro .class-intro-safety input { flex: 0 0 22px; width: 22px; height: 22px; accent-color: #cda8ff; }
+.guided-class-intro :is(button, summary, input, a, [tabindex]):focus-visible { outline: 3px solid #9af1ff; outline-offset: 3px; }
+@media (max-width: 360px) { .guided-class-intro .class-intro-hero > img { height: 184px; } .guided-class-intro .class-intro-body { padding-inline: 12px; } .guided-class-intro .class-movement-carousel li { flex-basis: 78px; } }
+@media (prefers-reduced-motion: reduce) { .guided-class-intro *, .guided-class-intro *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }

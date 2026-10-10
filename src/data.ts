@@ -1303,7 +1303,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "A progressive movement sequence. Keep the range comfortable, use knees-down options when needed, and treat the flow as a warm-up rather than a test of depth.",
     sourceUrl: "https://orthoinfo.aaos.org/en/staying-healthy/warm-up-cool-down-and-be-flexible/",
     focusMuscles: ["Shoulders", "Core", "Hips", "Hamstrings", "Whole body"],
-    image: "assets/yoga/class-cover-flow-v2.png",
+    image: "assets/yoga/intros/sun-salutation.webp",
     steps: SUN_SALUTATION_IDS.map((movementId) => ({ movementId, seconds: 20 }))
   },
   {
@@ -1315,7 +1315,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "A broad mobility and flexibility sequence. Move within a comfortable range, use easier variations whenever needed, and stop if anything feels sharp or painful.",
     sourceUrl: "https://orthoinfo.aaos.org/en/staying-healthy/warm-up-cool-down-and-be-flexible/",
     focusMuscles: ["Whole body", "Hips", "Hamstrings", "Back", "Shoulders"],
-    image: "assets/yoga/class-cover-flow-v2.png",
+    image: "assets/yoga/intros/full-house.webp",
     steps: FULL_HOUSE_STEPS
   },
   {
@@ -1327,7 +1327,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "A gentle whole-body sequence. Keep the range comfortable and treat the flow as a steady practice rather than a test of depth.",
     sourceUrl: "https://orthoinfo.aaos.org/en/staying-healthy/warm-up-cool-down-and-be-flexible/",
     focusMuscles: ["Hips", "Hamstrings", "Back", "Glutes"],
-    image: "assets/yoga/class-cover-flow-v2.png",
+    image: "assets/yoga/intros/the-ogs.webp",
     steps: [
       yogaStep("childs-pose", 30),
       yogaStep("downward-facing-dog", 30),
@@ -1350,7 +1350,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "Use a wall or reduce the range whenever balance or depth feels uncertain. Stay steady and stop if anything feels sharp.",
     sourceUrl: "https://orthoinfo.aaos.org/en/staying-healthy/warm-up-cool-down-and-be-flexible/",
     focusMuscles: ["Quadriceps", "Glutes", "Hips", "Hamstrings", "Core"],
-    image: "assets/yoga/class-cover-warmup-v2.png",
+    image: "assets/yoga/intros/standing-and-balance.webp",
     steps: [
       yogaStep("mountain-pose", 25),
       yogaStep("upward-salute", 25),
@@ -1376,7 +1376,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "Move slowly into each position and support the hips or knees when useful. Stretching should feel steady, never sharp.",
     sourceUrl: "https://www.nhs.uk/live-well/exercise/how-to-stretch-after-exercising/",
     focusMuscles: ["Hips", "Hamstrings", "Glutes", "Inner thighs", "Hip flexors"],
-    image: "assets/yoga/class-cover-cooldown-v2.png",
+    image: "assets/yoga/intros/hips-and-hamstrings.webp",
     steps: [
       yogaStep("downward-facing-dog", 25),
       yogaStep("kneeling-lunge", 25, "hip-side-block"),
@@ -1401,7 +1401,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "Keep the spine and lower back comfortable throughout. Choose a smaller range or pause whenever the position does not feel right.",
     sourceUrl: "https://orthoinfo.aaos.org/en/staying-healthy/warm-up-cool-down-and-be-flexible/",
     focusMuscles: ["Back", "Core", "Chest", "Glutes", "Whole body"],
-    image: "assets/yoga/class-cover-restore-v2.png",
+    image: "assets/yoga/intros/floor-and-restore.webp",
     steps: [
       yogaStep("cat-cow", 25),
       yogaStep("plank-pose", 20),
@@ -1428,19 +1428,19 @@ export const YOGA_CLASSES: YogaClass[] = [
       "A gentle flexibility and mobility sequence. Move within a comfortable range; stretching should feel steady, never sharp.",
     sourceUrl: "https://orthoinfo.aaos.org/en/staying-healthy/warm-up-cool-down-and-be-flexible/",
     focusMuscles: ["Hips", "Hamstrings", "Back", "Shoulders"],
-    image: "assets/yoga/class-cover-flow-v2.png",
+    image: "assets/yoga/intros/daily-reset.webp",
     steps: MARKS_FLOW_IDS.map((movementId) => ({ movementId, seconds: 30 }))
   },
   {
     id: "before-run",
     name: "Before Running",
     timing: "Before running",
-    description: "A brief dynamic warm-up for the ankles, hips, glutes, calves, quadriceps and hamstrings. Keep it comfortable; if knee pain appears or worsens, choose a gentler option or stop.",
+    description: "A brief, comfortable dynamic warm-up for your ankles, hips and legs.",
     evidence:
       "Dynamic movement and a gradual warm-up follow NHS exercise guidance. This routine is preparation, not treatment or a promise to prevent patellofemoral pain.",
     sourceUrl: "https://www.nhs.uk/live-well/exercise/how-to-warm-up-before-exercising/",
     focusMuscles: ["Ankles", "Hips", "Glutes", "Calves", "Quadriceps", "Hamstrings"],
-    image: "assets/yoga/class-cover-warmup-v2.png",
+    image: "assets/yoga/intros/before-run.webp",
     steps: [
       { movementId: "ankle-inversion-eversion", seconds: 10 },
       { movementId: "ankle-rocks", seconds: 20 },
@@ -1464,7 +1464,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "Use this mobility sequence to get the joints and cycling muscles moving, then build cadence and resistance progressively once you are on the bike.",
     sourceUrl: "https://www.britishcycling.org.uk/knowledge/bike-kit/article/20251022-Set-up-Why-a-bike-fit-is-essential-for-indoor-training-0",
     focusMuscles: ["Quadriceps", "Hip flexors", "Glutes", "Calves", "Ankles"],
-    image: "assets/stretches/display/standing-quad-stretch-v2.png",
+    image: "assets/yoga/intros/before-cycling.webp",
     steps: [
       { movementId: "knee-lifts", seconds: 30 },
       { movementId: "hip-circles", seconds: 30 },
@@ -1486,7 +1486,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "Based on NHS post-exercise guidance for the calves, quadriceps, hamstrings, inner thighs and buttocks.",
     sourceUrl: "https://www.nhs.uk/live-well/exercise/how-to-stretch-after-exercising/",
     focusMuscles: ["Calves", "Quadriceps", "Hamstrings", "Inner thighs", "Glutes"],
-    image: "assets/yoga/class-cover-cooldown-v2.png",
+    image: "assets/yoga/intros/after-run.webp",
     steps: [
       { movementId: "wall-calf-stretch", seconds: 25 },
       { movementId: "standing-quad-stretch", seconds: 25 },
@@ -1504,7 +1504,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "Based on British Cycling guidance to cool down progressively and restore movement around the hamstrings, hip flexors, glutes and back.",
     sourceUrl: "https://www.britishcycling.org.uk/knowledge/bike-kit/set-up/article/20251022-Set-up-Why-a-bike-fit-is-essential-for-indoor-training-0",
     focusMuscles: ["Quadriceps", "Hip flexors", "Hamstrings", "Glutes", "Back"],
-    image: "assets/yoga/class-cover-cooldown-v2.png",
+    image: "assets/yoga/intros/after-cycling.webp",
     steps: [
       { movementId: "standing-quad-stretch", seconds: 30 },
       { movementId: "kneeling-lunge", seconds: 30 },
@@ -1524,7 +1524,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "Gentle movement can help ordinary stiffness. Keep the range comfortable and stop if symptoms worsen or pain travels, tingles or feels sharp.",
     sourceUrl: "https://www.nhs.uk/conditions/back-pain/",
     focusMuscles: ["Latissimus dorsi", "Obliques", "Shoulders", "Thoracic spine", "Lower back"],
-    image: "assets/yoga/class-cover-restore-v2.png",
+    image: "assets/yoga/intros/back-and-shoulders.webp",
     steps: [
       { movementId: "kneeling-side-stretch", seconds: 30 },
       { movementId: "childs-pose", seconds: 30 },
@@ -1543,7 +1543,7 @@ export const YOGA_CLASSES: YogaClass[] = [
       "NHS guidance recommends protecting and resting a new sprain or strain initially, then resuming movement only when pain does not stop you. This is not for an acute injury.",
     sourceUrl: "https://www.nhs.uk/conditions/sprains-and-strains/",
     focusMuscles: ["Calves", "Hamstrings", "Inner thighs", "Glutes"],
-    image: "assets/yoga/class-cover-restore-v2.png",
+    image: "assets/yoga/intros/gentle-leg-recovery.webp",
     safetyGate: true,
     steps: [
       { movementId: "wall-calf-stretch", seconds: 20 },

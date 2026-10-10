@@ -41,7 +41,7 @@ function runningIsVisible() {
 
 function cyclingYogaIsVisible(quest: PersistedBikeQuest | null) {
   if (!quest || quest.completionDismissed || !["pre-stretch", "recovery", "complete"].includes(quest.step ?? "")) return false;
-  return Boolean(document.querySelector(".yoga-ready, .yoga-player, .yoga-completion"));
+  return Boolean(document.querySelector(".guided-class-intro, .yoga-player, .yoga-completion"));
 }
 
 function clickButtonContaining(selector: string, copy: string) {

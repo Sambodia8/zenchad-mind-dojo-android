@@ -486,7 +486,7 @@ export default function App() {
             <img src="assets/branding/neural-fantasy/emblem.png" alt="" />
           </button>
           <button className="brand" onClick={() => navigate({ name: "home" })} aria-label="Go to Home">
-            <span><strong className="brand-wordmark"><img src="assets/branding/neural-fantasy/wordmark.png" alt="Neural Fantasy" /></strong><small>{titleFor(route)}</small></span>
+            <span><strong className="brand-wordmark"><img src="assets/branding/neural-fantasy/wordmark.png" alt="Neural Fantasy" /></strong><small>{route.name === "yoga-class" ? "Yoga with Mark" : titleFor(route)}</small></span>
           </button>
         </div>
         <button type="button" className="persistent-settings-trigger" onClick={() => navigate({ name: "settings" })} aria-label="Open Settings" title="Settings"><Settings aria-hidden="true" /></button>
