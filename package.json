@@ -19,6 +19,7 @@
     "test:running-tts": "node scripts/test-running-tts.mjs",
     "test:running-photos": "node scripts/test-running-photos.mjs",
     "test:meditation-music": "node --experimental-strip-types --experimental-loader ./scripts/ts-loader.mjs scripts/test-meditation-music.mjs",
+    "test:streaming-music": "node --experimental-strip-types --experimental-loader ./scripts/ts-loader.mjs scripts/test-streaming-music.mjs",
     "preview": "vite preview",
     "audio:preview": "node scripts/generate-elevenlabs-preview.mjs",
     "audio:namaste": "node scripts/generate-namaste-endings.mjs",
