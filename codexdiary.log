@@ -1,3 +1,8 @@
+2026-10-10 - Smoother streaming meditation music
+- Decision/change: Preserve the current streaming track and playback position when playlist state updates without changing the active item, preventing repeated seeks and audible stuttering.
+- Preserve/avoid: Keep track selection and deliberate transition seeking intact; retain focused playlist regression coverage.
+- Key files: src/streamingMusicPlaylist.ts, scripts/test-streaming-music.mjs.
+
 2026-07-24 - Vision 2 watercolour redesign
 - Decision/change: Zen Chad 1.1 uses the warm illustrated journal direction from concept board 2 across the React/Capacitor Android app, with a five-item Home/Library/Roulette/Progress/Toolkit navigation model.
 - Preserve/avoid: Keep the app predominantly light with parchment, muted watercolour, sage-green actions and bronze rewards; do not reintroduce the dark-neon direction from boards 1 or 3 or replace working offline/timer/journal/voice behavior.

@@ -1,3 +1,9 @@
+# Neural Fantasy 2.30 — smoother streaming meditation music (2026-10-10)
+
+- Fixed streaming meditation playback repeatedly seeking the active track, which could cause stuttering. Playlist updates now avoid resetting playback when the active item is unchanged, and track transitions retain the intended position behavior.
+- Added focused automated coverage for streaming playlist changes and updated the Android build workflow dependency.
+- APK: `NeuralFantasy-2.30-Streaming-Music-Fix.apk`; version 2.30/code 41; package `com.zenchad.minddojo`; 545,802,842 bytes. SHA-256: `FE149A9C7B7A705331C049DECB2D39548C342A474004F6C98E435575C66CC7EF`. APK signature verified with the same certificate as 2.29. Size change: +222 bytes. Matching copies are in `releases/` and `D:\My Drive\ZenChad`; cloud sync confirmation is pending.
+
 # Neural Fantasy 2.29 — guided class introductions (2026-10-10)
 
 - Redesigned every built-in guided class and saved custom flow through one shared celestial preparation layout. Thirteen new Mark-matched hero illustrations, accurate expanded duration/movement counts, actual exercise previews, expandable evidence, compact original soundtrack cards, persistent context-aware start actions and readable controls. Removed focus tags, repeated titles and audio-cue explanations.
