@@ -10,6 +10,7 @@ interface PlayerSlot {
   source: MediaElementAudioSourceNode;
   gain: GainNode;
   entry?: MusicTimelineEntry;
+  pendingPlay?: Promise<void>;
 }
 
 export class StreamingMusicPlaylist {
@@ -35,12 +36,35 @@ export class StreamingMusicPlaylist {
   }
 
   setVolume(volume: number) {
-    this.volume = this.clamp(volume);
-    this.sync(this.elapsedSeconds, this.shouldPlay);
+    const nextVolume = this.clamp(volume);
+    if (nextVolume === this.volume) return;
+    this.volume = nextVolume;
+
+    // A volume slider must never restart playback or seek the media elements.
+    if (!this.shouldPlay) return;
+    const position = locateMusicTimeline(this.timeline, this.elapsedSeconds);
+    if (!position) return;
+    for (const slot of this.slots) {
+      if (slot.entry === position.current) {
+        this.setGain(slot, position.previous
+          ? Math.sin(position.crossfadeProgress * Math.PI / 2) * this.volume
+          : this.volume);
+      } else if (position.previous && slot.entry === position.previous) {
+        this.setGain(slot, Math.cos(position.crossfadeProgress * Math.PI / 2) * this.volume);
+      }
+    }
   }
 
   sync(elapsedSeconds: number, shouldPlay: boolean) {
-    this.elapsedSeconds = Math.max(0, elapsedSeconds);
+    const nextElapsed = Math.max(0, elapsedSeconds);
+    // The timer rounds to whole seconds. Comparing it against a continuously
+    // advancing media clock and seeking at ~1 second of drift caused audible
+    // stuttering in Android WebView. Only reposition after a genuine timeline
+    // jump (phase skip/background recovery) or a pause/resume.
+    const needsResync = !this.shouldPlay
+      || nextElapsed < this.elapsedSeconds - 1
+      || nextElapsed > this.elapsedSeconds + 3;
+    this.elapsedSeconds = nextElapsed;
     this.shouldPlay = shouldPlay;
     if (!shouldPlay) {
       this.pause();
@@ -58,12 +82,12 @@ export class StreamingMusicPlaylist {
     const currentGain = position.previous
       ? Math.sin(position.crossfadeProgress * Math.PI / 2) * this.volume
       : this.volume;
-    this.alignAndPlay(currentSlot, position.current, position.currentOffsetSeconds, currentGain);
+    this.alignAndPlay(currentSlot, position.current, position.currentOffsetSeconds, currentGain, needsResync);
 
     if (position.previous && position.previousOffsetSeconds !== undefined) {
       const previousSlot = this.slotFor(position.previous);
       const previousGain = Math.cos(position.crossfadeProgress * Math.PI / 2) * this.volume;
-      this.alignAndPlay(previousSlot, position.previous, position.previousOffsetSeconds, previousGain);
+      this.alignAndPlay(previousSlot, position.previous, position.previousOffsetSeconds, previousGain, needsResync);
     }
 
     for (const slot of this.slots) {
@@ -87,6 +111,7 @@ export class StreamingMusicPlaylist {
   dispose() {
     this.pause();
     for (const slot of this.slots) {
+      slot.entry = undefined;
       slot.audio.removeAttribute("src");
       slot.audio.load();
       slot.source.disconnect();
@@ -97,7 +122,7 @@ export class StreamingMusicPlaylist {
 
   private makeSlot(): PlayerSlot {
     const audio = new Audio();
-    audio.preload = "metadata";
+    audio.preload = "auto";
     const source = this.context.createMediaElementSource(audio);
     const gain = this.context.createGain();
     gain.gain.value = 0;
@@ -128,32 +153,52 @@ export class StreamingMusicPlaylist {
     slot: PlayerSlot,
     entry: MusicTimelineEntry,
     offsetSeconds: number,
-    gain: number
+    gain: number,
+    needsResync: boolean
   ) {
     const changed = slot.entry !== entry;
+    const target = Math.min(Math.max(0, offsetSeconds), Math.max(0, entry.track.durationSeconds - 0.05));
     if (changed) {
       slot.audio.pause();
       slot.entry = entry;
       slot.audio.src = entry.track.src;
       slot.audio.load();
+
+      // Android can ignore currentTime assignments before the metadata arrives.
+      // Seek once when the new file is ready, using the latest session position.
+      slot.audio.addEventListener("loadedmetadata", () => {
+        if (slot.entry !== entry || !this.shouldPlay) return;
+        const liveOffset = Math.min(
+          Math.max(0, this.elapsedSeconds - entry.startSeconds),
+          Math.max(0, entry.track.durationSeconds - 0.05)
+        );
+        try { slot.audio.currentTime = liveOffset; } catch { /* Let playback recover naturally. */ }
+      }, { once: true });
     }
 
-    const target = Math.min(Math.max(0, offsetSeconds), Math.max(0, entry.track.durationSeconds - 0.05));
-    if (changed || Math.abs(slot.audio.currentTime - target) > 0.9) {
-      try {
-        slot.audio.currentTime = target;
-      } catch {
-        slot.audio.addEventListener("loadedmetadata", () => {
-          try { slot.audio.currentTime = target; } catch { /* Asset failed; error handler will skip it. */ }
-        }, { once: true });
-      }
+    // Never chase the timer's rounded second-by-second reading while music is
+    // running. Regular HTMLMediaElement playback is smoother and more accurate.
+    if ((changed || needsResync) && slot.audio.readyState >= 1) {
+      try { slot.audio.currentTime = target; } catch { /* Metadata handler will seek later. */ }
     }
+
     this.setGain(slot, gain);
-    if (slot.audio.paused) {
-      void this.context.resume().then(() => slot.audio.play()).catch(() => {
-        this.failedTrackIds.add(entry.track.id);
-        this.timeline = buildMusicTimeline(this.queueIds, this.tracks, this.failedTrackIds);
-        if (this.shouldPlay) this.sync(this.elapsedSeconds, true);
+    if (slot.audio.paused && !slot.pendingPlay) {
+      // Only one resume/play attempt per slot. Repeated play() calls while the
+      // promise is pending can abort each other on Android and sound like a loop.
+      const attempt = this.context.resume()
+        .then(async () => {
+          if (!this.shouldPlay || slot.entry !== entry) return;
+          await slot.audio.play();
+          if (!this.shouldPlay || slot.entry !== entry) slot.audio.pause();
+        })
+        .catch(() => {
+          // Audio focus/autoplay interruptions are transient. Only the media
+          // element's error event should remove a genuinely broken asset.
+        });
+      slot.pendingPlay = attempt;
+      void attempt.finally(() => {
+        if (slot.pendingPlay === attempt) slot.pendingPlay = undefined;
       });
     }
   }
