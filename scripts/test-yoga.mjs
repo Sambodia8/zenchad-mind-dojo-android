@@ -69,21 +69,20 @@ assert.deepEqual(
   [
     ["ankle-inversion-eversion", 10],
     ["ankle-rocks", 20],
-    ["alternating-hip-openers", 20],
-    ["knee-lift-torso-twists", 20],
     ["front-back-leg-swings", 10],
     ["lateral-leg-swings", 10],
-    ["hamstring-sweeps", 15],
-    ["wall-calf-stretch", 15],
     ["standing-quad-stretch", 15],
+    ["alternating-hip-openers", 20],
+    ["knee-lift-torso-twists", 20],
+    ["wall-calf-stretch", 15],
     ["squat-to-forward-fold", 20],
     ["alternating-reverse-lunges", 15]
   ],
   "Before Running uses a short dynamic sequence without a duplicated forward fold"
 );
 assert.equal(beforeRun.steps.filter((step) => step.movementId === "forward-fold").length, 0, "Forward Fold is already part of Squat to Forward Fold");
-assert.equal(expandYogaClassSlides(beforeRun).length, 17, "per-side leg, calf and quad movements expand to a guided sequence");
-assert.equal(getYogaClassDuration(beforeRun), 325, "pre-run duration includes both sides and five-second transitions");
+assert.equal(expandYogaClassSlides(beforeRun).length, 15, "per-side leg, calf and quad movements expand to a guided sequence");
+assert.equal(getYogaClassDuration(beforeRun), 285, "pre-run duration includes both sides and five-second transitions");
 assert.ok(getYogaClassDuration(beforeRun) <= 360, "the pre-run movement sequence stays under six minutes");
 assert.equal(beforeRun.sourceUrl, "https://www.nhs.uk/live-well/exercise/how-to-warm-up-before-exercising/");
 assert.ok(beforeRun.focusMuscles.includes("Quadriceps"));
@@ -157,13 +156,22 @@ for (const [movementId, columns, sequence, frameMs] of [
   assert.deepEqual(movement?.visualAtlas, { columns, sequence, frameMs }, `${movementId} has its intended pose order and timing`);
 }
 for (const movement of MOVEMENTS.filter((candidate) => candidate.visualAtlas)) {
-  const { columns, sequence, frameMs } = movement.visualAtlas;
+  const { columns, sequence, frameMs, layout } = movement.visualAtlas;
   const [width, height] = pngDimensions(movement.image, false);
   assert.ok(Number.isInteger(columns) && columns >= 2);
   assert.ok(width >= columns && height > 0, `${movement.id} atlas can be divided into its configured pose cells`);
   assert.ok(sequence.length >= 2 && new Set(sequence).size >= 2, `${movement.id} plays multiple poses`);
   assert.ok(sequence.every((cell) => Number.isInteger(cell) && cell >= 0 && cell < columns), `${movement.id} pose indices stay inside the atlas`);
   assert.ok(Number.isFinite(frameMs) && frameMs > 0 && frameMs <= 5000, `${movement.id} has usable frame timing`);
+  if (layout) {
+    assert.equal(layout.frames.length, columns, `${movement.id} calibrates every pose`);
+    assert.ok(layout.width > 0 && layout.height > 0);
+    for (const crop of layout.frames) {
+      assert.ok(crop.x >= 0 && crop.y >= 0 && crop.width > 0 && crop.height > 0);
+      assert.ok(crop.x + crop.width <= width && crop.y + crop.height <= height, `${movement.id} source crop is contained`);
+      assert.ok(crop.anchorX >= 0 && crop.anchorX <= crop.width && crop.anchorY >= 0 && crop.anchorY <= crop.height);
+    }
+  }
 }
 
 const correctedWarmupVisuals = [

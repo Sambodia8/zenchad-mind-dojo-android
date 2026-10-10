@@ -564,7 +564,8 @@ const appSource = source("src/App.tsx");
 assert.ok(appSource.includes("pendingRunningRewardBonuses()"), "global app state must consume queued Running streak bonuses");
 assert.ok(appSource.includes("addRunningXp(current.stats, total)"), "Running streak bonus must feed global XP");
 assert.ok(appSource.includes("markRunningRewardBonusesApplied"), "Running streak bonuses need replay protection");
-assert.match(source("src/storage.ts"), /level: levelForXp\(migratedXp\)/, "saved levels must be recalculated after an XP-curve migration");
+assert.match(source("src/storage.ts"), /const migratedLevel = levelForXp\(migratedXp\)/, "saved levels must be recalculated after an XP-curve migration");
+assert.match(source("src/storage.ts"), /level: migratedLevel/, "the recalculated level is stored on the player");
 
 const diagnosticsSource = source("src/runningDiagnostics.ts");
 assert.ok(diagnosticsSource.includes("exact GPS coordinates and route geometry are intentionally omitted"), "copied diagnostics must carry the privacy guarantee");

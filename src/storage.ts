@@ -256,6 +256,7 @@ export function loadData(): AppData {
             value: Math.max(0, Math.min(10, mood.value * 2.5))
           }));
     const migratedXp = migratedBalance(parsed.stats?.xp);
+    const migratedLevel = levelForXp(migratedXp);
     return {
       practicePreferences: migratePracticePreferences(parsed.practicePreferences),
       practiceSessions: migratePracticeSessions(parsed.practiceSessions),
@@ -267,8 +268,10 @@ export function loadData(): AppData {
         // Level is derived state. Recalculate it when the curve changes so an
         // existing player does not remain stuck on a stale saved level.
         xp: migratedXp,
-        level: levelForXp(migratedXp),
-        lastSeenLevel: parsed.stats?.lastSeenLevel ?? 1
+        level: migratedLevel,
+        // The former popup used a different XP formula and could acknowledge
+        // an impossible level. Keep its marker on the player's actual curve.
+        lastSeenLevel: Math.max(1, Math.min(migratedLevel, Math.floor(migratedBalance(parsed.stats?.lastSeenLevel ?? 1))))
       },
       zenPoints: migratedBalance(parsed.zenPoints),
       lifetimeZenPoints: migratedBalance(parsed.lifetimeZenPoints ?? parsed.zenPoints),

@@ -40,6 +40,16 @@ const normalized = loadData();
 assert.equal(normalized.zenPoints, 9);
 assert.equal(normalized.lifetimeZenPoints, 0);
 
+for (const lastSeenLevel of [8, 9, 14]) {
+  localStorage.setItem("zenchad_app_data_v1", JSON.stringify({
+    ...defaultData, stats: { ...defaultData.stats, xp: 13052, level: 14, lastSeenLevel }
+  }));
+  const repaired = loadData();
+  assert.equal(repaired.stats.xp, 13052, "level repair preserves earned XP");
+  assert.equal(repaired.stats.level, 9, "the screenshot's XP uses the actual player curve");
+  assert.equal(repaired.stats.lastSeenLevel, Math.min(lastSeenLevel, 9), "impossible acknowledged levels are repaired");
+}
+
 const partiallyMigrated = { ...defaultData, zenPoints: 12 };
 delete partiallyMigrated.lifetimeZenPoints;
 localStorage.setItem("zenchad_app_data_v1", JSON.stringify(partiallyMigrated));

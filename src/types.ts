@@ -57,8 +57,20 @@ export interface Movement {
   seconds: number;
   /** Ordered, pre-aligned key poses; the representative image remains the still fallback. */
   visualFrames?: string[];
-  /** Equal-width cells of a generated pose atlas, played in this explicit order. */
-  visualAtlas?: { columns: number; sequence: number[]; frameMs: number };
+  /** Atlas poses played in order; calibrated crops keep the body and support steady. */
+  visualAtlas?: {
+    columns: number;
+    sequence: number[];
+    frameMs: number;
+    layout?: {
+      width: number;
+      height: number;
+      anchorX: number;
+      anchorY: number;
+      background?: string;
+      frames: Array<{ x: number; y: number; width: number; height: number; anchorX: number; anchorY: number }>;
+    };
+  };
   sides?: boolean;
   cue: string;
   kind: MovementKind;

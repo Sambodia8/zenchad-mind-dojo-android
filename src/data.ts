@@ -967,7 +967,18 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
     {
       sides: true,
       image: "assets/stretches/generated/bike-warmup/front-back-leg-swings-atlas.png",
-      visualAtlas: { columns: 3, sequence: [0, 1, 2, 1], frameMs: 850 }
+      visualAtlas: {
+        columns: 3, sequence: [0, 1, 2, 1], frameMs: 650,
+        // Unequal source panels share one scale and the planted shoe's heel/floor anchor.
+        layout: {
+          width: 740, height: 940, anchorX: 430, anchorY: 880, background: "#fff",
+          frames: [
+            { x: 0, y: 40, width: 512, height: 900, anchorX: 439, anchorY: 861 },
+            { x: 512, y: 40, width: 456, height: 900, anchorX: 327, anchorY: 866 },
+            { x: 968, y: 40, width: 568, height: 900, anchorX: 285, anchorY: 860 }
+          ]
+        }
+      }
     }
   ),
   warmupMovement(
@@ -981,8 +992,18 @@ export const ROUTINE_ONLY_MOVEMENTS: Movement[] = [
     "dynamic-warmup",
     {
       sides: true,
-      image: "assets/stretches/generated/bike-warmup/lateral-leg-swings-atlas.png",
-      visualAtlas: { columns: 3, sequence: [0, 1, 2, 1], frameMs: 850 }
+      image: "assets/stretches/generated/running-warmup-v4/lateral-leg-swings-atlas.png",
+      visualAtlas: {
+        columns: 3, sequence: [0, 1, 2, 1], frameMs: 650,
+        layout: {
+          width: 700, height: 759, anchorX: 215, anchorY: 727,
+          frames: [
+            { x: 0, y: 0, width: 735, height: 759, anchorX: 275, anchorY: 726 },
+            { x: 735, y: 0, width: 695, height: 759, anchorX: 278, anchorY: 727 },
+            { x: 1430, y: 0, width: 643, height: 759, anchorX: 302, anchorY: 727 }
+          ]
+        }
+      }
     }
   ),
   warmupMovement(
@@ -1444,13 +1465,12 @@ export const YOGA_CLASSES: YogaClass[] = [
     steps: [
       { movementId: "ankle-inversion-eversion", seconds: 10 },
       { movementId: "ankle-rocks", seconds: 20 },
-      { movementId: "alternating-hip-openers", seconds: 20 },
-      { movementId: "knee-lift-torso-twists", seconds: 20 },
       { movementId: "front-back-leg-swings", seconds: 10 },
       { movementId: "lateral-leg-swings", seconds: 10 },
-      { movementId: "hamstring-sweeps", seconds: 15 },
-      { movementId: "wall-calf-stretch", seconds: 15 },
       { movementId: "standing-quad-stretch", seconds: 15 },
+      { movementId: "alternating-hip-openers", seconds: 20 },
+      { movementId: "knee-lift-torso-twists", seconds: 20 },
+      { movementId: "wall-calf-stretch", seconds: 15 },
       { movementId: "squat-to-forward-fold", seconds: 20 },
       { movementId: "alternating-reverse-lunges", seconds: 15 }
     ]

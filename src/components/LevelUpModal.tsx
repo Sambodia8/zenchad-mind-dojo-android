@@ -10,9 +10,13 @@ interface Props {
 
 export default function LevelUpModal({ data, onDismiss }: Props) {
   const [show, setShow] = useState(false);
-  const currentLevel = Math.floor(data.stats.xp / 1000) + 1;
+  const currentLevel = data.stats.level;
 
   useEffect(() => {
+    if (currentLevel <= data.stats.lastSeenLevel) {
+      setShow(false);
+      return;
+    }
     if (currentLevel > data.stats.lastSeenLevel) {
       // Small delay to allow main screen to render first
       const t = setTimeout(() => {
@@ -46,7 +50,7 @@ export default function LevelUpModal({ data, onDismiss }: Props) {
           Level Up!
         </span>
         <h2 style={{ fontSize: '2.5rem', margin: '0 0 1rem 0' }}>Level {currentLevel}</h2>
-        <p style={{ opacity: 0.8, marginBottom: '2rem' }}>
+        <p style={{ color: 'var(--ink)', marginBottom: '2rem' }}>
           Your consistent practice is paying off. Keep building those mind reps!
         </p>
         <button 

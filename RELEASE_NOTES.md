@@ -1,3 +1,11 @@
+# Neural Fantasy 2.31 — running warm-up and level popup fixes (2026-10-11)
+
+- Front/back swings use calibrated source panels and a fixed planted shoe anchor; active animation guides fill the available artwork area. Replaced the lateral dance-like guide with a supported outward/centre/crossing swing. Shared cycling guides receive the same rendering fixes.
+- Before Running places the standing heel-to-seat quad stretch immediately after ankle work and both swing sets. Removed the inaccurate old-Mark hamstring sweep from this routine. Fifteen expanded movements, 4:45 total.
+- Level-up popup shares the header's player level, repairs impossible acknowledgement markers, and preserves earned XP. 13,052 XP displays level 9. Popup copy remains readable in dark and legacy light styling.
+- Yoga, saved-data and Running/native integration checks passed; phone-sized rendered text contrast >=5.24:1. No connected phone. TypeScript/Vite, Capacitor sync and Android assembly passed. The complete real-frame reference ZIP is a separate deliverable and remains pending.
+- APK: `NeuralFantasy-2.31-Running-Warmup-Fixes.apk`; version 2.31/code42; package `com.zenchad.minddojo`; 546,541,410 bytes (+738,568 from the new lateral artwork and renderer). SHA-256: `C91E40374E3CFD270316A1BBC39DD04559BE35B10EBBBE7F3BBA8217D3338D37`. Signature verified with unchanged certificate. All three relevant image hashes match canonical source; all 188 packaged audio files are unchanged. Identical local release and Drive-folder copies verified. Cloud confirmation pending.
+
 # Neural Fantasy 2.30 — smoother streaming meditation music (2026-10-10)
 
 - Fixed streaming meditation playback repeatedly seeking the active track, which could cause stuttering. Playlist updates now avoid resetting playback when the active item is unchanged, and track transitions retain the intended position behavior.
