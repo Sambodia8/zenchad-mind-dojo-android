@@ -22,14 +22,22 @@ export class StreamingMusicPlaylist {
   private shouldPlay = false;
   private elapsedSeconds = 0;
   private currentTrackId?: string;
+  private readonly queueIds: readonly string[];
+  private readonly tracks: readonly MeditationMusicTrack[];
+  private readonly onTrackChange: (track: MeditationMusicTrack) => void;
+  private readonly onUnavailable: () => void;
 
   constructor(
-    private readonly queueIds: readonly string[],
-    private readonly tracks: readonly MeditationMusicTrack[],
+    queueIds: readonly string[],
+    tracks: readonly MeditationMusicTrack[],
     volume: number,
-    private readonly onTrackChange: (track: MeditationMusicTrack) => void,
-    private readonly onUnavailable: () => void
+    onTrackChange: (track: MeditationMusicTrack) => void,
+    onUnavailable: () => void
   ) {
+    this.queueIds = queueIds;
+    this.tracks = tracks;
+    this.onTrackChange = onTrackChange;
+    this.onUnavailable = onUnavailable;
     this.volume = this.clamp(volume);
     this.slots = [this.makeSlot(), this.makeSlot()];
     this.timeline = buildMusicTimeline(this.queueIds, this.tracks, this.failedTrackIds);
